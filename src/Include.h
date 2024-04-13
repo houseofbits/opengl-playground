@@ -1,0 +1,19 @@
+#pragma once
+
+#include <math.h>
+#include <iostream>
+#include "Exception.h"
+#include "TypedClass.h"
+#include "Window.h"
+#include "Entry.h"
+#include "Helper/Logging.h"
+#include "Helper/Time.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/Cube.h"
+#include "Renderer/Shader.h"
+#include "Renderer/Camera.h"
+#include "Renderer/ShadowMapRenderer.h"
+#include "WireframeRenderer/GridPlane.h"
+#include "Events/Event.h"
+#include "Events/EventManager.h"
+#include "Events/WindowEvent.h"
