@@ -31,7 +31,6 @@ void Entry::run()
 
         depthRenderTarget.beginRender();
         depthShader.use();
-        // scene.render(camera, materialShader);
         scene.renderDepth(shadowCastingLight->getCamera(), depthShader);
         depthRenderTarget.end();
 
@@ -40,16 +39,14 @@ void Entry::run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         materialShader.use();
-
         renderer.updateLights();
-
         renderer.setShaderGlobalAttributes(&materialShader);
 
         scene.render(camera, materialShader);
 
         wireframeRenderer.draw(&renderer);
 
-        imageRenderer.draw();
+        // imageRenderer.draw();
 
         window.doubleBuffer();
 
@@ -67,7 +64,6 @@ void Entry::run()
  *  - Shadow map renderer
  *  - Normal maps
  *  - Specular maps
- *  - Render target abstraction ????
  *  - Deferred rendering
  *  - SSAO
  *  - Animations
@@ -87,6 +83,7 @@ void Entry::init()
     renderer.createPointLight(glm::vec3(0, 300, 0), glm::vec3(1, 0, 0), 600, 1);
     animatedLight = renderer.createPointLight(glm::vec3(0, 50, 300), glm::vec3(1, 1, 0), 600, 2);
     shadowCastingLight = renderer.createDirectLight(glm::vec3(100, 400, 100), glm::vec3(0, -1, 0), glm::vec3(0.8, 0.8, 1), 45, 600, 2);
+    shadowCastingLight->doesCastShadows = true;
 
     imageRenderer.init(glm::vec4(0, 0, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimage.frag");
     imageRenderer.textureId = depthRenderTarget.targetTextureId;

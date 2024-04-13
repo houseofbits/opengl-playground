@@ -4,7 +4,7 @@ const float PI = 3.1415926535897932384626433832795;
 const float PI_2 = 1.57079632679489661923;
 
 #define POINT_LIGHT 0 
-#define DIRECT_LIGHT 1
+#define SPOT_LIGHT 1
 
 const int MAX_LIGHTS = 10; 
 
@@ -34,11 +34,13 @@ in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
     vec2 TexCoord;
+    vec4 FragPosLightSpace;
 } fs_in;
 
 uniform vec3 viewPosition;
 uniform uint numActiveLights;
 uniform sampler2D texture1;
+uniform sampler2D lightDepthMap1;
 
 vec3 diffuseComponent(vec3 lightDir, vec3 normal, vec3 color)
 {
@@ -114,10 +116,14 @@ void main()
         light = lights[i];
         if (light.type == POINT_LIGHT) {
             lightColor += calculatePointLight(light);
-        } else if(light.type == DIRECT_LIGHT) {
+        } else if(light.type == SPOT_LIGHT) {
             lightColor += calculateDirectLight(light);
         }
     }
     
-    FragColor = vec4(textureColor * lightColor, 1.0);
+    vec3 projCoords = fs_in.FragPosLightSpace.xyz / fs_in.FragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+    vec4 lightProj = texture(lightDepthMap1, projCoords.xy); 
+
+    FragColor = lightProj;  //vec4(textureColor * lightColor, 1.0);
 }

@@ -93,8 +93,8 @@ bool Window::pollEvents()
                 }
                 else
                 {
-                    viewportWidth = 800;
-                    viewportHeight = 600;
+                    viewportWidth = 1024;
+                    viewportHeight = 768;
                     SDL_SetWindowFullscreen(sdlWindow, windowFlags);
                 }
 

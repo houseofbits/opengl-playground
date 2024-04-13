@@ -15,7 +15,6 @@ void main()
     // float ndc_depth = value.z / value.w;
     // float depth = (((farZ - nearZ) * ndc_depth) + nearZ + farZ) / 2.0;
 
-
     // float ndcDepth = (2.0 * depth - 0.01 - 500) / 500;
     // float clipDepth = ndcDepth / depth;
 

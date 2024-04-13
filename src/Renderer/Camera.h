@@ -43,5 +43,7 @@ public:
         isTransformDirty = true;
     }
     glm::mat4 &getProjectionViewMatrix();
+    glm::mat4 &getViewMatrix() { return viewMatrix; }
+    glm::mat4 &getProjectionMatrix() { return projectionMatrix; }
     glm::vec3 &getPosition() { return position; };
 };

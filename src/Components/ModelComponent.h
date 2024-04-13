@@ -13,7 +13,7 @@ class ModelComponent : public RenderableComponent
 public:
     ModelComponent();
 
-    void load(std::string filename); // remove, should be creates with factory or via config
+    void load(std::string filename); // remove, should be created with factory or via config
     void render();
     ModelComponent &resetTransform()
     {
