@@ -60,12 +60,15 @@ void Entry::run()
 }
 
 /**
- *  Learning
- *  - Shadow map renderer
+ *  Implement
+ *  - Point light shadow maps
+ *  - Shadow maps for multiple lights
  *  - Normal maps
  *  - Specular maps
+ *  - PBR
  *  - Deferred rendering
  *  - SSAO
+ *  - SSSM
  *  - Animations
  */
 void Entry::init()
@@ -82,11 +85,12 @@ void Entry::init()
     renderer.init(&camera);
     renderer.createPointLight(glm::vec3(0, 300, 0), glm::vec3(1, 0, 0), 600, 1);
     animatedLight = renderer.createPointLight(glm::vec3(0, 50, 300), glm::vec3(1, 1, 0), 600, 2);
-    shadowCastingLight = renderer.createDirectLight(glm::vec3(100, 400, 100), glm::vec3(0, -1, 0), glm::vec3(0.8, 0.8, 1), 45, 600, 2);
+    shadowCastingLight = renderer.createDirectLight(glm::vec3(100, 400, 100), glm::vec3(0, -1, 0), glm::vec3(0.8, 0.8, 1), 60, 600, 2);
     shadowCastingLight->doesCastShadows = true;
 
     imageRenderer.init(glm::vec4(0, 0, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimage.frag");
     imageRenderer.textureId = depthRenderTarget.targetTextureId;
+    renderer.shadowDepthMapId = depthRenderTarget.targetTextureId;
 
     scene.createModelComponent("resources/Duck/Duck.gltf", "resources/Duck/DuckCM.png")
         .setPosition(glm::vec3(-100, 0, 0));

@@ -22,6 +22,7 @@ public:
     unsigned int numActiveLights;
 
     unsigned int testTextureId;
+    unsigned int shadowDepthMapId;
 
     Light *createPointLight(glm::vec3 pos, glm::vec3 color, float falloff, float intensity = 1.);
     Light *createDirectLight(glm::vec3 pos, glm::vec3 direction, glm::vec3 color, float beamAngle, float falloff, float intensity = 1.);

@@ -29,7 +29,9 @@ public:
     {
         POINT = 0,
         SPOT = 1,
-        // DIRECT = 2
+        // DIRECT = 2,
+        // POINT_SHADOW  = 3,
+        SPOT_SHADOW = 4,
     };
 
     Type type;

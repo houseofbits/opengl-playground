@@ -45,6 +45,11 @@ void Renderer::updateLights()
             shaderLights[index].beamAngle = light->beamAngle;
         }
 
+        if (light->doesCastShadows && light->type == Light::SPOT)
+        {
+            shaderLights[index].type = Light::SPOT_SHADOW;
+        }
+
         index++;
     }
 
@@ -98,7 +103,7 @@ void Renderer::setShaderGlobalAttributes(Shader *shader)
     shader->setUniform("lights", lightsUniformBufferId);
 
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, testTextureId);
+    glBindTexture(GL_TEXTURE_2D, shadowDepthMapId);
     shader->setUniform("lightDepthMap1", 1);
 
     Light *shadowLight = nullptr;

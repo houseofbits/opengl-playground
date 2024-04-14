@@ -5,6 +5,7 @@ const float PI_2 = 1.57079632679489661923;
 
 #define POINT_LIGHT 0 
 #define SPOT_LIGHT 1
+#define SPOT_LIGHT_WITH_SHADOW 4
 
 const int MAX_LIGHTS = 10; 
 
@@ -42,10 +43,55 @@ uniform uint numActiveLights;
 uniform sampler2D texture1;
 uniform sampler2D lightDepthMap1;
 
+float rawShadowCalculation(vec4 fragPosLightSpace, float ndotl)
+{
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    if(projCoords.z > 1.0) {
+        return 0.0;
+    }
+
+    float closestDepth = texture(lightDepthMap1, projCoords.xy).r; 
+    float currentDepth = projCoords.z;
+    float bias = max(0.000005 * (1.0 - ndotl), 0.0000005);  
+    float shadow = (currentDepth - bias) > closestDepth  ? 0.0 : 1.0; 
+
+    return shadow;
+} 
+
+float pcfShadowCalculation(vec4 fragPosLightSpace, float ndotl)
+{
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    if(projCoords.z > 1.0) {
+        return 0.0;
+    }
+
+    float currentDepth = projCoords.z;
+
+    float bias = max(0.000005 * (1.0 - ndotl), 0.0000005);  
+
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(lightDepthMap1, 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(lightDepthMap1, projCoords.xy + vec2(x, y) * texelSize).r; 
+            shadow += currentDepth - bias > pcfDepth ? 0.0 : 1.0;        
+        }    
+    }
+    shadow /= 9.0;
+
+    return shadow;
+} 
+
 vec3 diffuseComponent(vec3 lightDir, vec3 normal, vec3 color)
 {
-    float diff = max(dot(lightDir, normal), 0.0);
-    return diff * color;
+    float ndotl = max(dot(lightDir, normal), 0.0);
+    return ndotl * color;
 }
 
 vec3 specularComponent(vec3 lightDir, vec3 normal)
@@ -79,7 +125,7 @@ vec3 calculatePointLight(Light light)
     return light.intensity * attenuation * (diffuse + specular);   
 }
 
-vec3 calculateDirectLight(Light light)
+vec3 calculateSpotLight(Light light, bool withShadows)
 {
     vec3 toLight = light.position - fs_in.FragPos;
     float dist = length(toLight);
@@ -95,14 +141,21 @@ vec3 calculateDirectLight(Light light)
         return vec3(0.0);
     }
 
-    float falloff = 1.0;//(light.beamAngle - angle) / light.beamAngle;
-    float attenuation = 1.0;//1.0 - clamp( dist / light.distAttenMax, 0.0, 1.0); 
+    float falloff = (light.beamAngle - angle) / light.beamAngle;
+    float attenuation = 1.0 - clamp( dist / light.distAttenMax, 0.0, 1.0); 
 
     vec3 normal = normalize(fs_in.Normal);
-    vec3 diffuse =  diffuseComponent(lightDir, normal, light.color);
+    float ndotl = max(dot(lightDir, normal), 0.0);
+
+    vec3 diffuse =  ndotl * light.color;
     vec3 specular = specularComponent(lightDir, normal);
 
-    return light.intensity * falloff * attenuation * (diffuse + specular); 
+    float shadow = 1.0;
+    if (withShadows) {
+        shadow = pcfShadowCalculation(fs_in.FragPosLightSpace, ndotl);
+    }
+
+    return shadow * light.intensity * falloff * attenuation * (diffuse + specular); 
 }
 
 void main() 
@@ -117,13 +170,11 @@ void main()
         if (light.type == POINT_LIGHT) {
             lightColor += calculatePointLight(light);
         } else if(light.type == SPOT_LIGHT) {
-            lightColor += calculateDirectLight(light);
+            lightColor += calculateSpotLight(light, false);
+        } else if(light.type == SPOT_LIGHT_WITH_SHADOW) {
+            lightColor += calculateSpotLight(light, true);
         }
     }
-    
-    vec3 projCoords = fs_in.FragPosLightSpace.xyz / fs_in.FragPosLightSpace.w;
-    projCoords = projCoords * 0.5 + 0.5;
-    vec4 lightProj = texture(lightDepthMap1, projCoords.xy); 
 
-    FragColor = lightProj;  //vec4(textureColor * lightColor, 1.0);
+    FragColor = vec4(textureColor * lightColor, 1.0);
 }
