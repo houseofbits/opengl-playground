@@ -30,4 +30,5 @@ public:
     void initLightsBuffer();
     void updateLights();
     void setShaderGlobalAttributes(Shader *shader);
+    Light *getFirstLightWithShadow();
 };

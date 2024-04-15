@@ -1,6 +1,8 @@
 #include "Include.h"
 #include <SDL2/SDL_opengl.h>
 #include "Renderer/Texture2D.h"
+#include "../libs/tinygltf/json.hpp"
+#include <fstream>
 
 Entry::Entry() : window(&eventManager)
 {
@@ -29,10 +31,13 @@ void Entry::run()
             break;
         }
 
-        depthRenderTarget.beginRender();
-        depthShader.use();
-        scene.renderDepth(shadowCastingLight->getCamera(), depthShader);
-        depthRenderTarget.end();
+        if (renderer.getFirstLightWithShadow())
+        {
+            depthRenderTarget.beginRender();
+            depthShader.use();
+            scene.renderDepth(renderer.getFirstLightWithShadow()->getCamera(), depthShader);
+            depthRenderTarget.end();
+        }
 
         glViewport(0, 0, window.viewportWidth, window.viewportHeight);
 
@@ -73,7 +78,6 @@ void Entry::run()
  */
 void Entry::init()
 {
-    materialShader.loadProgram("resources/shaders/lighting.vert", "resources/shaders/lighting.frag");
     depthShader.loadProgram("resources/shaders/lightDepth.vert", "resources/shaders/lightDepth.frag");
 
     wireframeRenderer.init();
@@ -83,22 +87,82 @@ void Entry::init()
     camera.registerEventHandlers(&eventManager);
 
     renderer.init(&camera);
-    renderer.createPointLight(glm::vec3(0, 300, 0), glm::vec3(1, 0, 0), 600, 1);
-    animatedLight = renderer.createPointLight(glm::vec3(0, 50, 300), glm::vec3(1, 1, 0), 600, 2);
-    shadowCastingLight = renderer.createDirectLight(glm::vec3(100, 400, 100), glm::vec3(0, -1, 0), glm::vec3(0.8, 0.8, 1), 60, 600, 2);
-    shadowCastingLight->doesCastShadows = true;
 
     imageRenderer.init(glm::vec4(0, 0, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimage.frag");
     imageRenderer.textureId = depthRenderTarget.targetTextureId;
     renderer.shadowDepthMapId = depthRenderTarget.targetTextureId;
 
-    scene.createModelComponent("resources/Duck/Duck.gltf", "resources/Duck/DuckCM.png")
-        .setPosition(glm::vec3(-100, 0, 0));
+    loadSceneFromJson("resources/scenes/ducks-n-lights.json");
+}
 
-    scene.createModelComponent("resources/Duck/Duck.gltf", "resources/Duck/DuckCM.png")
-        .setPosition(glm::vec3(100, 50, 0));
+glm::vec3 getVec3FromnJsonArray(nlohmann::json::array_t array)
+{
+    glm::vec3 value(0.0);
 
-    scene.createModelComponent("resources/BoxTextured.gltf", "resources/textures/concrete.jpg")
-        .setPosition(glm::vec3(0, 1, 0))
-        .setScale(glm::vec3(500, 10, 500));
+    value.x = array[0];
+    value.y = array[1];
+    value.z = array[2];
+
+    return value;
+}
+
+void Entry::loadSceneFromJson(std::string filename)
+{
+    std::ifstream file(filename);
+    if (file.fail())
+    {
+        std::cout << "Scene file not found " << filename << std::endl;
+        return;
+    }
+
+    nlohmann::json data = nlohmann::json::parse(file);
+
+    materialShader.loadProgram(data["materialShaderVert"], data["materialShaderFrag"]);
+
+    for (auto &meshData : data["meshes"])
+    {
+        ModelComponent &model = scene.createModelComponent(meshData["model"], meshData["diffuseTexture"]);
+        if (meshData["position"] != nullptr)
+        {
+            model.setPosition(getVec3FromnJsonArray(meshData["position"]));
+        }
+        if (meshData["rotation"] != nullptr)
+        {
+            model.setRotation(getVec3FromnJsonArray(meshData["rotation"]));
+        }
+        if (meshData["scale"] != nullptr)
+        {
+            model.setScale(getVec3FromnJsonArray(meshData["scale"]));
+        }
+    }
+
+    for (auto &lightData : data["lights"])
+    {
+        std::string type = lightData["type"];
+        Light *light = nullptr;
+        if (type == "POINT")
+        {
+            light = renderer.createPointLight(
+                getVec3FromnJsonArray(lightData["position"]),
+                getVec3FromnJsonArray(lightData["color"]),
+                lightData["distAttenMax"],
+                lightData["intensity"]);
+
+            animatedLight = light;
+        }
+        if (type == "SPOT")
+        {
+            light = renderer.createDirectLight(
+                getVec3FromnJsonArray(lightData["position"]),
+                getVec3FromnJsonArray(lightData["direction"]),
+                getVec3FromnJsonArray(lightData["color"]),
+                lightData["beamAngle"],
+                lightData["distAttenMax"],
+                lightData["intensity"]);
+        }
+        if (light != nullptr && lightData["doesCastShadows"] != nullptr)
+        {
+            light->doesCastShadows = lightData["doesCastShadows"];
+        }
+    }
 }

@@ -1,0 +1,116 @@
+{
+    "materialShaderVert": "resources/shaders/lighting.vert",
+    "materialShaderFrag": "resources/shaders/lighting.frag",
+    "meshes": [
+        {
+            "model": "resources/Duck/Duck.gltf",
+            "diffuseTexture": "resources/Duck/DuckCM.png",
+            "position": [
+                -100,
+                0,
+                -40
+            ]
+        },
+        {
+            "model": "resources/Duck/Duck.gltf",
+            "diffuseTexture": "resources/Duck/DuckCM.png",
+            "position": [
+                100,
+                50,
+                0
+            ],
+            "rotation": [
+                0,
+                -20,
+                0
+            ]
+        },
+        {
+            "model": "resources/Duck/Duck.gltf",
+            "diffuseTexture": "resources/Duck/DuckCM.png",
+            "position": [
+                0,
+                0,
+                60
+            ],
+            "rotation": [
+                0,
+                -110,
+                0
+            ],
+            "scale": [
+                0.5,
+                0.5,
+                0.5
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                0,
+                1,
+                0
+            ],
+            "scale": [
+                500,
+                10,
+                500
+            ]
+        }
+    ],
+    "lights": [
+        {
+            "type": "POINT",
+            "position": [
+                0,
+                300,
+                0
+            ],
+            "color": [
+                1,
+                0,
+                0
+            ],
+            "distAttenMax": 600,
+            "intensity": 1
+        },
+        {
+            "type": "POINT",
+            "position": [
+                0,
+                50,
+                300
+            ],
+            "color": [
+                1,
+                1,
+                0
+            ],
+            "distAttenMax": 600,
+            "intensity": 2
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                100,
+                400,
+                100
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                0.8,
+                0.8,
+                1
+            ],
+            "beamAngle": 60,
+            "distAttenMax": 600,
+            "intensity": 2,
+            "doesCastShadows": true
+        }
+    ]
+}

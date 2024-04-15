@@ -106,15 +106,22 @@ void Renderer::setShaderGlobalAttributes(Shader *shader)
     glBindTexture(GL_TEXTURE_2D, shadowDepthMapId);
     shader->setUniform("lightDepthMap1", 1);
 
-    Light *shadowLight = nullptr;
+    Light *shadowLight = getFirstLightWithShadow();
+    if (shadowLight != nullptr)
+    {
+        shader->setUniform("lightViewMatrix", shadowLight->camera.getProjectionViewMatrix());
+    }
+}
+
+Light *Renderer::getFirstLightWithShadow()
+{
     for (const auto &light : lights)
     {
         if (light->doesCastShadows)
         {
-            shadowLight = light;
-            break;
+            return light;
         }
     }
 
-    shader->setUniform("lightViewMatrix", shadowLight->camera.getProjectionViewMatrix());
+    return nullptr;
 }

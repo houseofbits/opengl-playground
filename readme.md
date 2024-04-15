@@ -1,6 +1,6 @@
 ## Playing around with various OpenGL rendering techniques.
 
-Dependencies fro Linux
+Dependencies for Linux
 
 `sudo apt install libglm-dev`
 

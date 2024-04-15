@@ -6,6 +6,7 @@
 #include "../Renderer/Shader.h"
 #include <glm/mat4x4.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <string>
 
 class ModelComponent : public RenderableComponent
@@ -30,6 +31,14 @@ public:
     ModelComponent &setScale(glm::vec3 pos)
     {
         transform = glm::scale(transform, pos);
+
+        return *this;
+    }
+    ModelComponent &setRotation(glm::vec3 pos)
+    {
+        transform = glm::rotate(transform, glm::radians(pos.x), glm::vec3(1, 0, 0));
+        transform = glm::rotate(transform, glm::radians(pos.y), glm::vec3(0, 1, 0));
+        transform = glm::rotate(transform, glm::radians(pos.z), glm::vec3(0, 0, 1));
 
         return *this;
     }

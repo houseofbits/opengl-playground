@@ -13,6 +13,7 @@
 #include "WireframeRenderer/WireframeRenderer.h"
 #include "PostProcessRenderer/PostProcessRenderer.h"
 #include "Components/ModelComponent.h"
+#include <string>
 
 class Entry
 {
@@ -32,9 +33,9 @@ private:
     // Rotating point light
     Light *animatedLight;
     float animatedLightAngle;
-    Light *shadowCastingLight;
 
     void init();
+    void loadSceneFromJson(std::string);
 
 public:
     Entry();

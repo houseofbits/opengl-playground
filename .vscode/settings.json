@@ -63,7 +63,13 @@
         "valarray": "cpp",
         "bitset": "cpp",
         "regex": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "compare": "cpp",
+        "complex": "cpp",
+        "concepts": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp"
     },
     "workbench.tree.indent": 25,
     "workbench.tree.renderIndentGuides": "always",
