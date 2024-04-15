@@ -36,11 +36,16 @@ public:
 
     void renderDepth(Camera &camera, Shader &shader)
     {
+        // glEnable(GL_CULL_FACE);
+        // glCullFace(GL_FRONT);
+
         shader.setUniform("viewProjectionMatrix", camera.getProjectionViewMatrix());
         for (const auto &renderable : renderables)
         {
             shader.setUniform("modelMatrix", renderable->getTransform());
             renderable->render();
         }
+
+        glCullFace(GL_BACK);
     }
 };
