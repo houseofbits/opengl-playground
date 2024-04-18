@@ -1,6 +1,6 @@
 #include "Shader.h"
 #include "../Helper/Logging.h"
-#include "../Helper/RecursiveTextFileLoader.h"
+#include "../Helper/ShaderSourceLoader.h"
 #include <GL/glew.h>
 #include <vector>
 #include <string>
@@ -51,7 +51,7 @@ unsigned int Shader::loadShader(std::string filename)
 {
     unsigned int type = getShaderType(filename);
 
-    std::string sourceStr = RecursiveTextFileLoader::load(filename);
+    std::string sourceStr = ShaderSourceLoader::load(filename);
     const char *c_code = sourceStr.c_str();
 
     GLuint shaderHandle = glCreateShader(type);

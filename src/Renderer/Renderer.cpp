@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <iostream>
 #include <math.h>
+#include "../Helper/ShaderSourceLoader.h"
 
 Renderer::Renderer() : activeCamera(0)
 {
@@ -12,6 +13,10 @@ Renderer::Renderer() : activeCamera(0)
 
 void Renderer::init(Camera *camera)
 {
+    ShaderSourceLoader::registerGlobal("MAX_LIGHTS", MAX_LIGHTS);
+    ShaderSourceLoader::registerGlobal("LIGHTS_UNIFORM_BINDING_INDEX", LIGHTS_UNIFORM_BINDING_INDEX);
+    ShaderSourceLoader::registerGlobal("LIGHT_VIEWS_UNIFORM_BINDING_INDEX", LIGHT_VIEWS_UNIFORM_BINDING_INDEX);
+
     activeCamera = camera;
     initLightsBuffer();
 

@@ -6,6 +6,7 @@
 #include <list>
 #include <iostream>
 #include <glm/vec3.hpp>
+#include "../Helper/ShaderSourceLoader.h"
 
 class ShadowMapRenderer
 {
@@ -30,6 +31,8 @@ public:
 
     void init()
     {
+        ShaderSourceLoader::registerGlobal("MAX_SHADOW_ATLAS_FRAGMENTS_PER_PASS", MAX_SHADOW_ATLAS_FRAGMENTS_PER_PASS);
+
         depthShader.loadProgram(
             "resources/shaders/shadowAtlas.vert",
             "resources/shaders/shadowAtlas.frag",
