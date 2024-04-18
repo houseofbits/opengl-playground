@@ -22,5 +22,5 @@ void main()
     
     float color = pow(pow(value.z, 50), 100);
 
-    FragColor = vec4(vec3(color), 1.0);
+    FragColor = value;//vec4(vec3(color), 1.0);
 }

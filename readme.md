@@ -10,6 +10,10 @@ Dependencies for Linux
 
 `sudo apt install libglew-dev`
 
+History
 
-* Multiple point and spot lights with shadow cast from one of the spot lights. Shadow has PCF filtering.
-![Screenshot1](./docs/images/spot-light-shadow-map.png)
+-   Multiple spot lights casting shadows.
+    ![Screenshot2](./docs/images/multiple-spot-shadows.png)
+
+-   Multiple point and spot lights with shadow cast from one of the spot lights. Shadow has PCF filtering.
+    ![Screenshot1](./docs/images/spot-light-shadow-map.png)

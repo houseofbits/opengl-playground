@@ -30,13 +30,18 @@ public:
         if (target == TARGET_DEPTH)
         {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+            glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
         }
         else
         {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         }
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
@@ -51,9 +56,6 @@ public:
         else
         {
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, targetTextureId, 0);
-            // glDrawBuffer(GL_COLOR_ATTACHMENT0);
-            // glReadBuffer(GL_COLOR_ATTACHMENT0);
-
             glGenRenderbuffers(1, &renderbufferId);
             glBindRenderbuffer(GL_RENDERBUFFER, renderbufferId);
             glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
@@ -70,10 +72,9 @@ public:
             std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        // glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void beginRender()
+    void beginRenderPartial(unsigned int fromX, unsigned int fromY, unsigned int sizeX, unsigned int sizeY)
     {
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
@@ -81,13 +82,16 @@ public:
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferId);
         glBindTexture(GL_TEXTURE_2D, targetTextureId);
 
-        glViewport(0, 0, width, height);
+        glViewport(fromX, fromY, sizeX, sizeY);
+
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(fromX, fromY, sizeX, sizeY);
+
         glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (target == TARGET_DEPTH)
         {
-            // glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTextureId, 0);
             glClear(GL_DEPTH_BUFFER_BIT);
         }
         else
@@ -97,11 +101,25 @@ public:
         }
     }
 
+    void beginRender()
+    {
+        beginRenderPartial(0, 0, width, height);
+    }
+
     void end()
     {
-        // if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
-        // {
+        glDisable(GL_SCISSOR_TEST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        // }
+    }
+
+    void blit(unsigned int screenWidth, unsigned int screenHeight)
+    {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferId);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+        glBlitFramebuffer(0, 0, width, height,
+                          0, 0, screenWidth, screenHeight,
+                          GL_COLOR_BUFFER_BIT,
+                          GL_LINEAR);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
     }
 };

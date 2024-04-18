@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 #include <map>
 #include <glm/mat4x4.hpp>
@@ -12,11 +13,13 @@ class Shader
 private:
     unsigned int programId;
     std::map<std::string, int> uniformLocations;
-
-public:
-    void loadProgram(std::string vertexProgramFileName, std::string fragmentProgramFileName);
     unsigned int loadShader(std::string filename);
     unsigned int getShaderType(std::string filename);
+    void checkCompileError(unsigned int shader, std::string name);
+    void checkLinkingError(unsigned int shader);
+
+public:
+    void loadProgram(std::string vertexProgramFileName, std::string fragmentProgramFileName, std::string geometryProgramFileName = "");
     void use();
     void setUniform(const char *name, float x, float y, float z);
     void setUniform(const char *name, const glm::vec2 &v);

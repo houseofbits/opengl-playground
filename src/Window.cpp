@@ -23,7 +23,7 @@ void Window::create()
     windowFlags = SDL_WINDOW_OPENGL;
 
     sdlWindow = SDL_CreateWindow(
-        "SDLWindow",
+        "OpenGL-playground",
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
         viewportWidth,
@@ -49,6 +49,8 @@ void Window::create()
     glEnable(GL_MULTISAMPLE);
 
     eventManager->queueEvent(new WindowEvent(WindowEvent::Type::CREATE, this));
+
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 }
 
 void Window::destroy()

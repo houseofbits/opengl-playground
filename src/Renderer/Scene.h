@@ -48,4 +48,13 @@ public:
 
         glCullFace(GL_BACK);
     }
+
+    void renderWithTransform(Shader &shader)
+    {
+        for (const auto &renderable : renderables)
+        {
+            shader.setUniform("modelMatrix", renderable->getTransform());
+            renderable->render();
+        }
+    }
 };

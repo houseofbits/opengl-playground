@@ -1,0 +1,238 @@
+{
+    "materialShaderVert": "resources/shaders/lighting.vert",
+    "materialShaderFrag": "resources/shaders/lightingSpotShadows.frag",
+    "meshes": [
+        {
+            "model": "resources/Duck/Duck.gltf",
+            "diffuseTexture": "resources/Duck/DuckCM.png",
+            "position": [
+                -100,
+                0,
+                -40
+            ]
+        },
+        {
+            "model": "resources/Duck/Duck.gltf",
+            "diffuseTexture": "resources/Duck/DuckCM.png",
+            "position": [
+                100,
+                50,
+                0
+            ],
+            "rotation": [
+                0,
+                -20,
+                0
+            ]
+        },
+        {
+            "model": "resources/Duck/Duck.gltf",
+            "diffuseTexture": "resources/Duck/DuckCM.png",
+            "position": [
+                0,
+                0,
+                60
+            ],
+            "rotation": [
+                0,
+                -110,
+                0
+            ],
+            "scale": [
+                0.5,
+                0.5,
+                0.5
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                0,
+                1,
+                0
+            ],
+            "scale": [
+                500,
+                10,
+                500
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                0,
+                250,
+                -250
+            ],
+            "scale": [
+                500,
+                500,
+                10
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                -250,
+                250,
+                0
+            ],
+            "scale": [
+                10,
+                500,
+                500
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                250,
+                250,
+                0
+            ],
+            "scale": [
+                10,
+                500,
+                500
+            ]
+        }
+    ],
+    "lights": [
+        {
+            "type": "SPOT",
+            "position": [
+                100,
+                400,
+                100
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                1,
+                0,
+                0
+            ],
+            "beamAngle": 45,
+            "distAttenMax": 600,
+            "intensity": 2,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                -100,
+                400,
+                50
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                0,
+                0,
+                1
+            ],
+            "beamAngle": 60,
+            "distAttenMax": 600,
+            "intensity": 2,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                0,
+                400,
+                -150
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                1,
+                1,
+                0
+            ],
+            "beamAngle": 60,
+            "distAttenMax": 600,
+            "intensity": 1,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                50,
+                150,
+                300
+            ],
+            "direction": [
+                0,
+                0,
+                -1
+            ],
+            "color": [
+                1,
+                1,
+                1
+            ],
+            "beamAngle": 60,
+            "distAttenMax": 700,
+            "intensity": 1,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                0,
+                400,
+                -180
+            ],
+            "direction": [
+                -0.5,
+                -1,
+                0
+            ],
+            "color": [
+                1,
+                0,
+                1
+            ],
+            "beamAngle": 60,
+            "distAttenMax": 700,
+            "intensity": 3,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                100,
+                400,
+                0
+            ],
+            "direction": [
+                0.5,
+                -1,
+                -0.5
+            ],
+            "color": [
+                0.5,
+                0.5,
+                1
+            ],
+            "beamAngle": 80,
+            "distAttenMax": 700,
+            "intensity": 0.6,
+            "doesCastShadows": true
+        }
+    ]
+}

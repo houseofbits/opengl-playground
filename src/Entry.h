@@ -15,6 +15,8 @@
 #include "Components/ModelComponent.h"
 #include <string>
 
+class InputEvent;
+
 class Entry
 {
 private:
@@ -25,17 +27,24 @@ private:
     PostProcessRenderer imageRenderer;
     RenderTarget depthRenderTarget;
 
+    RenderTarget testColorRenderTarget;
+
     Scene scene;
     Camera camera;
     Shader materialShader;
     Shader depthShader;
 
+    ShadowMapRenderer shadowMapRenderer;
+
     // Rotating point light
     Light *animatedLight;
     float animatedLightAngle;
+    int testFramebuffer;
 
     void init();
     void loadSceneFromJson(std::string);
+
+    bool handleInputEvent(InputEvent *const event);
 
 public:
     Entry();

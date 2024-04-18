@@ -42,13 +42,15 @@ void Renderer::updateLights()
         if (light->type == Light::SPOT)
         {
             shaderLights[index].direction = light->direction;
-            shaderLights[index].beamAngle = light->beamAngle;
+            shaderLights[index].beamAngle = glm::radians(light->beamAngle);
         }
 
         if (light->doesCastShadows && light->type == Light::SPOT)
         {
             shaderLights[index].type = Light::SPOT_SHADOW;
         }
+
+        light->uniformBufferIndex = index;
 
         index++;
     }
@@ -83,12 +85,12 @@ Light *Renderer::createDirectLight(glm::vec3 pos, glm::vec3 direction, glm::vec3
 
     light->type = Light::SPOT;
     light->position = pos;
-    light->direction = direction;
+    light->direction = glm::normalize(direction);
     light->color = color;
     light->distAttenMin = 0;
     light->distAttenMax = falloff;
     light->intensity = intensity;
-    light->beamAngle = (beamAngle * (M_PI / 180)) / 2.0;
+    light->beamAngle = beamAngle; //(beamAngle * (M_PI / 180)) / 2.0;
     light->doesCastShadows = false;
 
     lights.push_back(light);
@@ -96,20 +98,22 @@ Light *Renderer::createDirectLight(glm::vec3 pos, glm::vec3 direction, glm::vec3
     return light;
 }
 
-void Renderer::setShaderGlobalAttributes(Shader *shader)
+void Renderer::setShaderAttributes(Shader &shader)
 {
-    shader->setUniform("viewPosition", activeCamera->getPosition());
-    shader->setUniform("numActiveLights", numActiveLights);
-    shader->setUniform("lights", lightsUniformBufferId);
+    shader.setUniform("viewPosition", activeCamera->getPosition());
+    shader.setUniform("numActiveLights", numActiveLights);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, LIGHTS_UNIFORM_BINDING_INDEX, lightsUniformBufferId);
+    shader.setUniform("lights", lightsUniformBufferId);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, shadowDepthMapId);
-    shader->setUniform("lightDepthMap1", 1);
+    shader.setUniform("lightDepthMap1", 1);
 
     Light *shadowLight = getFirstLightWithShadow();
     if (shadowLight != nullptr)
     {
-        shader->setUniform("lightViewMatrix", shadowLight->camera.getProjectionViewMatrix());
+        shader.setUniform("lightViewMatrix", shadowLight->getProjectionViewMatrix());
     }
 }
 

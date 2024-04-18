@@ -6,8 +6,9 @@ const float PI_2 = 1.57079632679489661923;
 #define POINT_LIGHT 0 
 #define SPOT_LIGHT 1
 #define SPOT_LIGHT_WITH_SHADOW 4
+#define MAX_SHADOW_ATLAS_FRAGMENTS_PER_PASS 6   //This should be different than in a shadow pass
 
-const int MAX_LIGHTS = 10; 
+const int MAX_LIGHTS = 10;
 
 struct Light {
     vec3 position;
@@ -42,6 +43,8 @@ uniform vec3 viewPosition;
 uniform uint numActiveLights;
 uniform sampler2D texture1;
 uniform sampler2D lightDepthMap1;
+
+in vec4 fragmentPositionPerLightView[MAX_SHADOW_ATLAS_FRAGMENTS_PER_PASS];
 
 float rawShadowCalculation(vec4 fragPosLightSpace, float ndotl)
 {
@@ -177,4 +180,31 @@ void main()
     }
 
     FragColor = vec4(textureColor * lightColor, 1.0);
+
+
+
+    //Project shadowMap atlas onto scene
+    vec4 fragPosLightSpace = fragmentPositionPerLightView[0];
+    // vec4 fragPosLightSpace = fs_in.FragPosLightSpace;
+
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+    vec2 uv = projCoords.xy;
+    uv.x = uv.x * (1.0 / 6.0);
+
+    float shadow = 0;
+    if (uv.x > 1.0 || uv.x < 0.0 || uv.y > 1.0 || uv.y < 0.0) {
+        
+    } else {
+        float atlasDepth = texture(lightDepthMap1, uv).r;
+        float bias = 0.0000005;  
+        shadow = (projCoords.z - bias) > atlasDepth  ? 0.0 : 1.0; 
+    }
+
+    //atlasDepth = pow(pow(atlasDepth, 50), 100);
+    
+    FragColor = vec4(vec3(shadow), 1.0);
+
+    // FragColor = vec4(vec3(vsDistanceToLight / 500), 1.0);
+    // FragColor = vec4(atlasColor, 1.0);
 }

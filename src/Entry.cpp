@@ -3,10 +3,12 @@
 #include "Renderer/Texture2D.h"
 #include "../libs/tinygltf/json.hpp"
 #include <fstream>
+#include "Events/InputEvent.h"
 
 Entry::Entry() : window(&eventManager)
 {
     animatedLightAngle = 0;
+    eventManager.registerEventReceiver(this, &Entry::handleInputEvent);
 }
 
 void Entry::run()
@@ -31,27 +33,35 @@ void Entry::run()
             break;
         }
 
-        if (renderer.getFirstLightWithShadow())
-        {
-            depthRenderTarget.beginRender();
-            depthShader.use();
-            scene.renderDepth(renderer.getFirstLightWithShadow()->getCamera(), depthShader);
-            depthRenderTarget.end();
-        }
+        // if (renderer.getFirstLightWithShadow())
+        // {
+        //     depthRenderTarget.beginRender();
+        //     depthShader.use();
+        //     scene.renderDepth(renderer.getFirstLightWithShadow()->getCamera(), depthShader);
+        //     depthRenderTarget.end();
+        // }
+
+        renderer.updateLights();
+
+        shadowMapRenderer.beginRender(renderer.lights);
+        scene.renderWithTransform(shadowMapRenderer.depthShader);
+        shadowMapRenderer.endRender();
 
         glViewport(0, 0, window.viewportWidth, window.viewportHeight);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         materialShader.use();
-        renderer.updateLights();
-        renderer.setShaderGlobalAttributes(&materialShader);
+        renderer.setShaderAttributes(materialShader);
+        shadowMapRenderer.setShaderAttributes(materialShader);
 
         scene.render(camera, materialShader);
 
-        wireframeRenderer.draw(&renderer);
+        // wireframeRenderer.draw(&renderer);
 
         // imageRenderer.draw();
+
+        shadowMapRenderer.shadowAtlas.blit(window.viewportWidth, window.viewportHeight / 4);
 
         window.doubleBuffer();
 
@@ -65,6 +75,13 @@ void Entry::run()
 }
 
 /**
+ * TODO
+ *  - Shadow map atlas as a depth map
+ *  - Pass light view matrices to the vertex shader and calculate lightSpaceFragmentPos for every light
+ *  - Calculate shadow in FS as normal
+ *  - For point lights will have 6 shadow atlas records with index to the corresponding light source
+ *  - Possibility to exclude some of point light faces manually or by some clever optimization
+ *
  *  Implement
  *  - Point light shadow maps
  *  - Shadow maps for multiple lights
@@ -82,17 +99,21 @@ void Entry::init()
 
     wireframeRenderer.init();
 
-    depthRenderTarget.create(RenderTarget::TARGET_DEPTH, 512, 512);
+    depthRenderTarget.create(RenderTarget::TARGET_DEPTH, 128, 128);
+    testColorRenderTarget.create(RenderTarget::TARGET_COLOR, 128 * 6, 128);
 
     camera.registerEventHandlers(&eventManager);
 
+    shadowMapRenderer.init();
     renderer.init(&camera);
 
     imageRenderer.init(glm::vec4(0, 0, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimage.frag");
-    imageRenderer.textureId = depthRenderTarget.targetTextureId;
-    renderer.shadowDepthMapId = depthRenderTarget.targetTextureId;
+    imageRenderer.textureId = testColorRenderTarget.targetTextureId;           //.targetTextureId;
+    renderer.shadowDepthMapId = shadowMapRenderer.shadowAtlas.targetTextureId; //.targetTextureId;
 
-    loadSceneFromJson("resources/scenes/ducks-n-lights.json");
+    // loadSceneFromJson("resources/scenes/ducks-n-lights.json");
+    loadSceneFromJson("resources/scenes/multiple-spot-lights.json");
+    // loadSceneFromJson("resources/scenes/single-spot-light.json");
 }
 
 glm::vec3 getVec3FromnJsonArray(nlohmann::json::array_t array)
@@ -165,4 +186,22 @@ void Entry::loadSceneFromJson(std::string filename)
             light->doesCastShadows = lightData["doesCastShadows"];
         }
     }
+}
+
+bool Entry::handleInputEvent(InputEvent *const event)
+{
+    if (event->type == InputEvent::KEYDOWN)
+    {
+        if (event->keyCode == 30)
+        {
+            testFramebuffer = 1;
+        }
+        if (event->keyCode == 31)
+        {
+            testFramebuffer = 2;
+        }
+        // std::cout << event->keyCode << std::endl;
+    }
+
+    return true;
 }

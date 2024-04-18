@@ -1,5 +1,6 @@
 #include "Shader.h"
 #include "../Helper/Logging.h"
+#include "../Helper/RecursiveTextFileLoader.h"
 #include <GL/glew.h>
 #include <vector>
 #include <string>
@@ -50,42 +51,28 @@ unsigned int Shader::loadShader(std::string filename)
 {
     unsigned int type = getShaderType(filename);
 
-    std::ifstream file(filename, std::ios::in);
-    if (!file)
-    {
-        Logging::write("Shader file not found " + filename);
-
-        return 0;
-    }
-
-    std::stringstream source;
-    source << file.rdbuf();
-    std::string sourceStr = source.str();
+    std::string sourceStr = RecursiveTextFileLoader::load(filename);
     const char *c_code = sourceStr.c_str();
 
     GLuint shaderHandle = glCreateShader(type);
     glShaderSource(shaderHandle, 1, &c_code, NULL);
     glCompileShader(shaderHandle);
 
-    GLint success;
-    glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        GLchar infoLog[512];
-        glGetShaderInfoLog(shaderHandle, sizeof(infoLog), nullptr, infoLog);
-        Logging::write("Shader compilation failed " + filename);
-        Logging::write(infoLog);
-
-        return 0;
-    }
+    checkCompileError(shaderHandle, filename);
 
     return shaderHandle;
 }
 
-void Shader::loadProgram(std::string vertexProgramFileName, std::string fragmentProgramFileName)
+void Shader::loadProgram(std::string vertexProgramFileName, std::string fragmentProgramFileName, std::string geometryProgramFileName)
 {
     unsigned int vertexShaderId = loadShader(vertexProgramFileName);
     unsigned int fragmentShaderId = loadShader(fragmentProgramFileName);
+    unsigned int geometryShaderId = 0;
+
+    if (geometryProgramFileName.size() > 0)
+    {
+        geometryShaderId = loadShader(geometryProgramFileName);
+    }
 
     if (!vertexShaderId || !fragmentShaderId)
     {
@@ -95,17 +82,13 @@ void Shader::loadProgram(std::string vertexProgramFileName, std::string fragment
     programId = glCreateProgram();
     glAttachShader(programId, vertexShaderId);
     glAttachShader(programId, fragmentShaderId);
+    if (geometryShaderId != 0)
+    {
+        glAttachShader(programId, geometryShaderId);
+    }
     glLinkProgram(programId);
 
-    int success;
-    glGetProgramiv(programId, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        GLchar infoLog[512];
-        glGetShaderInfoLog(programId, sizeof(infoLog), nullptr, infoLog);
-        Logging::write("Shader program linking failed " + vertexProgramFileName + ", " + fragmentProgramFileName);
-        Logging::write(infoLog);
-    }
+    checkLinkingError(programId);
 
     glDeleteShader(vertexShaderId);
     glDeleteShader(fragmentShaderId);
@@ -185,4 +168,29 @@ int Shader::getUniformLocation(const char *name)
     }
 
     return uniformLocations[name];
+}
+
+void Shader::checkCompileError(unsigned int shader, std::string name)
+{
+    GLint success;
+    GLchar infoLog[1024];
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+        std::cout << name << std::endl;
+        std::cout << "COMPILATION FAILED " << infoLog << std::endl;
+    }
+}
+
+void Shader::checkLinkingError(unsigned int shader)
+{
+    GLint success;
+    GLchar infoLog[1024];
+    glGetProgramiv(shader, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+        std::cout << "LINKING FAILED " << infoLog << std::endl;
+    }
 }

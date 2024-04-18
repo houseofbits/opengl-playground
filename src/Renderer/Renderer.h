@@ -13,6 +13,9 @@ class Renderer
 public:
     Renderer();
 
+    static const unsigned int LIGHTS_UNIFORM_BINDING_INDEX = 1;
+    static const unsigned int LIGHT_VIEWS_UNIFORM_BINDING_INDEX = 2;
+
     static const unsigned int MAX_LIGHTS = 10;
 
     Camera *activeCamera;
@@ -29,6 +32,6 @@ public:
     void init(Camera *camera);
     void initLightsBuffer();
     void updateLights();
-    void setShaderGlobalAttributes(Shader *shader);
+    void setShaderAttributes(Shader &shader);
     Light *getFirstLightWithShadow();
 };
