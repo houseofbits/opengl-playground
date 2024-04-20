@@ -1,0 +1,242 @@
+{
+    "materialShaderVert": "resources/shaders/lighting.vert",
+    "materialShaderFrag": "resources/shaders/lightingSpotShadows.frag",
+    "meshes": [
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                0,
+                1,
+                0
+            ],
+            "scale": [
+                500,
+                10,
+                500
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                0,
+                250,
+                -250
+            ],
+            "scale": [
+                500,
+                500,
+                10
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                -250,
+                250,
+                0
+            ],
+            "scale": [
+                10,
+                500,
+                500
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                250,
+                250,
+                0
+            ],
+            "scale": [
+                10,
+                500,
+                500
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                -50,
+                250,
+                50
+            ],
+            "scale": [
+                30,
+                500,
+                30
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                50,
+                250,
+                50
+            ],
+            "scale": [
+                30,
+                500,
+                30
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                -50,
+                250,
+                -50
+            ],
+            "scale": [
+                30,
+                500,
+                30
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                50,
+                250,
+                -50
+            ],
+            "scale": [
+                30,
+                500,
+                30
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                -50,
+                250,
+                -130
+            ],
+            "scale": [
+                30,
+                500,
+                30
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                50,
+                250,
+                -130
+            ],
+            "scale": [
+                30,
+                500,
+                30
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                -50,
+                250,
+                130
+            ],
+            "scale": [
+                30,
+                500,
+                30
+            ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                50,
+                250,
+                130
+            ],
+            "scale": [
+                30,
+                500,
+                30
+            ]
+        }
+    ],
+    "lights": [
+        {
+            "type": "SPOT",
+            "position": [
+                0,
+                300,
+                0
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                1,
+                1,
+                0.5
+            ],
+            "beamAngle": 45,
+            "distAttenMax": 1000,
+            "intensity": 2,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                0,
+                300,
+                0
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                1,
+                1,
+                0.5
+            ],
+            "beamAngle": 90,
+            "distAttenMax": 500,
+            "intensity": 2,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                200,
+                300,
+                -200
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                0,
+                0,
+                1
+            ],
+            "beamAngle": 90,
+            "distAttenMax": 500,
+            "intensity": 1,
+            "doesCastShadows": true
+        }
+    ]
+}

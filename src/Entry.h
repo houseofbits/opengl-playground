@@ -32,8 +32,6 @@ private:
     Scene scene;
     Camera camera;
     Shader materialShader;
-    Shader depthShader;
-
     ShadowMapRenderer shadowMapRenderer;
 
     // Rotating point light

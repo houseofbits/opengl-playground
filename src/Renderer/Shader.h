@@ -15,7 +15,7 @@ private:
     std::map<std::string, int> uniformLocations;
     unsigned int loadShader(std::string filename);
     unsigned int getShaderType(std::string filename);
-    void checkCompileError(unsigned int shader, std::string name);
+    void checkCompileError(unsigned int shader, std::string name, std::string source);
     void checkLinkingError(unsigned int shader);
 
 public:

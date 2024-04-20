@@ -19,7 +19,7 @@ in VS_OUT {
 uniform vec3 viewPosition;
 // uniform uint numActiveLights;
 uniform sampler2D texture1;
-uniform sampler2D lightDepthMap1;
+uniform sampler2D shadowDepthAtlas;
 
 in vec4 fragmentPositionPerLightView[6];
 
@@ -42,9 +42,37 @@ vec2 poissonDisk[16] = vec2[](
    vec2( 0.14383161, -0.14100790 ) 
 );
 
+vec3 getProjectedCoords(LightViewStructure lightView, vec4 lightSpacePos)
+{
+    vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    projCoords.x = (projCoords.x * lightView.atlasSize.x) + lightView.atlasPos.x;
+    projCoords.y = (projCoords.y * lightView.atlasSize.y) + lightView.atlasPos.y;
+
+    return projCoords;
+}
+
+bool projCoordsClip(LightViewStructure lightView, vec3 projCoords)
+{
+    if(projCoords.z > 1.0) {
+        return false;
+    }
+
+    if (projCoords.x < lightView.atlasPos.x 
+        || projCoords.x > (lightView.atlasPos.x + lightView.atlasSize.x) 
+        || projCoords.y < lightView.atlasPos.y 
+        || projCoords.y > (lightView.atlasPos.y + lightView.atlasSize.y)) {
+
+        return false;
+    }
+
+    return true;    
+}
+
 float sampleShadow(vec3 projCoords, float bias)
 {
-    float depth = texture(lightDepthMap1, projCoords.xy).r; 
+    float depth = texture(shadowDepthAtlas, projCoords.xy).r; 
     return projCoords.z - bias > depth ? 0.0 : 1.0;    
 }
 
@@ -60,7 +88,8 @@ float random(vec3 seed, int i){
 	return fract(sin(dot_product) * 43758.5453);
 }
 
-float rawShadow(vec4 fragPosLightSpace, vec4 atlasRect, float ndotl)
+
+float rawShadow2(vec4 fragPosLightSpace, vec2 atlasPos, vec2 atlasSize, float ndotl)
 {
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
@@ -70,41 +99,38 @@ float rawShadow(vec4 fragPosLightSpace, vec4 atlasRect, float ndotl)
     }
 
     vec2 uv = projCoords.xy;
-    uv.x = (uv.x * atlasRect.z) + atlasRect.x;
-    uv.y = (uv.y * atlasRect.w) + atlasRect.y;
+    uv.x = (uv.x * atlasSize.x) + atlasPos.x;
+    uv.y = (uv.y * atlasSize.y) + atlasPos.y;
 
 
-    if (uv.x < atlasRect.x || uv.x > (atlasRect.x + atlasRect.z) || uv.y < atlasRect.y || uv.y > (atlasRect.y + atlasRect.w)) {
+    if (uv.x < atlasPos.x || uv.x > (atlasPos.x + atlasSize.x) || uv.y < atlasPos.y || uv.y > (atlasPos.y + atlasSize.y)) {
         return 0.0;
     }
 
     float currentDepth = projCoords.z;
-    float depth = texture(lightDepthMap1, uv).r;
+    float depth = texture(shadowDepthAtlas, uv).r;
 
     float bias = 0.0000001 * tan(acos(clamp(ndotl, 0.0, 1.0)));
 
     float shadow = currentDepth - bias > depth ? 0.0 : 1.0;   
 
-    return shadow;  //pow(pow(depth, 100), 100);
+    return pow(pow(depth, 100), 100);
 }
 
-float poissonShadowCalculation(vec4 fragPosLightSpace, vec4 atlasRect, float ndotl)
+float rawShadow(vec3 projCoords, float ndotl)
 {
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    projCoords = projCoords * 0.5 + 0.5;
+    float currentDepth = projCoords.z;
+    float depth = texture(shadowDepthAtlas, projCoords.xy).r;
 
-    if(projCoords.z > 1.0) {
-        return 0.0;
-    }
+    float bias = 0.0000001 * tan(acos(clamp(ndotl, 0.0, 1.0)));
 
-    vec2 uv = projCoords.xy;
-    uv.x = (uv.x * atlasRect.z) + atlasRect.x;
-    uv.y = (uv.y * atlasRect.w) + atlasRect.y;
+    float shadow = currentDepth - bias > depth ? 0.0 : 1.0;   
 
-    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
-        return 0.0;
-    }
+    return shadow;//pow(pow(depth, 100), 100);
+}
 
+float poissonShadowCalculation(vec3 projCoords, float ndotl)
+{
     float currentDepth = projCoords.z;
 
     float bias = 0.000001 * tan(acos(clamp(ndotl, 0.0, 1.0)));
@@ -113,7 +139,7 @@ float poissonShadowCalculation(vec4 fragPosLightSpace, vec4 atlasRect, float ndo
     for (int i = 0;i < 16;i++){
         int index = i;  //int(random(fs_in.FragPos.xyz, i) * 1000)%16;
 
-        float depth = texture(lightDepthMap1, uv + poissonDisk[index]/700.0).r; 
+        float depth = texture(shadowDepthAtlas, projCoords.xy + poissonDisk[index]/700.0).r; 
 
         if ( depth  <  currentDepth - bias ){
             shadow -= 0.0625;
@@ -123,27 +149,13 @@ float poissonShadowCalculation(vec4 fragPosLightSpace, vec4 atlasRect, float ndo
     return shadow;
 }
 
-float pcfShadowCalculation(vec4 fragPosLightSpace, vec4 atlasRect, float ndotl)
+float pcfShadowCalculation(vec3 projCoords, float ndotl)
 {
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    projCoords = projCoords * 0.5 + 0.5;
-
-    if(projCoords.z > 1.0) {
-        return 0.0;
-    }
-
-    projCoords.x = (projCoords.x * atlasRect.z) + atlasRect.x;
-    projCoords.y = (projCoords.y * atlasRect.w) + atlasRect.y;
-
-    if (projCoords.x < atlasRect.x || projCoords.x > (atlasRect.x + atlasRect.z) || projCoords.y < atlasRect.y || projCoords.y > (atlasRect.y + atlasRect.w)) {
-        return 0.0;
-    }
-
     float currentDepth = projCoords.z;
 
     float bias = 0.0000001 * tan(acos(clamp(ndotl, 0.0, 1.0)));
 
-    vec2 texelSize = 1.0 / textureSize(lightDepthMap1, 0);
+    vec2 texelSize = 1.0 / textureSize(shadowDepthAtlas, 0);
     float shadow = 0;
     for(int x = -1; x <= 1; ++x)
     {
@@ -169,10 +181,10 @@ void main()
     
     vec3 color = vec3(0.0);
 
-    for (uint index = 0; index < numberOfFragments; index++)
+    for (uint index = 0; index < numberOfLightViews; index++)
     {
         vec4 fragPosLightSpace = fragmentPositionPerLightView[index];
-        vec4 atlasRect = shadowFragments[index].atlasRect;
+        LightViewStructure lightView = lightViews[index];
         vec3 lightPosition = lights[index].position;
 
         vec3 toLight = lightPosition - fs_in.FragPos;
@@ -184,10 +196,16 @@ void main()
         //     continue;
         // }
 
-        // finalShadow += poissonShadowCalculation(fragPosLightSpace, atlasRect, ndotl);
-        finalShadow += pcfShadowCalculation(fragPosLightSpace, atlasRect, ndotl);
-        // finalShadow += pcfOffsetShadowCalculation(fragPosLightSpace, atlasRect, ndotl);
-        // finalShadow = rawShadow(fragPosLightSpace, atlasRect, ndotl);     
+        vec3 projCoords = getProjectedCoords(lightView, fragPosLightSpace);
+        // if (!projCoordsClip(lightView, projCoords)) {
+        //     continue;
+        // }
+
+        // finalShadow += poissonShadowCalculation(projCoords ndotl);
+        // finalShadow += pcfShadowCalculation(projCoords, ndotl);
+        // finalShadow += pcfOffsetShadowCalculation(projCoords, ndotl);
+        finalShadow = rawShadow(projCoords, ndotl);     
+        // finalShadow = rawShadow2(fragPosLightSpace, lightView.atlasPos, lightView.atlasSize, ndotl);
     }
     FragColor = vec4(vec3(finalShadow), 1.0);
     // FragColor = vec4(color, 1.0);

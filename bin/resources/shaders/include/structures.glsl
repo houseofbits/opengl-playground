@@ -1,9 +1,8 @@
+#define LIGHT_POINT_SOURCE = 1 << 0
+#define LIGHT_DIRECT_SOURCE = 1 << 1
+#define LIGHT_HAS_SHADOW = 1 << 2
 
-#define LIGHT_TYPE_POINT 0 
-#define LIGHT_TYPE_SPOT 1
-#define LIGHT_TYPE_SPOT_WITH_SHADOW 4
-
-struct Light {
+struct LightStructure {
     vec3 position;
     float falloff;    
 
@@ -11,18 +10,21 @@ struct Light {
     float intensity;
 
     vec3 direction;
-    uint type;
+    uint flags;
 
     float distAttenMin;
     float distAttenMax;
     float beamAngle;
-    float falloffAngle;    
+    float falloffAngle;  
+
+    vec2 shadowAtlasPos;
+    vec2 shadowAtlasSize;
+    mat4 projectionViewMatrix;
 };
 
-//Point light will have up to 6 views per light
-struct ShadowAtlasFragment {    
+struct LightViewStructure {    
     mat4 lightProjectionViewMatrix;
-    vec4 viewport;
-    vec4 atlasRect;
-    // uint lightIndex;
+    vec2 atlasPos;
+    vec2 atlasSize;
+    uint lightIndex;
 };

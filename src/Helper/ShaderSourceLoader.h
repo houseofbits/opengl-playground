@@ -17,10 +17,12 @@ public:
     {
         std::string fullSourceCode = loadRecursive(path);
 
+        fullSourceCode = replaceGlobals(fullSourceCode);
+
         // std::cout << "==================================" << path << std::endl;
         // std::cout << fullSourceCode << std::endl;
 
-        return replaceGlobals(fullSourceCode);
+        return fullSourceCode;
     }
 
     static std::string loadRecursive(std::string path)

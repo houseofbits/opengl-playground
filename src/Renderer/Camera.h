@@ -46,4 +46,5 @@ public:
     glm::mat4 &getViewMatrix() { return viewMatrix; }
     glm::mat4 &getProjectionMatrix() { return projectionMatrix; }
     glm::vec3 &getPosition() { return position; };
+    glm::vec3 &getDirection() { return direction; };
 };

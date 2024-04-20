@@ -1,5 +1,6 @@
 #include "Shader.h"
 #include "../Helper/Logging.h"
+#include "../Helper/Console.h"
 #include "../Helper/ShaderSourceLoader.h"
 #include <GL/glew.h>
 #include <vector>
@@ -58,7 +59,7 @@ unsigned int Shader::loadShader(std::string filename)
     glShaderSource(shaderHandle, 1, &c_code, NULL);
     glCompileShader(shaderHandle);
 
-    checkCompileError(shaderHandle, filename);
+    checkCompileError(shaderHandle, filename, sourceStr);
 
     return shaderHandle;
 }
@@ -170,7 +171,7 @@ int Shader::getUniformLocation(const char *name)
     return uniformLocations[name];
 }
 
-void Shader::checkCompileError(unsigned int shader, std::string name)
+void Shader::checkCompileError(unsigned int shader, std::string name, std::string source)
 {
     GLint success;
     GLchar infoLog[1024];
@@ -180,6 +181,19 @@ void Shader::checkCompileError(unsigned int shader, std::string name)
         glGetShaderInfoLog(shader, 1024, NULL, infoLog);
         std::cout << name << std::endl;
         std::cout << "COMPILATION FAILED " << infoLog << std::endl;
+        std::cout << "================================================================" << std::endl;
+        // std::cout << source << std::endl;
+
+        int i = 0;
+        std::string line;
+        std::istringstream iss(source);
+        for (std::string line; std::getline(iss, line);)
+        {
+            std::cout << i << ": " << FOREGRN << line << RESETTEXT << std::endl;
+            i++;
+        }
+
+        std::cout << "================================================================" << std::endl;
     }
 }
 

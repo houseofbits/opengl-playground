@@ -33,27 +33,23 @@ void Entry::run()
             break;
         }
 
-        // if (renderer.getFirstLightWithShadow())
-        // {
-        //     depthRenderTarget.beginRender();
-        //     depthShader.use();
-        //     scene.renderDepth(renderer.getFirstLightWithShadow()->getCamera(), depthShader);
-        //     depthRenderTarget.end();
-        // }
+        // renderer.generateLightsUniform(scene);
+        renderer.updateLights(scene);
+        renderer.renderShadowAtlas(scene);
 
-        renderer.updateLights();
+        // shadowMapRenderer.generateShadowAtlasViews(scene.lights);
 
-        shadowMapRenderer.beginRender(renderer.lights);
-        scene.renderWithTransform(shadowMapRenderer.depthShader);
-        shadowMapRenderer.endRender();
+        // shadowMapRenderer.renderShadowAtlas(scene);
 
         glViewport(0, 0, window.viewportWidth, window.viewportHeight);
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        (*scene.lights.begin())->position = camera.getPosition() - glm::vec3(0, 20, 0);
+        (*scene.lights.begin())->direction = camera.getDirection();
 
         materialShader.use();
         renderer.setShaderAttributes(materialShader);
-        shadowMapRenderer.setShaderAttributes(materialShader);
+        // shadowMapRenderer.setShaderAttributes(materialShader);
 
         scene.render(camera, materialShader);
 
@@ -61,7 +57,7 @@ void Entry::run()
 
         // imageRenderer.draw();
 
-        shadowMapRenderer.shadowAtlas.blit(window.viewportWidth, window.viewportHeight / 4);
+        shadowMapRenderer.shadowAtlas.blit(window.viewportWidth, window.viewportHeight);
 
         window.doubleBuffer();
 
@@ -95,8 +91,6 @@ void Entry::run()
  */
 void Entry::init()
 {
-    depthShader.loadProgram("resources/shaders/lightDepth.vert", "resources/shaders/lightDepth.frag");
-
     wireframeRenderer.init();
 
     depthRenderTarget.create(RenderTarget::TARGET_DEPTH, 128, 128);
@@ -104,16 +98,17 @@ void Entry::init()
 
     camera.registerEventHandlers(&eventManager);
 
-    shadowMapRenderer.init();
+    // shadowMapRenderer.init();
     renderer.init(&camera);
 
     imageRenderer.init(glm::vec4(0, 0, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimage.frag");
-    imageRenderer.textureId = testColorRenderTarget.targetTextureId;           //.targetTextureId;
-    renderer.shadowDepthMapId = shadowMapRenderer.shadowAtlas.targetTextureId; //.targetTextureId;
+    imageRenderer.textureId = testColorRenderTarget.targetTextureId; //.targetTextureId;
+    // renderer.shadowDepthMapId = shadowMapRenderer.shadowAtlas.targetTextureId; //.targetTextureId;
 
     // loadSceneFromJson("resources/scenes/ducks-n-lights.json");
-    loadSceneFromJson("resources/scenes/multiple-spot-lights.json");
+    // loadSceneFromJson("resources/scenes/multiple-spot-lights.json");
     // loadSceneFromJson("resources/scenes/single-spot-light.json");
+    loadSceneFromJson("resources/scenes/hall-with-columns.json");
 }
 
 glm::vec3 getVec3FromnJsonArray(nlohmann::json::array_t array)
@@ -163,7 +158,7 @@ void Entry::loadSceneFromJson(std::string filename)
         Light *light = nullptr;
         if (type == "POINT")
         {
-            light = renderer.createPointLight(
+            light = scene.createPointLight(
                 getVec3FromnJsonArray(lightData["position"]),
                 getVec3FromnJsonArray(lightData["color"]),
                 lightData["distAttenMax"],
@@ -173,7 +168,7 @@ void Entry::loadSceneFromJson(std::string filename)
         }
         if (type == "SPOT")
         {
-            light = renderer.createDirectLight(
+            light = scene.createDirectLight(
                 getVec3FromnJsonArray(lightData["position"]),
                 getVec3FromnJsonArray(lightData["direction"]),
                 getVec3FromnJsonArray(lightData["color"]),

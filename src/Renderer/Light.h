@@ -6,35 +6,68 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Camera.h"
 
+enum LightUniformFlags
+{
+    POINT_SOURCE = 1 << 0,
+    DIRECT_SOURCE = 1 << 1,
+    HAS_SHADOW = 1 << 2,
+};
+
+typedef struct alignas(16)
+{
+    glm::vec3 position;
+    float falloff;
+
+    glm::vec3 color;
+    float intensity;
+
+    glm::vec3 direction;
+    unsigned int flags;
+
+    float distAttenMin;
+    float distAttenMax;
+    float beamAngle;
+    float falloffAngle;
+
+    glm::vec2 shadowAtlasPos;
+    glm::vec2 shadowAtlasSize;
+    glm::mat4 projectionViewMatrix;
+
+} LightUniform;
+
+// Defines light projection view matrices and index into shadow atlas
+// for shadow calculation
+// Spot light has one view. Point light will have up to 6 views
+// Additionally, there is a possibility to split the light frustum into multiple views
+// for lights covering large area, to get better shadow quality.
+class LightView
+{
+public:
+    glm::mat4 viewMatrix = glm::mat4(1.0);
+    glm::mat4 projectionMatrix = glm::mat4(1.0);
+    glm::mat4 projectionViewMatrix = glm::mat4(1.0);
+    unsigned int shadowAtlasIndex = 0;
+    unsigned int uniformBufferIndex = 0;
+
+    // bool shouldUpdate = {true};      //TODO
+    // bool shouldRelocateAtlas = {true};
+
+    void calculateProjectionViewMatrix(float fov, glm::vec3 position, glm::vec3 direction, float farPlane)
+    {
+        projectionMatrix = glm::perspective<float>(glm::radians(fov), 1.0, 0.01, farPlane);
+        viewMatrix = glm::lookAt(position, position + direction, glm::vec3(1, 1, 1));
+        projectionViewMatrix = projectionMatrix * viewMatrix;
+    }
+};
+
 class Light
 {
 public:
-    static const unsigned int MAX_VIEWS = 6;
-
-    typedef struct alignas(16)
-    {
-        glm::vec3 position;
-        float falloff;
-
-        glm::vec3 color;
-        float intensity;
-
-        glm::vec3 direction;
-        unsigned int type;
-
-        float distAttenMin;
-        float distAttenMax;
-        float beamAngle;
-        float falloffAngle;
-    } ShaderLight;
-
     enum Type
     {
         POINT = 0,
         SPOT = 1,
-        // DIRECT = 2,
-        // POINT_SHADOW  = 3,
-        SPOT_SHADOW = 4,
+        DIRECT = 2,
     };
 
     Type type;
@@ -44,47 +77,25 @@ public:
     float intensity;
     float distAttenMin;
     float distAttenMax;
-    float beamAngle;    // Half of the angle in radians
-    float falloffAngle; // Half of the angle in radians
+    float beamAngle;
+    float falloffAngle;
     bool doesCastShadows;
-    // Camera camera;
 
     // Multilight stuff
     // glm::mat4 viewMatrices[MAX_VIEWS]; // Multiple view matrices in case of point light
     // glm::vec4 shadowAtlasPosition[MAX_VIEWS];
 
+    // Obsolette stuff
     glm::mat4 viewMatrix;
     glm::mat4 projectionMatrix;
     glm::mat4 projectionViewMatrix;
-    glm::vec4 shadowAtlasPosition;
-
     unsigned int uniformBufferIndex;
+    glm::mat4 &getProjectionViewMatrix();
 
-    // Camera &getCamera()
-    // {
-    //     glm::vec3 up = glm::cross(direction, glm::vec3(1, 0, 0));
+    // New stuff
+    LightView views[6];
+    unsigned int numberOfViews;
 
-    //     camera.setProjectionMatrix(glm::perspective<float>(glm::radians(60.0), 1.0, 0.01, distAttenMax));
-    //     camera.setViewMatrix(glm::lookAt(position, position + direction, glm::vec3(1, 0, 0)));
-
-    //     return camera;
-    // }
-
-    glm::mat4 &getProjectionViewMatrix()
-    {
-        projectionMatrix = glm::perspective<float>(glm::radians(beamAngle), 1.0, 0.01, distAttenMax);
-        viewMatrix = glm::lookAt(position, position + direction, glm::vec3(1, 0, 0));
-
-        projectionViewMatrix = projectionMatrix * viewMatrix;
-
-        return projectionViewMatrix;
-    }
-
-    void setShadowAtlasPosition(float x, float y, float width, float height)
-    {
-        shadowAtlasPosition.x = x;
-        shadowAtlasPosition.y = y;
-        shadowAtlasPosition.z = width;
-        shadowAtlasPosition.w = height;
-    }
+    void generateViews();
+    unsigned int getLightUniformFlags(bool withShadows);
 };

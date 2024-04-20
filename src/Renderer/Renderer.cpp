@@ -8,99 +8,53 @@
 
 Renderer::Renderer() : activeCamera(0)
 {
-    std::cout << "Size: " << sizeof(Light::ShaderLight) << std::endl;
-}
-
-void Renderer::init(Camera *camera)
-{
     ShaderSourceLoader::registerGlobal("MAX_LIGHTS", MAX_LIGHTS);
     ShaderSourceLoader::registerGlobal("LIGHTS_UNIFORM_BINDING_INDEX", LIGHTS_UNIFORM_BINDING_INDEX);
     ShaderSourceLoader::registerGlobal("LIGHT_VIEWS_UNIFORM_BINDING_INDEX", LIGHT_VIEWS_UNIFORM_BINDING_INDEX);
 
+    std::cout << "LightUniform size: " << sizeof(LightUniform) << std::endl;
+}
+
+void Renderer::init(Camera *camera)
+{
+    shadowMapRenderer.init();
     activeCamera = camera;
     initLightsBuffer();
-
-    testTextureId = Texture2D::createTexture("resources/textures/checker-map.png");
 }
 
 void Renderer::initLightsBuffer()
 {
     glGenBuffers(1, &lightsUniformBufferId);
     glBindBuffer(GL_UNIFORM_BUFFER, lightsUniformBufferId);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(Light::ShaderLight) * MAX_LIGHTS, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(LightUniform) * MAX_LIGHTS, NULL, GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, lightsUniformBufferId);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void Renderer::updateLights()
+void Renderer::generateLightsUniform(Scene &scene)
 {
     unsigned int index = 0;
-    for (auto const &light : lights)
+    for (auto const &light : scene.lights)
     {
-        shaderLights[index].type = light->type;
-        shaderLights[index].position = light->position;
-        shaderLights[index].color = light->color;
-        shaderLights[index].distAttenMax = light->distAttenMax;
-        shaderLights[index].distAttenMin = light->distAttenMin;
-        shaderLights[index].intensity = light->intensity;
-
-        if (light->type == Light::SPOT)
-        {
-            shaderLights[index].direction = light->direction;
-            shaderLights[index].beamAngle = glm::radians(light->beamAngle);
-        }
-
-        if (light->doesCastShadows && light->type == Light::SPOT)
-        {
-            shaderLights[index].type = Light::SPOT_SHADOW;
-        }
+        lightsUniformData[index].flags = light->getLightUniformFlags(true);
+        lightsUniformData[index].position = light->position;
+        lightsUniformData[index].color = light->color;
+        lightsUniformData[index].distAttenMax = light->distAttenMax;
+        lightsUniformData[index].distAttenMin = light->distAttenMin;
+        lightsUniformData[index].intensity = light->intensity;
+        lightsUniformData[index].direction = light->direction;
+        lightsUniformData[index].beamAngle = glm::radians(light->beamAngle);
 
         light->uniformBufferIndex = index;
 
         index++;
     }
 
-    numActiveLights = lights.size();
+    numActiveLights = index;
 
     glBindBuffer(GL_UNIFORM_BUFFER, lightsUniformBufferId);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light::ShaderLight) * numActiveLights, shaderLights);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(LightUniform) * numActiveLights, lightsUniformData);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
-}
-
-Light *Renderer::createPointLight(glm::vec3 pos, glm::vec3 color, float falloff, float intensity)
-{
-    Light *light = new Light();
-
-    light->type = Light::POINT;
-    light->position = pos;
-    light->color = color;
-    light->distAttenMin = 0;
-    light->distAttenMax = falloff;
-    light->intensity = intensity;
-    light->doesCastShadows = false;
-
-    lights.push_back(light);
-
-    return light;
-}
-
-Light *Renderer::createDirectLight(glm::vec3 pos, glm::vec3 direction, glm::vec3 color, float beamAngle, float falloff, float intensity)
-{
-    Light *light = new Light();
-
-    light->type = Light::SPOT;
-    light->position = pos;
-    light->direction = glm::normalize(direction);
-    light->color = color;
-    light->distAttenMin = 0;
-    light->distAttenMax = falloff;
-    light->intensity = intensity;
-    light->beamAngle = beamAngle; //(beamAngle * (M_PI / 180)) / 2.0;
-    light->doesCastShadows = false;
-
-    lights.push_back(light);
-
-    return light;
 }
 
 void Renderer::setShaderAttributes(Shader &shader)
@@ -112,25 +66,78 @@ void Renderer::setShaderAttributes(Shader &shader)
     shader.setUniform("lights", lightsUniformBufferId);
 
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, shadowDepthMapId);
-    shader.setUniform("lightDepthMap1", 1);
+    glBindTexture(GL_TEXTURE_2D, shadowMapRenderer.shadowAtlas.targetTextureId);
+    // glBindTexture(GL_TEXTURE_2D, shadowDepthMapId);
+    shader.setUniform("shadowDepthAtlas", 1);
 
-    Light *shadowLight = getFirstLightWithShadow();
-    if (shadowLight != nullptr)
-    {
-        shader.setUniform("lightViewMatrix", shadowLight->getProjectionViewMatrix());
-    }
+    shadowMapRenderer.setShaderAttributes(shader);
 }
 
-Light *Renderer::getFirstLightWithShadow()
+void Renderer::updateLights(Scene &scene)
 {
-    for (const auto &light : lights)
+    unsigned int shadowMapSize = 256;
+
+    unsigned int uniformIndex = 0;
+    for (auto const &light : scene.lights)
     {
-        if (light->doesCastShadows)
+        light->generateViews(); // TODO Update only when necesarry
+
+        for (unsigned int i = 0; i < light->numberOfViews; i++)
         {
-            return light;
+            if (light->doesCastShadows)
+            {
+                int index = shadowMapRenderer.atlasGraph.occupyFirstAvailable(shadowMapSize, shadowMapSize);
+                light->views[i].shadowAtlasIndex = index > 0 ? index : 0;
+                if (index > 0)
+                {
+                    AtlasNode &node = shadowMapRenderer.atlasGraph.nodes[index];
+                    populateUniformAtlasAttributes(lightsUniformData[uniformIndex], node);
+                }
+            }
+
+            populateUniform(lightsUniformData[uniformIndex], *light, light->views[i]);
+
+            light->uniformBufferIndex = uniformIndex;
+
+            uniformIndex++;
         }
     }
 
-    return nullptr;
+    numActiveLights = uniformIndex;
+
+    glBindBuffer(GL_UNIFORM_BUFFER, lightsUniformBufferId);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(LightUniform) * numActiveLights, lightsUniformData);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+void Renderer::populateUniform(LightUniform &uniform, Light &light, LightView &view)
+{
+    bool hasShadowAtlasIndex = view.shadowAtlasIndex > 0;
+
+    uniform.flags = light.getLightUniformFlags(hasShadowAtlasIndex);
+    uniform.position = light.position;
+    uniform.color = light.color;
+    uniform.distAttenMax = light.distAttenMax;
+    uniform.distAttenMin = light.distAttenMin;
+    uniform.intensity = light.intensity;
+    uniform.direction = light.direction;
+    uniform.beamAngle = glm::radians(light.beamAngle);
+    uniform.projectionViewMatrix = view.projectionViewMatrix;
+}
+
+void Renderer::populateUniformAtlasAttributes(LightUniform &uniform, AtlasNode &node)
+{
+    uniform.shadowAtlasPos = glm::vec2(
+        (float)node.left / (float)ShadowMapRenderer::ATLAS_WIDTH,
+        (float)node.top / (float)ShadowMapRenderer::ATLAS_HEIGHT);
+
+    uniform.shadowAtlasSize = glm::vec2(
+        (float)node.width / (float)ShadowMapRenderer::ATLAS_WIDTH,
+        (float)node.height / (float)ShadowMapRenderer::ATLAS_HEIGHT);
+}
+
+void Renderer::renderShadowAtlas(Scene &scene)
+{
+    shadowMapRenderer.generateShadowAtlasViews(scene.lights);
+    shadowMapRenderer.renderShadowAtlas(scene);
 }
