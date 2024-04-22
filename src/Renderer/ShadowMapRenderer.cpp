@@ -4,86 +4,38 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
 
-ShadowMapRenderer::ShadowMapRenderer()
+ShadowMapRenderer::ShadowMapRenderer() : depthShader(), shadowAtlas(), atlasGraph(), debugImageRenderer()
 {
     ShaderSourceLoader::registerGlobal("MAX_LIGHTVIEWS_PER_PASS", MAX_LIGHTVIEWS_PER_PASS);
 }
 
 void ShadowMapRenderer::init()
 {
+    shadowAtlas.create(RenderTarget::TARGET_DEPTH, ATLAS_WIDTH, ATLAS_HEIGHT);
+    // shadowAtlas.create(RenderTarget::TARGET_COLOR, ATLAS_WIDTH, ATLAS_HEIGHT);
+    atlasGraph.generate(ATLAS_WIDTH, ATLAS_HEIGHT);
+
+    generateAtlasRegionUniformBuffer();
+
     depthShader.loadProgram(
         "resources/shaders/shadowAtlas.vert",
         "resources/shaders/shadowAtlas.frag",
         "resources/shaders/shadowAtlas.geom");
 
-    shadowAtlas.create(RenderTarget::TARGET_DEPTH, ATLAS_WIDTH, ATLAS_HEIGHT);
-    // shadowAtlas.create(RenderTarget::TARGET_COLOR, ATLAS_WIDTH, ATLAS_HEIGHT);
-    atlasGraph.generate(ATLAS_WIDTH, ATLAS_HEIGHT);
+    debugImageRenderer.init(glm::vec4(-1, -1, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimageDepth.frag");
+    debugImageRenderer.textureId = shadowAtlas.targetTextureId;
+
     // atlasGraph.debug();
-    // shadowAtlas.isClearBuffersEnabled = false;
-
-    // std::cout << "LightViewUniform size: " << sizeof(LightViewUniform) << std::endl;
-
-    glGenBuffers(1, &lightViewsUniformBufferId);
-    glBindBuffer(GL_UNIFORM_BUFFER, lightViewsUniformBufferId);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(LightViewUniform) * MAX_LIGHTVIEWS_PER_PASS, NULL, GL_DYNAMIC_DRAW);
-    glBindBufferBase(GL_UNIFORM_BUFFER, 1, lightViewsUniformBufferId);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void ShadowMapRenderer::generateShadowAtlasViews(std::list<Light *> &lights)
+void ShadowMapRenderer::beginRender()
 {
-    atlasGraph.clearAll();
-    unsigned int regionSize = 512;
-    unsigned int posX = 0;
-    unsigned int index = 0;
-    for (const auto &light : lights)
-    {
-        if (light->doesCastShadows && light->type == Light::SPOT)
-        {
-            int atlasIndex = atlasGraph.occupyFirstAvailable(regionSize, regionSize);
-            AtlasNode &node = atlasGraph.nodes[atlasIndex];
-
-            lightViewUniformData[index].lightProjectionViewMatrix = light->getProjectionViewMatrix();
-            lightViewUniformData[index].atlasPos = glm::vec2((float)node.left / (float)ATLAS_WIDTH, (float)node.top / (float)ATLAS_HEIGHT);
-            lightViewUniformData[index].atlasSize = glm::vec2((float)node.width / (float)ATLAS_WIDTH, (float)node.height / (float)ATLAS_HEIGHT);
-            lightViewUniformData[index].lightIndex = light->uniformBufferIndex;
-
-            atlasViewports[index] = glm::uvec4(node.left, node.top, node.width, node.height);
-
-            index++;
-            posX += regionSize;
-            if (posX >= ATLAS_WIDTH)
-            {
-                break;
-            }
-        }
-    }
-
-    numberOfLightViews = index;
-
-    glBindBuffer(GL_UNIFORM_BUFFER, lightViewsUniformBufferId);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(LightViewUniform) * numberOfLightViews, lightViewUniformData);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    shadowAtlas.beginRender();
+    depthShader.use();
 }
 
 void ShadowMapRenderer::renderShadowAtlas(Scene &scene)
 {
-    shadowAtlas.beginRender();
-
-    for (unsigned int index = 0; index < numberOfLightViews; index++)
-    {
-        glViewportIndexedf(
-            index,
-            atlasViewports[index].x,
-            atlasViewports[index].y,
-            atlasViewports[index].z,
-            atlasViewports[index].w);
-    }
-
-    depthShader.use();
-    setShaderAttributes(depthShader);
-
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
 
@@ -93,9 +45,26 @@ void ShadowMapRenderer::renderShadowAtlas(Scene &scene)
     glCullFace(GL_BACK);
 }
 
-void ShadowMapRenderer::setShaderAttributes(Shader &shader)
+void ShadowMapRenderer::debugRender()
 {
-    glBindBufferBase(GL_UNIFORM_BUFFER, Renderer::LIGHT_VIEWS_UNIFORM_BINDING_INDEX, lightViewsUniformBufferId);
-    shader.setUniform("lightViews", lightViewsUniformBufferId);
-    shader.setUniform("numberOfLightViews", numberOfLightViews);
+    debugImageRenderer.draw();
+}
+
+void ShadowMapRenderer::generateAtlasRegionUniformBuffer()
+{
+    glm::vec4 *data = atlasGraph.getRectangleArray(ATLAS_WIDTH, ATLAS_HEIGHT);
+    glGenBuffers(1, &shadowAtlasRegionBufferId);
+    glBindBuffer(GL_UNIFORM_BUFFER, shadowAtlasRegionBufferId);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec4) * atlasGraph.size, NULL, GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 2, shadowAtlasRegionBufferId);
+
+    data[0] = glm::vec4(1, 0, 0, 1);
+    data[1] = glm::vec4(0, 1, 0, 1);
+    data[2] = glm::vec4(0, 0, 1, 1);
+
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4) * atlasGraph.size, data);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    delete data;
+
+    ShaderSourceLoader::registerGlobal("NUM_SHADOW_ATLAS_REGIONS", atlasGraph.size);
 }

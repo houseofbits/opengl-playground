@@ -6,32 +6,34 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Camera.h"
 
-enum LightUniformFlags
-{
-    POINT_SOURCE = 1 << 0,
-    DIRECT_SOURCE = 1 << 1,
-    HAS_SHADOW = 1 << 2,
-};
-
 typedef struct alignas(16)
 {
-    glm::vec3 position;
-    float falloff;
+    // 0
+    glm::vec3 position; // 12
+    float intensity;    // 4
 
-    glm::vec3 color;
-    float intensity;
+    // 16
+    glm::vec3 color;              // 12
+    unsigned int doesCastShadows; // 4
 
-    glm::vec3 direction;
-    unsigned int flags;
+    // 32
+    glm::vec3 direction;        // 12
+    unsigned int isPointSource; // 4
 
-    float distAttenMin;
-    float distAttenMax;
-    float beamAngle;
-    float falloffAngle;
+    // 48
+    float distAttenMin;            // 4
+    float distAttenMax;            // 4
+    float beamAngle;               // 4
+    unsigned int shadowAtlasIndex; // 4
 
-    glm::vec2 shadowAtlasPos;
-    glm::vec2 shadowAtlasSize;
-    glm::mat4 projectionViewMatrix;
+    // 64
+    glm::vec2 shadowAtlasPos;  // 8
+    glm::vec2 shadowAtlasSize; // 8
+
+    // 80
+    glm::mat4 projectionViewMatrix; // 64
+
+    // 144
 
 } LightUniform;
 
@@ -55,7 +57,7 @@ public:
     void calculateProjectionViewMatrix(float fov, glm::vec3 position, glm::vec3 direction, float farPlane)
     {
         projectionMatrix = glm::perspective<float>(glm::radians(fov), 1.0, 0.01, farPlane);
-        viewMatrix = glm::lookAt(position, position + direction, glm::vec3(1, 1, 1));
+        viewMatrix = glm::lookAt(position, position + direction, glm::vec3(1, 0, 0));
         projectionViewMatrix = projectionMatrix * viewMatrix;
     }
 };
@@ -97,5 +99,4 @@ public:
     unsigned int numberOfViews;
 
     void generateViews();
-    unsigned int getLightUniformFlags(bool withShadows);
 };

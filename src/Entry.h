@@ -24,7 +24,6 @@ private:
     Window window;
     Renderer renderer;
     WireframeRenderer wireframeRenderer;
-    PostProcessRenderer imageRenderer;
     RenderTarget depthRenderTarget;
 
     RenderTarget testColorRenderTarget;
@@ -38,6 +37,8 @@ private:
     Light *animatedLight;
     float animatedLightAngle;
     int testFramebuffer;
+
+    bool isShadowAtlasVisible;
 
     void init();
     void loadSceneFromJson(std::string);

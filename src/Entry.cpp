@@ -8,6 +8,7 @@
 Entry::Entry() : window(&eventManager)
 {
     animatedLightAngle = 0;
+    isShadowAtlasVisible = false;
     eventManager.registerEventReceiver(this, &Entry::handleInputEvent);
 }
 
@@ -33,13 +34,9 @@ void Entry::run()
             break;
         }
 
-        // renderer.generateLightsUniform(scene);
         renderer.updateLights(scene);
+
         renderer.renderShadowAtlas(scene);
-
-        // shadowMapRenderer.generateShadowAtlasViews(scene.lights);
-
-        // shadowMapRenderer.renderShadowAtlas(scene);
 
         glViewport(0, 0, window.viewportWidth, window.viewportHeight);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -49,22 +46,21 @@ void Entry::run()
 
         materialShader.use();
         renderer.setShaderAttributes(materialShader);
-        // shadowMapRenderer.setShaderAttributes(materialShader);
-
         scene.render(camera, materialShader);
 
         // wireframeRenderer.draw(&renderer);
 
-        // imageRenderer.draw();
-
-        shadowMapRenderer.shadowAtlas.blit(window.viewportWidth, window.viewportHeight);
+        if (isShadowAtlasVisible)
+        {
+            renderer.shadowMapRenderer.debugRender();
+        }
 
         window.doubleBuffer();
 
         // Animate point light
-        animatedLightAngle += Time::frameTime * 3.0;
-        animatedLight->position.x = cos(animatedLightAngle) * 400;
-        animatedLight->position.z = sin(animatedLightAngle) * 400;
+        // animatedLightAngle += Time::frameTime * 3.0;
+        // animatedLight->position.x = cos(animatedLightAngle) * 400;
+        // animatedLight->position.z = sin(animatedLightAngle) * 400;
     }
 
     window.destroy();
@@ -72,11 +68,10 @@ void Entry::run()
 
 /**
  * TODO
- *  - Shadow map atlas as a depth map
- *  - Pass light view matrices to the vertex shader and calculate lightSpaceFragmentPos for every light
- *  - Calculate shadow in FS as normal
- *  - For point lights will have 6 shadow atlas records with index to the corresponding light source
- *  - Possibility to exclude some of point light faces manually or by some clever optimization
+ *  - Add texture atlas mapping uniform
+ *  - Add point lights
+ *  - Add direct lights
+ *  - Add projectors
  *
  *  Implement
  *  - Point light shadow maps
@@ -100,10 +95,6 @@ void Entry::init()
 
     // shadowMapRenderer.init();
     renderer.init(&camera);
-
-    imageRenderer.init(glm::vec4(0, 0, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimage.frag");
-    imageRenderer.textureId = testColorRenderTarget.targetTextureId; //.targetTextureId;
-    // renderer.shadowDepthMapId = shadowMapRenderer.shadowAtlas.targetTextureId; //.targetTextureId;
 
     // loadSceneFromJson("resources/scenes/ducks-n-lights.json");
     // loadSceneFromJson("resources/scenes/multiple-spot-lights.json");
@@ -187,13 +178,17 @@ bool Entry::handleInputEvent(InputEvent *const event)
 {
     if (event->type == InputEvent::KEYDOWN)
     {
-        if (event->keyCode == 30)
+        if (event->keyCode == 30) // '1'
         {
             testFramebuffer = 1;
         }
-        if (event->keyCode == 31)
+        if (event->keyCode == 31) // '2'
         {
             testFramebuffer = 2;
+        }
+        if (event->keyCode == 59) // F2
+        {
+            isShadowAtlasVisible = !isShadowAtlasVisible;
         }
         // std::cout << event->keyCode << std::endl;
     }

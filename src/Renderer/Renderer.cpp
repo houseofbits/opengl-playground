@@ -13,6 +13,12 @@ Renderer::Renderer() : activeCamera(0)
     ShaderSourceLoader::registerGlobal("LIGHT_VIEWS_UNIFORM_BINDING_INDEX", LIGHT_VIEWS_UNIFORM_BINDING_INDEX);
 
     std::cout << "LightUniform size: " << sizeof(LightUniform) << std::endl;
+    // std::cout << "size uint: " << sizeof(unsigned int) << std::endl;
+    // std::cout << "size float: " << sizeof(float) << std::endl;
+    // std::cout << "size vec4: " << sizeof(glm::vec4) << std::endl;
+    // std::cout << "size vec3: " << sizeof(glm::vec3) << std::endl;
+    // std::cout << "size vec2: " << sizeof(glm::vec2) << std::endl;
+    // std::cout << "size mat4: " << sizeof(glm::mat4) << std::endl;
 }
 
 void Renderer::init(Camera *camera)
@@ -36,7 +42,7 @@ void Renderer::generateLightsUniform(Scene &scene)
     unsigned int index = 0;
     for (auto const &light : scene.lights)
     {
-        lightsUniformData[index].flags = light->getLightUniformFlags(true);
+        lightsUniformData[index].isPointSource = light->type == Light::SPOT;
         lightsUniformData[index].position = light->position;
         lightsUniformData[index].color = light->color;
         lightsUniformData[index].distAttenMax = light->distAttenMax;
@@ -60,22 +66,20 @@ void Renderer::generateLightsUniform(Scene &scene)
 void Renderer::setShaderAttributes(Shader &shader)
 {
     shader.setUniform("viewPosition", activeCamera->getPosition());
-    shader.setUniform("numActiveLights", numActiveLights);
 
     glBindBufferBase(GL_UNIFORM_BUFFER, LIGHTS_UNIFORM_BINDING_INDEX, lightsUniformBufferId);
     shader.setUniform("lights", lightsUniformBufferId);
+    shader.setUniform("numActiveLights", numActiveLights);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, shadowMapRenderer.shadowAtlas.targetTextureId);
-    // glBindTexture(GL_TEXTURE_2D, shadowDepthMapId);
     shader.setUniform("shadowDepthAtlas", 1);
-
-    shadowMapRenderer.setShaderAttributes(shader);
+    shader.setUniform("shadowAtlasRegions", shadowMapRenderer.shadowAtlasRegionBufferId);
 }
 
 void Renderer::updateLights(Scene &scene)
 {
-    unsigned int shadowMapSize = 256;
+    shadowMapRenderer.atlasGraph.clearAll();
 
     unsigned int uniformIndex = 0;
     for (auto const &light : scene.lights)
@@ -86,13 +90,7 @@ void Renderer::updateLights(Scene &scene)
         {
             if (light->doesCastShadows)
             {
-                int index = shadowMapRenderer.atlasGraph.occupyFirstAvailable(shadowMapSize, shadowMapSize);
-                light->views[i].shadowAtlasIndex = index > 0 ? index : 0;
-                if (index > 0)
-                {
-                    AtlasNode &node = shadowMapRenderer.atlasGraph.nodes[index];
-                    populateUniformAtlasAttributes(lightsUniformData[uniformIndex], node);
-                }
+                populateUniformAtlasAttributes(lightsUniformData[uniformIndex], *light, light->views[i]);
             }
 
             populateUniform(lightsUniformData[uniformIndex], *light, light->views[i]);
@@ -114,7 +112,8 @@ void Renderer::populateUniform(LightUniform &uniform, Light &light, LightView &v
 {
     bool hasShadowAtlasIndex = view.shadowAtlasIndex > 0;
 
-    uniform.flags = light.getLightUniformFlags(hasShadowAtlasIndex);
+    uniform.isPointSource = light.type == Light::SPOT;
+    uniform.doesCastShadows = light.doesCastShadows && hasShadowAtlasIndex;
     uniform.position = light.position;
     uniform.color = light.color;
     uniform.distAttenMax = light.distAttenMax;
@@ -123,21 +122,55 @@ void Renderer::populateUniform(LightUniform &uniform, Light &light, LightView &v
     uniform.direction = light.direction;
     uniform.beamAngle = glm::radians(light.beamAngle);
     uniform.projectionViewMatrix = view.projectionViewMatrix;
+    uniform.shadowAtlasIndex = view.shadowAtlasIndex;
 }
 
-void Renderer::populateUniformAtlasAttributes(LightUniform &uniform, AtlasNode &node)
+void Renderer::populateUniformAtlasAttributes(LightUniform &uniform, Light &light, LightView &view)
 {
-    uniform.shadowAtlasPos = glm::vec2(
-        (float)node.left / (float)ShadowMapRenderer::ATLAS_WIDTH,
-        (float)node.top / (float)ShadowMapRenderer::ATLAS_HEIGHT);
+    unsigned int shadowMapSize = 512;
 
-    uniform.shadowAtlasSize = glm::vec2(
-        (float)node.width / (float)ShadowMapRenderer::ATLAS_WIDTH,
-        (float)node.height / (float)ShadowMapRenderer::ATLAS_HEIGHT);
+    int index = shadowMapRenderer.atlasGraph.occupyFirstAvailable(shadowMapSize, shadowMapSize);
+    view.shadowAtlasIndex = index > 0 ? index : 0;
+    if (index > 0)
+    {
+        AtlasNode &node = shadowMapRenderer.atlasGraph.nodes[index];
+
+        uniform.shadowAtlasPos = glm::vec2(
+            (float)node.left / (float)ShadowMapRenderer::ATLAS_WIDTH,
+            (float)node.top / (float)ShadowMapRenderer::ATLAS_HEIGHT);
+
+        uniform.shadowAtlasSize = glm::vec2(
+            (float)node.width / (float)ShadowMapRenderer::ATLAS_WIDTH,
+            (float)node.height / (float)ShadowMapRenderer::ATLAS_HEIGHT);
+
+        // std::cout << index << " " << uniform.shadowAtlasPos.x << "," << uniform.shadowAtlasPos.y << std::endl;
+    }
 }
 
 void Renderer::renderShadowAtlas(Scene &scene)
 {
-    shadowMapRenderer.generateShadowAtlasViews(scene.lights);
+    shadowMapRenderer.beginRender();
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, LIGHTS_UNIFORM_BINDING_INDEX, lightsUniformBufferId);
+    shadowMapRenderer.depthShader.setUniform("lights", lightsUniformBufferId);
+    shadowMapRenderer.depthShader.setUniform("numActiveLights", numActiveLights);
+
+    // std::cout << numActiveLights << std::endl;
+
+    int viewportIndex = 0;
+    for (unsigned int i = 0; i < numActiveLights; i++)
+    {
+        if (lightsUniformData[i].doesCastShadows == 1)
+        {
+            AtlasNode &node = shadowMapRenderer.atlasGraph.nodes[lightsUniformData[i].shadowAtlasIndex];
+
+            glViewportIndexedf(viewportIndex, node.left, node.top, node.width, node.height);
+
+            // std::cout << viewportIndex << ", " << node.left << ", " << node.top << " " << node.width << ", " << node.height << std::endl;
+
+            viewportIndex++;
+        }
+    }
+
     shadowMapRenderer.renderShadowAtlas(scene);
 }

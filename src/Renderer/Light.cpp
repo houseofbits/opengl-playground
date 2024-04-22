@@ -37,28 +37,3 @@ void Light::generateViews()
     }
 }
 
-unsigned int Light::getLightUniformFlags(bool withShadows)
-{
-    unsigned int flags = 0;
-    switch (type)
-    {
-    case Light::SPOT:
-        flags = LightUniformFlags::POINT_SOURCE;
-        break;
-    case Light::POINT:
-        flags = LightUniformFlags::POINT_SOURCE;
-        break;
-    case Light::DIRECT:
-        flags = LightUniformFlags::DIRECT_SOURCE;
-        break;
-    default:
-        break;
-    }
-
-    if (doesCastShadows && withShadows)
-    {
-        flags = flags | LightUniformFlags::HAS_SHADOW;
-    }
-
-    return flags;
-}

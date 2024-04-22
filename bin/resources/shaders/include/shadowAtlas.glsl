@@ -1,22 +1,39 @@
+#define NUM_SHADOW_ATLAS_REGIONS ${NUM_SHADOW_ATLAS_REGIONS}
 
 uniform sampler2D shadowDepthAtlas;
 
-vec3 getProjectedCoords(LightViewStructure lightView, vec4 lightSpacePos)
+layout (std140, binding = 2) uniform ShadowAtlasRegionsBlock {
+    vec4 shadowAtlasRegions[NUM_SHADOW_ATLAS_REGIONS];
+};
+
+vec3 getProjectedCoords2(LightStructure light, vec4 lightSpacePos)
 {
     vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
     projCoords = projCoords * 0.5 + 0.5;
-    projCoords.xy = (projCoords.xy * lightView.atlasSize) + lightView.atlasPos;
+
+    vec4 pos = shadowAtlasRegions[light.shadowAtlasIndex];
+    projCoords.x = (projCoords.x * pos.z) + pos.x;
+    projCoords.y = (projCoords.y * pos.w) + pos.y;
 
     return projCoords;
 }
 
-bool projCoordsClip(LightViewStructure lightView, vec3 projCoords)
+vec3 getProjectedCoords(LightStructure light, vec4 lightSpacePos)
+{
+    vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
+    projCoords = projCoords * 0.5 + 0.5;
+    projCoords.xy = (projCoords.xy * light.shadowAtlasSize) + light.shadowAtlasPos;
+
+    return projCoords;
+}
+
+bool projCoordsClip(LightStructure light, vec3 projCoords)
 {
     if (projCoords.z > 1.0 
-        || projCoords.x < lightView.atlasPos.x 
-        || projCoords.x > (lightView.atlasPos.x + lightView.atlasSize.x) 
-        || projCoords.y < lightView.atlasPos.y 
-        || projCoords.y > (lightView.atlasPos.y + lightView.atlasSize.y)) {
+        || projCoords.x < light.shadowAtlasPos.x 
+        || projCoords.x > (light.shadowAtlasPos.x + light.shadowAtlasSize.x) 
+        || projCoords.y < light.shadowAtlasPos.y 
+        || projCoords.y > (light.shadowAtlasPos.y + light.shadowAtlasSize.y)) {
 
         return false;
     }

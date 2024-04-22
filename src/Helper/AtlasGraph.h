@@ -146,6 +146,21 @@ public:
         }
     }
 
+    glm::vec4 *getRectangleArray(unsigned int width, unsigned int height)
+    {
+        glm::vec4 *array = new glm::vec4[size];
+        for (unsigned int i = 0; i < size; i++)
+        {
+            array[i] = glm::vec4(
+                (float)nodes[i].left / (float)width,
+                (float)nodes[i].top / (float)height,
+                (float)nodes[i].width / (float)width,
+                (float)nodes[i].height / (float)height);
+        }
+
+        return array;
+    }
+
     void debug()
     {
         std::cout << "Size: " << size << std::endl;

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <glm/vec3.hpp>
 #include "../Helper/ShaderSourceLoader.h"
+#include "../PostProcessRenderer/PostProcessRenderer.h"
 
 class ShadowMapRenderer
 {
@@ -19,25 +20,16 @@ public:
 
     ShadowMapRenderer();
 
-    typedef struct alignas(16)
-    {
-        glm::mat4 lightProjectionViewMatrix;
-        glm::vec2 atlasPos;
-        glm::vec2 atlasSize;
-        unsigned int lightIndex;
-    } LightViewUniform;
-
     Shader depthShader;
     RenderTarget shadowAtlas;
     AtlasGraph atlasGraph;
+    PostProcessRenderer debugImageRenderer;
 
-    LightViewUniform lightViewUniformData[MAX_LIGHTVIEWS_PER_PASS];
-    glm::uvec4 atlasViewports[MAX_LIGHTVIEWS_PER_PASS];
-    unsigned int lightViewsUniformBufferId;
-    unsigned int numberOfLightViews;
+    unsigned int shadowAtlasRegionBufferId;
 
     void init();
-    void generateShadowAtlasViews(std::list<Light *> &lights);
+    void beginRender();
     void renderShadowAtlas(Scene &scene);
-    void setShaderAttributes(Shader &shader);
+    void debugRender();
+    void generateAtlasRegionUniformBuffer();
 };

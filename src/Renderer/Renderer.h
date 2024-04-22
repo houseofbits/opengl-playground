@@ -38,6 +38,6 @@ public:
     ShadowMapRenderer shadowMapRenderer;
     void updateLights(Scene &scene);
     void populateUniform(LightUniform &uniform, Light &light, LightView &view);
-    void populateUniformAtlasAttributes(LightUniform &uniform, AtlasNode &node);
+    void populateUniformAtlasAttributes(LightUniform &uniform, Light &light, LightView &view);
     void renderShadowAtlas(Scene &scene);
 };
