@@ -40,4 +40,6 @@ public:
     void populateUniform(LightUniform &uniform, Light &light, LightView &view);
     void populateUniformAtlasAttributes(LightUniform &uniform, Light &light, LightView &view);
     void renderShadowAtlas(Scene &scene);
+
+    void printDebugShadowMaps();
 };

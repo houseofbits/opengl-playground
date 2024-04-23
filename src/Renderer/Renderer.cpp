@@ -174,3 +174,36 @@ void Renderer::renderShadowAtlas(Scene &scene)
 
     shadowMapRenderer.renderShadowAtlas(scene);
 }
+
+void Renderer::printDebugShadowMaps()
+{
+    shadowMapRenderer.atlasGraph.debug();
+
+    for (unsigned int lightIndex = 0; lightIndex < numActiveLights; lightIndex++)
+    {
+        std::cout << lightIndex
+                  << ": "
+                  << lightsUniformData[lightIndex].shadowAtlasIndex << std::endl;
+
+        std::cout << "light data: "
+                  << lightsUniformData[lightIndex].shadowAtlasPos.x
+                  << ","
+                  << lightsUniformData[lightIndex].shadowAtlasPos.y
+                  << " "
+                  << lightsUniformData[lightIndex].shadowAtlasSize.x
+                  << ","
+                  << lightsUniformData[lightIndex].shadowAtlasSize.y
+                  << std::endl;
+
+        glm::vec4 *p = shadowMapRenderer.atlasGraph.getRectangleArray(ShadowMapRenderer::ATLAS_WIDTH, ShadowMapRenderer::ATLAS_HEIGHT);
+        std::cout << "atlas buff: "
+                  << p[lightsUniformData[lightIndex].shadowAtlasIndex].x
+                  << ","
+                  << p[lightsUniformData[lightIndex].shadowAtlasIndex].y
+                  << " "
+                  << p[lightsUniformData[lightIndex].shadowAtlasIndex].z
+                  << ","
+                  << p[lightsUniformData[lightIndex].shadowAtlasIndex].w
+                  << std::endl;
+    }
+}

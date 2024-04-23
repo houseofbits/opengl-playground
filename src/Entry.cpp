@@ -189,6 +189,8 @@ bool Entry::handleInputEvent(InputEvent *const event)
         if (event->keyCode == 59) // F2
         {
             isShadowAtlasVisible = !isShadowAtlasVisible;
+
+            renderer.printDebugShadowMaps();
         }
         // std::cout << event->keyCode << std::endl;
     }

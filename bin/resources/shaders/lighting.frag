@@ -74,39 +74,47 @@ vec3 calculateSpotLightShadow(LightStructure light, vec3 projCoords)
 
 void main() 
 {
-    vec3 textureColor = texture(texture1, fs_in.TexCoord).xyz;
+    // vec3 textureColor = texture(texture1, fs_in.TexCoord).xyz;
 
-    vec3 lightColor = vec3(0.0);
-    LightStructure light;
-    vec4 fragPosLightSpace;
+    // vec3 lightColor = vec3(0.0);
+    // LightStructure light;
+    // vec4 fragPosLightSpace;
  
-    for(int index = 0; index < numActiveLights; index++)
-    {   
-        fragPosLightSpace = fragmentPositionPerLightView[index];
-        light = lights[index];        
+    // for(int index = 0; index < numActiveLights; index++)
+    // {   
+    //     fragPosLightSpace = fragmentPositionPerLightView[index];
+    //     light = lights[index];        
 
-        vec3 projCoords = getProjectedCoords(light, fragPosLightSpace);
-        if (!projCoordsClip(light, projCoords)) {
-            continue;
-        }
+    //     vec3 projCoords = getProjectedCoords2(light, fragPosLightSpace);
+    //     if (!projCoordsClip(light, projCoords)) {
+    //         continue;
+    //     }
 
-        lightColor += calculateSpotLightShadow(light, projCoords);
-    }
+    //     lightColor += calculateSpotLightShadow(light, projCoords);
+    // }
 
     // vec4 val = shadowAtlasRegions[3];
 
     // FragColor = val;
 
-   FragColor = vec4(textureColor * lightColor, 1.0);
+//    FragColor = vec4(textureColor * lightColor, 1.0);
  
- 
-    // vec4 shadowMap = vec4(0.0); 
+    vec3 shadowMap = vec3(0.0);
+    float inShadow = 0;
+    uint lightIndex = 0;
+    LightStructure light = lights[lightIndex];  
+    vec3 projCoords = getProjectedCoords2(light, fragmentPositionPerLightView[lightIndex]);
+    
+   // if (projCoordsClip(light, projCoords)) {
+        shadowMap = texture(shadowDepthAtlas, projCoords.xy).xyz;
 
-    // if (projCoordsClip(light, projCoords)) {
-    //     shadowMap = texture(shadowDepthAtlas, projCoords.xy);
-    // }
+        // inShadow = sampleShadow(projCoords, 0.0000001);
 
-    // float depth = pow(pow(shadowMap.r, 100), 100);
+        // shadowMap = calculateSpotLightShadow(light, projCoords);
+  //  }
 
-    // FragColor = vec4(vec3(depth), 1.0);
+    // FragColor = vec4(vec3(inShadow), 1.0);
+    
+    float depth = pow(pow(shadowMap.r, 100), 100);
+    FragColor = vec4(vec3(depth), 1.0);
 }

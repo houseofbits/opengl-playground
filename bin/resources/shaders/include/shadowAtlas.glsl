@@ -44,7 +44,7 @@ bool projCoordsClip(LightStructure light, vec3 projCoords)
 float sampleShadow(vec3 projCoords, float bias)
 {
     float depth = texture(shadowDepthAtlas, projCoords.xy).r; 
-    return projCoords.z - bias > depth ? 0.0 : 1.0;    
+    return ((projCoords.z - bias) > depth) ? 0.0 : 1.0;
 }
 
 float sampleShadow(vec3 projCoords, float bias, vec2 texelSize, int x, int y)
