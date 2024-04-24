@@ -12,9 +12,6 @@ struct LightStructure {
     float distAttenMax;
     float beamAngle;
     uint shadowAtlasIndex;
-
-    vec2 shadowAtlasPos;
-    vec2 shadowAtlasSize;
     
     mat4 projectionViewMatrix;
 };

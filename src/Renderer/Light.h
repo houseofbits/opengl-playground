@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
@@ -27,13 +28,7 @@ typedef struct alignas(16)
     unsigned int shadowAtlasIndex; // 4
 
     // 64
-    glm::vec2 shadowAtlasPos;  // 8
-    glm::vec2 shadowAtlasSize; // 8
-
-    // 80
     glm::mat4 projectionViewMatrix; // 64
-
-    // 144
 
 } LightUniform;
 
@@ -56,8 +51,12 @@ public:
 
     void calculateProjectionViewMatrix(float fov, glm::vec3 position, glm::vec3 direction, float farPlane)
     {
+        glm::vec3 up = direction;
+        std::swap(up.x, up.y);
+        std::swap(up.y, up.z);
+
         projectionMatrix = glm::perspective<float>(glm::radians(fov), 1.0, 0.01, farPlane);
-        viewMatrix = glm::lookAt(position, position + direction, glm::vec3(1, 0, 0));
+        viewMatrix = glm::lookAt(position, position + direction, up);
         projectionViewMatrix = projectionMatrix * viewMatrix;
     }
 };

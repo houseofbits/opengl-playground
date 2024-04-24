@@ -6,34 +6,34 @@ layout (std140, binding = 2) uniform ShadowAtlasRegionsBlock {
     vec4 shadowAtlasRegions[NUM_SHADOW_ATLAS_REGIONS];
 };
 
-vec3 getProjectedCoords2(LightStructure light, vec4 lightSpacePos)
+vec3 getProjectedCoords(vec4 atlasRect, vec4 lightSpacePos)
 {
     vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
     projCoords = projCoords * 0.5 + 0.5;
 
-    vec4 pos = shadowAtlasRegions[light.shadowAtlasIndex];
-    projCoords.x = (projCoords.x * pos.z) + pos.x;
-    projCoords.y = (projCoords.y * pos.w) + pos.y;
-
+    projCoords.x = (projCoords.x * atlasRect.z) + atlasRect.x;
+    projCoords.y = (projCoords.y * atlasRect.w) + atlasRect.y;
+   
     return projCoords;
 }
 
-vec3 getProjectedCoords(LightStructure light, vec4 lightSpacePos)
+bool projCoordsClip2(vec4 atlasRect, vec2 projCoords)
 {
-    vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
-    projCoords = projCoords * 0.5 + 0.5;
-    projCoords.xy = (projCoords.xy * light.shadowAtlasSize) + light.shadowAtlasPos;
+    if (projCoords.x < atlasRect.x 
+        || projCoords.x > (atlasRect.x + atlasRect.z) 
+        || projCoords.y < atlasRect.y 
+        || projCoords.y > (atlasRect.y + atlasRect.w)) {
 
-    return projCoords;
+        return false;
+    }
+
+    return true;
 }
 
-bool projCoordsClip(LightStructure light, vec3 projCoords)
+bool projCoordsClip(vec4 atlasRect, vec3 projCoords)
 {
     if (projCoords.z > 1.0 
-        || projCoords.x < light.shadowAtlasPos.x 
-        || projCoords.x > (light.shadowAtlasPos.x + light.shadowAtlasSize.x) 
-        || projCoords.y < light.shadowAtlasPos.y 
-        || projCoords.y > (light.shadowAtlasPos.y + light.shadowAtlasSize.y)) {
+        || !projCoordsClip2(atlasRect, projCoords.xy)) {
 
         return false;
     }
@@ -47,13 +47,13 @@ float sampleShadow(vec3 projCoords, float bias)
     return ((projCoords.z - bias) > depth) ? 0.0 : 1.0;
 }
 
-float sampleShadow(vec3 projCoords, float bias, vec2 texelSize, int x, int y)
+float sampleShadow(vec2 uv, float bias, float fragmentDepth)
 {
-    projCoords.xy = projCoords.xy + vec2(x, y) * texelSize;
-    return sampleShadow(projCoords, bias);
+    float depth = texture(shadowDepthAtlas, uv).r; 
+    return ((fragmentDepth - bias) > depth) ? 0.0 : 1.0;    
 }
 
-float pcfShadowCalculation(vec3 projCoords, float ndotl)
+float pcfShadowCalculation(vec3 projCoords, float ndotl, vec4 atlasRect)
 {
     float currentDepth = projCoords.z;
 
@@ -61,14 +61,22 @@ float pcfShadowCalculation(vec3 projCoords, float ndotl)
 
     vec2 texelSize = 1.0 / textureSize(shadowDepthAtlas, 0);
     float shadow = 0;
+    vec2 uv;
+    int div=0;
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
-            shadow += sampleShadow(projCoords, bias, texelSize, x,y);      
+            uv = projCoords.xy + vec2(x,y) * texelSize;            
+            if (projCoordsClip2(atlasRect, uv)) 
+            {
+                shadow += sampleShadow(uv, bias, projCoords.z);    
+
+                div++;  
+            }
         }    
     }
-    shadow /= 9.0;
+    shadow /= div;
 
     return shadow;
 }

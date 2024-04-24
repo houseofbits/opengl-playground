@@ -14,7 +14,7 @@
 class ShadowMapRenderer
 {
 public:
-    static const unsigned int MAX_LIGHTVIEWS_PER_PASS = 6;
+    static const unsigned int MAX_LIGHTVIEWS_PER_PASS = 20;
     static const unsigned int ATLAS_WIDTH = 2048;
     static const unsigned int ATLAS_HEIGHT = 2048;
 

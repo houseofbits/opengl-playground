@@ -63,7 +63,7 @@ Light *Scene::createPointLight(glm::vec3 pos, glm::vec3 color, float falloff, fl
     return light;
 }
 
-Light *Scene::createDirectLight(glm::vec3 pos, glm::vec3 direction, glm::vec3 color, float beamAngle, float falloff, float intensity)
+Light *Scene::createSpotLight(glm::vec3 pos, glm::vec3 direction, glm::vec3 color, float beamAngle, float falloff, float intensity)
 {
     Light *light = new Light();
 
@@ -74,7 +74,7 @@ Light *Scene::createDirectLight(glm::vec3 pos, glm::vec3 direction, glm::vec3 co
     light->distAttenMin = 0;
     light->distAttenMax = falloff;
     light->intensity = intensity;
-    light->beamAngle = beamAngle; //(beamAngle * (M_PI / 180)) / 2.0;
+    light->beamAngle = beamAngle;
     light->doesCastShadows = false;
 
     lights.push_back(light);

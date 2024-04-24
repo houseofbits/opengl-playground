@@ -131,20 +131,6 @@ void Renderer::populateUniformAtlasAttributes(LightUniform &uniform, Light &ligh
 
     int index = shadowMapRenderer.atlasGraph.occupyFirstAvailable(shadowMapSize, shadowMapSize);
     view.shadowAtlasIndex = index > 0 ? index : 0;
-    if (index > 0)
-    {
-        AtlasNode &node = shadowMapRenderer.atlasGraph.nodes[index];
-
-        uniform.shadowAtlasPos = glm::vec2(
-            (float)node.left / (float)ShadowMapRenderer::ATLAS_WIDTH,
-            (float)node.top / (float)ShadowMapRenderer::ATLAS_HEIGHT);
-
-        uniform.shadowAtlasSize = glm::vec2(
-            (float)node.width / (float)ShadowMapRenderer::ATLAS_WIDTH,
-            (float)node.height / (float)ShadowMapRenderer::ATLAS_HEIGHT);
-
-        // std::cout << index << " " << uniform.shadowAtlasPos.x << "," << uniform.shadowAtlasPos.y << std::endl;
-    }
 }
 
 void Renderer::renderShadowAtlas(Scene &scene)
@@ -184,16 +170,6 @@ void Renderer::printDebugShadowMaps()
         std::cout << lightIndex
                   << ": "
                   << lightsUniformData[lightIndex].shadowAtlasIndex << std::endl;
-
-        std::cout << "light data: "
-                  << lightsUniformData[lightIndex].shadowAtlasPos.x
-                  << ","
-                  << lightsUniformData[lightIndex].shadowAtlasPos.y
-                  << " "
-                  << lightsUniformData[lightIndex].shadowAtlasSize.x
-                  << ","
-                  << lightsUniformData[lightIndex].shadowAtlasSize.y
-                  << std::endl;
 
         glm::vec4 *p = shadowMapRenderer.atlasGraph.getRectangleArray(ShadowMapRenderer::ATLAS_WIDTH, ShadowMapRenderer::ATLAS_HEIGHT);
         std::cout << "atlas buff: "

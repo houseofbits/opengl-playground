@@ -57,11 +57,6 @@ void ShadowMapRenderer::generateAtlasRegionUniformBuffer()
     glBindBuffer(GL_UNIFORM_BUFFER, shadowAtlasRegionBufferId);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec4) * atlasGraph.size, NULL, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 2, shadowAtlasRegionBufferId);
-
-    data[0] = glm::vec4(1, 0, 0, 1);
-    data[1] = glm::vec4(0, 1, 0, 1);
-    data[2] = glm::vec4(0, 0, 1, 1);
-
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4) * atlasGraph.size, data);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
     delete data;
