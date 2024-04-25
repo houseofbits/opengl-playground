@@ -167,8 +167,9 @@ void Renderer::printDebugShadowMaps()
 
     for (unsigned int lightIndex = 0; lightIndex < numActiveLights; lightIndex++)
     {
-        std::cout << lightIndex
-                  << ": "
+        std::cout << "inde: "
+                  << lightIndex
+                  << " shadowAtlas:"
                   << lightsUniformData[lightIndex].shadowAtlasIndex << std::endl;
 
         glm::vec4 *p = shadowMapRenderer.atlasGraph.getRectangleArray(ShadowMapRenderer::ATLAS_WIDTH, ShadowMapRenderer::ATLAS_HEIGHT);

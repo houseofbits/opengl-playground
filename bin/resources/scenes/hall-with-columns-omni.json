@@ -210,8 +210,8 @@
                 0.5,
                 1
             ],
-            "distAttenMax": 400,
-            "intensity": 0.8,
+            "distAttenMax": 800,
+            "intensity": 0.7,
             "doesCastShadows": true
         }
     ]

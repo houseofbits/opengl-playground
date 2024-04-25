@@ -46,11 +46,17 @@ void Window::create()
     {
     }
 
+    //
+
     glEnable(GL_MULTISAMPLE);
 
     eventManager->queueEvent(new WindowEvent(WindowEvent::Type::CREATE, this));
 
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+
+    int numViewports;
+    glGetIntegerv(GL_MAX_VIEWPORTS, &numViewports);
+    std::cout << "Num viewports: " << numViewports << std::endl;
 }
 
 void Window::destroy()

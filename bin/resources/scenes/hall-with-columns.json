@@ -237,6 +237,116 @@
             "distAttenMax": 500,
             "intensity": 1,
             "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                100,
+                200,
+                -100
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                1,
+                0,
+                1
+            ],
+            "beamAngle": 90,
+            "distAttenMax": 500,
+            "intensity": 1,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                50,
+                150,
+                100
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                1,
+                1,
+                1
+            ],
+            "beamAngle": 60,
+            "distAttenMax": 500,
+            "intensity": 1,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                -150,
+                250,
+                100
+            ],
+            "direction": [
+                1,
+                0,
+                0
+            ],
+            "color": [
+                1,
+                1,
+                1
+            ],
+            "beamAngle": 60,
+            "distAttenMax": 500,
+            "intensity": 1,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                0,
+                250,
+                200
+            ],
+            "direction": [
+                0,
+                0,
+                -1
+            ],
+            "color": [
+                0,
+                0,
+                1
+            ],
+            "beamAngle": 90,
+            "distAttenMax": 900,
+            "intensity": 1,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                0,
+                100,
+                400
+            ],
+            "direction": [
+                0,
+                0,
+                -1
+            ],
+            "color": [
+                1,
+                1,
+                1
+            ],
+            "beamAngle": 90,
+            "distAttenMax": 1200,
+            "intensity": 0.4,
+            "doesCastShadows": true
         }
     ]
 }
