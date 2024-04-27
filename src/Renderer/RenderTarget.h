@@ -20,6 +20,7 @@ public:
     bool isClearBuffersEnabled;
 
     void create(Target target, unsigned int imageWidth, unsigned int imageHeight);
+    void createTexture(Target target, unsigned int imageWidth, unsigned int imageHeight);
     void beginRenderPartial(unsigned int fromX, unsigned int fromY, unsigned int sizeX, unsigned int sizeY);
     void beginRender();
     void end();

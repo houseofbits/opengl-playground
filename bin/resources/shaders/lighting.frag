@@ -95,6 +95,8 @@ void main()
     }
     FragColor = vec4(textureColor * lightColor, 1.0);
 
+    // FragColor = vec4(fs_in.Normal, 1.0);
+
 
     // vec4 val = shadowAtlasRegions[0];
     // FragColor = vec4(val.x, val.y, 1.0, 1.0);

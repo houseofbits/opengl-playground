@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
 #include "Events/InputEvent.h"
+#include "Helper/GLDebugMessageCallback.h"
 #include <glm/vec2.hpp>
 #include "Helper/Time.h"
 #include <iostream>
@@ -37,8 +38,13 @@ void Window::create()
         throw new Exception(2, "Could not create window");
     }
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    int contextFlags = 0;
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &contextFlags);
+    contextFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, contextFlags);
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GLContext Context = SDL_GL_CreateContext(sdlWindow);
 
     GLenum glewError = glewInit();
@@ -46,8 +52,12 @@ void Window::create()
     {
     }
 
-    //
+    // glEnable(GL_DEBUG_OUTPUT);
+    // glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    // glDebugMessageCallback(GLDebugMessageCallback, nullptr);
 
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     glEnable(GL_MULTISAMPLE);
 
     eventManager->queueEvent(new WindowEvent(WindowEvent::Type::CREATE, this));

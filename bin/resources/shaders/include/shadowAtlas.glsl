@@ -57,7 +57,7 @@ float pcfShadowCalculation(vec3 projCoords, float ndotl, vec4 atlasRect)
 {
     float currentDepth = projCoords.z;
 
-    float bias = 0.0000001 * tan(acos(clamp(ndotl, 0.0, 1.0)));
+    float bias = 0.0;//0.0000001 * tan(acos(clamp(ndotl, 0.0, 1.0)));
 
     vec2 texelSize = 1.0 / textureSize(shadowDepthAtlas, 0);
     float shadow = 0;

@@ -173,6 +173,28 @@
     ],
     "lights": [
         {
+            "type": "SPOT",
+            "position": [
+                100,
+                400,
+                100
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                1,
+                1,
+                0
+            ],
+            "beamAngle": 45,
+            "distAttenMax": 600,
+            "intensity": 2,
+            "doesCastShadows": true
+        },
+        {
             "type": "POINT",
             "position": [
                 0,

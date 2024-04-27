@@ -24,9 +24,6 @@ private:
     Window window;
     Renderer renderer;
     WireframeRenderer wireframeRenderer;
-    RenderTarget depthRenderTarget;
-
-    RenderTarget testColorRenderTarget;
 
     Scene scene;
     Camera camera;

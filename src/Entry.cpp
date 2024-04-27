@@ -41,8 +41,8 @@ void Entry::run()
         glViewport(0, 0, window.viewportWidth, window.viewportHeight);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // (*scene.lights.begin())->position = camera.getPosition() - glm::vec3(0, 20, 0);
-        // (*scene.lights.begin())->direction = camera.getDirection();
+        (*scene.lights.begin())->position = camera.getPosition() - glm::vec3(0, 20, 0);
+        (*scene.lights.begin())->direction = camera.getDirection();
 
         materialShader.use();
         renderer.setShaderAttributes(materialShader);
@@ -54,6 +54,8 @@ void Entry::run()
         {
             renderer.shadowMapRenderer.debugRender();
         }
+
+        // debugImageRenderer.draw();
 
         window.doubleBuffer();
 
@@ -68,9 +70,8 @@ void Entry::run()
 
 /**
  * TODO
- *  - Add texture atlas mapping uniform
- *  - Add point lights
- *  - Add direct lights
+ *  - Batch rendering in the shadow atlas pass
+ *  - Texture atlas ??
  *  - Add projectors
  *
  *  Implement
@@ -88,8 +89,7 @@ void Entry::init()
 {
     wireframeRenderer.init();
 
-    depthRenderTarget.create(RenderTarget::TARGET_DEPTH, 128, 128);
-    testColorRenderTarget.create(RenderTarget::TARGET_COLOR, 128 * 6, 128);
+    // testColorRenderTarget.create(RenderTarget::TARGET_COLOR, 128 * 6, 128);
 
     camera.registerEventHandlers(&eventManager);
 

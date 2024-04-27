@@ -10,6 +10,8 @@ in vec4 vsPosition[];
 in vec3 vsNormal[];
 
 out vec3 gsNormal;
+out vec3 gsPosition;
+out float gsFarPlane;
 
 void main()
 {   
@@ -28,6 +30,8 @@ void main()
             {
                 gsNormal = vsNormal[i];
                 gl_Position = projViewMatrix * vsPosition[i];
+                gsPosition = gl_Position.xyz;
+                gsFarPlane = lights[lightIndex].distAttenMax;
 
                 EmitVertex();
             }    

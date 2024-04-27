@@ -48,6 +48,7 @@ void ShadowMapRenderer::renderShadowAtlas(Scene &scene)
 void ShadowMapRenderer::debugRender()
 {
     debugImageRenderer.draw();
+    // shadowAtlas.blit(512, 512);
 }
 
 void ShadowMapRenderer::generateAtlasRegionUniformBuffer()

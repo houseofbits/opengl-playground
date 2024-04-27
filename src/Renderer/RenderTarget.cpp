@@ -1,23 +1,15 @@
 #include "RenderTarget.h"
 
-void RenderTarget::create(Target target, unsigned int imageWidth, unsigned int imageHeight)
+void RenderTarget::createTexture(Target target, unsigned int imageWidth, unsigned int imageHeight)
 {
-    target = target;
-    width = imageWidth;
-    height = imageHeight;
-    isClearBuffersEnabled = true;
-
-    glGenFramebuffers(1, &framebufferId);
     glGenTextures(1, &targetTextureId);
     glBindTexture(GL_TEXTURE_2D, targetTextureId);
     if (target == TARGET_DEPTH)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-        glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
     }
     else
     {
@@ -27,6 +19,18 @@ void RenderTarget::create(Target target, unsigned int imageWidth, unsigned int i
     }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}
+
+void RenderTarget::create(Target target, unsigned int imageWidth, unsigned int imageHeight)
+{
+    target = target;
+    width = imageWidth;
+    height = imageHeight;
+    isClearBuffersEnabled = true;
+
+    glGenFramebuffers(1, &framebufferId);
+
+    createTexture(target, imageWidth, imageHeight);
 
     glBindFramebuffer(GL_FRAMEBUFFER, framebufferId);
 

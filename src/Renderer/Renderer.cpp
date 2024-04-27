@@ -127,7 +127,7 @@ void Renderer::populateUniform(LightUniform &uniform, Light &light, LightView &v
 
 void Renderer::populateUniformAtlasAttributes(LightUniform &uniform, Light &light, LightView &view)
 {
-    unsigned int shadowMapSize = 512;
+    unsigned int shadowMapSize = 256;
 
     int index = shadowMapRenderer.atlasGraph.occupyFirstAvailable(shadowMapSize, shadowMapSize);
     view.shadowAtlasIndex = index > 0 ? index : 0;
@@ -167,9 +167,8 @@ void Renderer::printDebugShadowMaps()
 
     for (unsigned int lightIndex = 0; lightIndex < numActiveLights; lightIndex++)
     {
-        std::cout << "inde: "
-                  << lightIndex
-                  << " shadowAtlas:"
+        std::cout << lightIndex
+                  << ": "
                   << lightsUniformData[lightIndex].shadowAtlasIndex << std::endl;
 
         glm::vec4 *p = shadowMapRenderer.atlasGraph.getRectangleArray(ShadowMapRenderer::ATLAS_WIDTH, ShadowMapRenderer::ATLAS_HEIGHT);

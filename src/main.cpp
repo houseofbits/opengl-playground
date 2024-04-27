@@ -2,8 +2,7 @@
 #include <list>
 #include <typeindex>
 #include <iostream>
-
-#include "Helper/AtlasGraph.h"
+#include "Renderer/TextureAtlasManager.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +17,10 @@ int main(int argc, char *argv[])
     // graph.clearAll();
     // graph.debug();
 
-    Entry entry;
-    entry.run();
+    TextureAtlasManager mgr;
+    mgr.init();
+    // mgr.printNodesWithRegions(1024);
+
+    // Entry entry;
+    // entry.run();
 }

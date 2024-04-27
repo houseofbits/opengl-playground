@@ -100,17 +100,17 @@ void Model::createFromFile(std::string filename)
 
     glBindVertexArray(0);
 
-    for (auto it = generatedBuffers.cbegin(); it != generatedBuffers.cend();)
-    {
-        tinygltf::BufferView bufferView = model.bufferViews[it->first];
-        if (bufferView.target != GL_ELEMENT_ARRAY_BUFFER)
-        {
-            glDeleteBuffers(1, &generatedBuffers[it->first]);
-            generatedBuffers.erase(it++);
-        }
-        else
-        {
-            ++it;
-        }
-    }
+    // for (auto it = generatedBuffers.cbegin(); it != generatedBuffers.cend();)
+    // {
+    //     tinygltf::BufferView bufferView = model.bufferViews[it->first];
+    //     if (bufferView.target != GL_ELEMENT_ARRAY_BUFFER)
+    //     {
+    //         glDeleteBuffers(1, &generatedBuffers[it->first]);
+    //         generatedBuffers.erase(it++);
+    //     }
+    //     else
+    //     {
+    //         ++it;
+    //     }
+    // }
 }
