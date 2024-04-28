@@ -9,12 +9,15 @@ class TextureAtlas
 {
 private:
     unsigned int textureBinding;
+
+public:
     QuadTreeOccupancy qtOccupancy;
     Texture *texture;
 
-public:
     TextureAtlas();
     ~TextureAtlas();
+
+    int getSize();
 
     TextureAtlas &setTextureBinding(unsigned int id);
     TextureAtlas &create(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);

@@ -1,4 +1,5 @@
 #include "QuadTree.h"
+#include <assert.h>
 
 void QuadTree::create(unsigned int treeDepth)
 {
@@ -54,4 +55,11 @@ void QuadTree::createNodesRecursive(int parentIndex, unsigned int depth)
             createNodesRecursive(nodeIndex, depth + 1);
         }
     }
+}
+
+const QuadTreeNode &QuadTree::getNode(unsigned int index)
+{
+    assert(index < numNodes);
+
+    return nodes[index];
 }

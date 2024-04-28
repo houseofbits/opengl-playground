@@ -1,4 +1,7 @@
+#include <algorithm>
 #include "TextureAtlasManager.h"
+#include "../../libs/tinygltf/stb_image.h"
+#include <assert.h>
 
 TextureAtlasManager::TextureAtlasManager() : atlases()
 {
@@ -39,7 +42,35 @@ int TextureAtlasManager::loadTextureIntoAtlas(std::string textureFileName, Atlas
 {
     TextureAtlas &atlas = atlases[atlasType];
 
-        // unsigned int imageWidth;
+    int w, h, comp;
+    const uint8_t *img = stbi_load(textureFileName.c_str(), &w, &h, &comp, 3);
+
+    if (img == nullptr)
+    {
+        std::cout << "Failed to load image " << textureFileName << std::endl;
+
+        return -1;
+    }
+
+    int textureSize = std::max(w, h);
+    int qtDepth = atlas.getSize() / textureSize;
+
+    assert(qtDepth > 0);
+    assert(qtDepth <= 6);
+
+    int nodeIndex = atlas.qtOccupancy.findFirstUnoccupiedNodeAtDepth(quadTree, qtDepth);
+    if (nodeIndex > 0)
+    {
+        QuadTreeNode &node = quadTree.getNode(nodeIndex);
+
+        atlas.texture->applyImage(0, 0, w, h, img);
+
+        atlas.qtOccupancy.setOccupied(quadTree, nodeIndex, true);
+
+        return nodeIndex;
+    }
+
+    // unsigned int imageWidth;
     // unsigned int imageHeight;
 
     // // TODO: load image
@@ -59,7 +90,7 @@ int TextureAtlasManager::loadTextureIntoAtlas(std::string textureFileName, Atlas
     //         << std::endl;
     // }
 
-    return index;
+    return -1;
 }
 
 int TextureAtlasManager::occupyAtlasRegion(TextureAtlas &atlas, const unsigned int &width, const unsigned int &height)

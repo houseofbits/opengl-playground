@@ -35,6 +35,11 @@ void Texture::create(unsigned int textureWidth, unsigned int textureHeight, Type
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
+void Texture::applyImage(unsigned int left, unsigned int top, unsigned int imageWidth, unsigned int imageHeight, const unsigned char *imageData)
+{
+    // TODO
+}
+
 void Texture::destroy()
 {
 }

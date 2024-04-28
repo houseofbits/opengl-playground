@@ -22,4 +22,5 @@ private:
 
 public:
     void create(unsigned int depth);
+    const QuadTreeNode &getNode(unsigned int index);
 };

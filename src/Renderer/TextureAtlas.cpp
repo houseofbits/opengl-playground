@@ -1,4 +1,5 @@
 #include "TextureAtlas.h"
+#include <assert.h>
 
 TextureAtlas::TextureAtlas() : textureBinding(0), texture(nullptr), qtOccupancy()
 {
@@ -6,6 +7,14 @@ TextureAtlas::TextureAtlas() : textureBinding(0), texture(nullptr), qtOccupancy(
 
 TextureAtlas::~TextureAtlas()
 {
+}
+
+int TextureAtlas::getSize()
+{
+    assert(texture != nullptr);
+    assert(texture->width != texture->height);
+
+    return texture->width;
 }
 
 TextureAtlas &TextureAtlas::setTextureBinding(unsigned int id)

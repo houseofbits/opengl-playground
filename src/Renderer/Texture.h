@@ -18,6 +18,7 @@ public:
     Type type;
 
     virtual void create(unsigned int width, unsigned int height, Type type);
+    virtual void applyImage(unsigned int left, unsigned int top, unsigned int imageWidth, unsigned int imageHeight, const unsigned char *imageData);
     virtual void bind();
     virtual void unbind();
     virtual void destroy();

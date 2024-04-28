@@ -11,5 +11,5 @@ private:
 public:
     void isBranchOccupied(const QuadTree &tree, unsigned int nodeIndex);
     unsigned int findFirstUnoccupiedNodeAtDepth(const QuadTree &tree, unsigned int depth);
-    void setOccupied(const QuadTree &tree, unsigned int nodeIndex);
+    void setOccupied(const QuadTree &tree, unsigned int nodeIndex, bool value);
 };

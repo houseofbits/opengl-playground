@@ -10,6 +10,6 @@ unsigned int QuadTreeOccupancy::findFirstUnoccupiedNodeAtDepth(const QuadTree &t
     return -1;
 }
 
-void QuadTreeOccupancy::setOccupied(const QuadTree &tree, unsigned int nodeIndex)
+void QuadTreeOccupancy::setOccupied(const QuadTree &tree, unsigned int nodeIndex, bool value)
 {
 }
