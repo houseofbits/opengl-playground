@@ -2,48 +2,49 @@
 
 TextureAtlasManager::TextureAtlasManager() : atlases()
 {
-    numNodes = 1;
-    for (int i = 1; i < maxDepth; i++)
-        numNodes += pow(4, i);
+    // numNodes = 1;
+    // for (int i = 1; i < maxDepth; i++)
+    //     numNodes += pow(4, i);
 
-    nodes = new TextureAtlasNode[numNodes];
-    generateNodes();
+    // nodes = new TextureAtlasNode[numNodes];
+    // generateNodes();
+
+    quadTree.create(6);
 }
 
 TextureAtlasManager::~TextureAtlasManager()
 {
-    delete[] nodes;
+    // delete[] nodes;
 }
 
 void TextureAtlasManager::init()
 {
     TextureAtlas &shadowDepthAtlas = atlases[ATLAS_SHADOW_DEPTH];
     shadowDepthAtlas
-        .setTextureBindingId(0)
-        .setSize(2048)
-        .enableAsRenderTarget(RenderTarget::TARGET_DEPTH);
+        .setTextureBinding(0)
+        .createAsRenderTarget(2048, 2048, Texture::TYPE_DEPTH);
 
     TextureAtlas &diffuseAtlas = atlases[ATLAS_DIFFUSE];
     diffuseAtlas
-        .setTextureBindingId(1)
-        .setSize(2048)
-        .enableColorTexture();
+        .setTextureBinding(1)
+        .create(2048, 2048, Texture::TYPE_RGBA);
 
     TextureAtlas &effectsAtlas = atlases[ATLAS_EFFECTS];
     shadowDepthAtlas
-        .setTextureBindingId(2)
-        .setSize(1024)
-        .enableColorTexture();
+        .setTextureBinding(2)
+        .create(2048, 2048, Texture::TYPE_RGBA);
 }
 
-int TextureAtlasManager::loadTextureIntoAtlas(std::string textureFileName, AtlasType atlas)
+int TextureAtlasManager::loadTextureIntoAtlas(std::string textureFileName, AtlasType atlasType)
 {
-    unsigned int imageWidth;
-    unsigned int imageHeight;
+    TextureAtlas &atlas = atlases[atlasType];
 
-    // TODO: load image
+        // unsigned int imageWidth;
+    // unsigned int imageHeight;
 
-    int index = occupyAtlasRegion(atlases[atlas], imageWidth, imageHeight);
+    // // TODO: load image
+
+    // int index = occupyAtlasRegion(atlases[atlas], imageWidth, imageHeight);
     // if (index > 0)
     // {
     //     // atlases[atlas].writeImage(index, imageData, imageWidth, imageHeight);
@@ -66,7 +67,7 @@ int TextureAtlasManager::occupyAtlasRegion(TextureAtlas &atlas, const unsigned i
     int index = findFirstAvailable(atlas, width, height, 0);
     if (index >= 0)
     {
-        atlas.setOccupied(index, true);
+        // atlas.setOccupied(index, true);
     }
 
     return index;
@@ -74,45 +75,47 @@ int TextureAtlasManager::occupyAtlasRegion(TextureAtlas &atlas, const unsigned i
 
 int TextureAtlasManager::findFirstAvailable(TextureAtlas &atlas, const unsigned int &width, const unsigned int &height, unsigned int nodeIndex)
 {
-    TextureAtlasNode &node = nodes[nodeIndex];
-    int nodeWidth = atlas.width / node.size;
-    int nodeHeight = atlas.height / node.size;
+    return -1;
+    // TextureAtlasNode &node = nodes[nodeIndex];
+    // int nodeWidth = atlas.width / node.size;
+    // int nodeHeight = atlas.height / node.size;
 
-    if (nodeWidth >= width * 2 && nodeHeight >= height * 2)
-    {
-        for (unsigned int i = 0; i < 4; i++)
-        {
-            if (nodes[nodeIndex].childIndices[i] >= 0)
-            {
-                int index = findFirstAvailable(atlas, width, height, nodes[nodeIndex].childIndices[i]);
-                if (index >= 0)
-                {
-                    return index;
-                }
-            }
-        }
-    }
+    // if (nodeWidth >= width * 2 && nodeHeight >= height * 2)
+    // {
+    //     for (unsigned int i = 0; i < 4; i++)
+    //     {
+    //         if (nodes[nodeIndex].childIndices[i] >= 0)
+    //         {
+    //             int index = findFirstAvailable(atlas, width, height, nodes[nodeIndex].childIndices[i]);
+    //             if (index >= 0)
+    //             {
+    //                 return index;
+    //             }
+    //         }
+    //     }
+    // }
 
-    return areChildrenOccupied(atlas, nodeIndex)
-               ? -1
-               : nodeIndex;
+    // return areChildrenOccupied(atlas, nodeIndex)
+    //            ? -1
+    //            : nodeIndex;
 }
 
 int TextureAtlasManager::areChildrenOccupied(TextureAtlas &atlas, unsigned int index)
 {
-    bool isOccupied = atlas.isOccupied(index);
-    if (!isOccupied)
-    {
-        for (unsigned int i = 0; i < 4; i++)
-        {
-            if (nodes[index].childIndices[i] >= 0)
-            {
-                return areChildrenOccupied(atlas, nodes[index].childIndices[i]);
-            }
-        }
-    }
+    return 0;
+    // bool isOccupied = atlas.isOccupied(index);
+    // if (!isOccupied)
+    // {
+    //     for (unsigned int i = 0; i < 4; i++)
+    //     {
+    //         if (nodes[index].childIndices[i] >= 0)
+    //         {
+    //             return areChildrenOccupied(atlas, nodes[index].childIndices[i]);
+    //         }
+    //     }
+    // }
 
-    return isOccupied;
+    // return isOccupied;
 }
 
 void TextureAtlasManager::generateNodes()

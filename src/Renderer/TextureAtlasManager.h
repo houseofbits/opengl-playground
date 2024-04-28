@@ -41,12 +41,19 @@ private:
     int sizeIterator = 0;
     unsigned int numNodes;
     TextureAtlasNode *nodes;
-    std::map<AtlasType, TextureAtlas> atlases;
 
     void generateNodes();
     void generateNodesRecursive(int parentIndex, unsigned int depth);
-    glm::vec3 *createIndexedRegionArray();
 
     int findFirstAvailable(TextureAtlas &atlas, const unsigned int &width, const unsigned int &height, unsigned int nodeIndex);
     int areChildrenOccupied(TextureAtlas &atlas, unsigned int index);
+
+    //////////////////////////////////////////////////////////////
+    /// New stuff
+
+private:
+    QuadTree quadTree;
+    std::map<AtlasType, TextureAtlas> atlases;
+
+    glm::vec3 *createIndexedRegionArray();
 };

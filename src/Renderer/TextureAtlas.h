@@ -1,52 +1,22 @@
 #pragma once
 
-#include "RenderTarget.h"
+#include "Texture.h"
+#include "TextureRenderTarget.h"
+#include "../Helper/QuadTreeOccupancy.h"
 #include <map>
 
-class TextureAtlas : public RenderTarget
+class TextureAtlas
 {
 private:
-    std::map<unsigned int, bool> ocupancy;
-    unsigned int textureBindingId;
+    unsigned int textureBinding;
+    QuadTreeOccupancy qtOccupancy;
+    Texture *texture;
 
 public:
-    TextureAtlas &setTextureBindingId(unsigned int id)
-    {
-        textureBindingId = id;
+    TextureAtlas();
+    ~TextureAtlas();
 
-        return *this;
-    }
-
-    TextureAtlas &setSize(unsigned int size)
-    {
-        width = height = size;
-
-        return *this;
-    }
-
-    TextureAtlas &setOccupied(unsigned int index, bool isOccupied)
-    {
-        ocupancy[index] = isOccupied;
-
-        return *this;
-    }
-
-    TextureAtlas &enableAsRenderTarget(RenderTarget::Target target)
-    {
-        // create(target, width, height);
-
-        return *this;
-    }
-
-    TextureAtlas &enableColorTexture()
-    {
-        // createTexture(RenderTarget::TARGET_COLOR, width, height);
-
-        return *this;
-    }
-
-    bool isOccupied(unsigned int index)
-    {
-        return ocupancy[index];
-    }
+    TextureAtlas &setTextureBinding(unsigned int id);
+    TextureAtlas &create(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);
+    TextureAtlas &createAsRenderTarget(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);
 };
