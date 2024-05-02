@@ -2,14 +2,14 @@
 
 #include "Texture.h"
 #include "TextureRenderTarget.h"
+#include "Shader.h"
 #include "../Helper/QuadTreeOccupancy.h"
+#include "../Helper/QuadTree.h"
 #include <map>
+#include <string>
 
 class TextureAtlas
 {
-private:
-    unsigned int textureBinding;
-
 public:
     QuadTreeOccupancy qtOccupancy;
     Texture *texture;
@@ -19,7 +19,6 @@ public:
 
     int getSize();
 
-    TextureAtlas &setTextureBinding(unsigned int id);
     TextureAtlas &create(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);
     TextureAtlas &createAsRenderTarget(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);
 };

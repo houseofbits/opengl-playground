@@ -6,6 +6,7 @@
 #include <map>
 #include <math.h>
 #include <glm/vec3.hpp>
+#include "UniformBuffer.h"
 
 class TextureAtlasNode
 {
@@ -29,31 +30,16 @@ public:
 
     TextureAtlasManager();
     ~TextureAtlasManager();
+
     void init();
     int loadTextureIntoAtlas(std::string textureFileName, AtlasType atlas);
-    void printNodes(std::string indent = "", int index = 0);
-    void printNodesWithRegions(int inputSize, std::string indent = "", int index = 0);
-
-    int occupyAtlasRegion(TextureAtlas &atlas, const unsigned int &width, const unsigned int &height);
-
-private:
-    const unsigned int maxDepth = 6;
-    int sizeIterator = 0;
-    unsigned int numNodes;
-    TextureAtlasNode *nodes;
-
-    void generateNodes();
-    void generateNodesRecursive(int parentIndex, unsigned int depth);
-
-    int findFirstAvailable(TextureAtlas &atlas, const unsigned int &width, const unsigned int &height, unsigned int nodeIndex);
-    int areChildrenOccupied(TextureAtlas &atlas, unsigned int index);
-
-    //////////////////////////////////////////////////////////////
-    /// New stuff
+    unsigned int &getTextureId(AtlasType atlas);
+    void bindAll(Shader &shader);
 
 private:
     QuadTree quadTree;
+    UniformBuffer<glm::vec4> atlasRegionsMapping;
     std::map<AtlasType, TextureAtlas> atlases;
 
-    glm::vec3 *createIndexedRegionArray();
+    void initAtlasRegionsMapping();
 };

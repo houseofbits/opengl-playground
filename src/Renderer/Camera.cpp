@@ -121,3 +121,18 @@ glm::mat4 &Camera::getProjectionViewMatrix()
 
     return projectionViewMatrix;
 }
+
+Camera &Camera::setPosition(glm::vec3 pos)
+{
+    position = pos;
+
+    return *this;
+}
+
+Camera &Camera::setAngles(float horizontal, float vertical)
+{
+    verticalAngle = vertical;
+    horizontalAngle = horizontal;
+
+    return *this;
+}

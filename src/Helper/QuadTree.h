@@ -14,13 +14,24 @@ class QuadTree
 {
 private:
     unsigned int depth;
-    int sizeIterator = 0;
+    int sizeIterator;
     unsigned int numNodes;
     QuadTreeNode *nodes;
 
     void createNodesRecursive(int parentIndex, unsigned int depth);
 
 public:
+    QuadTree();
+    ~QuadTree();
+
     void create(unsigned int depth);
     const QuadTreeNode &getNode(unsigned int index);
+    unsigned int getNumNodes()
+    {
+        return numNodes;
+    }
+    unsigned int getDepth()
+    {
+        return depth;
+    }
 };

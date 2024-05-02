@@ -21,10 +21,10 @@ void PostProcessRenderer::init(glm::vec4 rect, std::string vertexProgramFileName
     };
 
     std::vector<float> tex = {
-        0., 0.,
-        1., 0.,
+        0., 1.,
         1., 1.,
-        0., 1.};
+        1., 0.,
+        0., 0.};
 
     std::vector<unsigned int> el = {
         0, 1, 2, 0, 2, 3};

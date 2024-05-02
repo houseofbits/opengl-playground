@@ -7,7 +7,6 @@ Texture::Texture()
 
 Texture::~Texture()
 {
-    destroy();
 }
 
 void Texture::create(unsigned int textureWidth, unsigned int textureHeight, Type textureType)
@@ -33,15 +32,19 @@ void Texture::create(unsigned int textureWidth, unsigned int textureHeight, Type
     }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTextureStorage2D(textureId, 1, GL_RGB8, width, height);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 }
 
 void Texture::applyImage(unsigned int left, unsigned int top, unsigned int imageWidth, unsigned int imageHeight, const unsigned char *imageData)
 {
-    // TODO
+    glTextureSubImage2D(textureId, 0, left, top, imageWidth, imageHeight, GL_RGB, GL_UNSIGNED_BYTE, imageData);
 }
 
 void Texture::destroy()
 {
+    glDeleteTextures(1, &textureId);
 }
 
 void Texture::bind()
@@ -51,4 +54,5 @@ void Texture::bind()
 
 void Texture::unbind()
 {
+    glBindTexture(GL_TEXTURE_2D, 0);
 }

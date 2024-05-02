@@ -1,10 +1,34 @@
 #include "QuadTree.h"
 #include <assert.h>
+#include <math.h>
+#include <iostream>
+
+QuadTree::QuadTree() : numNodes(0), nodes(nullptr), depth(0), sizeIterator(0)
+{
+}
+
+QuadTree::~QuadTree()
+{
+}
 
 void QuadTree::create(unsigned int treeDepth)
 {
+
     depth = treeDepth;
     sizeIterator = 0;
+
+    numNodes = 1;
+    for (int i = 1; i < depth; i++)
+    {
+        numNodes += pow(4, i);
+    }
+
+    if (nodes != nullptr)
+    {
+        delete[] nodes;
+    }
+
+    nodes = new QuadTreeNode[numNodes];
 
     QuadTreeNode node;
     node.parentIndex = -1;
@@ -21,9 +45,9 @@ void QuadTree::create(unsigned int treeDepth)
     createNodesRecursive(0, 1);
 }
 
-void QuadTree::createNodesRecursive(int parentIndex, unsigned int depth)
+void QuadTree::createNodesRecursive(int parentIndex, unsigned int currentDepth)
 {
-    if (depth + 1 > depth)
+    if (currentDepth + 1 > depth)
     {
         return;
     }
@@ -52,7 +76,7 @@ void QuadTree::createNodesRecursive(int parentIndex, unsigned int depth)
             sizeIterator++;
             i++;
 
-            createNodesRecursive(nodeIndex, depth + 1);
+            createNodesRecursive(nodeIndex, currentDepth + 1);
         }
     }
 }

@@ -27,7 +27,6 @@ private:
 public:
     Camera();
 
-    void init(unsigned int viewportWidth, unsigned int viewportHeight);
     void resize(unsigned int viewportWidth, unsigned int viewportHeight);
     void registerEventHandlers(EventManager *eventManager);
     bool handleWindowEvent(WindowEvent *const event);
@@ -47,4 +46,7 @@ public:
     glm::mat4 &getProjectionMatrix() { return projectionMatrix; }
     glm::vec3 &getPosition() { return position; };
     glm::vec3 &getDirection() { return direction; };
+
+    Camera &setPosition(glm::vec3 position);
+    Camera &setAngles(float horizontal, float vertical);
 };

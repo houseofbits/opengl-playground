@@ -96,6 +96,9 @@ void Entry::init()
     // shadowMapRenderer.init();
     renderer.init(&camera);
 
+    atlasManager.init();
+    postProcessRenderer.init(glm::vec4(-1, -1, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimageColor.frag");
+
     // loadSceneFromJson("resources/scenes/ducks-n-lights.json");
     // loadSceneFromJson("resources/scenes/multiple-spot-lights.json");
     // loadSceneFromJson("resources/scenes/single-spot-light.json");

@@ -14,6 +14,7 @@
 #include "PostProcessRenderer/PostProcessRenderer.h"
 #include "Components/ModelComponent.h"
 #include <string>
+#include "Renderer/TextureAtlasManager.h"
 
 class InputEvent;
 
@@ -29,6 +30,11 @@ private:
     Camera camera;
     Shader materialShader;
     ShadowMapRenderer shadowMapRenderer;
+
+    //Test shadow atlases
+    TextureAtlasManager atlasManager;
+    PostProcessRenderer postProcessRenderer;
+
 
     // Rotating point light
     Light *animatedLight;
