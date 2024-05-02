@@ -6,6 +6,7 @@
 #include "TestTexture.h"
 #include "TestTextureAtlas.h"
 #include "TestTextureAtlasShader.h"
+#include "TestTextureAtlasDepth.h"
 
 class RenderTests
 {
@@ -15,10 +16,12 @@ public:
         TestTexture textureTest;
         TestTextureAtlas atlasTest;
         TestTextureAtlasShader atlasShaderTest;
+        TestTextureAtlasDepth atlasDepthTest;
 
         // runSingleTest(&textureTest);
         // runSingleTest(&atlasTest);
-        runSingleTest(&atlasShaderTest);
+        // runSingleTest(&atlasShaderTest);
+        runSingleTest(&atlasDepthTest);
     }
 
     static void runSingleTest(BaseRenderTest *test)

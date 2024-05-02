@@ -16,10 +16,21 @@ uniform sampler2D diffuseAtlas;
 uniform sampler2D effectsAtlas;
 uniform uint diffuseTextureId;
 
-void main()
-{
-    vec4 color = texture(diffuseAtlas, uv);
+vec2 calculateAtlasUV(uint index, vec2 uv)
+{   
+    vec4 atlasRect = atlasRegionMapping[index];
 
-    // fragColor = vec4(normal, 1.0);
+    uv.x = (uv.x * atlasRect.x) + atlasRect.y;
+    uv.y = (uv.y * atlasRect.x) + atlasRect.z;
+   
+    return uv;
+}
+
+void main()
+{   
+    vec2 uv2 = calculateAtlasUV(diffuseTextureId, uv);
+
+    vec4 color = texture(diffuseAtlas, uv2);
+
     fragColor = vec4(color.rgb, 1.0);
 }

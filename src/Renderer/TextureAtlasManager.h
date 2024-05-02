@@ -21,6 +21,8 @@ public:
 class TextureAtlasManager
 {
 public:
+    static const unsigned int quadTreeDepth = 6;
+
     enum AtlasType
     {
         ATLAS_SHADOW_DEPTH,

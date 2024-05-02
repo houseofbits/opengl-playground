@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <GL/glew.h>
 #include "BaseRenderTest.h"
 #include "../../Renderer/Texture.h"
@@ -12,7 +13,7 @@
 class TestTextureAtlasShader : public BaseRenderTest
 {
 private:
-    static const int numCubes = 20;
+    static const int numCubes = 30;
 
     TextureAtlasManager atlasManager;
     Camera camera;
@@ -20,6 +21,7 @@ private:
     Cube cubes[numCubes];
     glm::mat4 cubeTransforms[numCubes];
     unsigned int cubeDiffuseTextureIds[numCubes];
+    std::vector<int> textureIds;
 
     float randomFloat()
     {
@@ -32,37 +34,40 @@ public:
         message("Test TextureAtlas - usage in shader");
 
         atlasManager.init();
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t-512.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t-512.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t-256.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t2-256.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t-128.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t2-128.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t2-128.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t-128.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t-128.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t-512.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t-256.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t2-256.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t-256.png", TextureAtlasManager::ATLAS_DIFFUSE);
-        atlasManager.loadTextureIntoAtlas("resources/test/textures/t2-256.png", TextureAtlasManager::ATLAS_DIFFUSE);
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-512.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-512.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-256.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t2-256.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-128.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t2-128.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t2-128.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-128.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-128.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-512.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-256.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t2-256.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-256.png", TextureAtlasManager::ATLAS_DIFFUSE));
+        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t2-256.png", TextureAtlasManager::ATLAS_DIFFUSE));
 
-        camera.setPosition(glm::vec3(0, 200, -500))
-            .setAngles(0, glm::radians(-25.0f))
+        camera.setPosition(glm::vec3(50, 200, -500))
+            .setAngles(glm::radians(-10.0f), glm::radians(-25.0f))
             .resize(window.viewportWidth, window.viewportHeight);
 
         shader.loadProgram("resources/test/shaders/basic.vert", "resources/test/shaders/textureAtlasMapping.frag");
 
-        float spread = 600;
+        float spread = 500;
         for (unsigned int i = 0; i < numCubes; i++)
         {
             cubes[i].create(25 + randomFloat() * 50.0);
             cubeTransforms[i] = glm::mat4(1.0);
             cubeTransforms[i] = glm::translate(
                 cubeTransforms[i],
-                glm::vec3((spread / 2) - randomFloat() * spread, 0.0, (spread / 2) - randomFloat() * spread));
+                glm::vec3(
+                    (spread / 2) - randomFloat() * spread,
+                    (spread / 2) - randomFloat() * spread,
+                    (spread / 2) - randomFloat() * spread));
 
-            cubeDiffuseTextureIds[i] = 1;
+            cubeDiffuseTextureIds[i] = textureIds[i % textureIds.size()];
         }
     }
 

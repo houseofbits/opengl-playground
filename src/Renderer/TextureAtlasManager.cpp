@@ -6,7 +6,7 @@
 
 TextureAtlasManager::TextureAtlasManager() : atlases()
 {
-    quadTree.create(6);
+    quadTree.create(quadTreeDepth);
 
     ShaderSourceLoader::registerGlobal("NUM_ATLAS_REGIONS", quadTree.getNumNodes());
 }
