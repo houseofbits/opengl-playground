@@ -17,10 +17,8 @@ TextureAtlasManager::~TextureAtlasManager()
 
 void TextureAtlasManager::init()
 {
-    // TextureAtlas &shadowDepthAtlas = atlases[ATLAS_SHADOW_DEPTH];
-    // shadowDepthAtlas
-    //     .setTextureBinding(0)
-    //     .createAsRenderTarget(2048, 2048, Texture::TYPE_DEPTH);
+    TextureAtlas &shadowDepthAtlas = atlases[ATLAS_SHADOW_DEPTH];
+    shadowDepthAtlas.createAsRenderTarget(2048, 2048, Texture::TYPE_DEPTH);
 
     TextureAtlas &diffuseAtlas = atlases[ATLAS_DIFFUSE];
     diffuseAtlas.create(2048, 2048, Texture::TYPE_RGBA);
@@ -33,7 +31,7 @@ void TextureAtlasManager::init()
 
 int TextureAtlasManager::loadTextureIntoAtlas(std::string textureFileName, AtlasType atlasType)
 {
-    TextureAtlas &atlas = atlases[atlasType];
+    TextureAtlas &atlas = getAtlas(atlasType);
 
     unsigned char *data = nullptr;
     int width, height;
@@ -41,40 +39,49 @@ int TextureAtlasManager::loadTextureIntoAtlas(std::string textureFileName, Atlas
     if (TextureLoader::loadData(textureFileName, &width, &height, data))
     {
         int textureSize = std::max(width, height);
-        int qtSize = atlas.getSize() / textureSize;
 
-        assert(qtSize > 0);
-        assert(qtSize <= 32);
-
-        int nodeIndex = atlas.qtOccupancy.findFreeNodeOfSize(quadTree, qtSize);
+        int nodeIndex = occupyRegion(atlasType, textureSize);
         if (nodeIndex > 0)
         {
-            const QuadTreeNode &node = quadTree.getNode(nodeIndex);
+            glm::uvec4 rect = getRegionRect(atlasType, nodeIndex);
 
-            int nodeSize = atlas.getSize() / node.size;
-
-            assert(nodeSize >= textureSize);
-
-            int left = node.left * nodeSize;
-            int top = node.top * nodeSize;
-
-            assert(nodeSize + left <= atlas.getSize());
-            assert(nodeSize + top <= atlas.getSize());
-
-            atlas.texture->applyImage(left, top, width, height, data);
-
-            atlas.qtOccupancy.setOccupied(quadTree, nodeIndex, true);
-
-            return nodeIndex;
+            atlas.texture->applyImage(rect.x, rect.y, width, height, data);
         }
+
+        return nodeIndex;
     }
 
     return -1;
 }
 
-unsigned int &TextureAtlasManager::getTextureId(AtlasType atlas)
+int TextureAtlasManager::occupyRegion(AtlasType atlasType, int size)
 {
-    return atlases[atlas].texture->textureId;
+    TextureAtlas &atlas = getAtlas(atlasType);
+
+    int qtSize = atlas.getSize() / size;
+
+    assert(qtSize > 0);
+    assert(qtSize <= 32);
+
+    int nodeIndex = atlas.qtOccupancy.findFreeNodeOfSize(quadTree, qtSize);
+    if (nodeIndex > 0)
+    {
+        atlas.qtOccupancy.setOccupied(quadTree, nodeIndex, true);
+
+        return nodeIndex;
+    }
+
+    return -1;
+}
+
+unsigned int &TextureAtlasManager::getTextureId(AtlasType type)
+{
+    return atlases[type].texture->textureId;
+}
+
+TextureAtlas &TextureAtlasManager::getAtlas(AtlasType type)
+{
+    return atlases[type];
 }
 
 void TextureAtlasManager::initAtlasRegionsMapping()
@@ -95,15 +102,31 @@ void TextureAtlasManager::initAtlasRegionsMapping()
 
 void TextureAtlasManager::bindAll(Shader &shader)
 {
+    glActiveTexture(GL_TEXTURE0);
+    atlases[ATLAS_SHADOW_DEPTH].bindTexture();
+    shader.setUniform("diffuseAtlas", 0);
 
     glActiveTexture(GL_TEXTURE1);
-    atlases[ATLAS_DIFFUSE].texture->bind();
+    atlases[ATLAS_DIFFUSE].bindTexture();
     shader.setUniform("diffuseAtlas", 1);
 
     glActiveTexture(GL_TEXTURE2);
-    atlases[ATLAS_EFFECTS].texture->bind();
+    atlases[ATLAS_EFFECTS].bindTexture();
     shader.setUniform("effectsAtlas", 2);
 
     atlasRegionsMapping.bind();
     shader.setUniform("atlasRegionMapping", atlasRegionsMapping.getBufferId());
+}
+
+glm::uvec4 TextureAtlasManager::getRegionRect(AtlasType type, unsigned int index)
+{
+    const QuadTreeNode &node = quadTree.getNode(index);
+
+    int size = getAtlas(type).getSize() / node.size;
+
+    return glm::uvec4(
+        node.left * size,
+        node.top * size,
+        size,
+        size);
 }

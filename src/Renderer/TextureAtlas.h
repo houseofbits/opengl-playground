@@ -13,6 +13,7 @@ class TextureAtlas
 public:
     QuadTreeOccupancy qtOccupancy;
     Texture *texture;
+    bool isRenderTarget;
 
     TextureAtlas();
     ~TextureAtlas();
@@ -21,4 +22,8 @@ public:
 
     TextureAtlas &create(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);
     TextureAtlas &createAsRenderTarget(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);
+
+    void bindRenderTarget();
+    void unbindRenderTarget();
+    void bindTexture();
 };

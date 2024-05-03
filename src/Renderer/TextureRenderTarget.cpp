@@ -4,9 +4,9 @@
 
 void TextureRenderTarget::create(unsigned int width, unsigned int height, Texture::Type type)
 {
-    Texture::create(width, height, type);
-
     glGenFramebuffers(1, &framebufferId);
+
+    Texture::create(width, height, type);
 
     glBindFramebuffer(GL_FRAMEBUFFER, framebufferId);
 

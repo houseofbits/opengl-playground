@@ -36,7 +36,10 @@ public:
     void init();
     int loadTextureIntoAtlas(std::string textureFileName, AtlasType atlas);
     unsigned int &getTextureId(AtlasType atlas);
+    TextureAtlas &getAtlas(AtlasType type);
     void bindAll(Shader &shader);
+    glm::uvec4 getRegionRect(AtlasType type, unsigned int index);
+    int occupyRegion(AtlasType type, int size);
 
 private:
     QuadTree quadTree;

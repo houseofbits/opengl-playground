@@ -32,13 +32,13 @@ void Texture::create(unsigned int textureWidth, unsigned int textureHeight, Type
     }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glTextureStorage2D(textureId, 1, GL_RGB8, width, height);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 }
 
 void Texture::applyImage(unsigned int left, unsigned int top, unsigned int imageWidth, unsigned int imageHeight, const unsigned char *imageData)
 {
+    glTextureStorage2D(textureId, 1, GL_RGB8, width, height);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
     glTextureSubImage2D(textureId, 0, left, top, imageWidth, imageHeight, GL_RGB, GL_UNSIGNED_BYTE, imageData);
 }
 

@@ -16,4 +16,5 @@ public:
     bool isNodeOccupied(unsigned int nodeIndex);
     int findFreeNodeOfSize(QuadTree &tree, unsigned int size, unsigned int nodeIndex = 0);
     void setOccupied(QuadTree &tree, unsigned int nodeIndex, bool value);
+    void clear();
 };

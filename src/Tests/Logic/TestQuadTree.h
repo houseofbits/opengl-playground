@@ -51,7 +51,7 @@ public:
         assert(qt.getNode(7).top == 0);
         assert(qt.getNode(8).top == 1);
 
-        // printDebugQTStructure(qt);
+        printDebugQTStructure(qt);
     }
 
     static void testIsBranchOccupied()

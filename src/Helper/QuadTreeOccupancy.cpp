@@ -57,3 +57,8 @@ void QuadTreeOccupancy::setOccupied(QuadTree &tree, unsigned int nodeIndex, bool
 {
     occupancyMap[nodeIndex] = value;
 }
+
+void QuadTreeOccupancy::clear()
+{
+    occupancyMap.clear();
+}
