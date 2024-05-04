@@ -74,26 +74,26 @@ vec3 calculateSpotLightShadow(LightStructure light, vec3 projCoords, vec4 atlasR
 
 void main() 
 {
-    vec3 textureColor = texture(texture1, fs_in.TexCoord).xyz;
+    // vec3 textureColor = texture(texture1, fs_in.TexCoord).xyz;
 
-    vec3 lightColor = vec3(0.0);
-    LightStructure light;
-    vec4 fragPosLightSpace;
+    // vec3 lightColor = vec3(0.0);
+    // LightStructure light;
+    // vec4 fragPosLightSpace;
  
-    for(int index = 0; index < numActiveLights; index++)
-    {   
-        fragPosLightSpace = fragmentPositionPerLightView[index];
-        light = lights[index];
+    // for(int index = 0; index < numActiveLights; index++)
+    // {   
+    //     fragPosLightSpace = fragmentPositionPerLightView[index];
+    //     light = lights[index];
 
-        vec4 atlasRect = shadowAtlasRegions[light.shadowAtlasIndex];
-        vec3 projCoords = getProjectedCoords(atlasRect, fragPosLightSpace);
-        if (!projCoordsClip(atlasRect, projCoords)) {
-            continue;
-        }
+    //     vec4 atlasRect = shadowAtlasRegions[light.shadowAtlasIndex];
+    //     vec3 projCoords = getProjectedCoords(atlasRect, fragPosLightSpace);
+    //     if (!projCoordsClip(atlasRect, projCoords)) {
+    //         continue;
+    //     }
 
-        lightColor += calculateSpotLightShadow(light, projCoords, atlasRect);
-    }
-    FragColor = vec4(textureColor * lightColor, 1.0);
+    //     lightColor += calculateSpotLightShadow(light, projCoords, atlasRect);
+    // }
+    // FragColor = vec4(textureColor * lightColor, 1.0);
 
     // FragColor = vec4(fs_in.Normal, 1.0);
 
@@ -101,23 +101,23 @@ void main()
     // vec4 val = shadowAtlasRegions[0];
     // FragColor = vec4(val.x, val.y, 1.0, 1.0);
 
-//     vec3 shadowMap = vec3(0.0);
-//     float inShadow = 0;
-//     uint lightIndex = 0;
-//     LightStructure light = lights[lightIndex];
+    vec3 shadowMap = vec3(0.0);
+    float inShadow = 0;
+    uint lightIndex = 0;
+    LightStructure light = lights[lightIndex];
 
-//     vec4 atlasRect = shadowAtlasRegions[light.shadowAtlasIndex];
-//     vec3 projCoords = getProjectedCoords2(atlasRect, fragmentPositionPerLightView[lightIndex]);
+    vec4 atlasRect = shadowAtlasRegions[light.shadowAtlasIndex];
+    vec3 projCoords = getProjectedCoords(atlasRect, fragmentPositionPerLightView[lightIndex]);
     
-//    if (projCoordsClip2(atlasRect, projCoords)) {
-//         // shadowMap = texture(shadowDepthAtlas, projCoords.xy).xyz;
+  // if (projCoordsClip2(atlasRect, projCoords.xy)) {
+        shadowMap = texture(shadowDepthAtlas, projCoords.xy).xyz;
 
-//         // inShadow = sampleShadow(projCoords, 0.0000001);
+        // inShadow = sampleShadow(projCoords, 0.0000001);
 
-//         shadowMap = calculateSpotLightShadow(light, projCoords);
-//    }
+        // shadowMap = calculateSpotLightShadow(light, projCoords);
+  // }
 //     FragColor = vec4(shadowMap, 1.0);
 
-    // float depth = pow(pow(shadowMap.r, 100), 100);
-    // FragColor = vec4(vec3(depth), 1.0);
+    float depth = pow(pow(shadowMap.r, 100), 100);
+    FragColor = vec4(vec3(depth), 1.0);
 }

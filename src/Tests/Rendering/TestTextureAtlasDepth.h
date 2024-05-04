@@ -48,7 +48,6 @@ public:
         renderer.draw();
 
         atlasManager.getAtlas(TextureAtlasManager::ATLAS_SHADOW_DEPTH).bindRenderTarget();
-
         atlasManager.getAtlas(TextureAtlasManager::ATLAS_SHADOW_DEPTH).qtOccupancy.clear();
 
         int size = 1024;
@@ -65,10 +64,9 @@ public:
                 shader.setUniform("modelMatrix", cubeTransform);
                 cube.draw();
 
-                size = size / 2;
-                if (size < 128)
+                if (size > 128)
                 {
-                    size = 128;
+                    size = size / 2;
                 }
             }
         }

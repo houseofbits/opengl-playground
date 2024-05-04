@@ -17,7 +17,7 @@ void Scene::render(Camera &camera, Shader &shader)
     for (const auto &renderable : renderables)
     {
         shader.setUniform("modelMatrix", renderable->getTransform());
-        renderable->setShaderMaterialParams(shader);
+        // renderable->setShaderMaterialParams(shader);
         renderable->render();
     }
 }

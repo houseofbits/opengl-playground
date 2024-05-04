@@ -15,10 +15,3 @@ struct LightStructure {
     
     mat4 projectionViewMatrix;
 };
-
-struct LightViewStructure {    
-    mat4 lightProjectionViewMatrix;
-    vec2 atlasPos;
-    vec2 atlasSize;
-    uint lightIndex;
-};

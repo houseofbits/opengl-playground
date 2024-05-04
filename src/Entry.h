@@ -8,7 +8,6 @@
 #include "Renderer/Model.h"
 #include "Renderer/Scene.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/RenderTarget.h"
 #include "Renderer/ShadowMapRenderer.h"
 #include "WireframeRenderer/WireframeRenderer.h"
 #include "PostProcessRenderer/PostProcessRenderer.h"
@@ -31,10 +30,9 @@ private:
     Shader materialShader;
     ShadowMapRenderer shadowMapRenderer;
 
-    //Test shadow atlases
+    // Test shadow atlases
     TextureAtlasManager atlasManager;
     PostProcessRenderer postProcessRenderer;
-
 
     // Rotating point light
     Light *animatedLight;

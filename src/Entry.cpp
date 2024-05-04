@@ -41,8 +41,8 @@ void Entry::run()
         glViewport(0, 0, window.viewportWidth, window.viewportHeight);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        (*scene.lights.begin())->position = camera.getPosition() - glm::vec3(0, 20, 0);
-        (*scene.lights.begin())->direction = camera.getDirection();
+        // (*scene.lights.begin())->position = camera.getPosition() - glm::vec3(0, 20, 0);
+        // (*scene.lights.begin())->direction = camera.getDirection();
 
         materialShader.use();
         renderer.setShaderAttributes(materialShader);
@@ -101,9 +101,9 @@ void Entry::init()
 
     // loadSceneFromJson("resources/scenes/ducks-n-lights.json");
     // loadSceneFromJson("resources/scenes/multiple-spot-lights.json");
-    // loadSceneFromJson("resources/scenes/single-spot-light.json");
+    loadSceneFromJson("resources/scenes/single-spot-light.json");
     // loadSceneFromJson("resources/scenes/hall-with-columns.json");
-    loadSceneFromJson("resources/scenes/hall-with-columns-omni.json");
+    // loadSceneFromJson("resources/scenes/hall-with-columns-omni.json");
 }
 
 glm::vec3 getVec3FromnJsonArray(nlohmann::json::array_t array)

@@ -27,9 +27,13 @@ void main()
             gl_ViewportIndex = viewportIndex;
 
             for(int i = 0; i < 3; ++i)
-            {
+            {   
+                vec3 ldir = normalize(lights[lightIndex].position - vsPosition[i].xyz);
                 gsNormal = vsNormal[i];
-                gl_Position = projViewMatrix * vsPosition[i];
+                float ndotl = 1.0 - dot(ldir, gsNormal);
+                ldir = ldir * (ndotl  * 20.0);
+                vec4 vpos = vec4(vsPosition[i].xyz - ldir, vsPosition[i].w);
+                gl_Position = projViewMatrix * vpos;    //vsPosition[i];
                 gsPosition = gl_Position.xyz;
                 gsFarPlane = lights[lightIndex].distAttenMax;
 

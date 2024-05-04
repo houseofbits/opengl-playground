@@ -94,7 +94,7 @@ void TextureAtlasManager::initAtlasRegionsMapping()
         data[i] = {nodeSize, node.left * nodeSize, node.top * nodeSize, 0.0f};
     }
 
-    atlasRegionsMapping.create(quadTree.getNumNodes(), UniformBuffer<glm::vec4>::STATIC);
+    atlasRegionsMapping.create(quadTree.getNumNodes(), UniformBuffer<glm::vec4>::STATIC, 2);
     atlasRegionsMapping.setData(data, 0, quadTree.getNumNodes());
 
     delete[] data;
@@ -104,7 +104,7 @@ void TextureAtlasManager::bindAll(Shader &shader)
 {
     glActiveTexture(GL_TEXTURE0);
     atlases[ATLAS_SHADOW_DEPTH].bindTexture();
-    shader.setUniform("diffuseAtlas", 0);
+    shader.setUniform("shadowDepthAtlas", 0);
 
     glActiveTexture(GL_TEXTURE1);
     atlases[ATLAS_DIFFUSE].bindTexture();

@@ -82,10 +82,6 @@ public:
     float falloffAngle;
     bool doesCastShadows;
 
-    // Multilight stuff
-    // glm::mat4 viewMatrices[MAX_VIEWS]; // Multiple view matrices in case of point light
-    // glm::vec4 shadowAtlasPosition[MAX_VIEWS];
-
     // Obsolette stuff
     glm::mat4 viewMatrix;
     glm::mat4 projectionMatrix;

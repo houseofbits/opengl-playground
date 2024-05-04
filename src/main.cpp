@@ -7,9 +7,9 @@
 
 int main(int argc, char *argv[])
 {
-    // Entry entry;
-    // entry.run();
+    Entry entry;
+    entry.run();
 
     // LogicTests::run();
-    RenderTests::run();
+    // RenderTests::run();
 }

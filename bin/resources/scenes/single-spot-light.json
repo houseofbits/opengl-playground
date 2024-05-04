@@ -1,6 +1,6 @@
 {
     "materialShaderVert": "resources/shaders/lighting.vert",
-    "materialShaderFrag": "resources/shaders/lighting.frag",
+    "materialShaderFrag": "resources/shaders/lighting2.frag",
     "meshes": [
         {
             "model": "resources/Duck/Duck.gltf",
@@ -10,6 +10,20 @@
                 0,
                 0
             ]
+        },
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/textures/concrete.jpg",
+            "position": [
+                0,
+                1,
+                0
+            ],
+            "scale": [
+                500,
+                10,
+                500
+            ]
         }
     ],
     "lights": [
@@ -17,8 +31,8 @@
             "type": "SPOT",
             "position": [
                 -100,
-                400,
-                50
+                500,
+                0
             ],
             "direction": [
                 0,
@@ -30,7 +44,29 @@
                 0,
                 1
             ],
-            "beamAngle": 60,
+            "beamAngle": 50,
+            "distAttenMax": 700,
+            "intensity": 2,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                100,
+                500,
+                0
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                0,
+                0,
+                1
+            ],
+            "beamAngle": 50,
             "distAttenMax": 700,
             "intensity": 2,
             "doesCastShadows": true
