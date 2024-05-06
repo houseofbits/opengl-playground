@@ -1,8 +1,9 @@
 #pragma once
+#include "../Events/EventManager.h"
+#include "Shader.h"
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-#include "../Events/EventManager.h"
 
 class WindowEvent;
 class InputEvent;
@@ -29,8 +30,8 @@ public:
 
     void resize(unsigned int viewportWidth, unsigned int viewportHeight);
     void registerEventHandlers(EventManager *eventManager);
-    bool handleWindowEvent(WindowEvent *const event);
-    bool handleInputEvent(InputEvent *const event);
+    bool handleWindowEvent(WindowEvent *event);
+    bool handleInputEvent(InputEvent *event);
     void setViewMatrix(glm::mat4 m)
     {
         viewMatrix = m;
@@ -49,4 +50,6 @@ public:
 
     Camera &setPosition(glm::vec3 position);
     Camera &setAngles(float horizontal, float vertical);
+
+    void bind(Shader& shader);
 };

@@ -6,7 +6,11 @@ enable_testing()
 
 file(GLOB_RECURSE sources src/*.cpp src/*.h)
 
-add_executable(${PROJECT_NAME} ${sources})
+add_executable(${PROJECT_NAME} ${sources}
+        src/Renderer/StaticGeometryRenderer.cpp
+        src/Renderer/StaticGeometryRenderer.h
+        src/Renderer/BaseRenderer.cpp
+        src/Renderer/BaseRenderer.h)
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)
 

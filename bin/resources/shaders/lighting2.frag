@@ -2,10 +2,6 @@
 
 layout (location=0) out vec4 FragColor;
 
-#include include/structures.glsl
-#include include/lightBlock.glsl
-#include include/textureAtlas.glsl
-
 in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
@@ -14,6 +10,11 @@ in VS_OUT {
 } fs_in;
 
 uniform vec3 viewPosition;
+
+#include include/structures.glsl
+#include include/lightBlock.glsl
+#include include/textureAtlas.glsl
+#include include/lighting.glsl
 
 in vec4 fragmentPositionPerLightView[MAX_LIGHTS];
 
@@ -68,16 +69,16 @@ float pcfShadowCalculation(vec3 projCoords, uint index)
 
 void main() 
 {
-    float inShadow = 0;
+    vec3 color = vec3(0.0);
     for(int lightIndex = 0; lightIndex < numActiveLights; lightIndex++) {    
-        // uint lightIndex = 0;
         LightStructure light = lights[lightIndex];
         vec3 projCoords = calculateProjectedCoords(light.shadowAtlasIndex, fragmentPositionPerLightView[lightIndex]);
         
         if (isProjCoordsClipping(light.shadowAtlasIndex, projCoords.xy)) {
-            // inShadow = sampleShadow(projCoords, 0.0000001);
-            inShadow += pcfShadowCalculation(projCoords, light.shadowAtlasIndex);
+            float inShadow = pcfShadowCalculation(projCoords, light.shadowAtlasIndex);
+
+            color += calculateLight(light, inShadow);
         }    
     }
-    FragColor = vec4(vec3(inShadow / 2.0), 1.0);
+    FragColor = vec4(color, 1.0);
 }

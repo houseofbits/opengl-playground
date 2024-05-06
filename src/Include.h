@@ -12,7 +12,7 @@
 #include "Renderer/Cube.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Camera.h"
-#include "Renderer/ShadowMapRenderer.h"
+#include "Renderer/RenderManager.h"
 #include "WireframeRenderer/GridPlane.h"
 #include "Events/Event.h"
 #include "Events/EventManager.h"

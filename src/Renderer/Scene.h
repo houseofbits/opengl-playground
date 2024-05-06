@@ -18,7 +18,7 @@ public:
     Light *createPointLight(glm::vec3 pos, glm::vec3 color, float falloff, float intensity = 1.);
     Light *createSpotLight(glm::vec3 pos, glm::vec3 direction, glm::vec3 color, float beamAngle, float falloff, float intensity = 1.);
 
-    void render(Camera &camera, Shader &shader);
-    void renderDepth(Camera &camera, Shader &shader);
+    void render( Shader &shader);
+    void renderDepth(Shader &shader);
     void renderWithTransform(Shader &shader);
 };

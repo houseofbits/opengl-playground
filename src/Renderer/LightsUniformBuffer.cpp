@@ -1,8 +1,9 @@
 #include "LightsUniformBuffer.h"
 #include "../Helper/ShaderSourceLoader.h"
 
-LightsUniformBuffer::LightsUniformBuffer() : uniformBuffer()
+LightsUniformBuffer::LightsUniformBuffer() : uniformBuffer(), maxActiveLights(0), numActiveLights(0)
 {
+    ShaderSourceLoader::registerGlobal("LIGHTS_UNIFORM_BINDING_INDEX", LIGHTS_UNIFORM_BINDING_INDEX);
 }
 
 void LightsUniformBuffer::create(unsigned int maxLights)
@@ -20,7 +21,7 @@ void LightsUniformBuffer::update(Scene &scene, TextureAtlasManager &atlasManager
     unsigned int uniformIndex = 0;
     for (auto const &light : scene.lights)
     {
-        light->generateViews(); // TODO Update only when necesarry
+        light->generateViews(); // TODO Update only when necessary
 
         LightUniform &uniform = uniformBuffer.get(uniformIndex);
 
@@ -62,7 +63,7 @@ void LightsUniformBuffer::populateUniform(LightUniform &uniform, Light &light, L
 
 unsigned int LightsUniformBuffer::getShadowAtlasRegionIndex(TextureAtlasManager &atlasManager)
 {
-    unsigned int shadowMapSize = 512;
+    int shadowMapSize = 512;
 
     int index = atlasManager.occupyRegion(TextureAtlasManager::ATLAS_SHADOW_DEPTH, shadowMapSize);
     return index > 0 ? index : 0;

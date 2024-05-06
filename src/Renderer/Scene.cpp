@@ -11,9 +11,8 @@ ModelComponent &Scene::createModelComponent(std::string modelFilename, std::stri
     return *model;
 }
 
-void Scene::render(Camera &camera, Shader &shader)
+void Scene::render(Shader &shader)
 {
-    shader.setUniform("viewProjectionMatrix", camera.getProjectionViewMatrix());
     for (const auto &renderable : renderables)
     {
         shader.setUniform("modelMatrix", renderable->getTransform());
@@ -22,12 +21,11 @@ void Scene::render(Camera &camera, Shader &shader)
     }
 }
 
-void Scene::renderDepth(Camera &camera, Shader &shader)
+void Scene::renderDepth(Shader &shader)
 {
     // glEnable(GL_CULL_FACE);
     // glCullFace(GL_FRONT);
 
-    shader.setUniform("viewProjectionMatrix", camera.getProjectionViewMatrix());
     for (const auto &renderable : renderables)
     {
         shader.setUniform("modelMatrix", renderable->getTransform());

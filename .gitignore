@@ -46,3 +46,8 @@ CTestTestfile.cmake
 _deps
 build/
 libs/
+.clang-format
+.cmake/
+.idea/
+.ninja_deps
+.ninja_log

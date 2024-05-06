@@ -5,10 +5,8 @@
 #include <fstream>
 #include "Events/InputEvent.h"
 
-Entry::Entry() : window(&eventManager)
+Entry::Entry() : window(&eventManager), renderManager(&window)
 {
-    animatedLightAngle = 0;
-    isShadowAtlasVisible = false;
     eventManager.registerEventReceiver(this, &Entry::handleInputEvent);
 }
 
@@ -34,28 +32,7 @@ void Entry::run()
             break;
         }
 
-        renderer.updateLights(scene);
-
-        renderer.renderShadowAtlas(scene);
-
-        glViewport(0, 0, window.viewportWidth, window.viewportHeight);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // (*scene.lights.begin())->position = camera.getPosition() - glm::vec3(0, 20, 0);
-        // (*scene.lights.begin())->direction = camera.getDirection();
-
-        materialShader.use();
-        renderer.setShaderAttributes(materialShader);
-        scene.render(camera, materialShader);
-
-        // wireframeRenderer.draw(&renderer);
-
-        if (isShadowAtlasVisible)
-        {
-            renderer.shadowMapRenderer.debugRender();
-        }
-
-        // debugImageRenderer.draw();
+        renderManager.render(scene);
 
         window.doubleBuffer();
 
@@ -87,17 +64,10 @@ void Entry::run()
  */
 void Entry::init()
 {
-    wireframeRenderer.init();
-
-    // testColorRenderTarget.create(RenderTarget::TARGET_COLOR, 128 * 6, 128);
-
     camera.registerEventHandlers(&eventManager);
 
-    // shadowMapRenderer.init();
-    renderer.init(&camera);
-
-    atlasManager.init();
-    postProcessRenderer.init(glm::vec4(-1, -1, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimageColor.frag");
+    renderManager.init();
+    renderManager.setCamera(&camera);
 
     // loadSceneFromJson("resources/scenes/ducks-n-lights.json");
     // loadSceneFromJson("resources/scenes/multiple-spot-lights.json");
@@ -106,7 +76,7 @@ void Entry::init()
     // loadSceneFromJson("resources/scenes/hall-with-columns-omni.json");
 }
 
-glm::vec3 getVec3FromnJsonArray(nlohmann::json::array_t array)
+glm::vec3 getVec3FromJsonArray(nlohmann::json::array_t array)
 {
     glm::vec3 value(0.0);
 
@@ -117,7 +87,7 @@ glm::vec3 getVec3FromnJsonArray(nlohmann::json::array_t array)
     return value;
 }
 
-void Entry::loadSceneFromJson(std::string filename)
+void Entry::loadSceneFromJson(const std::string& filename)
 {
     std::ifstream file(filename);
     if (file.fail())
@@ -128,22 +98,20 @@ void Entry::loadSceneFromJson(std::string filename)
 
     nlohmann::json data = nlohmann::json::parse(file);
 
-    materialShader.loadProgram(data["materialShaderVert"], data["materialShaderFrag"]);
-
     for (auto &meshData : data["meshes"])
     {
         ModelComponent &model = scene.createModelComponent(meshData["model"], meshData["diffuseTexture"]);
         if (meshData["position"] != nullptr)
         {
-            model.setPosition(getVec3FromnJsonArray(meshData["position"]));
+            model.setPosition(getVec3FromJsonArray(meshData["position"]));
         }
         if (meshData["rotation"] != nullptr)
         {
-            model.setRotation(getVec3FromnJsonArray(meshData["rotation"]));
+            model.setRotation(getVec3FromJsonArray(meshData["rotation"]));
         }
         if (meshData["scale"] != nullptr)
         {
-            model.setScale(getVec3FromnJsonArray(meshData["scale"]));
+            model.setScale(getVec3FromJsonArray(meshData["scale"]));
         }
     }
 
@@ -154,17 +122,17 @@ void Entry::loadSceneFromJson(std::string filename)
         if (type == "POINT")
         {
             light = scene.createPointLight(
-                getVec3FromnJsonArray(lightData["position"]),
-                getVec3FromnJsonArray(lightData["color"]),
+                    getVec3FromJsonArray(lightData["position"]),
+                    getVec3FromJsonArray(lightData["color"]),
                 lightData["distAttenMax"],
                 lightData["intensity"]);
         }
         if (type == "SPOT")
         {
             light = scene.createSpotLight(
-                getVec3FromnJsonArray(lightData["position"]),
-                getVec3FromnJsonArray(lightData["direction"]),
-                getVec3FromnJsonArray(lightData["color"]),
+                    getVec3FromJsonArray(lightData["position"]),
+                    getVec3FromJsonArray(lightData["direction"]),
+                    getVec3FromJsonArray(lightData["color"]),
                 lightData["beamAngle"],
                 lightData["distAttenMax"],
                 lightData["intensity"]);
@@ -178,24 +146,24 @@ void Entry::loadSceneFromJson(std::string filename)
 
 bool Entry::handleInputEvent(InputEvent *const event)
 {
-    if (event->type == InputEvent::KEYDOWN)
-    {
-        if (event->keyCode == 30) // '1'
-        {
-            testFramebuffer = 1;
-        }
-        if (event->keyCode == 31) // '2'
-        {
-            testFramebuffer = 2;
-        }
-        if (event->keyCode == 59) // F2
-        {
-            isShadowAtlasVisible = !isShadowAtlasVisible;
-
-            renderer.printDebugShadowMaps();
-        }
-        // std::cout << event->keyCode << std::endl;
-    }
+//    if (event->type == InputEvent::KEYDOWN)
+//    {
+//        if (event->keyCode == 30) // '1'
+//        {
+//            testFramebuffer = 1;
+//        }
+//        if (event->keyCode == 31) // '2'
+//        {
+//            testFramebuffer = 2;
+//        }
+//        if (event->keyCode == 59) // F2
+//        {
+//            isShadowAtlasVisible = !isShadowAtlasVisible;
+//
+//            renderer.printDebugShadowMaps();
+//        }
+//        // std::cout << event->keyCode << std::endl;
+//    }
 
     return true;
 }

@@ -6,9 +6,9 @@ void WireframeRenderer::init()
     gridPlane.create(1000, 1000, 100);
 }
 
-void WireframeRenderer::draw(Renderer *renderer)
+void WireframeRenderer::draw()
 {
     shader.use();
-    shader.setUniform("viewProjectionMatrix", renderer->activeCamera->getProjectionViewMatrix());
-    gridPlane.draw();
+//    shader.setUniform("viewProjectionMatrix", renderer->activeCamera->getProjectionViewMatrix());
+//    gridPlane.draw();
 }

@@ -136,3 +136,9 @@ Camera &Camera::setAngles(float horizontal, float vertical)
 
     return *this;
 }
+
+void Camera::bind(Shader &shader)
+{
+    shader.setUniform("viewProjectionMatrix", getProjectionViewMatrix());
+    shader.setUniform("viewPosition", getPosition());
+}

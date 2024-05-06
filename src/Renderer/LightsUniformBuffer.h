@@ -9,6 +9,8 @@
 class LightsUniformBuffer
 {
 public:
+    static const unsigned int LIGHTS_UNIFORM_BINDING_INDEX = 1;
+
     typedef UniformBuffer<LightUniform> LightUniformBuffer;
 
     LightsUniformBuffer();
@@ -18,8 +20,8 @@ private:
     unsigned int maxActiveLights;
     unsigned int numActiveLights;
 
-    void populateUniform(LightUniform &uniform, Light &light, LightView &view);
-    unsigned int getShadowAtlasRegionIndex(TextureAtlasManager &atlasManager);
+    static void populateUniform(LightUniform &uniform, Light &light, LightView &view);
+    static unsigned int getShadowAtlasRegionIndex(TextureAtlasManager &atlasManager);
 
 public:
     void create(unsigned int maxLights);
@@ -29,7 +31,7 @@ public:
     {
         return uniformBuffer.get(index);
     }
-    unsigned int getNumActiveLights()
+    [[nodiscard]] unsigned int getNumActiveLights() const
     {
         return numActiveLights;
     }

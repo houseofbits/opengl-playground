@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Renderer.h"
 #include "Scene.h"
 #include "Shader.h"
 #include "../Helper/AtlasGraph.h"
@@ -9,20 +8,22 @@
 #include <glm/vec3.hpp>
 #include "../Helper/ShaderSourceLoader.h"
 #include "../PostProcessRenderer/PostProcessRenderer.h"
+#include "BaseRenderer.h"
 
-class ShadowMapRenderer
+class ShadowMapRenderer : public BaseRenderer
 {
-public:
+private:
     static const unsigned int MAX_LIGHTVIEWS_PER_PASS = 20;
 
-    ShadowMapRenderer();
+    void prepareViewports();
+
+public:
+    explicit ShadowMapRenderer(RenderManager *);
 
     Shader depthShader;
     PostProcessRenderer debugImageRenderer;
 
     void init();
-    void renderShadowAtlas(Scene &scene);
-    void debugRender();
-
-    void render(Scene &scene, TextureAtlasManager &atlasManager);
+    void render(Scene &scene);
+    void renderShadowAtlas();
 };
