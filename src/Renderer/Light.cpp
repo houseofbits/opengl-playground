@@ -1,6 +1,11 @@
 #include "Light.h"
 #include "UniformBuffer.h"
 
+Light::Light(): projectionTextureId(0)
+{
+
+}
+
 glm::mat4 &Light::getProjectionViewMatrix()
 {
     projectionMatrix = glm::perspective<float>(glm::radians(beamAngle), 1.0, 0.01, distAttenMax);

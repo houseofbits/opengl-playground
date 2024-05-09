@@ -30,6 +30,9 @@ typedef struct alignas(16)
     // 64
     glm::mat4 projectionViewMatrix; // 64
 
+    // 128
+    unsigned int projectionTextureId;   //4
+
 } LightUniform;
 
 // Defines light projection view matrices and index into shadow atlas
@@ -51,12 +54,17 @@ public:
 
     void calculateProjectionViewMatrix(float fov, glm::vec3 position, glm::vec3 direction, float farPlane)
     {
-        glm::vec3 up = direction;
-        std::swap(up.x, up.y);
-        std::swap(up.y, up.z);
+        glm::vec3 dir = glm::normalize(direction);
+        glm::vec3 up(0,1,0);
+        if (fabs(glm::dot(dir, up)) > 0.99) {
+            up = glm::vec3(1,0,0);
+        }
+
+        glm::vec3 cross = glm::cross(dir, up);
+        glm::vec3 tangentUp = glm::cross(dir, cross);
 
         projectionMatrix = glm::perspective<float>(glm::radians(fov), 1.0, 0.01, farPlane);
-        viewMatrix = glm::lookAt(position, position + direction, up);
+        viewMatrix = glm::lookAt(position, position + direction, tangentUp);
         projectionViewMatrix = projectionMatrix * viewMatrix;
     }
 };
@@ -64,6 +72,8 @@ public:
 class Light
 {
 public:
+    Light();
+
     enum Type
     {
         POINT = 0,
@@ -81,6 +91,8 @@ public:
     float beamAngle;
     float falloffAngle;
     bool doesCastShadows;
+
+    unsigned int projectionTextureId;
 
     // Obsolette stuff
     glm::mat4 viewMatrix;

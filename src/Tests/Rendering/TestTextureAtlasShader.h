@@ -33,7 +33,14 @@ public:
     {
         message("Test TextureAtlas - usage in shader");
 
+
+
+
         atlasManager.init();
+
+//        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/Duck/DuckCM.png", TextureAtlasManager::ATLAS_DIFFUSE));
+//        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/textures/concrete.jpg", TextureAtlasManager::ATLAS_DIFFUSE));
+
         textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-512.png", TextureAtlasManager::ATLAS_DIFFUSE));
         textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-512.png", TextureAtlasManager::ATLAS_DIFFUSE));
         textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/test/textures/t-256.png", TextureAtlasManager::ATLAS_DIFFUSE));

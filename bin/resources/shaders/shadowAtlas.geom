@@ -31,8 +31,8 @@ void main()
                 vec3 ldir = normalize(lights[lightIndex].position - vsPosition[i].xyz);
                 gsNormal = vsNormal[i];
                 float ndotl = 1.0 - dot(ldir, gsNormal);
-                ldir = ldir * (ndotl  * 20.0);
-                vec4 vpos = vec4(vsPosition[i].xyz - ldir, vsPosition[i].w);
+                ldir = ldir * (ndotl  * 10.0);
+                vec4 vpos = vec4(vsPosition[i].xyz - ldir - (gsNormal * 2.0), vsPosition[i].w);
                 gl_Position = projViewMatrix * vpos;    //vsPosition[i];
                 gsPosition = gl_Position.xyz;
                 gsFarPlane = lights[lightIndex].distAttenMax;

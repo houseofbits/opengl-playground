@@ -2,10 +2,6 @@
 
 layout (location=0) out vec4 FragColor;
 
-#include include/structures.glsl
-#include include/lightBlock.glsl
-#include include/shadowAtlas.glsl
-
 in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
@@ -14,110 +10,103 @@ in VS_OUT {
 } fs_in;
 
 uniform vec3 viewPosition;
-uniform sampler2D texture1;
+uniform uint diffuseTextureId;
+//uniform sampler2D texture1;
+
+#include include/structures.glsl
+#include include/lightBlock.glsl
+#include include/textureAtlas.glsl
+#include include/lighting.glsl
 
 in vec4 fragmentPositionPerLightView[MAX_LIGHTS];
 
-vec3 diffuseComponent(vec3 lightDir, vec3 normal, vec3 color)
+
+
+vec3 calculateProjectedCoords(vec4 lightSpacePos)
 {
-    float ndotl = max(dot(lightDir, normal), 0.0);
-    return ndotl * color;
+    vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    return projCoords;
 }
 
-vec3 specularComponent(vec3 lightDir, vec3 normal)
+float sampleShadow(vec3 projCoords, float bias)
 {
-    vec3 viewDir = normalize(viewPosition - fs_in.FragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = 0.0;
- 
-    vec3 halfwayDir = normalize(lightDir + viewDir);  
-    spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-
-    return vec3(1.0) * spec;
+    float depth = texture(shadowDepthAtlas, projCoords.xy).r;
+    return projCoords.z - bias > depth ? 0.0 : 1.0;
 }
 
-vec3 calculateSpotLightShadow(LightStructure light, vec3 projCoords, vec4 atlasRect)
+float sampleShadow(uint shadowAtlasIndex, vec2 uv, float bias, float fragmentDepth)
 {
-    vec3 toLight = light.position - fs_in.FragPos;
-    float dist = length(toLight);
+    uv = calculateAtlasUV(shadowAtlasIndex, uv);
 
-    if (dist > light.distAttenMax) {
-        return vec3(0.0);
-    }    
+    float depth = texture(shadowDepthAtlas, uv).r;
+    return ((fragmentDepth - bias) > depth) ? 0.0 : 1.0;
+}
 
-    vec3 lightDir = normalize(toLight);
-    vec3 normal = normalize(fs_in.Normal);
-    float ndotl = dot(lightDir, normal);
-    if (ndotl <= 0.0) {
-        return vec3(0.0);
+float pcfShadowCalculation(vec3 projCoords, uint shadowAtlasIndex, float ndotl)
+{
+    //    float currentDepth = projCoords.z;
+    //    vec2 uv = calculateAtlasUV(shadowAtlasIndex, projCoords.xy);
+    //    float dstToSurface = abs(texture(shadowDepthAtlas, uv).r - currentDepth);
+
+    float bias = 0.0000001;
+    float blurFactor = 1.0 / 256.0;//textureSize(shadowDepthAtlas, 0);
+    float shadow = 0;
+    vec2 uv;
+    int div=0;
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            uv = projCoords.xy + vec2(x, y) * blurFactor;
+            if (isProjCoordsClipping(uv))
+            {
+                shadow += sampleShadow(shadowAtlasIndex, uv, bias, projCoords.z);
+
+                div++;
+            }
+        }
     }
+    shadow /= div;
 
-    float shadow = pcfShadowCalculation(projCoords, ndotl, atlasRect);
-    if (ndotl <= 0.0) {
-        return vec3(0.0);
-    }
-
-    // float angle = acos(dot(-lightDir, light.direction));
-    // float halfBeamAngle = light.beamAngle * 0.5;
-
-    // if (angle > halfBeamAngle) {
-    //     return vec3(0.0);
-    // }
-
-    float falloff = 1.0;//(halfBeamAngle - angle) / halfBeamAngle;
-    float attenuation = 1.0 - clamp( dist / light.distAttenMax, 0.0, 1.0); 
-    vec3 diffuse =  max(ndotl, 0.0) * light.color;
-    vec3 specular = specularComponent(lightDir, normal);
-
-    return shadow * light.intensity * falloff * attenuation * (diffuse + specular); 
+    return shadow;
 }
 
-void main() 
+void main()
 {
-    // vec3 textureColor = texture(texture1, fs_in.TexCoord).xyz;
+    vec2 uv = calculateAtlasUV(diffuseTextureId, fs_in.TexCoord);
+    vec3 diffuseColor = texture(diffuseAtlas, uv).xyz;
+    vec3 lightProjColor = vec3(1.0);
+    vec3 lightColor = vec3(0.0);
 
-    // vec3 lightColor = vec3(0.0);
-    // LightStructure light;
-    // vec4 fragPosLightSpace;
- 
-    // for(int index = 0; index < numActiveLights; index++)
-    // {   
-    //     fragPosLightSpace = fragmentPositionPerLightView[index];
-    //     light = lights[index];
+    for (int lightIndex = 0; lightIndex < numActiveLights; lightIndex++) {
+        LightStructure light = lights[lightIndex];
 
-    //     vec4 atlasRect = shadowAtlasRegions[light.shadowAtlasIndex];
-    //     vec3 projCoords = getProjectedCoords(atlasRect, fragPosLightSpace);
-    //     if (!projCoordsClip(atlasRect, projCoords)) {
-    //         continue;
-    //     }
+        vec3 projCoords = calculateProjectedCoords(fragmentPositionPerLightView[lightIndex]);
+        if (isProjCoordsClipping(projCoords.xy) && projCoords.z > 0.0 && projCoords.z < 1.0) {
+            vec3 lightPosition = light.position;
+            vec3 toLight = lightPosition - fs_in.FragPos;
+            vec3 lightDir = normalize(toLight);
+            float ndotl = dot(lightDir, fs_in.Normal);
 
-    //     lightColor += calculateSpotLightShadow(light, projCoords, atlasRect);
-    // }
-    // FragColor = vec4(textureColor * lightColor, 1.0);
+            if (ndotl < 0) {
+                continue;
+            }
 
-    // FragColor = vec4(fs_in.Normal, 1.0);
+            float shadowing = 1.0;
+            if (light.doesCastShadows == 1) {
+                shadowing = pcfShadowCalculation(projCoords, light.shadowAtlasIndex, ndotl);
+            }
 
+            lightProjColor = vec3(1.0);
+            if (light.projectionTextureId != 0) {
+                vec2 lightProjUV = calculateAtlasUV(light.projectionTextureId, projCoords.xy);
+                lightProjColor = texture(effectsAtlas, lightProjUV).xyz;
+            }
 
-    // vec4 val = shadowAtlasRegions[0];
-    // FragColor = vec4(val.x, val.y, 1.0, 1.0);
-
-    vec3 shadowMap = vec3(0.0);
-    float inShadow = 0;
-    uint lightIndex = 0;
-    LightStructure light = lights[lightIndex];
-
-    vec4 atlasRect = shadowAtlasRegions[light.shadowAtlasIndex];
-    vec3 projCoords = getProjectedCoords(atlasRect, fragmentPositionPerLightView[lightIndex]);
-    
-  // if (projCoordsClip2(atlasRect, projCoords.xy)) {
-        shadowMap = texture(shadowDepthAtlas, projCoords.xy).xyz;
-
-        // inShadow = sampleShadow(projCoords, 0.0000001);
-
-        // shadowMap = calculateSpotLightShadow(light, projCoords);
-  // }
-//     FragColor = vec4(shadowMap, 1.0);
-
-    float depth = pow(pow(shadowMap.r, 100), 100);
-    FragColor = vec4(vec3(depth), 1.0);
+            lightColor += calculateLight(light, shadowing, lightProjColor);
+        }
+    }
+    FragColor = vec4(diffuseColor * lightColor, 1.0);
 }

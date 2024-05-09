@@ -51,3 +51,5 @@ libs/
 .idea/
 .ninja_deps
 .ninja_log
+DartConfiguration.tcl
+build.ninja

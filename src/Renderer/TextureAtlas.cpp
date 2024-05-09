@@ -6,11 +6,9 @@ TextureAtlas::TextureAtlas() : texture(nullptr), qtOccupancy(), isRenderTarget(f
 {
 }
 
-TextureAtlas::~TextureAtlas()
-{
-}
+TextureAtlas::~TextureAtlas() = default;
 
-int TextureAtlas::getSize()
+int TextureAtlas::getSize() const
 {
     assert(texture != nullptr);
     assert(texture->width == texture->height);
@@ -35,7 +33,7 @@ TextureAtlas &TextureAtlas::createAsRenderTarget(unsigned int textureWidth, unsi
     return *this;
 }
 
-void TextureAtlas::bindRenderTarget()
+void TextureAtlas::bindRenderTarget() const
 {
     if (!isRenderTarget)
     {
@@ -44,12 +42,12 @@ void TextureAtlas::bindRenderTarget()
     texture->bind();
 }
 
-void TextureAtlas::unbindRenderTarget()
+void TextureAtlas::unbindRenderTarget() const
 {
     texture->unbind();
 }
 
-void TextureAtlas::bindTexture()
+void TextureAtlas::bindTexture() const
 {
     glBindTexture(GL_TEXTURE_2D, texture->textureId);
 }

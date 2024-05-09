@@ -1,12 +1,13 @@
 #pragma once
 
-#include "RenderableComponent.h"
 #include "../Renderer/Camera.h"
 #include "../Renderer/Model.h"
 #include "../Renderer/Shader.h"
-#include <glm/mat4x4.hpp>
-#include <glm/gtx/transform.hpp>
+#include "RenderableComponent.h"
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/mat4x4.hpp>
+#include <iostream>
 #include <string>
 
 class ModelComponent : public RenderableComponent
@@ -43,15 +44,20 @@ public:
         return *this;
     }
 
-    glm::mat4 &getTransform() { return transform; }
-    void setShaderMaterialParams(Shader &shader)
+    glm::mat4 &getTransform() override { return transform; }
+    void setShaderMaterialParams(Shader &shader) override
     {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureId);
-        shader.setUniform("texture1", 0);
+//        glActiveTexture(GL_TEXTURE5);
+//        glBindTexture(GL_TEXTURE_2D, textureId);
+//        shader.setUniform("texture1", 5);
+
+//        std::cout<<diffuseTextureId<<std::endl;
+        shader.setUniform("diffuseTextureId", diffuseTextureId);
     }
 
     glm::mat4 transform;
     unsigned int textureId;
     Model model;
+
+    unsigned int diffuseTextureId;
 };

@@ -12,5 +12,4 @@ void main()
     float depth = pow(pow(value.r, 100), 100);
 
     FragColor = vec4(vec3(depth), 1.0);
-    // FragColor = vec4(vec3(value.xyz), 1.0);
 }

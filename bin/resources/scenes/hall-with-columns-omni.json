@@ -4,7 +4,7 @@
     "meshes": [
         {
             "model": "resources/BoxTextured.gltf",
-            "diffuseTexture": "resources/textures/concrete.jpg",
+            "diffuseTexture": "resources/test/textures/t-512.png",
             "position": [
                 0,
                 1,
@@ -175,9 +175,9 @@
         {
             "type": "SPOT",
             "position": [
-                100,
+                200,
                 400,
-                100
+                -200
             ],
             "direction": [
                 0,
@@ -186,54 +186,44 @@
             ],
             "color": [
                 1,
-                1,
-                0
+                0,
+                1
             ],
             "beamAngle": 45,
             "distAttenMax": 600,
-            "intensity": 2,
+            "intensity": 4,
             "doesCastShadows": true
         },
         {
             "type": "POINT",
             "position": [
-                0,
+                120,
                 200,
-                50
+                0
             ],
-            "direction": [
-                0,
-                -1,
+            "color": [
+                0.3,
+                0.3,
+                1
+            ],
+            "distAttenMax": 400,
+            "intensity": 1,
+            "doesCastShadows": true
+        },
+        {
+            "type": "POINT",
+            "position": [
+                -120,
+                200,
                 0
             ],
             "color": [
                 1,
-                0,
+                1,
                 0
             ],
             "distAttenMax": 400,
-            "intensity": 2,
-            "doesCastShadows": true
-        },
-        {
-            "type": "POINT",
-            "position": [
-                200,
-                200,
-                100
-            ],
-            "direction": [
-                0,
-                -1,
-                0
-            ],
-            "color": [
-                0.5,
-                0.5,
-                1
-            ],
-            "distAttenMax": 800,
-            "intensity": 0.7,
+            "intensity": 1,
             "doesCastShadows": true
         }
     ]

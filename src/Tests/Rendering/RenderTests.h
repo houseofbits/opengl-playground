@@ -20,8 +20,8 @@ public:
 
         // runSingleTest(&textureTest);
         // runSingleTest(&atlasTest);
-        // runSingleTest(&atlasShaderTest);
-        runSingleTest(&atlasDepthTest);
+         runSingleTest(&atlasShaderTest);
+//        runSingleTest(&atlasDepthTest);
     }
 
     static void runSingleTest(BaseRenderTest *test)

@@ -19,14 +19,15 @@ void LightsUniformBuffer::update(Scene &scene, TextureAtlasManager &atlasManager
     atlasManager.getAtlas(TextureAtlasManager::ATLAS_SHADOW_DEPTH).qtOccupancy.clear();
 
     unsigned int uniformIndex = 0;
+//    std::cout<<"===================="<<std::endl;
     for (auto const &light : scene.lights)
     {
         light->generateViews(); // TODO Update only when necessary
 
-        LightUniform &uniform = uniformBuffer.get(uniformIndex);
-
         for (unsigned int i = 0; i < light->numberOfViews; i++)
         {
+            LightUniform &uniform = uniformBuffer.get(uniformIndex);
+
             if (light->doesCastShadows)
             {
                 light->views[i].shadowAtlasIndex = getShadowAtlasRegionIndex(atlasManager);
@@ -36,9 +37,13 @@ void LightsUniformBuffer::update(Scene &scene, TextureAtlasManager &atlasManager
 
             light->uniformBufferIndex = uniformIndex;
 
+//            std::cout<<uniformIndex<<std::endl;
+
             uniformIndex++;
         }
     }
+
+//    std::cout<<numActiveLights<<std::endl;
 
     numActiveLights = uniformIndex;
     uniformBuffer.update(0, numActiveLights);
@@ -49,7 +54,7 @@ void LightsUniformBuffer::populateUniform(LightUniform &uniform, Light &light, L
     bool hasShadowAtlasIndex = view.shadowAtlasIndex > 0;
 
     uniform.isPointSource = light.type == Light::SPOT;
-    uniform.doesCastShadows = light.doesCastShadows && hasShadowAtlasIndex;
+    uniform.doesCastShadows = (unsigned int)(light.doesCastShadows && hasShadowAtlasIndex);
     uniform.position = light.position;
     uniform.color = light.color;
     uniform.distAttenMax = light.distAttenMax;
@@ -59,11 +64,12 @@ void LightsUniformBuffer::populateUniform(LightUniform &uniform, Light &light, L
     uniform.beamAngle = glm::radians(light.beamAngle);
     uniform.projectionViewMatrix = view.projectionViewMatrix;
     uniform.shadowAtlasIndex = view.shadowAtlasIndex;
+    uniform.projectionTextureId = light.projectionTextureId;
 }
 
 unsigned int LightsUniformBuffer::getShadowAtlasRegionIndex(TextureAtlasManager &atlasManager)
 {
-    int shadowMapSize = 512;
+    int shadowMapSize = 256;
 
     int index = atlasManager.occupyRegion(TextureAtlasManager::ATLAS_SHADOW_DEPTH, shadowMapSize);
     return index > 0 ? index : 0;

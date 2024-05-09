@@ -14,4 +14,6 @@ struct LightStructure {
     uint shadowAtlasIndex;
     
     mat4 projectionViewMatrix;
+
+    uint projectionTextureId;
 };

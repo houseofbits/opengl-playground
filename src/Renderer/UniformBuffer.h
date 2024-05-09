@@ -12,7 +12,7 @@ public:
         DYNAMIC = GL_DYNAMIC_DRAW
     };
 
-private:
+public:
     unsigned int maxSize;
     unsigned int bufferId;
     T *data;

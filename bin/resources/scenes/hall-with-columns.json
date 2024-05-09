@@ -4,7 +4,7 @@
     "meshes": [
         {
             "model": "resources/BoxTextured.gltf",
-            "diffuseTexture": "resources/textures/concrete.jpg",
+            "diffuseTexture": "resources/test/textures/t-512.png",
             "position": [
                 0,
                 1,
@@ -192,7 +192,7 @@
             "beamAngle": 45,
             "distAttenMax": 1000,
             "intensity": 2,
-            "doesCastShadows": true
+            "doesCastShadows": false
         },
         {
             "type": "SPOT",

@@ -1,10 +1,18 @@
 #include "Scene.h"
 
-ModelComponent &Scene::createModelComponent(std::string modelFilename, std::string textureFilename)
+Scene::Scene(): camera(), renderables(), lights()
 {
-    ModelComponent *model = new ModelComponent();
+
+}
+
+ModelComponent &Scene::createModelComponent(TextureAtlasManager* atlasManager, std::string modelFilename, std::string textureFilename)
+{
+    auto *model = new ModelComponent();
     model->model.createFromFile(modelFilename);
-    model->textureId = Texture2D::createTexture(textureFilename);
+//    model->textureId = Texture2D::createTexture(textureFilename);
+    model->diffuseTextureId = atlasManager->loadTextureIntoAtlas(textureFilename, TextureAtlasManager::ATLAS_DIFFUSE);
+
+//    std::cout<<textureFilename<<" "<<model->diffuseTextureId<<std::endl;
 
     renderables.push_back(model);
 
@@ -16,7 +24,7 @@ void Scene::render(Shader &shader)
     for (const auto &renderable : renderables)
     {
         shader.setUniform("modelMatrix", renderable->getTransform());
-        // renderable->setShaderMaterialParams(shader);
+        renderable->setShaderMaterialParams(shader);
         renderable->render();
     }
 }
@@ -44,9 +52,9 @@ void Scene::renderWithTransform(Shader &shader)
     }
 }
 
-Light *Scene::createPointLight(glm::vec3 pos, glm::vec3 color, float falloff, float intensity)
+Light &Scene::createPointLight(glm::vec3 pos, glm::vec3 color, float falloff, float intensity)
 {
-    Light *light = new Light();
+    auto *light = new Light();
 
     light->type = Light::POINT;
     light->position = pos;
@@ -55,15 +63,16 @@ Light *Scene::createPointLight(glm::vec3 pos, glm::vec3 color, float falloff, fl
     light->distAttenMax = falloff;
     light->intensity = intensity;
     light->doesCastShadows = false;
+    light->projectionTextureId = 0;
 
     lights.push_back(light);
 
-    return light;
+    return *light;
 }
 
-Light *Scene::createSpotLight(glm::vec3 pos, glm::vec3 direction, glm::vec3 color, float beamAngle, float falloff, float intensity)
+Light &Scene::createSpotLight(TextureAtlasManager* atlasManager, glm::vec3 pos, glm::vec3 direction, glm::vec3 color, float beamAngle, float falloff, float intensity)
 {
-    Light *light = new Light();
+    auto *light = new Light();
 
     light->type = Light::SPOT;
     light->position = pos;
@@ -74,8 +83,9 @@ Light *Scene::createSpotLight(glm::vec3 pos, glm::vec3 direction, glm::vec3 colo
     light->intensity = intensity;
     light->beamAngle = beamAngle;
     light->doesCastShadows = false;
+    light->projectionTextureId = atlasManager->loadTextureIntoAtlas("resources/textures/spot-proj-4.png", TextureAtlasManager::ATLAS_EFFECTS);
 
     lights.push_back(light);
 
-    return light;
+    return *light;
 }

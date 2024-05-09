@@ -46,7 +46,7 @@
         },
         {
             "model": "resources/BoxTextured.gltf",
-            "diffuseTexture": "resources/textures/concrete.jpg",
+            "diffuseTexture": "resources/test/textures/t-512.png",
             "position": [
                 0,
                 1,

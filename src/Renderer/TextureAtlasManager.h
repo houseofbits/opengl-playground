@@ -45,6 +45,7 @@ private:
     QuadTree quadTree;
     UniformBuffer<glm::vec4> atlasRegionsMapping;
     std::map<AtlasType, TextureAtlas> atlases;
+    std::map<std::string, std::pair<unsigned int, AtlasType>> loadedTextures;
 
     void initAtlasRegionsMapping();
 };

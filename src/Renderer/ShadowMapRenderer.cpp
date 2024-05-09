@@ -37,12 +37,14 @@ void ShadowMapRenderer::render(Scene &scene)
 
     prepareViewports();
 
-//    glEnable(GL_CULL_FACE);
-    // glCullFace(GL_FRONT);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_FRONT);
 
     scene.renderWithTransform(depthShader);
 
-//    glCullFace(GL_BACK);
+    glCullFace(GL_BACK);
 
     renderManager->atlasManager.getAtlas(TextureAtlasManager::ATLAS_SHADOW_DEPTH).unbindRenderTarget();
 }

@@ -1,6 +1,6 @@
 #include "TextureAtlasManager.h"
 #include "../../libs/tinygltf/stb_image.h"
-#include <assert.h>
+#include <cassert>
 #include "TextureLoader.h"
 #include "../Helper/ShaderSourceLoader.h"
 
@@ -11,9 +11,7 @@ TextureAtlasManager::TextureAtlasManager() : atlases()
     ShaderSourceLoader::registerGlobal("NUM_ATLAS_REGIONS", quadTree.getNumNodes());
 }
 
-TextureAtlasManager::~TextureAtlasManager()
-{
-}
+TextureAtlasManager::~TextureAtlasManager() = default;
 
 void TextureAtlasManager::init()
 {
@@ -31,6 +29,16 @@ void TextureAtlasManager::init()
 
 int TextureAtlasManager::loadTextureIntoAtlas(std::string textureFileName, AtlasType atlasType)
 {
+    if (loadedTextures.find(textureFileName) != loadedTextures.end())
+    {
+        if (loadedTextures[textureFileName].second != atlasType)
+        {
+            std::cout<<"Atlas type does not match for loaded texture: "<<textureFileName<<std::endl;
+        }
+
+        return (int)loadedTextures[textureFileName].first;
+    }
+
     TextureAtlas &atlas = getAtlas(atlasType);
 
     unsigned char *data = nullptr;
@@ -46,6 +54,8 @@ int TextureAtlasManager::loadTextureIntoAtlas(std::string textureFileName, Atlas
             glm::uvec4 rect = getRegionRect(atlasType, nodeIndex);
 
             atlas.texture->applyImage(rect.x, rect.y, width, height, data);
+
+            loadedTextures[textureFileName] = std::pair<unsigned int, AtlasType>(nodeIndex, atlasType);
         }
 
         return nodeIndex;
@@ -86,12 +96,12 @@ TextureAtlas &TextureAtlasManager::getAtlas(AtlasType type)
 
 void TextureAtlasManager::initAtlasRegionsMapping()
 {
-    glm::vec4 *data = new glm::vec4[quadTree.getNumNodes()];
+    auto *data = new glm::vec4[quadTree.getNumNodes()];
     for (unsigned int i = 0; i < quadTree.getNumNodes(); i++)
     {
         const QuadTreeNode &node = quadTree.getNode(i);
-        float nodeSize = 1.0f / node.size;
-        data[i] = {nodeSize, node.left * nodeSize, node.top * nodeSize, 0.0f};
+        float nodeSize = 1.0f / (float)node.size;
+        data[i] = {nodeSize, (float)node.left * nodeSize, (float)node.top * nodeSize, 0.0f};
     }
 
     atlasRegionsMapping.create(quadTree.getNumNodes(), UniformBuffer<glm::vec4>::STATIC, 2);
@@ -122,11 +132,11 @@ glm::uvec4 TextureAtlasManager::getRegionRect(AtlasType type, unsigned int index
 {
     const QuadTreeNode &node = quadTree.getNode(index);
 
-    int size = getAtlas(type).getSize() / node.size;
+    unsigned int size = getAtlas(type).getSize() / node.size;
 
-    return glm::uvec4(
+    return {
         node.left * size,
         node.top * size,
         size,
-        size);
+        size};
 }

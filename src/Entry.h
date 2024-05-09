@@ -21,10 +21,11 @@ class Entry
 {
 private:
     EventManager eventManager;
+    RenderManager renderManager;
     Window window;
     Scene scene;
-    Camera camera;
-    RenderManager renderManager;
+
+    int debugMode;
 
     void init();
     void loadSceneFromJson(const std::string&);

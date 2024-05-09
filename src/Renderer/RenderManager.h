@@ -11,7 +11,8 @@ class RenderManager
 
 protected:
     Window* window;
-    Camera* camera;
+
+    PostProcessRenderer debugRendererColor;
 public:
     explicit RenderManager(Window*);
 
@@ -22,5 +23,5 @@ public:
 
     void init();
     void render(Scene& scene);
-    void setCamera(Camera* cam);
+    void renderDebug(int mode);
 };

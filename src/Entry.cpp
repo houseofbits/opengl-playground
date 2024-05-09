@@ -5,7 +5,7 @@
 #include <fstream>
 #include "Events/InputEvent.h"
 
-Entry::Entry() : window(&eventManager), renderManager(&window)
+Entry::Entry() : window(&eventManager), renderManager(&window), debugMode(0)
 {
     eventManager.registerEventReceiver(this, &Entry::handleInputEvent);
 }
@@ -32,7 +32,14 @@ void Entry::run()
             break;
         }
 
+        (*scene.lights.begin())->position = scene.camera.getPosition() - glm::vec3(0, 20, 0);
+        (*scene.lights.begin())->direction = scene.camera.getDirection();
+
         renderManager.render(scene);
+
+        if (debugMode > 0) {
+            renderManager.renderDebug(debugMode);
+        }
 
         window.doubleBuffer();
 
@@ -47,13 +54,14 @@ void Entry::run()
 
 /**
  * TODO
- *  - Batch rendering in the shadow atlas pass
- *  - Texture atlas ??
- *  - Add projectors
+ *
+ * TODO: NICE TO HAVE
+ *  - Refactor and optimize lighting fragment shader
+ *  - Add shadow bias variables to light
+ *  - Projection texture per light view
+ *  - Optional light views for omni lights - configurable
  *
  *  Implement
- *  - Point light shadow maps
- *  - Shadow maps for multiple lights
  *  - Normal maps
  *  - Specular maps
  *  - PBR
@@ -64,16 +72,15 @@ void Entry::run()
  */
 void Entry::init()
 {
-    camera.registerEventHandlers(&eventManager);
-
     renderManager.init();
-    renderManager.setCamera(&camera);
 
-    // loadSceneFromJson("resources/scenes/ducks-n-lights.json");
-    // loadSceneFromJson("resources/scenes/multiple-spot-lights.json");
-    loadSceneFromJson("resources/scenes/single-spot-light.json");
-    // loadSceneFromJson("resources/scenes/hall-with-columns.json");
-    // loadSceneFromJson("resources/scenes/hall-with-columns-omni.json");
+//     loadSceneFromJson("resources/scenes/ducks-n-lights.json");
+//     loadSceneFromJson("resources/scenes/multiple-spot-lights.json");
+//    loadSceneFromJson("resources/scenes/single-spot-light.json");
+//     loadSceneFromJson("resources/scenes/hall-with-columns.json");
+     loadSceneFromJson("resources/scenes/hall-with-columns-omni.json");
+
+     scene.camera.registerEventHandlers(&eventManager);
 }
 
 glm::vec3 getVec3FromJsonArray(nlohmann::json::array_t array)
@@ -100,7 +107,7 @@ void Entry::loadSceneFromJson(const std::string& filename)
 
     for (auto &meshData : data["meshes"])
     {
-        ModelComponent &model = scene.createModelComponent(meshData["model"], meshData["diffuseTexture"]);
+        ModelComponent &model = scene.createModelComponent(&renderManager.atlasManager, meshData["model"], meshData["diffuseTexture"]);
         if (meshData["position"] != nullptr)
         {
             model.setPosition(getVec3FromJsonArray(meshData["position"]));
@@ -118,52 +125,61 @@ void Entry::loadSceneFromJson(const std::string& filename)
     for (auto &lightData : data["lights"])
     {
         std::string type = lightData["type"];
-        Light *light = nullptr;
+
+        bool doesCastShadows = false;
+        if (lightData["doesCastShadows"] != nullptr)
+        {
+            doesCastShadows = lightData["doesCastShadows"];
+        }
+
         if (type == "POINT")
         {
-            light = scene.createPointLight(
+            Light &light = scene.createPointLight(
                     getVec3FromJsonArray(lightData["position"]),
                     getVec3FromJsonArray(lightData["color"]),
                 lightData["distAttenMax"],
                 lightData["intensity"]);
+
+            light.doesCastShadows = doesCastShadows;
         }
         if (type == "SPOT")
         {
-            light = scene.createSpotLight(
+            Light &light = scene.createSpotLight(
+                    &renderManager.atlasManager,
                     getVec3FromJsonArray(lightData["position"]),
                     getVec3FromJsonArray(lightData["direction"]),
                     getVec3FromJsonArray(lightData["color"]),
                 lightData["beamAngle"],
                 lightData["distAttenMax"],
                 lightData["intensity"]);
-        }
-        if (light != nullptr && lightData["doesCastShadows"] != nullptr)
-        {
-            light->doesCastShadows = lightData["doesCastShadows"];
+
+            light.doesCastShadows = doesCastShadows;
         }
     }
 }
 
 bool Entry::handleInputEvent(InputEvent *const event)
 {
-//    if (event->type == InputEvent::KEYDOWN)
-//    {
-//        if (event->keyCode == 30) // '1'
-//        {
-//            testFramebuffer = 1;
-//        }
-//        if (event->keyCode == 31) // '2'
-//        {
-//            testFramebuffer = 2;
-//        }
-//        if (event->keyCode == 59) // F2
-//        {
-//            isShadowAtlasVisible = !isShadowAtlasVisible;
-//
-//            renderer.printDebugShadowMaps();
-//        }
-//        // std::cout << event->keyCode << std::endl;
-//    }
+    if (event->type == InputEvent::KEYDOWN)
+    {
+        if (event->keyCode == 30) // '1'
+        {
+            debugMode = 0;
+        }
+        if (event->keyCode == 31) // '2'
+        {
+            debugMode = 1;
+        }
+        if (event->keyCode == 32) // '3'
+        {
+            debugMode = 2;
+        }
+        if (event->keyCode == 33) // '4'
+        {
+            debugMode = 3;
+        }
+//        std::cout << event->keyCode << std::endl;
+    }
 
     return true;
 }

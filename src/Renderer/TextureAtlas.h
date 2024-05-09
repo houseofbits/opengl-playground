@@ -18,12 +18,12 @@ public:
     TextureAtlas();
     ~TextureAtlas();
 
-    int getSize();
+    int getSize() const;
 
     TextureAtlas &create(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);
     TextureAtlas &createAsRenderTarget(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);
 
-    void bindRenderTarget();
-    void unbindRenderTarget();
-    void bindTexture();
+    void bindRenderTarget() const;
+    void unbindRenderTarget() const;
+    void bindTexture() const;
 };
