@@ -10,7 +10,9 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/StaticGeometryRenderer.cpp
         src/Renderer/StaticGeometryRenderer.h
         src/Renderer/BaseRenderer.cpp
-        src/Renderer/BaseRenderer.h)
+        src/Renderer/BaseRenderer.h
+        src/Components/SceneLoader.cpp
+        src/Components/SceneLoader.h)
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)
 

@@ -69,7 +69,7 @@ void LightsUniformBuffer::populateUniform(LightUniform &uniform, Light &light, L
 
 unsigned int LightsUniformBuffer::getShadowAtlasRegionIndex(TextureAtlasManager &atlasManager)
 {
-    int shadowMapSize = 256;
+    int shadowMapSize = 512;
 
     int index = atlasManager.occupyRegion(TextureAtlasManager::ATLAS_SHADOW_DEPTH, shadowMapSize);
     return index > 0 ? index : 0;

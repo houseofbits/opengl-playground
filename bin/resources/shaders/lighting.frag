@@ -11,7 +11,7 @@ in VS_OUT {
 
 uniform vec3 viewPosition;
 uniform uint diffuseTextureId;
-//uniform sampler2D texture1;
+uniform uint normalTextureId;
 
 #include include/structures.glsl
 #include include/lightBlock.glsl

@@ -36,4 +36,8 @@ void RenderManager::renderDebug(int mode)
         debugRendererColor.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_EFFECTS);
         debugRendererColor.draw();
     }
+    if (mode == 4) {
+        debugRendererColor.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_NORMALS);
+        debugRendererColor.draw();
+    }
 }

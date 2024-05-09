@@ -1,15 +1,14 @@
 #pragma once
-#include "TextureAtlas.h"
 #include "../Helper/Console.h"
+#include "TextureAtlas.h"
+#include "UniformBuffer.h"
+#include <glm/vec3.hpp>
 #include <iostream>
-#include <string>
 #include <map>
 #include <math.h>
-#include <glm/vec3.hpp>
-#include "UniformBuffer.h"
+#include <string>
 
-class TextureAtlasNode
-{
+class TextureAtlasNode {
 public:
     int parentIndex;
     int childIndices[4];
@@ -18,15 +17,14 @@ public:
     unsigned int size;
 };
 
-class TextureAtlasManager
-{
+class TextureAtlasManager {
 public:
     static const unsigned int quadTreeDepth = 6;
 
-    enum AtlasType
-    {
+    enum AtlasType {
         ATLAS_SHADOW_DEPTH,
         ATLAS_DIFFUSE,
+        ATLAS_NORMALS,
         ATLAS_EFFECTS,
     };
 

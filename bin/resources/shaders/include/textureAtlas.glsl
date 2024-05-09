@@ -6,6 +6,7 @@ layout (std140, binding = 2) uniform AtlasRegionMappingBlock {
 
 uniform sampler2D shadowDepthAtlas;
 uniform sampler2D diffuseAtlas;
+uniform sampler2D normalsAtlas;
 uniform sampler2D effectsAtlas;
 
 vec2 calculateAtlasUV(uint index, vec2 uv)

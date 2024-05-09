@@ -47,17 +47,13 @@ public:
     glm::mat4 &getTransform() override { return transform; }
     void setShaderMaterialParams(Shader &shader) override
     {
-//        glActiveTexture(GL_TEXTURE5);
-//        glBindTexture(GL_TEXTURE_2D, textureId);
-//        shader.setUniform("texture1", 5);
-
-//        std::cout<<diffuseTextureId<<std::endl;
         shader.setUniform("diffuseTextureId", diffuseTextureId);
+        shader.setUniform("normalTextureId", normalTextureId);
     }
 
     glm::mat4 transform;
-    unsigned int textureId;
     Model model;
 
     unsigned int diffuseTextureId;
+    unsigned int normalTextureId;
 };

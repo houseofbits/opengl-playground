@@ -5,6 +5,8 @@
 #include "ShadowMapRenderer.h"
 #include "StaticGeometryRenderer.h"
 
+class Window;
+
 class RenderManager
 {
     friend class StaticGeometryRenderer;

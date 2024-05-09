@@ -23,6 +23,9 @@ void Window::create()
 
     windowFlags = SDL_WINDOW_OPENGL;
 
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,8);
+
     sdlWindow = SDL_CreateWindow(
         "OpenGL-playground",
         SDL_WINDOWPOS_UNDEFINED,
@@ -37,6 +40,8 @@ void Window::create()
 
         throw new Exception(2, "Could not create window");
     }
+
+
 
     int contextFlags = 0;
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &contextFlags);

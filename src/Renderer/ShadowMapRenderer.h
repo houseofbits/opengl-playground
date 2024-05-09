@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Scene.h"
-#include "Shader.h"
+#include "../Components/Scene.h"
 #include "../Helper/AtlasGraph.h"
-#include <list>
-#include <iostream>
-#include <glm/vec3.hpp>
 #include "../Helper/ShaderSourceLoader.h"
 #include "../PostProcessRenderer/PostProcessRenderer.h"
 #include "BaseRenderer.h"
+#include "Shader.h"
+#include <glm/vec3.hpp>
+#include <iostream>
+#include <list>
 
 class ShadowMapRenderer : public BaseRenderer
 {

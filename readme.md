@@ -12,8 +12,22 @@ Dependencies for Linux
 
 History
 
+-   Multiple point and spot lights casting shadows. Light projection texture. Texture atlases.
+
+    <p float="left">
+      <img src="./docs/images/multilight-scene.png" width="400" />
+      <img src="./docs/images/shadow-atlas.png" width="400" />
+    </p>
+
 -   Multiple spot lights casting shadows.
-    ![Screenshot2](./docs/images/multiple-spot-shadows.png)
+
+    <p float="left">
+      <img src="./docs/images/multiple-spot-shadows.png" width="400" />
+    </p>
 
 -   Multiple point and spot lights with shadow cast from one of the spot lights. Shadow has PCF filtering.
-    ![Screenshot1](./docs/images/spot-light-shadow-map.png)
+
+    <p float="left">
+      <img src="./docs/images/spot-light-shadow-map.png" width="400" />
+    </p>
+

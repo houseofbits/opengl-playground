@@ -1,10 +1,10 @@
 #pragma once
 
+#include "../Components/Scene.h"
 #include "Light.h"
-#include "Scene.h"
+#include "Shader.h"
 #include "TextureAtlasManager.h"
 #include "UniformBuffer.h"
-#include "Shader.h"
 
 class LightsUniformBuffer
 {

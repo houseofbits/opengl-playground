@@ -3,7 +3,16 @@
 
 Light::Light(): projectionTextureId(0)
 {
-
+    type = POINT;
+    position = glm::vec3(0.0);
+    direction = glm::vec3(0.0);
+    color = glm::vec3(0.0);
+    distAttenMin = 0;
+    distAttenMax = 0;
+    intensity = 1;
+    doesCastShadows = false;
+    projectionTextureId = 0;
+    beamAngle = 45;
 }
 
 glm::mat4 &Light::getProjectionViewMatrix()
