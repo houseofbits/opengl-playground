@@ -1,0 +1,53 @@
+{
+    "camera": {
+        "position": [
+            59,
+            73,
+            55
+        ],
+        "verticalAngle": -35,
+        "horizontalAngle": -133
+    },
+    "meshes": [
+        {
+            "model": "resources/BoxTextured.gltf",
+            "diffuseTexture": "resources/test/textures/t-512.png",
+            "normalTexture": "resources/textures/normal-map.png",
+            "position": [
+                0,
+                20,
+                0
+            ],
+            "scale": [
+                50,
+                50,
+                50
+            ]
+        }
+    ],
+    "lights": [
+        {
+            "type": "SPOT",
+            "position": [
+                50,
+                100,
+                35
+            ],
+            "direction": [
+                -0.3,
+                -0.5,
+                0
+            ],
+            "color": [
+                1,
+                1,
+                1
+            ],
+            "beamAngle": 60,
+            "distAttenMax": 600,
+            "intensity": 2,
+            "doesCastShadows": false,
+            "projectionTexture": "resources/textures/spot-proj-4.png"
+        }
+    ]
+}

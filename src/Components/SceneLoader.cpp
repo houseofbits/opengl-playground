@@ -16,6 +16,10 @@ bool SceneLoader::loadSceneFromJson(const std::string &filename, Scene &scene) {
         for (auto &lightData: data["lights"]) {
             populateLight(scene.createLight(), lightData);
         }
+
+        if (data["camera"] != nullptr) {
+            populateCamera(scene.camera, data["camera"]);
+        }
     }
 
     return false;
@@ -76,6 +80,16 @@ void SceneLoader::populateLight(Light &light, nlohmann::json &lightData) {
     }
     if (lightData["intensity"] != nullptr) {
         light.intensity = lightData["intensity"];
+    }
+}
+
+void SceneLoader::populateCamera(Camera &camera, nlohmann::json &data) {
+    if (data["position"] != nullptr) {
+        camera.setPosition(getVec3FromJsonArray(data["position"]));
+    }
+
+    if (data["verticalAngle"] != nullptr && data["horizontalAngle"] != nullptr) {
+        camera.setAngles(data["horizontalAngle"], data["verticalAngle"]);
     }
 }
 

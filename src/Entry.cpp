@@ -29,8 +29,8 @@ void Entry::run()
             break;
         }
 
-        (*scene.lights.begin())->position = scene.camera.getPosition() - glm::vec3(0, 20, 0);
-        (*scene.lights.begin())->direction = scene.camera.getDirection();
+//        (*scene.lights.begin())->position = scene.camera.getPosition() - glm::vec3(0, 20, 0);
+//        (*scene.lights.begin())->direction = scene.camera.getDirection();
 
         renderManager.render(scene);
 
@@ -52,6 +52,7 @@ void Entry::run()
 /**
  * TODO
  *  - Normal mapping
+ *      - Refactor lighting shader and integrate normal mapping
  *
  * TODO: NICE TO HAVE
  *  - Refactor and optimize lighting fragment shader
@@ -60,14 +61,13 @@ void Entry::run()
  *  - Optional light views for omni lights - configurable
  *  - Add View class to extend the Camera and LightView
  *
- *  Implement
+ * TODO: IMPLEMENT
  *  - Normal maps
  *  - Specular maps
- *  - PBR
- *  - Deferred rendering
- *  - SSAO
- *  - SSSM
- *  - Animations
+ *  - Basic animations
+ *  - Create a basic test scene
+ *  - PhysX
+ *
  */
 void Entry::init()
 {
@@ -78,8 +78,8 @@ void Entry::init()
 //    loadSceneFromJson("resources/scenes/single-spot-light.json");
 //     loadSceneFromJson("resources/scenes/hall-with-columns.json");
 //     loadSceneFromJson("resources/scenes/hall-with-columns-omni.json");
-
-     sceneLoader.loadSceneFromJson("resources/scenes/hall-with-columns-omni.json", scene);
+//     sceneLoader.loadSceneFromJson("resources/scenes/hall-with-columns-omni.json", scene);
+     sceneLoader.loadSceneFromJson("resources/scenes/normal-maps.json", scene);
 
      scene.camera.registerEventHandlers(&eventManager);
 }

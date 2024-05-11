@@ -14,7 +14,7 @@ TextureAtlasManager::~TextureAtlasManager() = default;
 
 void TextureAtlasManager::init() {
     atlases[ATLAS_SHADOW_DEPTH].createAsRenderTarget(4096, 4096, Texture::TYPE_DEPTH);
-    atlases[ATLAS_DIFFUSE].create(2048, 2048, Texture::TYPE_RGBA);
+    atlases[ATLAS_DIFFUSE].create(2048, 2048, Texture::TYPE_RGBA, true);
     atlases[ATLAS_NORMALS].create(2048, 2048, Texture::TYPE_RGBA);
     atlases[ATLAS_EFFECTS].create(1024, 1024, Texture::TYPE_RGBA);
 

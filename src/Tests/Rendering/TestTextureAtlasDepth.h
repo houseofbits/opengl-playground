@@ -43,7 +43,7 @@ public:
         cubeTransform = glm::rotate(cubeTransform, glm::radians(30.0f), glm::vec3(0, 1, 0));
     }
 
-    void render()
+    void render(Camera&)
     {
         renderer.draw();
 

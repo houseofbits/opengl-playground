@@ -23,13 +23,13 @@ private:
     unsigned int cubeDiffuseTextureIds[numCubes];
     std::vector<int> textureIds;
 
-    float randomFloat()
+    static float randomFloat()
     {
         return (float)(rand()) / (float)(RAND_MAX);
     }
 
 public:
-    void setup(Window &window)
+    void setup(Window &window) override
     {
         message("Test TextureAtlas - usage in shader");
 
@@ -78,7 +78,7 @@ public:
         }
     }
 
-    void render()
+    void render(Camera&) override
     {
         shader.use();
         atlasManager.bindAll(shader);
@@ -92,7 +92,7 @@ public:
         }
     }
 
-    void destroy()
+    void destroy() override
     {
     }
 };

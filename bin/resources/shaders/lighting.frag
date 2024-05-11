@@ -20,8 +20,6 @@ uniform uint normalTextureId;
 
 in vec4 fragmentPositionPerLightView[MAX_LIGHTS];
 
-
-
 vec3 calculateProjectedCoords(vec4 lightSpacePos)
 {
     vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;

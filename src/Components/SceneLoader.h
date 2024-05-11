@@ -15,6 +15,7 @@ private:
 
     void populateModel(ModelComponent &model, nlohmann::json &data);
     void populateLight(Light &light, nlohmann::json &data);
+    void populateCamera(Camera &camera, nlohmann::json &data);
 
 public:
     explicit SceneLoader(RenderManager *renderManager);

@@ -24,7 +24,7 @@ public:
         renderer.textureId = texture1.textureId;
     }
 
-    void render()
+    void render(Camera&)
     {
         renderer.draw();
     }

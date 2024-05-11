@@ -41,14 +41,12 @@ void Window::create()
         throw new Exception(2, "Could not create window");
     }
 
-
-
     int contextFlags = 0;
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &contextFlags);
     contextFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, contextFlags);
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);   //3
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GLContext Context = SDL_GL_CreateContext(sdlWindow);
 

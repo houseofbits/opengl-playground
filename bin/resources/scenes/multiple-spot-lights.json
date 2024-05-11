@@ -1,6 +1,4 @@
 {
-    "materialShaderVert": "resources/shaders/lighting.vert",
-    "materialShaderFrag": "resources/shaders/lightingSpotShadows.frag",
     "meshes": [
         {
             "model": "resources/Duck/Duck.gltf",

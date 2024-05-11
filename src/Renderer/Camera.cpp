@@ -81,7 +81,12 @@ bool Camera::handleInputEvent(InputEvent *const event)
 
     if (event->type == InputEvent::KEYDOWN && event->keyCode == 58) // F1
     {
-        std::cout << "Camera - vertical angle: " << verticalAngle << " horizontal angle: " << horizontalAngle << " position:" << position.x << "," << position.y << "," << position.z << std::endl;
+        std::cout << "Camera - vertical angle: "
+                  << round(glm::degrees(verticalAngle))
+                  << " horizontal angle: "
+                  << round(glm::degrees(horizontalAngle))
+                  << " position:"
+                  << round(position.x) << "," << round(position.y) << "," << round(position.z) << std::endl;
     }
     return true;
 }
@@ -131,8 +136,8 @@ Camera &Camera::setPosition(glm::vec3 pos)
 
 Camera &Camera::setAngles(float horizontal, float vertical)
 {
-    verticalAngle = vertical;
-    horizontalAngle = horizontal;
+    verticalAngle = glm::radians(vertical);
+    horizontalAngle = glm::radians(horizontal);
 
     return *this;
 }

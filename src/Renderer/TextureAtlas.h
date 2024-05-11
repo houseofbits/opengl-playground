@@ -20,7 +20,7 @@ public:
 
     int getSize() const;
 
-    TextureAtlas &create(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);
+    TextureAtlas &create(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType, bool withMipmapping = false);
     TextureAtlas &createAsRenderTarget(unsigned int textureWidth, unsigned int textureHeight, Texture::Type textureType);
 
     void bindRenderTarget() const;

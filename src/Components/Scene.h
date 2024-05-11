@@ -9,8 +9,7 @@
 #include "ModelComponent.h"
 #include <list>
 
-class Scene
-{
+class Scene {
 public:
     Scene();
 
@@ -21,7 +20,7 @@ public:
     ModelComponent &createModel();
     Light &createLight();
 
-    void render( Shader &shader);
+    void render(Shader &shader);
     void renderWithTransform(Shader &shader);
     void clear();
 };

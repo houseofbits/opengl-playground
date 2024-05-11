@@ -2,13 +2,14 @@
 
 #include "../../Helper/Console.h"
 #include "../../Window.h"
+#include "../../Renderer/Camera.h"
 #include <iostream>
 #include <string>
 
 class BaseRenderTest
 {
 public:
-    void message(std::string message)
+    static void message(const std::string& message)
     {
         std::cout
             << BACKGRN
@@ -19,6 +20,6 @@ public:
     }
 
     virtual void setup(Window &window) = 0;
-    virtual void render() = 0;
+    virtual void render(Camera&) = 0;
     virtual void destroy() = 0;
 };

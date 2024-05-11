@@ -1,6 +1,4 @@
 {
-    "materialShaderVert": "resources/shaders/lighting.vert",
-    "materialShaderFrag": "resources/shaders/lighting.frag",
     "meshes": [
         {
             "model": "resources/BoxTextured.gltf",

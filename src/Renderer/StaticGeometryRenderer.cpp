@@ -1,17 +1,17 @@
 #include "../Include.h"
 
-StaticGeometryRenderer::StaticGeometryRenderer(RenderManager *manager) : BaseRenderer(manager)
-{
-
+StaticGeometryRenderer::StaticGeometryRenderer(RenderManager *manager) : BaseRenderer(manager) {
 }
 
-void StaticGeometryRenderer::init()
-{
+void StaticGeometryRenderer::init() {
     materialShader.loadProgram("resources/shaders/lighting.vert", "resources/shaders/lighting.frag");
+//    materialShader.loadProgram(
+//            "resources/shaders/normals.vert",
+//            "resources/shaders/normals.frag",
+//            "resources/shaders/normals.geom");
 }
 
-void StaticGeometryRenderer::render(Scene &scene)
-{
+void StaticGeometryRenderer::render(Scene &scene) {
     glViewport(0, 0, renderManager->window->viewportWidth, renderManager->window->viewportHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

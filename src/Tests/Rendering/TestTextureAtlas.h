@@ -42,7 +42,7 @@ public:
         renderer.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_DIFFUSE);
     }
 
-    void render()
+    void render(Camera&)
     {
         renderer.draw();
     }
