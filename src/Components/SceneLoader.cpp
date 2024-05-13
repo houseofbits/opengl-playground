@@ -36,6 +36,9 @@ void SceneLoader::populateModel(ModelComponent &model, nlohmann::json &meshData)
     if (meshData["normalTexture"] != nullptr) {
         model.normalTextureId = renderManager->atlasManager.loadTextureIntoAtlas(meshData["normalTexture"], TextureAtlasManager::ATLAS_NORMALS);
     }
+    if (meshData["specularTexture"] != nullptr) {
+        model.specularTextureId = renderManager->atlasManager.loadTextureIntoAtlas(meshData["specularTexture"], TextureAtlasManager::ATLAS_DIFFUSE);
+    }
     if (meshData["position"] != nullptr) {
         model.setPosition(getVec3FromJsonArray(meshData["position"]));
     }

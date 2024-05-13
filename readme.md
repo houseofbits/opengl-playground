@@ -12,6 +12,12 @@ Dependencies for Linux
 
 History
 
+-   Normal mapping and basic specular maps.
+
+    <p float="left">
+      <img src="./docs/images/normal-maps.png" width="400" />
+    </p>
+
 -   Multiple point and spot lights casting shadows. Light projection texture. Texture atlases.
 
     <p float="left">

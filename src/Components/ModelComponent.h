@@ -49,6 +49,7 @@ public:
     {
         shader.setUniform("diffuseTextureId", diffuseTextureId);
         shader.setUniform("normalTextureId", normalTextureId);
+        shader.setUniform("specularTextureId", specularTextureId);
     }
 
     glm::mat4 transform;
@@ -56,4 +57,6 @@ public:
 
     unsigned int diffuseTextureId;
     unsigned int normalTextureId;
+    unsigned int specularTextureId;
+
 };

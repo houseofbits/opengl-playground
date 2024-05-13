@@ -2,7 +2,9 @@
     "meshes": [
         {
             "model": "resources/BoxTextured.gltf",
-            "diffuseTexture": "resources/test/textures/t-512.png",
+            "diffuseTexture": "resources/textures/floor.png",
+            "normalTexture": "resources/textures/floor_norm.png",
+            "specularTexture": "resources/textures/floor_spec.png",
             "position": [
                 0,
                 1,
@@ -16,8 +18,9 @@
         },
         {
             "model": "resources/BoxTextured.gltf",
-            "diffuseTexture": "resources/textures/concrete.jpg",
-            "normalTexture": "resources/test/textures/normal-map.png",
+            "diffuseTexture": "resources/textures/198.JPG",
+            "normalTexture": "resources/textures/198_norm.JPG",
+            "specularTexture": "resources/textures/198_spec.jpg",
             "position": [
                 0,
                 250,
@@ -31,8 +34,9 @@
         },
         {
             "model": "resources/BoxTextured.gltf",
-            "diffuseTexture": "resources/textures/concrete.jpg",
-            "normalTexture": "resources/test/textures/normal-map.png",
+            "diffuseTexture": "resources/textures/198.JPG",
+            "normalTexture": "resources/textures/198_norm.JPG",
+            "specularTexture": "resources/textures/198_spec.jpg",
             "position": [
                 -250,
                 250,
@@ -46,8 +50,9 @@
         },
         {
             "model": "resources/BoxTextured.gltf",
-            "diffuseTexture": "resources/textures/concrete.jpg",
-            "normalTexture": "resources/test/textures/normal-map.png",
+            "diffuseTexture": "resources/textures/198.JPG",
+            "normalTexture": "resources/textures/198_norm.JPG",
+            "specularTexture": "resources/textures/198_spec.jpg",
             "position": [
                 250,
                 250,

@@ -10,6 +10,7 @@ in mat3 gsInvTBN;
 uniform vec3 viewPosition;
 uniform uint diffuseTextureId;
 uniform uint normalTextureId;
+uniform uint specularTextureId;
 
 #include include/lightBlock.glsl
 #include include/textureAtlas.glsl
@@ -65,7 +66,7 @@ float pcfShadowCalculation(vec3 projCoords, uint shadowAtlasIndex, float ndotl)
     return shadow;
 }
 
-vec3 calculateSpecularComponent(vec3 lightDir, vec3 viewDir, vec3 normal)
+vec3 calculateSpecularComponent(vec3 lightDir, vec3 viewDir, vec3 normal, vec3 specularColor)
 {
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = 0.0;
@@ -73,7 +74,7 @@ vec3 calculateSpecularComponent(vec3 lightDir, vec3 viewDir, vec3 normal)
     vec3 halfwayDir = normalize(lightDir + viewDir);
     spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 
-    return vec3(1.0) * spec;
+    return spec * specularColor;
 }
 
 float calculateLightDistanceAttenuation(float distAttenMax, float distToLight)
@@ -85,6 +86,12 @@ void main()
 {
     vec2 uv = calculateAtlasUV(diffuseTextureId, gsTexcoord);
     vec3 diffuseColor = texture(diffuseAtlas, uv).xyz;
+
+    vec3 specularColor = vec3(1.0);
+    if (specularTextureId > 0) {
+        vec2 uvSpec = calculateAtlasUV(specularTextureId, gsTexcoord);
+        specularColor = texture(diffuseAtlas, uvSpec).xyz;
+    }
 
     vec3 normal = normalize(gsNormal);
     if (normalTextureId > 0) {
@@ -133,7 +140,7 @@ void main()
                 calculateLightDistanceAttenuation(light.distAttenMax, distToLight)
                 * shadowing
                 * lightProjColor
-                * (diffuse + calculateSpecularComponent(lightDir, viewDir, normal));
+                * (diffuse + calculateSpecularComponent(lightDir, viewDir, normal, specularColor));
         }
     }
 
