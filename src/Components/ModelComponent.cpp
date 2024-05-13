@@ -1,6 +1,6 @@
 #include "ModelComponent.h"
 
-ModelComponent::ModelComponent() : model(), transform(1.0)
+ModelComponent::ModelComponent() : model(), transform(1.0), diffuseTextureId(0), normalTextureId(0)
 {
 }
 

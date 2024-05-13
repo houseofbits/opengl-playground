@@ -4,11 +4,14 @@ StaticGeometryRenderer::StaticGeometryRenderer(RenderManager *manager) : BaseRen
 }
 
 void StaticGeometryRenderer::init() {
-    materialShader.loadProgram("resources/shaders/lighting.vert", "resources/shaders/lighting.frag");
-//    materialShader.loadProgram(
-//            "resources/shaders/normals.vert",
-//            "resources/shaders/normals.frag",
-//            "resources/shaders/normals.geom");
+    materialShader.loadProgram(
+            "resources/shaders/lighting.vert",
+            "resources/shaders/lighting.frag",
+            "resources/shaders/lighting.geom");
+    //    materialShader.loadProgram(
+    //            "resources/shaders/normals.vert",
+    //            "resources/shaders/normals.frag",
+    //            "resources/shaders/normals.geom");
 }
 
 void StaticGeometryRenderer::render(Scene &scene) {

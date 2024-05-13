@@ -4,36 +4,23 @@ layout (location=0) in vec3 VertexPosition;
 layout (location=1) in vec3 VertexNormal;
 layout (location=2) in vec2 TexCoord;
 
-#include include/structures.glsl
-#include include/lightBlock.glsl
-
 uniform mat4 modelMatrix;
 uniform mat4 viewProjectionMatrix;
-uniform mat4 lightViewMatrix;
 
-out vec3 Normal;
-out VS_OUT {
-    vec3 FragPos;
-    vec3 Normal;
-    vec2 TexCoord;
-    vec4 FragPosLightSpace;
-} vs_out;
-
-out vec4 fragmentPositionPerLightView[MAX_LIGHTS];
+out vec4 vsPosition;
+out vec3 vsNormal;
+out vec2 vsTexcoord;
 
 void main()
-{   
+{
+    mat3 moderInverse = mat3(transpose(inverse(modelMatrix)));
+
     vec4 p = modelMatrix * vec4(VertexPosition, 1.0);
-    // vec4 n = modelMatrix * vec4(VertexNormal, 1.0);
+    vec3 n = moderInverse * VertexNormal;
 
-    vs_out.FragPos = p.xyz;
-    vs_out.Normal = VertexNormal;
-    vs_out.TexCoord = TexCoord;
-    vs_out.FragPosLightSpace = lightViewMatrix * vec4(vs_out.FragPos, 1.0);
-    
-    for(int i = 0; i < numActiveLights; i++) {
-        fragmentPositionPerLightView[i] = lights[i].projectionViewMatrix * vec4(vs_out.FragPos, 1.0);
-    }
+    vsPosition = p;
+    vsNormal = n;
+    vsTexcoord = TexCoord;
 
-    gl_Position = viewProjectionMatrix * modelMatrix * vec4(VertexPosition,1.0);
+    gl_Position = viewProjectionMatrix * modelMatrix * vec4(VertexPosition, 1.0);
 }

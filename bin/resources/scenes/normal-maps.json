@@ -12,7 +12,7 @@
         {
             "model": "resources/BoxTextured.gltf",
             "diffuseTexture": "resources/test/textures/t-512.png",
-            "normalTexture": "resources/textures/normal-map.png",
+            "normalTexture": "resources/test/textures/normal-map.png",
             "position": [
                 0,
                 20,
@@ -45,7 +45,7 @@
             ],
             "beamAngle": 60,
             "distAttenMax": 600,
-            "intensity": 2,
+            "intensity": 1,
             "doesCastShadows": false,
             "projectionTexture": "resources/textures/spot-proj-4.png"
         }

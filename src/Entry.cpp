@@ -29,8 +29,8 @@ void Entry::run()
             break;
         }
 
-//        (*scene.lights.begin())->position = scene.camera.getPosition() - glm::vec3(0, 20, 0);
-//        (*scene.lights.begin())->direction = scene.camera.getDirection();
+        (*scene.lights.begin())->position = scene.camera.getPosition() - glm::vec3(0, 20, 0);
+        (*scene.lights.begin())->direction = scene.camera.getDirection();
 
         renderManager.render(scene);
 
@@ -53,6 +53,8 @@ void Entry::run()
  * TODO
  *  - Normal mapping
  *      - Refactor lighting shader and integrate normal mapping
+ *  - Fix the normals - rotate by model-matrix
+ *  - Add mip-mapping
  *
  * TODO: NICE TO HAVE
  *  - Refactor and optimize lighting fragment shader
@@ -78,8 +80,8 @@ void Entry::init()
 //    loadSceneFromJson("resources/scenes/single-spot-light.json");
 //     loadSceneFromJson("resources/scenes/hall-with-columns.json");
 //     loadSceneFromJson("resources/scenes/hall-with-columns-omni.json");
-//     sceneLoader.loadSceneFromJson("resources/scenes/hall-with-columns-omni.json", scene);
-     sceneLoader.loadSceneFromJson("resources/scenes/normal-maps.json", scene);
+     sceneLoader.loadSceneFromJson("resources/scenes/hall-with-columns-omni.json", scene);
+//     sceneLoader.loadSceneFromJson("resources/scenes/normal-maps.json", scene);
 
      scene.camera.registerEventHandlers(&eventManager);
 }

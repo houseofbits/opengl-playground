@@ -47,7 +47,6 @@ public:
     glm::mat4 projectionMatrix = glm::mat4(1.0);
     glm::mat4 projectionViewMatrix = glm::mat4(1.0);
     unsigned int shadowAtlasIndex = 0;
-    unsigned int uniformBufferIndex = 0;
 
     // bool shouldUpdate = {true};      //TODO
     // bool shouldRelocateAtlas = {true};
