@@ -21,8 +21,8 @@ History
 -   Multiple point and spot lights casting shadows. Light projection texture. Texture atlases.
 
     <p float="left">
-      <img src="./docs/images/multilight-scene.png" width="400" />
-      <img src="./docs/images/shadow-atlas.png" width="400" />
+      <img src="./docs/images/multilight-scene.png" width="250" />
+      <img src="./docs/images/shadow-atlas.png" width="250" />
     </p>
 
 -   Multiple spot lights casting shadows.
