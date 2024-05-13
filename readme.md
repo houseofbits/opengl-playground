@@ -12,7 +12,8 @@ History
 -   Normal mapping and basic specular maps.
 
     <p float="left">
-      <img src="./docs/images/normal-maps.png" width="400" />
+      <img src="./docs/images/normal-maps.png" width="300" />
+      <img src="./docs/images/normal-maps2.png" width="300" />      
     </p>
 
 -   Multiple point and spot lights casting shadows. Light projection texture. Texture atlases.
