@@ -23,25 +23,26 @@ public:
             return 0;
         }
 
-        Texture t;
-        t.create(w,h, Texture::TYPE_RGBA);
-        t.applyImage(0,0,w,h, img);
-
-        return t.textureId;
-
-//        unsigned int texture;
-//        glGenTextures(1, &texture);
-//        glBindTexture(GL_TEXTURE_2D, texture);
-//        glTextureParameteri(texture, GL_TEXTURE_MAX_LEVEL, 0);
-//        glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//        glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//        glTextureStorage2D(texture, 1, GL_RGB8, w, h);
-//        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-//        glTextureSubImage2D(texture, 0, 0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, img);
-//        // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+//        Texture t;
+//        t.create(w,h, Texture::TYPE_RGBA);
+//        t.applyImage(0,0,w,h, img);
 //
-//        glBindTexture(GL_TEXTURE_2D, 0);
-//
-//        return texture;
+//        return t.textureId;
+
+        unsigned int texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTextureParameteri(texture, GL_TEXTURE_MAX_LEVEL, 10);
+        glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTextureStorage2D(texture, 10, GL_RGB8, w, h);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTextureSubImage2D(texture, 0, 0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, img);
+//         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        return texture;
     }
 };

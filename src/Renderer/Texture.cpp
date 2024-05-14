@@ -1,7 +1,10 @@
 #include "Texture.h"
 #include <GL/glew.h>
+#include <algorithm>
+#include <cmath>
+#include <iostream>
 
-Texture::Texture(): textureId(0),isMipmapsEnabled(false), width(0), height(0), type(TYPE_RGBA) {
+Texture::Texture() : textureId(0), isMipmapsEnabled(false), width(0), height(0), type(TYPE_RGBA) {
 }
 
 Texture::~Texture() = default;
@@ -21,10 +24,12 @@ void Texture::create(unsigned int textureWidth, unsigned int textureHeight, Type
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     } else {
-        glTextureParameteri(textureId, GL_TEXTURE_MAX_LEVEL, 0);
+        int maxLevels = 1 + (int)floor(log2(std::max(width, height)));
+
+        glTextureParameteri(textureId, GL_TEXTURE_MAX_LEVEL, maxLevels);
         glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTextureStorage2D(textureId, 1, GL_RGB8, (int) width, (int) height);
+        glTextureStorage2D(textureId, maxLevels, GL_RGB8, (int) width, (int) height);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     }
 }

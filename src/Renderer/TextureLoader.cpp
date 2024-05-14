@@ -5,7 +5,7 @@
 
 #include "../../libs/tinygltf/stb_image.h"
 
-Texture TextureLoader::load(std::string filename)
+Texture TextureLoader::load(std::string filename, bool withMipmapping)
 {
     unsigned char *data = nullptr;
     int width, height;
@@ -14,6 +14,9 @@ Texture TextureLoader::load(std::string filename)
     if (loadData(filename, &width, &height, data))
     {
         texture.create(width, height, Texture::TYPE_RGBA);
+        if (withMipmapping) {
+            texture.enableMipMaps();
+        }
         texture.applyImage(0, 0, width, height, data);
     }
 

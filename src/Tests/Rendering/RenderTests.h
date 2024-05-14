@@ -3,6 +3,7 @@
 #include "../../Events/EventManager.h"
 #include "../../Window.h"
 #include "BaseRenderTest.h"
+#include "TestMipMapping.h"
 #include "TestNormalMapping.h"
 #include "TestTangentSpaceCalculation.h"
 #include "TestTexture.h"
@@ -21,13 +22,15 @@ public:
         TestTextureAtlasDepth atlasDepthTest;
         TestTangentSpaceCalculation tangentSpaceCalculation;
         TestNormalMapping testNormalMapping;
+        TestMipMapping testMipMapping;
 
         // runSingleTest(&textureTest);
         // runSingleTest(&atlasTest);
 //         runSingleTest(&atlasShaderTest);
 //        runSingleTest(&atlasDepthTest);
 //        runSingleTest(&tangentSpaceCalculation);
-        runSingleTest(&testNormalMapping);
+//        runSingleTest(&testNormalMapping);
+        runSingleTest(&testMipMapping);
     }
 
     static void runSingleTest(BaseRenderTest *test)
@@ -50,7 +53,7 @@ public:
             }
 
             glViewport(0, 0, window.viewportWidth, window.viewportHeight);
-            glClearColor(1.f, 1.f, 1.f, 1.0f);
+            glClearColor(0.f, 1.f, 0.f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             test->render(camera);

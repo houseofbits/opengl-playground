@@ -8,6 +8,6 @@
 class TextureLoader
 {
 public:
-    static Texture load(std::string filename);
+    static Texture load(std::string filename, bool withMipmapping = false);
     static bool loadData(std::string filename, int *width, int *height, unsigned char *&data);
 };

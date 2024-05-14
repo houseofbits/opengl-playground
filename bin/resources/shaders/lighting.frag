@@ -84,7 +84,7 @@ float calculateLightDistanceAttenuation(float distAttenMax, float distToLight)
 
 void main()
 {
-    vec2 uv = calculateAtlasUV(diffuseTextureId, gsTexcoord);
+    vec2 uv = calculateAtlasUVBleed(diffuseTextureId, gsTexcoord);
     vec3 diffuseColor = texture(diffuseAtlas, uv).xyz;
 
     vec3 specularColor = vec3(1.0);
@@ -95,7 +95,7 @@ void main()
 
     vec3 normal = normalize(gsNormal);
     if (normalTextureId > 0) {
-        vec2 uv2 = calculateAtlasUV(normalTextureId, gsTexcoord);
+        vec2 uv2 = calculateAtlasUVBleed(normalTextureId, gsTexcoord);
         normal = texture(normalsAtlas, uv2).rgb;
         normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
     }

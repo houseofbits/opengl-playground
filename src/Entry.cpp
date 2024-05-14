@@ -51,10 +51,7 @@ void Entry::run()
 
 /**
  * TODO
- *  - Normal mapping
- *      - Refactor lighting shader and integrate normal mapping
- *  - Fix the normals - rotate by model-matrix
- *  - Add mip-mapping
+ *  - Shadow map pass light batching
  *
  * TODO: NICE TO HAVE
  *  - Refactor and optimize lighting fragment shader

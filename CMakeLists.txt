@@ -14,7 +14,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Components/SceneLoader.cpp
         src/Components/SceneLoader.h
         src/Tests/Rendering/TestTangentSpaceCalculation.h
-        src/Tests/Rendering/TestNormalMapping.h)
+        src/Tests/Rendering/TestNormalMapping.h
+        src/Tests/Rendering/TestMipMapping.h)
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)
 
