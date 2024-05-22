@@ -9,7 +9,7 @@ uniform sampler2D texture1;
 void main()
 {
     vec4 value = texture(texture1, TexCoord);
-    float depth = pow(pow(value.r, 100), 100);
+    float depth = pow(pow(value.r, 5), 100);
 
     FragColor = vec4(vec3(depth), 1.0);
 }

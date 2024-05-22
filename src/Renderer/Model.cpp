@@ -43,6 +43,8 @@ void Model::createFromFile(std::string filename)
         glBindBuffer(bufferView.target, vbo);
         glBufferData(bufferView.target, bufferView.byteLength,
                      &buffer.data.at(0) + bufferView.byteOffset, GL_STATIC_DRAW);
+
+//        std::cout<<"B: "<<bufferView.target<<std::endl;
     }
 
     for (const auto &node : model.nodes)
@@ -66,6 +68,8 @@ void Model::createFromFile(std::string filename)
                 el.bufferId = generatedBuffers[indexAccessor.bufferView];
                 elementsArray.push_back(el);
 
+//                std::cout<<"Prim:"<<model.meshes[node.mesh].name<<std::endl;
+
                 for (auto &attrib : primitive.attributes)
                 {
                     tinygltf::Accessor accessor = model.accessors[attrib.second];
@@ -88,6 +92,8 @@ void Model::createFromFile(std::string filename)
                         vaa = 2;
                     if (vaa > -1)
                     {
+
+//                        std::cout<<"VA: "<<vaa<<", "<<size<<", "<<accessor.componentType<<std::endl;
                         glEnableVertexAttribArray(vaa);
                         glVertexAttribPointer(vaa, size, accessor.componentType,
                                               accessor.normalized ? GL_TRUE : GL_FALSE,

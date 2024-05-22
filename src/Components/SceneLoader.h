@@ -4,6 +4,7 @@
 #include "../Renderer/RenderManager.h"
 #include "Scene.h"
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <string>
 
 class SceneLoader {
@@ -11,6 +12,7 @@ private:
     RenderManager *renderManager;
 
     static glm::vec3 getVec3FromJsonArray(nlohmann::json::array_t array);
+    static glm::vec4 getVec4FromJsonArray(nlohmann::json::array_t array);
     static bool readJsonData(const std::string &filename, nlohmann::json &data);
 
     void populateModel(ModelComponent &model, nlohmann::json &data);

@@ -5,22 +5,28 @@ Scene::Scene(): camera(), renderables(), lights()
 
 }
 
+//TODO: Main material pass. Refactor or rename
 void Scene::render(Shader &shader)
 {
     for (const auto &renderable : renderables)
     {
-        shader.setUniform("modelMatrix", renderable->getTransform());
-        renderable->setShaderMaterialParams(shader);
-        renderable->render();
+        if (renderable->isSolidMaterial) {
+            shader.setUniform("modelMatrix", renderable->getTransform());
+            renderable->setShaderMaterialParams(shader);
+            renderable->render();
+        }
     }
 }
 
+//TODO This is for shadow map pass. Rename or refactor
 void Scene::renderWithTransform(Shader &shader)
 {
     for (const auto &renderable : renderables)
     {
-        shader.setUniform("modelMatrix", renderable->getTransform());
-        renderable->render();
+        if (renderable->doesCastShadows) {
+            shader.setUniform("modelMatrix", renderable->getTransform());
+            renderable->render();
+        }
     }
 }
 

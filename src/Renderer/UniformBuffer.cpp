@@ -4,6 +4,7 @@
 #include <cstring>
 
 template class UniformBuffer<float>;
+template class UniformBuffer<unsigned int>;
 template class UniformBuffer<glm::vec4>;
 template class UniformBuffer<LightUniform>;
 

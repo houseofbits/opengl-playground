@@ -13,9 +13,17 @@
 class ShadowMapRenderer : public BaseRenderer
 {
 private:
-    static const unsigned int MAX_LIGHTVIEWS_PER_PASS = 20;
+    typedef UniformBuffer<unsigned int> UniformIndexBuffer;
+
+    static const unsigned int MAX_LIGHTVIEWS_PER_PASS = 16;     //Hard limit by GL_MAX_VIEWPORTS
+    static const unsigned int LIGHT_INDEXES_UNIFORM_BINDING_INDEX = 3;
 
     void prepareViewports();
+    void prepareIndexes(unsigned int page);
+    unsigned int calculateNumPages();
+
+    UniformIndexBuffer lightIndexesUniform;
+    unsigned int numLightsPerPass;
 
 public:
     explicit ShadowMapRenderer(RenderManager *);

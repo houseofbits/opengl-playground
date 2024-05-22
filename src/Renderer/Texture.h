@@ -9,6 +9,8 @@ public:
         TYPE_RGBA,
     };
 
+    static const int maxMipMapLevels = 5;
+
     Texture();
     virtual ~Texture();
 
@@ -21,7 +23,11 @@ public:
     virtual void create(unsigned int width, unsigned int height, Type type);
     void enableMipMaps();
     void applyImage(unsigned int left, unsigned int top, unsigned int imageWidth, unsigned int imageHeight, const unsigned char *imageData);
+    void applyTexture(const Texture& texture, unsigned int left, unsigned int top);
+
     virtual void bind();
     virtual void unbind();
     virtual void destroy();
+
+    bool isLoaded();
 };

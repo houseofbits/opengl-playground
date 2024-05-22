@@ -9,4 +9,7 @@ public:
     virtual void render() = 0;
     virtual glm::mat4 &getTransform() = 0;
     virtual void setShaderMaterialParams(Shader &shader) = 0;
+
+    bool doesCastShadows = {true};
+    bool isSolidMaterial = {true};
 };

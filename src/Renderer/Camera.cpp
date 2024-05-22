@@ -38,8 +38,8 @@ bool Camera::handleWindowEvent(WindowEvent *const event)
 
 bool Camera::handleInputEvent(InputEvent *const event)
 {
-    float moveSpeed = 80;
-    float lookSpeed = 0.2;
+    float moveSpeed = 4;
+    float lookSpeed = 0.1;
 
     if (event->type == InputEvent::MOUSEMOVE && event->mouseButtonLeft)
     {
@@ -82,11 +82,14 @@ bool Camera::handleInputEvent(InputEvent *const event)
     if (event->type == InputEvent::KEYDOWN && event->keyCode == 58) // F1
     {
         std::cout << "Camera - vertical angle: "
-                  << round(glm::degrees(verticalAngle))
+                  << (glm::degrees(verticalAngle))
                   << " horizontal angle: "
-                  << round(glm::degrees(horizontalAngle))
+                  << (glm::degrees(horizontalAngle))
                   << " position:"
-                  << round(position.x) << "," << round(position.y) << "," << round(position.z) << std::endl;
+                  << (position.x) << "," << (position.y) << "," << (position.z)
+                  << " direction:"
+                  << (direction.x) << "," << (direction.y) << "," << (direction.z)
+                  << std::endl;
     }
     return true;
 }

@@ -1,0 +1,65 @@
+{
+    "camera": {
+        "position": [
+            -2.5,
+            -5.9,
+            6.3
+        ],
+        "verticalAngle": 56,
+        "horizontalAngle": -182
+    },
+    "meshes": [
+        {
+            "model": "resources/test/models/axis.gltf",
+            "diffuseTexture": "resources/test/textures/red-128.png",
+            "selfIllumination": 0.5,
+            "doesReceiveShadows": false
+        }
+    ],
+    "lights": [
+        {
+            "type": "POINT",
+            "position": [
+                0,
+                0,
+                10
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                1,
+                1,
+                0.5
+            ],
+            "beamAngle": 45,
+            "distAttenMax": 700,
+            "intensity": 1,
+            "doesCastShadows": true
+        },
+        {
+            "type": "POINT",
+            "position": [
+                -10,
+                10,
+                5
+            ],
+            "direction": [
+                0,
+                -1,
+                0
+            ],
+            "color": [
+                0.8,
+                0.8,
+                1
+            ],
+            "beamAngle": 45,
+            "distAttenMax": 20,
+            "intensity": 0.5,
+            "doesCastShadows": true
+        }
+    ]
+}

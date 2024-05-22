@@ -50,6 +50,11 @@ public:
         shader.setUniform("diffuseTextureId", diffuseTextureId);
         shader.setUniform("normalTextureId", normalTextureId);
         shader.setUniform("specularTextureId", specularTextureId);
+        shader.setUniform("diffuseColor", diffuseColor);
+        shader.setUniform("selfIllumination", selfIllumination);
+        shader.setUniform("doesReceiveShadows", doesReceiveShadows);
+        shader.setUniform("specularPower", specularPower);
+        shader.setUniform("specularColor", specularColor);
     }
 
     glm::mat4 transform;
@@ -58,5 +63,10 @@ public:
     unsigned int diffuseTextureId;
     unsigned int normalTextureId;
     unsigned int specularTextureId;
+    glm::vec4 diffuseColor;
+    float selfIllumination;
+    bool doesReceiveShadows;
+    unsigned int specularPower;
+    glm::vec3 specularColor;
 
 };

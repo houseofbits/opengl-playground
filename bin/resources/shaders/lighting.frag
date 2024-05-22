@@ -11,6 +11,11 @@ uniform vec3 viewPosition;
 uniform uint diffuseTextureId;
 uniform uint normalTextureId;
 uniform uint specularTextureId;
+uniform vec4 diffuseColor;
+uniform float selfIllumination;
+uniform bool doesReceiveShadows;
+uniform uint specularPower;
+uniform vec3 specularColor;
 
 #include include/lightBlock.glsl
 #include include/textureAtlas.glsl
@@ -44,13 +49,13 @@ float pcfShadowCalculation(vec3 projCoords, uint shadowAtlasIndex, float ndotl)
     //    float dstToSurface = abs(texture(shadowDepthAtlas, uv).r - currentDepth);
 
     float bias = 0.0000001;
-    float blurFactor = 1.0 / 256.0;//textureSize(shadowDepthAtlas, 0);
+    float blurFactor = 1.0 / 800.0; //textureSize(shadowDepthAtlas, 0).x;  //
     float shadow = 0;
     vec2 uv;
     int div=0;
-    for (int x = -1; x <= 1; ++x)
+    for (int x = -2; x <= 2; ++x)
     {
-        for (int y = -1; y <= 1; ++y)
+        for (int y = -2; y <= 2; ++y)
         {
             uv = projCoords.xy + vec2(x, y) * blurFactor;
             if (isProjCoordsClipping(uv))
@@ -66,15 +71,15 @@ float pcfShadowCalculation(vec3 projCoords, uint shadowAtlasIndex, float ndotl)
     return shadow;
 }
 
-vec3 calculateSpecularComponent(vec3 lightDir, vec3 viewDir, vec3 normal, vec3 specularColor)
+vec3 calculateSpecularComponent(vec3 lightDir, vec3 viewDir, vec3 normal, vec3 color, uint power)
 {
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = 0.0;
 
     vec3 halfwayDir = normalize(lightDir + viewDir);
-    spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+    spec = pow(max(dot(normal, halfwayDir), 0.0), float(power));
 
-    return spec * specularColor;
+    return spec * color;
 }
 
 float calculateLightDistanceAttenuation(float distAttenMax, float distToLight)
@@ -84,25 +89,32 @@ float calculateLightDistanceAttenuation(float distAttenMax, float distToLight)
 
 void main()
 {
-    vec2 uv = calculateAtlasUVBleed(diffuseTextureId, gsTexcoord);
-    vec3 diffuseColor = texture(diffuseAtlas, uv).xyz;
-
-    vec3 specularColor = vec3(1.0);
-    if (specularTextureId > 0) {
-        vec2 uvSpec = calculateAtlasUV(specularTextureId, gsTexcoord);
-        specularColor = texture(diffuseAtlas, uvSpec).xyz;
+    vec3 diffuse = diffuseColor.rgb;
+    if (diffuseTextureId > 0) {
+        diffuse = sampleDiffuseAtlasFragment(diffuseTextureId, gsTexcoord);
+        diffuse *= diffuseColor.rgb;
     }
 
-    vec3 normal = normalize(gsNormal);
+    if (selfIllumination > 0.9) {
+        FragColor = vec4(diffuse, 1.0);
+        return;
+    }
+
+    vec3 specularLevel = vec3(1.0);
+    if (specularTextureId > 0) {
+        specularLevel = sampleDiffuseAtlasFragment(specularTextureId, gsTexcoord);
+    }
+
+    vec3 normal = gsNormal;
     if (normalTextureId > 0) {
-        vec2 uv2 = calculateAtlasUVBleed(normalTextureId, gsTexcoord);
-        normal = texture(normalsAtlas, uv2).rgb;
+        normal = sampleNormalsAtlasFragment(normalTextureId, gsTexcoord);
         normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
     }
+    normal = normalize(normal);
 
     vec3 viewDir = normalize(viewPosition - gsPosition.xyz);
     vec3 lightProjColor = vec3(1.0);
-    vec3 lightColor = vec3(0.0);
+    vec3 lightColor = vec3(selfIllumination) + (diffuse * vec3(0.1,0.1,0.1));
 
     for (int lightIndex = 0; lightIndex < numActiveLights; lightIndex++) {
         LightStructure light = lights[lightIndex];
@@ -121,7 +133,7 @@ void main()
             }
 
             float shadowing = 1.0;
-            if (light.doesCastShadows == 1) {
+            if (light.doesCastShadows == 1 && doesReceiveShadows) {
                 shadowing = pcfShadowCalculation(lightProjectedPosition, light.shadowAtlasIndex, ndotl);
             }
 
@@ -131,7 +143,7 @@ void main()
                 lightProjColor = texture(effectsAtlas, lightProjUV).xyz;
             }
 
-            vec3 diffuse = diffuseColor
+            vec3 diffuseLight = diffuse
                 * ndotl
                 * light.color
                 * light.intensity;
@@ -140,10 +152,13 @@ void main()
                 calculateLightDistanceAttenuation(light.distAttenMax, distToLight)
                 * shadowing
                 * lightProjColor
-                * (diffuse + calculateSpecularComponent(lightDir, viewDir, normal, specularColor));
+                * (diffuseLight + calculateSpecularComponent(lightDir, viewDir, normal, specularLevel * specularColor, specularPower));
         }
     }
 
+    if (selfIllumination > 0) {
+        lightColor = mix(lightColor, diffuse, selfIllumination);
+    }
+
     FragColor = vec4(lightColor, 1.0);
-//    FragColor = vec4(vec3(normal), 1.0);
 }

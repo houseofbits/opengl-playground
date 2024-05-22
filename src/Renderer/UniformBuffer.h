@@ -28,16 +28,11 @@ public:
     void setData(const T *data, unsigned int offset, unsigned int size);
     T &get(unsigned int index)
     {
-        // if (data == nullptr || index > maxSize)
-        // {
-        //     return nullptr;
-        // }
-
         return data[index];
     }
     void set(T value, unsigned int index)
     {
-        if (data == nullptr || index > maxSize)
+        if (data != nullptr && index < maxSize)
         {
             data[index] = value;
         }

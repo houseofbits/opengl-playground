@@ -62,13 +62,17 @@ void Window::create()
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     glEnable(GL_MULTISAMPLE);
+//    glDisable(GL_MULTISAMPLE);
 
     eventManager->queueEvent(new WindowEvent(WindowEvent::Type::CREATE, this));
 
     // std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-    // int numViewports;
-    // glGetIntegerv(GL_MAX_VIEWPORTS, &numViewports);
-    // std::cout << "Num viewports: " << numViewports << std::endl;
+//     int numViewports;
+//     glGetIntegerv(GL_MAX_VIEWPORTS, &numViewports);
+//     std::cout << "Num viewports: " << numViewports << std::endl;
+//    int maxVertices;
+//    glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES, &maxVertices);
+//    std::cout << "GS maximum number of vertices: " << maxVertices << std::endl;
 }
 
 void Window::destroy()

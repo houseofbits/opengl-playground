@@ -29,8 +29,8 @@ void Entry::run()
             break;
         }
 
-        (*scene.lights.begin())->position = scene.camera.getPosition() - glm::vec3(0, 20, 0);
-        (*scene.lights.begin())->direction = scene.camera.getDirection();
+//        (*scene.lights.begin())->position = scene.camera.getPosition() - glm::vec3(0, 0.1, 0);
+//        (*scene.lights.begin())->direction = scene.camera.getDirection();
 
         renderManager.render(scene);
 
@@ -51,20 +51,18 @@ void Entry::run()
 
 /**
  * TODO
- *  - Shadow map pass light batching
+ *  - Shadow map pass light batching - needed for the test scene to be made
+ *  - Refactor file structure
  *
  * TODO: NICE TO HAVE
- *  - Refactor and optimize lighting fragment shader
  *  - Add shadow bias variables to light
  *  - Projection texture per light view
  *  - Optional light views for omni lights - configurable
  *  - Add View class to extend the Camera and LightView
  *
  * TODO: IMPLEMENT
- *  - Normal maps
- *  - Specular maps
- *  - Basic animations
  *  - Create a basic test scene
+ *  - Basic animations
  *  - PhysX
  *
  */
@@ -77,7 +75,9 @@ void Entry::init()
 //    loadSceneFromJson("resources/scenes/single-spot-light.json");
 //     loadSceneFromJson("resources/scenes/hall-with-columns.json");
 //     loadSceneFromJson("resources/scenes/hall-with-columns-omni.json");
-     sceneLoader.loadSceneFromJson("resources/scenes/hall-with-columns-omni.json", scene);
+//     sceneLoader.loadSceneFromJson("resources/scenes/hall-with-columns-omni.json", scene);
+     sceneLoader.loadSceneFromJson("resources/scenes/scene1.json", scene);
+//     sceneLoader.loadSceneFromJson("resources/scenes/gltf-debug.json", scene);
 //     sceneLoader.loadSceneFromJson("resources/scenes/normal-maps.json", scene);
 
      scene.camera.registerEventHandlers(&eventManager);

@@ -8,8 +8,8 @@ RenderManager::RenderManager(Window *w) : window(w),atlasManager(), shadowMapRen
 
 void RenderManager::init()
 {
-    lightsUniformBuffer.create(20);
     atlasManager.init();
+    lightsUniformBuffer.create(100);
     shadowMapRenderer.init();
     staticGeometryRenderer.init();
 

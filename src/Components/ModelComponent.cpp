@@ -1,6 +1,16 @@
 #include "ModelComponent.h"
 
-ModelComponent::ModelComponent() : model(), transform(1.0), diffuseTextureId(0), normalTextureId(0), specularTextureId(0)
+ModelComponent::ModelComponent() :
+                                   model(),
+                                   transform(1.0),
+                                   diffuseTextureId(0),
+                                   normalTextureId(0),
+                                   specularTextureId(0),
+                                   diffuseColor(1,1,1,1),
+                                   selfIllumination(0),
+                                   doesReceiveShadows(true),
+                                   specularPower(32),
+                                   specularColor(1,1,1)
 {
 }
 

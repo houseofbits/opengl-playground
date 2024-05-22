@@ -16,7 +16,7 @@ void TextureAtlasManager::init() {
     atlases[ATLAS_SHADOW_DEPTH].createAsRenderTarget(4096, 4096, Texture::TYPE_DEPTH);
     atlases[ATLAS_DIFFUSE].create(2048, 2048, Texture::TYPE_RGBA, true);
     atlases[ATLAS_NORMALS].create(2048, 2048, Texture::TYPE_RGBA, true);
-    atlases[ATLAS_EFFECTS].create(1024, 1024, Texture::TYPE_RGBA);
+    atlases[ATLAS_EFFECTS].create(1024, 1024, Texture::TYPE_RGBA, true);
 
     initAtlasRegionsMapping();
 }
@@ -31,20 +31,15 @@ int TextureAtlasManager::loadTextureIntoAtlas(std::string textureFileName, Atlas
     }
 
     TextureAtlas &atlas = getAtlas(atlasType);
-
-    unsigned char *data = nullptr;
-    int width, height;
-
-    if (TextureLoader::loadData(textureFileName, &width, &height, data)) {
-        int textureSize = std::max(width, height);
-
-        int nodeIndex = occupyRegion(atlasType, textureSize);
+    Texture texture = TextureLoader::load(textureFileName, true);
+    if (texture.isLoaded()) {
+        unsigned int textureSize = std::max(texture.width, texture.height);
+        int nodeIndex = occupyRegion(atlasType, (int)textureSize);
         if (nodeIndex > 0) {
             glm::uvec4 rect = getRegionRect(atlasType, nodeIndex);
-
-            atlas.texture->applyImage(rect.x, rect.y, width, height, data);
-
+            atlas.texture->applyTexture(texture, rect.x, rect.y);
             loadedTextures[textureFileName] = std::pair<unsigned int, AtlasType>(nodeIndex, atlasType);
+            texture.destroy();
         }
 
         return nodeIndex;
@@ -83,7 +78,7 @@ void TextureAtlasManager::initAtlasRegionsMapping() {
     auto *data = new glm::vec4[quadTree.getNumNodes()];
     for (unsigned int i = 0; i < quadTree.getNumNodes(); i++) {
         const QuadTreeNode &node = quadTree.getNode(i);
-        float nodeSize = 1.0f / (float) node.size;
+        float nodeSize = (1.0f / (float) node.size);
         data[i] = {nodeSize, (float) node.left * nodeSize, (float) node.top * nodeSize, 0.0f};
     }
 

@@ -33,6 +33,8 @@ void LightsUniformBuffer::update(Scene &scene, TextureAtlasManager &atlasManager
                 light->views[i].shadowAtlasIndex = getShadowAtlasRegionIndex(atlasManager);
             }
 
+//            std::cout<<uniformIndex<<" - "<<light->views[i].shadowAtlasIndex<<std::endl;
+
             populateUniform(uniform, *light, light->views[i]);
 
             light->uniformBufferIndex = uniformIndex;
@@ -42,6 +44,21 @@ void LightsUniformBuffer::update(Scene &scene, TextureAtlasManager &atlasManager
             uniformIndex++;
         }
     }
+
+//        Light* light = (*scene.lights.begin());
+//        light->generateViews();
+//        for(unsigned int i=0; i<30; i++)
+//        {
+//            LightUniform &uniform = uniformBuffer.get(uniformIndex);
+//
+//            if (light->doesCastShadows) {
+//                light->views[0].shadowAtlasIndex = getShadowAtlasRegionIndex(atlasManager);
+//            }
+//
+//            populateUniform(uniform, *light, light->views[0]);
+//
+//            uniformIndex++;
+//        }
 
 //    std::cout<<numActiveLights<<std::endl;
 
@@ -80,4 +97,6 @@ void LightsUniformBuffer::bind(Shader &shader)
     uniformBuffer.bind();
     shader.setUniform("lights", uniformBuffer.getBufferId());
     shader.setUniform("numActiveLights", numActiveLights);
+
+//    std::cout<<numActiveLights<<std::endl;
 }

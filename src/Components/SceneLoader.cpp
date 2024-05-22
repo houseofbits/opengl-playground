@@ -48,6 +48,27 @@ void SceneLoader::populateModel(ModelComponent &model, nlohmann::json &meshData)
     if (meshData["scale"] != nullptr) {
         model.setScale(getVec3FromJsonArray(meshData["scale"]));
     }
+    if (meshData["diffuseColor"] != nullptr) {
+        model.diffuseColor = getVec4FromJsonArray(meshData["diffuseColor"]);
+    }
+    if (meshData["selfIllumination"] != nullptr) {
+        model.selfIllumination = (float) meshData["selfIllumination"];
+    }
+    if (meshData["specularPower"] != nullptr) {
+        model.specularPower = (unsigned int) meshData["specularPower"];
+    }
+    if (meshData["specularColor"] != nullptr) {
+        model.specularColor = getVec3FromJsonArray(meshData["specularColor"]);
+    }
+    if (meshData["doesCastShadows"] != nullptr) {
+        model.doesCastShadows = (bool) meshData["doesCastShadows"];
+    }
+    if (meshData["doesReceiveShadows"] != nullptr) {
+        model.doesReceiveShadows = (bool) meshData["doesReceiveShadows"];
+    }
+    if (meshData["isSolidMaterial"] != nullptr) {
+        model.isSolidMaterial = (bool) meshData["isSolidMaterial"];
+    }
 }
 
 void SceneLoader::populateLight(Light &light, nlohmann::json &lightData) {
@@ -114,6 +135,17 @@ glm::vec3 SceneLoader::getVec3FromJsonArray(nlohmann::json::array_t array) {
     value.x = array[0];
     value.y = array[1];
     value.z = array[2];
+
+    return value;
+}
+
+glm::vec4 SceneLoader::getVec4FromJsonArray(nlohmann::json::array_t array) {
+    glm::vec4 value(0.0);
+
+    value.x = array[0];
+    value.y = array[1];
+    value.z = array[2];
+    value.w = array[3];
 
     return value;
 }
