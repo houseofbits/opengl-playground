@@ -51,14 +51,17 @@ void Entry::run()
 
 /**
  * TODO
- *  - Shadow map pass light batching - needed for the test scene to be made
+ *  - Render scene to cubemap
+ *  - Reflection probe manager and renderer
  *  - Refactor file structure
+ *  - Debug point lights - has some rendering glitches
+ *  - Explore how to render debug information - wireframe generation for lights
  *
  * TODO: NICE TO HAVE
  *  - Add shadow bias variables to light
  *  - Projection texture per light view
  *  - Optional light views for omni lights - configurable
- *  - Add View class to extend the Camera and LightView
+ *  - Add View abstraction - could be used for Camera, LightView, Decals, RTT
  *
  * TODO: IMPLEMENT
  *  - Create a basic test scene

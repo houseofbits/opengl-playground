@@ -21,7 +21,7 @@ private:
     unsigned int numActiveLights;
 
     static void populateUniform(LightUniform &uniform, Light &light, LightView &view);
-    static unsigned int getShadowAtlasRegionIndex(TextureAtlasManager &atlasManager);
+    static unsigned int getShadowAtlasRegionIndex(TextureAtlasManager &atlasManager, unsigned int maxTextureSize);
 
 public:
     void create(unsigned int maxLights);

@@ -1,5 +1,8 @@
 #include "Light.h"
 #include "UniformBuffer.h"
+#include <cmath>
+#include <iostream>
+#include <algorithm>
 
 Light::Light(): projectionTextureId(0)
 {
@@ -50,4 +53,32 @@ void Light::generateViews()
             views[i].calculateProjectionViewMatrix(90.0, position, directions[i], distAttenMax);
         }
     }
+}
+
+unsigned int Light::calculateMaximumTextureSize()
+{
+    float angle = beamAngle;
+    if (type == POINT) {
+        angle = 90.0;
+    }
+
+    int projectionSize = (int)(distAttenMax * (float)sin(glm::radians(angle / 2))) * 2;
+
+    unsigned int lowerPower = 1u << static_cast<unsigned int>(std::log2(projectionSize));
+    unsigned int upperPower = lowerPower << 1;
+
+    unsigned int size;
+//    if (projectionSize - lowerPower < upperPower - projectionSize) {
+//        size = lowerPower;
+//    } else {
+        size = upperPower;
+//    }
+
+    size = size * 2;
+
+    size = std::min(std::max((int)size, 256), 1024);
+
+//    std::cout<<" b:"<<beamAngle<<" l:"<<distAttenMax<<std::endl;
+//    std::cout<<" proj:"<<projectionSize<<" pow2:"<<size<<std::endl;
+    return size;
 }

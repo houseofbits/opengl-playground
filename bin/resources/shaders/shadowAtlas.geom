@@ -39,7 +39,7 @@ void main()
                 vec3 ldir = normalize(lights[lightIndex].position - vsPosition[i].xyz);
                 gsNormal = vsNormal[i];
                 float ndotl = 1.0 - dot(ldir, gsNormal);
-                ldir = ldir * (ndotl  * 1.2);
+                ldir = ldir * (ndotl  * 0.1);
                 vec4 vpos = vec4(vsPosition[i].xyz - ldir, vsPosition[i].w); // - (gsNormal * 2.0),
                 gl_Position = projViewMatrix * vpos;    //vsPosition[i];
                 gsPosition = gl_Position.xyz;

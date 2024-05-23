@@ -93,12 +93,14 @@ public:
 
     unsigned int projectionTextureId;
 
-    // Obsolette stuff
+    // Obsolete stuff
     glm::mat4 viewMatrix;
     glm::mat4 projectionMatrix;
     glm::mat4 projectionViewMatrix;
     unsigned int uniformBufferIndex;
     glm::mat4 &getProjectionViewMatrix();
+
+    unsigned int calculateMaximumTextureSize();
 
     // New stuff
     LightView views[6];

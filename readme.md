@@ -15,6 +15,7 @@ History
       <img src="./docs/images/upd3/img1.png" width="300" />
       <img src="./docs/images/upd3/img2.png" width="300" />  
       <img src="./docs/images/upd3/img3.png" width="300" />      
+      <img src="./docs/images/upd3/img4.png" width="300" />      
     </p>
 
 -   Normal mapping and basic specular maps.

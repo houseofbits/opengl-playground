@@ -68,11 +68,11 @@ TextureCube TextureLoader::loadCube(std::string imageFileName, bool withMipmappi
             //            areAllFacesLoaded = false;
             //            break;
             //        }
-            std::cout<<"load data "<<filename<<std::endl;
+//            std::cout<<"load data "<<filename<<std::endl;
             texture.applyImageToFace(faceId, 0, 0, width, height, data);
             freeData(data);
         } else {
-            std::cout<<"failed to load "<<filename<<std::endl;
+            std::cout<<"Failed to load "<<filename<<std::endl;
         }
     }
 

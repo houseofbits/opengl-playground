@@ -7,12 +7,10 @@ StaticGeometryRenderer::StaticGeometryRenderer(RenderManager *manager) : BaseRen
 void StaticGeometryRenderer::init() {
     materialShader.loadProgram(
             "resources/shaders/lighting.vert",
+//            "resources/shaders/lightingSimplified.frag",  //Used to render scene into reflection probes
             "resources/shaders/lighting.frag",
             "resources/shaders/lighting.geom");
-    //    materialShader.loadProgram(
-    //            "resources/shaders/normals.vert",
-    //            "resources/shaders/normals.frag",
-    //            "resources/shaders/normals.geom");
+
     skyboxTexture = TextureLoader::loadCube("resources/textures/sky2/*.png", true);
 
     skyShader.loadProgram("resources/shaders/skybox.vert", "resources/shaders/skybox.frag");

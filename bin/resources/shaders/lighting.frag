@@ -49,7 +49,7 @@ float pcfShadowCalculation(vec3 projCoords, uint shadowAtlasIndex, float ndotl)
     //    vec2 uv = calculateAtlasUV(shadowAtlasIndex, projCoords.xy);
     //    float dstToSurface = abs(texture(shadowDepthAtlas, uv).r - currentDepth);
 
-    float bias = 0.0000001;
+    float bias = 0.00001;
     float blurFactor = 1.0 / 800.0; //textureSize(shadowDepthAtlas, 0).x;  //
     float shadow = 0;
     vec2 uv;

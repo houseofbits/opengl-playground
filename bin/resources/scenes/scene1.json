@@ -157,8 +157,8 @@
                 0.8,
                 1
             ],
-            "beamAngle": 200,
-            "distAttenMax": 20,
+            "beamAngle": 100,
+            "distAttenMax": 200,
             "intensity": 0.6,
             "doesCastShadows": true,
             "projectionTexture": "resources/textures/spot-1.png"

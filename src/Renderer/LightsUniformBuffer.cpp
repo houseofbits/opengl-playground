@@ -24,13 +24,15 @@ void LightsUniformBuffer::update(Scene &scene, TextureAtlasManager &atlasManager
     {
         light->generateViews(); // TODO Update only when necessary
 
+        int textureSize = light->calculateMaximumTextureSize();
+
         for (unsigned int i = 0; i < light->numberOfViews; i++)
         {
             LightUniform &uniform = uniformBuffer.get(uniformIndex);
 
             if (light->doesCastShadows)
             {
-                light->views[i].shadowAtlasIndex = getShadowAtlasRegionIndex(atlasManager);
+                light->views[i].shadowAtlasIndex = getShadowAtlasRegionIndex(atlasManager, textureSize);
             }
 
 //            std::cout<<uniformIndex<<" - "<<light->views[i].shadowAtlasIndex<<std::endl;
@@ -84,11 +86,9 @@ void LightsUniformBuffer::populateUniform(LightUniform &uniform, Light &light, L
     uniform.projectionTextureId = light.projectionTextureId;
 }
 
-unsigned int LightsUniformBuffer::getShadowAtlasRegionIndex(TextureAtlasManager &atlasManager)
+unsigned int LightsUniformBuffer::getShadowAtlasRegionIndex(TextureAtlasManager &atlasManager, unsigned int maxTextureSize)
 {
-    int shadowMapSize = 512;
-
-    int index = atlasManager.occupyRegion(TextureAtlasManager::ATLAS_SHADOW_DEPTH, shadowMapSize);
+    int index = atlasManager.occupyRegion(TextureAtlasManager::ATLAS_SHADOW_DEPTH, (int)maxTextureSize);
     return index > 0 ? index : 0;
 }
 
