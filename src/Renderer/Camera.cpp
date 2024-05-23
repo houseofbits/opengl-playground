@@ -16,7 +16,7 @@ Camera::Camera() : verticalAngle(-0.4), horizontalAngle(-0.6), position(0), isTr
 void Camera::resize(unsigned int viewportWidth, unsigned int viewportHeight)
 {
     calculateView();
-    projectionMatrix = glm::perspective(glm::radians(60.0f), (float)viewportWidth / viewportHeight, 0.1f, 1000.0f);
+    projectionMatrix = glm::perspective(glm::radians(90.0f), (float)viewportWidth / viewportHeight, 0.1f, 1000.0f);
     isTransformDirty = true;
 }
 

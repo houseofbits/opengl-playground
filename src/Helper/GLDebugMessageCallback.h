@@ -1,132 +1,111 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <string>
-#include <iostream>
 #include "Console.h"
+#include <GL/glew.h>
+#include <iostream>
+#include <string>
+
+const bool DISPLAY_NOTIFICATIONS = false;
+
+std::string getSourceString(GLenum source) {
+    switch (source) {
+        case GL_DEBUG_SOURCE_API:
+            return "API";
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+            return "WINDOW SYSTEM";
+        case GL_DEBUG_SOURCE_SHADER_COMPILER:
+            return "SHADER COMPILER";
+        case GL_DEBUG_SOURCE_THIRD_PARTY:
+            return "THIRD PARTY";
+        case GL_DEBUG_SOURCE_APPLICATION:
+            return "APPLICATION";
+        case GL_DEBUG_SOURCE_OTHER:
+        default:
+            return "UNKNOWN";
+    }
+}
+
+std::string getTypeString(GLenum type) {
+    switch (type) {
+        case GL_DEBUG_TYPE_ERROR:
+            return "ERROR";
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+            return "DEPRECATED BEHAVIOR";
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+            return "UNDEFINED BEHAVIOR";
+        case GL_DEBUG_TYPE_PORTABILITY:
+            return "PORTABILITY";
+        case GL_DEBUG_TYPE_PERFORMANCE:
+            return "PERFORMANCE";
+        case GL_DEBUG_TYPE_OTHER:
+            return "OTHER";
+        case GL_DEBUG_TYPE_MARKER:
+            return "MARKER";
+        default:
+            return "UNKNOWN";
+    }
+}
+
+std::string getSeverityString(GLenum severity) {
+    switch (severity) {
+        case GL_DEBUG_SEVERITY_HIGH:
+            return "HIGH";
+        case GL_DEBUG_SEVERITY_MEDIUM:
+            return "MEDIUM";
+        case GL_DEBUG_SEVERITY_LOW:
+            return "LOW";
+        case GL_DEBUG_SEVERITY_NOTIFICATION:
+            return "NOTIFICATION";
+        default:
+            return "UNKNOWN";
+    }
+}
+
+bool isHighPriority(GLenum type, GLenum severity) {
+    if (type == GL_DEBUG_TYPE_ERROR) {
+        return true;
+    }
+
+    if (severity == GL_DEBUG_SEVERITY_HIGH) {
+        return true;
+    }
+
+    return false;
+}
+
+bool isLowPriority(GLenum severity) {
+    if (severity == GL_DEBUG_SEVERITY_LOW || severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
+        return true;
+    }
+
+    return false;
+}
 
 void GLDebugMessageCallback(GLenum source, GLenum type, GLuint id,
                             GLenum severity, GLsizei length,
-                            const GLchar *msg, const void *data)
-{
-    std::string _source;
-    std::string _type;
-    std::string _severity;
-
-    switch (source)
-    {
-    case GL_DEBUG_SOURCE_API:
-        _source = "API";
-        break;
-
-    case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-        _source = "WINDOW SYSTEM";
-        break;
-
-    case GL_DEBUG_SOURCE_SHADER_COMPILER:
-        _source = "SHADER COMPILER";
-        break;
-
-    case GL_DEBUG_SOURCE_THIRD_PARTY:
-        _source = "THIRD PARTY";
-        break;
-
-    case GL_DEBUG_SOURCE_APPLICATION:
-        _source = "APPLICATION";
-        break;
-
-    case GL_DEBUG_SOURCE_OTHER:
-        _source = "UNKNOWN";
-        break;
-
-    default:
-        _source = "UNKNOWN";
-        break;
-    }
-
-    bool isHightPriority = false;
-    bool isLowPriority = false;
-
-    switch (type)
-    {
-    case GL_DEBUG_TYPE_ERROR:
-        _type = "ERROR";
-        isHightPriority = true;
-        break;
-
-    case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-        _type = "DEPRECATED BEHAVIOR";
-        break;
-
-    case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-        _type = "UDEFINED BEHAVIOR";
-        break;
-
-    case GL_DEBUG_TYPE_PORTABILITY:
-        _type = "PORTABILITY";
-        break;
-
-    case GL_DEBUG_TYPE_PERFORMANCE:
-        _type = "PERFORMANCE";
-        break;
-
-    case GL_DEBUG_TYPE_OTHER:
-        _type = "OTHER";
-        break;
-
-    case GL_DEBUG_TYPE_MARKER:
-        _type = "MARKER";
-        break;
-
-    default:
-        _type = "UNKNOWN";
-        break;
-    }
-
-    switch (severity)
-    {
-    case GL_DEBUG_SEVERITY_HIGH:
-        _severity = "HIGH";
-        isHightPriority = true;
-        break;
-
-    case GL_DEBUG_SEVERITY_MEDIUM:
-        _severity = "MEDIUM";
-        break;
-
-    case GL_DEBUG_SEVERITY_LOW:
-        _severity = "LOW";
-        isLowPriority = true;
-        break;
-
-    case GL_DEBUG_SEVERITY_NOTIFICATION:
-        _severity = "NOTIFICATION";
-        isLowPriority = true;
-        break;
-
-    default:
-        _severity = "UNKNOWN";
-        break;
+                            const GLchar *msg, const void *data) {
+    if (isLowPriority(severity) && !DISPLAY_NOTIFICATIONS) {
+        return;
     }
 
     std::cout << FOREWHT
               << id
               << ": ";
 
-    if (isHightPriority)
+    if (isHighPriority(type, severity))
         std::cout << FORERED;
-    else if (isLowPriority)
+    else if (isLowPriority(severity))
         std::cout << FOREGRN;
     else
         std::cout << FOREYEL;
 
     std::cout
-        << _type << " - "
-        << _severity
-        << ": "
-        << msg;
+            << getTypeString(type) << " - "
+            << getSeverityString(severity)
+            << ": "
+            << msg;
 
     std::cout
-        << RESETTEXT
-        << std::endl;
+            << RESETTEXT
+            << std::endl;
 }

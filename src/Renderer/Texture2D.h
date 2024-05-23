@@ -8,6 +8,9 @@
 #include <iostream>
 #include "Texture.h"
 
+/**
+ * TODO: Texture2D is used for testing only. May be removed
+ */
 class Texture2D
 {
 public:

@@ -43,3 +43,9 @@ void PostProcessRenderer::draw()
         VertexArray::draw();
     }
 }
+
+void PostProcessRenderer::render()
+{
+    VertexArray::draw();
+}
+

@@ -13,4 +13,6 @@ public:
 
     void init(glm::vec4 rect, std::string vertexProgramFileName, std::string fragmentProgramFileName);
     void draw();
+
+    void render();
 };

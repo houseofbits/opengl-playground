@@ -55,9 +55,9 @@ void Window::create()
     {
     }
 
-    // glEnable(GL_DEBUG_OUTPUT);
-    // glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    // glDebugMessageCallback(GLDebugMessageCallback, nullptr);
+//     glEnable(GL_DEBUG_OUTPUT);
+//     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+//     glDebugMessageCallback(GLDebugMessageCallback, nullptr);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);

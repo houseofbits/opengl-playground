@@ -16,6 +16,7 @@ uniform float selfIllumination;
 uniform bool doesReceiveShadows;
 uniform uint specularPower;
 uniform vec3 specularColor;
+uniform samplerCube skyboxTexture;
 
 #include include/lightBlock.glsl
 #include include/textureAtlas.glsl
@@ -114,7 +115,38 @@ void main()
 
     vec3 viewDir = normalize(viewPosition - gsPosition.xyz);
     vec3 lightProjColor = vec3(1.0);
-    vec3 lightColor = vec3(selfIllumination) + (diffuse * vec3(0.1,0.1,0.1));
+    vec3 lightColor = vec3(selfIllumination) + (diffuse * vec3(0.5,0.5,0.5));
+
+    /////////////////////////////////////////////////////////////////////////////
+    // reflection cubemap
+    vec3 view = normalize(gsPosition.xyz - viewPosition);
+    vec3 sky = texture(skyboxTexture, reflect(view, normal)).rgb;
+    float frensnel = pow(1.0 - dot(normal, -view), 2);
+
+    /////////////////////////////////////////////////////////////////////////////
+//    //refl probe test
+    vec3 probePos;
+    vec3 lookup;
+    vec3 refl;
+    vec3 probeColor = vec3(0);
+    int miplevel = 7;
+    probePos = vec3(-13.0762,2.45162,11.1766);
+    lookup = normalize(gsPosition.xyz - probePos);
+    refl = reflect(lookup, normal);
+    probeColor += textureLod(skyboxTexture, refl, miplevel).rgb;
+
+    probePos = vec3(-13.9322,1.82362,6.06079);
+    lookup = normalize(gsPosition.xyz - probePos);
+    refl = reflect(lookup, normal);
+    probeColor += textureLod(skyboxTexture, refl, miplevel).rgb;
+
+    probePos = vec3(-5.71523,4.20533,4.18001);
+    lookup = normalize(gsPosition.xyz - probePos);
+    refl = reflect(lookup, normal);
+    probeColor += textureLod(skyboxTexture, refl, miplevel).rgb;
+
+    lightColor = lightColor * (probeColor / 3);
+    /////////////////////////////////////////////////////////////////////////////
 
     for (int lightIndex = 0; lightIndex < numActiveLights; lightIndex++) {
         LightStructure light = lights[lightIndex];
@@ -152,13 +184,38 @@ void main()
                 calculateLightDistanceAttenuation(light.distAttenMax, distToLight)
                 * shadowing
                 * lightProjColor
-                * (diffuseLight + calculateSpecularComponent(lightDir, viewDir, normal, specularLevel * specularColor, specularPower));
+                * (diffuseLight + calculateSpecularComponent(lightDir, viewDir, normal, specularLevel * specularColor, specularPower) + (sky * frensnel));
         }
     }
 
     if (selfIllumination > 0) {
         lightColor = mix(lightColor, diffuse, selfIllumination);
     }
+
+//    vec3 probePos;
+//    vec3 lookup;
+//    vec3 refl;
+//    vec3 sky = vec3(0);
+//    probePos = vec3(-13.0762,2.45162,11.1766);
+//    lookup = normalize(gsPosition.xyz - probePos);
+//    refl = reflect(lookup, normal);
+//    sky += textureLod(skyboxTexture, refl, 7).rgb;
+//
+//    probePos = vec3(-13.9322,1.82362,6.06079);
+//    lookup = normalize(gsPosition.xyz - probePos);
+//    refl = reflect(lookup, normal);
+//    sky += textureLod(skyboxTexture, refl, 7).rgb;
+//
+//    probePos = vec3(-5.71523,4.20533,4.18001);
+//    lookup = normalize(gsPosition.xyz - probePos);
+//    refl = reflect(lookup, normal);
+//    sky += textureLod(skyboxTexture, refl, 7).rgb;
+//
+//    sky = sky / 3;
+//
+//    vec3 view = normalize(gsPosition.xyz - viewPosition);
+//    vec3 refl = reflect(view, normal);
+//    vec3 sky = textureLod(skyboxTexture, refl, 1).rgb;
 
     FragColor = vec4(lightColor, 1.0);
 }

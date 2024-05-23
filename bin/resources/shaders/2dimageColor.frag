@@ -8,7 +8,7 @@ uniform sampler2D texture1;
 
 void main()
 {
-//    vec4 value = texture(texture1, TexCoord);
+//    vec4 value = textureLod(texture1, TexCoord, 5);
 
     vec3 value = vec3(
         textureGather(texture1, TexCoord, 0).x,

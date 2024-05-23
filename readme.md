@@ -9,6 +9,14 @@ Dependencies for Linux
 
 History
 
+-   Fix for the texture atlas seams and mip-mapping and various other improvements.
+
+    <p float="left">
+      <img src="./docs/images/upd3/img1.png" width="300" />
+      <img src="./docs/images/upd3/img2.png" width="300" />  
+      <img src="./docs/images/upd3/img3.png" width="300" />      
+    </p>
+
 -   Normal mapping and basic specular maps.
 
     <p float="left">

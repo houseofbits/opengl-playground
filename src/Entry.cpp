@@ -14,7 +14,7 @@ void Entry::run()
     init();
 
     glEnable(GL_DEPTH_TEST);
-    glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
