@@ -1,10 +1,11 @@
-#include "Include.h"
-#include "Renderer/Texture2D.h"
 #include "Events/InputEvent.h"
+#include "Include.h"
+#include "Renderer/Texture/Texture2D.h"
 
-Entry::Entry() : window(&eventManager), renderManager(&window), debugMode(0), sceneLoader(&renderManager)
+Entry::Entry() : window(&eventManager), renderManager(&window), debugMode(0), sceneLoader(&renderManager), cameraController()
 {
     eventManager.registerEventReceiver(this, &Entry::handleInputEvent);
+    cameraController.registerEventHandlers(&eventManager);
 }
 
 void Entry::run()
@@ -51,9 +52,9 @@ void Entry::run()
 
 /**
  * TODO
+ *  - Refactor camera !!!!!!!!!!!!!!!!!!!
  *  - Render scene to cubemap
  *  - Reflection probe manager and renderer
- *  - Refactor file structure
  *  - Debug point lights - has some rendering glitches
  *  - Explore how to render debug information - wireframe generation for lights
  *
@@ -83,7 +84,8 @@ void Entry::init()
 //     sceneLoader.loadSceneFromJson("resources/scenes/gltf-debug.json", scene);
 //     sceneLoader.loadSceneFromJson("resources/scenes/normal-maps.json", scene);
 
-     scene.camera.registerEventHandlers(&eventManager);
+//     scene.camera.registerEventHandlers(&eventManager);
+     cameraController.attachCamera(&scene.camera);
 }
 
 bool Entry::handleInputEvent(InputEvent *const event)

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../Renderer/Cube.h"
-#include "../../Renderer/TextureAtlasManager.h"
-#include "../../Renderer/TextureLoader.h"
+#include "../../Renderer/Model/Cube.h"
+#include "../../Renderer/Texture/TextureAtlasManager.h"
+#include "../../Renderer/Texture/TextureLoader.h"
 #include "BaseRenderTest.h"
 #include <glm/gtx/transform.hpp>
 

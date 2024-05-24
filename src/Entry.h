@@ -1,17 +1,18 @@
 #pragma once
+#include "Components//SceneLoader.h"
 #include "Components/ModelComponent.h"
 #include "Components/Scene.h"
 #include "Events/EventManager.h"
 #include "PostProcessRenderer/PostProcessRenderer.h"
-#include "Renderer/Camera.h"
-#include "Renderer/Cube.h"
-#include "Renderer/Model.h"
-#include "Renderer/Plane.h"
+#include "Renderer/Camera/Camera.h"
+#include "Renderer/Camera/CameraController.h"
+#include "Renderer/Model/Cube.h"
+#include "Renderer/Model/Model.h"
+#include "Renderer/Model/Plane.h"
 #include "Renderer/RenderManager.h"
-#include "Renderer/Shader.h"
-#include "Components//SceneLoader.h"
-#include "Renderer/ShadowMapRenderer.h"
-#include "Renderer/TextureAtlasManager.h"
+#include "Renderer/Renderer/ShadowMapRenderer.h"
+#include "Renderer/Shader/Shader.h"
+#include "Renderer/Texture/TextureAtlasManager.h"
 #include "Window.h"
 #include "WireframeRenderer/WireframeRenderer.h"
 #include <string>
@@ -26,6 +27,7 @@ private:
     SceneLoader sceneLoader;
     Window window;
     Scene scene;
+    CameraController cameraController;
 
     int debugMode;
 

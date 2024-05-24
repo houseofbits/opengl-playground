@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Renderer/Shader.h"
-#include "../Renderer/VertexArray.h"
-#include <string>
+#include "../Renderer/Model/VertexArray.h"
+#include "../Renderer/Shader/Shader.h"
 #include "glm/vec4.hpp"
+#include <string>
 
 class PostProcessRenderer : public VertexArray
 {

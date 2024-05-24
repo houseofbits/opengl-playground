@@ -1,6 +1,6 @@
 #pragma once
-#include "../Renderer/Camera.h"
-#include "../Renderer/Shader.h"
+#include "../Renderer/Camera/Camera.h"
+#include "../Renderer/Shader/Shader.h"
 #include <glm/mat4x4.hpp>
 
 class RenderableComponent

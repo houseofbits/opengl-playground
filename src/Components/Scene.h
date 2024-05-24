@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../Renderer/Camera.h"
-#include "../Renderer/Cube.h"
-#include "../Renderer/Light.h"
-#include "../Renderer/Plane.h"
-#include "../Renderer/Texture2D.h"
-#include "../Renderer/TextureAtlasManager.h"
+#include "../Renderer/Camera/Camera.h"
+#include "../Renderer/Light/Light.h"
+#include "../Renderer/Model/Cube.h"
+#include "../Renderer/Model/Plane.h"
+#include "../Renderer/Texture/Texture2D.h"
+#include "../Renderer/Texture/TextureAtlasManager.h"
 #include "ModelComponent.h"
 #include <list>
 

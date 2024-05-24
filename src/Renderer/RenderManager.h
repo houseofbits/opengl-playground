@@ -1,9 +1,10 @@
 #pragma once
 
-#include "TextureAtlasManager.h"
-#include "LightsUniformBuffer.h"
-#include "ShadowMapRenderer.h"
-#include "StaticGeometryRenderer.h"
+#include "Light/LightsUniformBuffer.h"
+#include "Renderer/ShadowMapRenderer.h"
+#include "Renderer/SkyBoxRenderer.h"
+#include "Renderer/StaticGeometryRenderer.h"
+#include "Texture/TextureAtlasManager.h"
 
 class Window;
 
@@ -22,6 +23,10 @@ public:
     TextureAtlasManager atlasManager;
     ShadowMapRenderer shadowMapRenderer;
     StaticGeometryRenderer staticGeometryRenderer;
+    SkyBoxRenderer skyBoxRenderer;
+
+    TextureCubeRenderTarget cubeRenderTarget;
+    Camera cubeCamera;
 
     void init();
     void render(Scene& scene);

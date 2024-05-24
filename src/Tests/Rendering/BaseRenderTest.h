@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../../Helper/Console.h"
+#include "../../Renderer/Camera/Camera.h"
 #include "../../Window.h"
-#include "../../Renderer/Camera.h"
 #include <iostream>
 #include <string>
 

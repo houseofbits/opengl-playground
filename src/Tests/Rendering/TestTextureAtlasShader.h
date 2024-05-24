@@ -1,14 +1,14 @@
 #pragma once
 
-#include <vector>
-#include <GL/glew.h>
-#include "BaseRenderTest.h"
-#include "../../Renderer/Texture.h"
-#include "../../PostProcessRenderer/PostProcessRenderer.h"
-#include "../../Renderer/TextureLoader.h"
-#include "../../Renderer/UniformBuffer.h"
-#include "../../Renderer/TextureAtlasManager.h"
 #include "../../Helper/QuadTree.h"
+#include "../../PostProcessRenderer/PostProcessRenderer.h"
+#include "../../Renderer/Shader/UniformBuffer.h"
+#include "../../Renderer/Texture/Texture.h"
+#include "../../Renderer/Texture/TextureAtlasManager.h"
+#include "../../Renderer/Texture/TextureLoader.h"
+#include "BaseRenderTest.h"
+#include <GL/glew.h>
+#include <vector>
 
 class TestTextureAtlasShader : public BaseRenderTest
 {

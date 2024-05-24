@@ -1,10 +1,10 @@
 #pragma once
 
-#include <GL/glew.h>
-#include "BaseRenderTest.h"
-#include "../../Renderer/Texture.h"
 #include "../../PostProcessRenderer/PostProcessRenderer.h"
-#include "../../Renderer/TextureLoader.h"
+#include "../../Renderer/Texture/Texture.h"
+#include "../../Renderer/Texture/TextureLoader.h"
+#include "BaseRenderTest.h"
+#include <GL/glew.h>
 
 class TestTexture : public BaseRenderTest
 {

@@ -129,6 +129,9 @@ void main()
     if (selfIllumination > 0) {
         lightColor = mix(lightColor, diffuse, selfIllumination);
     }
-
+//
+//    vec3 view = normalize(gsPosition.xyz - viewPosition);
+//    vec3 sky = texture(skyboxTexture, view).rgb;
+//
     FragColor = vec4(lightColor, 1.0);
 }

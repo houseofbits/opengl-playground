@@ -1,5 +1,5 @@
 #include "PostProcessRenderer.h"
-#include "../Renderer/Texture2D.h"
+#include "../Renderer/Texture/Texture2D.h"
 
 void PostProcessRenderer::init(glm::vec4 rect, std::string vertexProgramFileName, std::string fragmentProgramFileName)
 {

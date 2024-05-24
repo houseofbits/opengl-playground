@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Renderer/Camera.h"
-#include "../Renderer/Model.h"
-#include "../Renderer/Shader.h"
+#include "../Renderer/Camera/Camera.h"
+#include "../Renderer/Model/Model.h"
+#include "../Renderer/Shader/Shader.h"
 #include "RenderableComponent.h"
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
