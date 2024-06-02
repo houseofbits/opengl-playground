@@ -76,7 +76,7 @@ unsigned int Light::calculateMaximumTextureSize()
 
     size = size * 2;
 
-    size = std::min(std::max((int)size, 256), 1024);
+    size = std::min(std::max((int)size, 512), 1024);
 
 //    std::cout<<" b:"<<beamAngle<<" l:"<<distAttenMax<<std::endl;
 //    std::cout<<" proj:"<<projectionSize<<" pow2:"<<size<<std::endl;

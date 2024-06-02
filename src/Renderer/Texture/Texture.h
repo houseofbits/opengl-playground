@@ -17,10 +17,12 @@ public:
     unsigned int textureId;
     unsigned int width;
     unsigned int height;
+    unsigned int arrayDepth;
     Type type;
     bool isMipmapsEnabled;
 
     virtual void create(unsigned int width, unsigned int height, Type type);
+    virtual void createArray(unsigned int width, unsigned int height, Type type, int depth);
     void enableMipMaps();
     void applyImage(unsigned int left, unsigned int top, unsigned int imageWidth, unsigned int imageHeight, const unsigned char *imageData);
     void applyTexture(const Texture& texture, unsigned int left, unsigned int top);

@@ -93,7 +93,7 @@
                 0.7
             ],
             "beamAngle": 80,
-            "distAttenMax": 700,
+            "distAttenMax": 40,
             "intensity": 2.0,
             "doesCastShadows": true,
             "projectionTexture": "resources/textures/spot-clouds.png"
@@ -162,6 +162,80 @@
             "intensity": 0.6,
             "doesCastShadows": true,
             "projectionTexture": "resources/textures/spot-1.png"
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                -0.350384,2.69039,25.3467
+            ],
+            "direction": [
+                0,-1,0
+            ],
+            "color": [
+                1,
+                1,
+                0.6
+            ],
+            "beamAngle": 120,
+            "distAttenMax": 10,
+            "intensity": 1.5,
+            "doesCastShadows": true,
+            "projectionTexture": "resources/textures/spot-proj-3.png"
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                7.12714,2.87264,24.1084
+            ],
+            "direction": [
+                0,-1,0
+            ],
+            "color": [
+                1,
+                1,
+                0.6
+            ],
+            "beamAngle": 120,
+            "distAttenMax": 10,
+            "intensity": 1.5,
+            "doesCastShadows": true,
+            "projectionTexture": "resources/textures/spot-proj-3.png"
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                3.12714,2.87264,24.4084
+            ],
+            "direction": [
+                0,-1,0
+            ],
+            "color": [
+                1,
+                1,
+                0.6
+            ],
+            "beamAngle": 120,
+            "distAttenMax": 10,
+            "intensity": 1.5,
+            "doesCastShadows": true,
+            "projectionTexture": "resources/textures/spot-proj-3.png"
+        }
+    ],
+    "probes": [
+        {
+            "position": [-12.3296, 2.08944, 11.9947],
+            "boundingBoxMin": [-18, -0.1, 4.5],
+            "boundingBoxMax": [-6, 11, 17.9]
+        },
+        {
+            "position": [-6.41652,3.49035,18.4947],
+            "boundingBoxMin": [-8.5, -0.1, 14],
+            "boundingBoxMax": [-2, 11, 23.2]
+        },
+        {
+            "position": [2.54989,1.9512,24.8731],
+            "boundingBoxMin": [-3.6, -0.1, 22],
+            "boundingBoxMax": [11, 3, 27.1]
         }
     ]
 }

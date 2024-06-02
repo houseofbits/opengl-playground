@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../Renderer/Model/Cube.h"
-#include "../../Renderer/Texture/TextureAtlasManager.h"
+#include "../../Renderer/TextureAtlas/TextureAtlasManager.h"
 #include "BaseRenderTest.h"
 #include <glm/gtx/transform.hpp>
 
@@ -24,7 +24,7 @@ public:
     void setup(Window &window) override {
         message("Test normal map rendering");
 
-        atlasManager.init();
+        atlasManager.init(2);
 
         shader.loadProgram("resources/test/shaders/normals.vert", "resources/test/shaders/normals.frag", "resources/test/shaders/normals.geom");
 

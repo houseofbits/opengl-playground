@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(): camera(), renderables(), lights()
+Scene::Scene(): camera(), renderables(), lights(), probes()
 {
 
 }
@@ -51,4 +51,12 @@ void Scene::clear()
     //TODO Proper Scene cleanup
     renderables.clear();
     lights.clear();
+    probes.clear();
+}
+
+EnvironmentProbe &Scene::createProbe() {
+    auto *probe = new EnvironmentProbe();
+    probes.push_back(probe);
+
+    return *probe;
 }

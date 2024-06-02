@@ -84,12 +84,21 @@ vec3 sampleAtlasFragmentLod(in sampler2D atlas, uint index, vec2 uv)
     return textureLod(atlas, uv, lod).xyz;
 }
 
-vec3 sampleDiffuseAtlasFragment(uint index, vec2 uv)
+vec3 sampleDiffuseAtlasFragment(uint index, vec2 uv, vec3 diffuseColor)
 {
-    return sampleAtlasFragmentLod(diffuseAtlas, index, uv);
+    if (index > 0) {
+        return sampleAtlasFragmentLod(diffuseAtlas, index, uv).xyz * diffuseColor;
+    }
+    return diffuseColor;
 }
 
-vec3 sampleNormalsAtlasFragment(uint index, vec2 uv)
+vec3 sampleNormalsAtlasFragment(uint index, vec2 uv, vec3 faceNormal, mat3 invTBN)
 {
-    return sampleAtlasFragmentLod(normalsAtlas, index, uv);
+    if (index > 0) {
+        vec3 n = sampleAtlasFragmentLod(normalsAtlas, index, uv).xyz;
+        n = gsInvTBN * normalize(n * 2.0 - 1.0);
+
+        return normalize(n);
+    }
+    return normalize(faceNormal);
 }

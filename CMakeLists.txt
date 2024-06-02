@@ -11,8 +11,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Renderer/StaticGeometryRenderer.h
         src/Renderer/Renderer/BaseRenderer.cpp
         src/Renderer/Renderer/BaseRenderer.h
-        src/Components/SceneLoader.cpp
-        src/Components/SceneLoader.h
+        src/SceneLoader/SceneLoader.cpp
+        src/SceneLoader/SceneLoader.h
         src/Tests/Rendering/TestTangentSpaceCalculation.h
         src/Tests/Rendering/TestNormalMapping.h
         src/Tests/Rendering/TestMipMapping.h
@@ -21,14 +21,24 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Helper/StringUtils.h
         src/Renderer/Texture/TextureCubeRenderTarget.cpp
         src/Renderer/Texture/TextureCubeRenderTarget.h
-        src/Renderer/Renderer/ReflectionProbeRenderer.cpp
-        src/Renderer/Renderer/ReflectionProbeRenderer.h
         src/Renderer/Renderer/SkyBoxRenderer.cpp
         src/Renderer/Renderer/SkyBoxRenderer.h
         src/Renderer/Common/ProjectionView.cpp
         src/Renderer/Common/ProjectionView.h
         src/Renderer/Camera/CameraController.cpp
         src/Renderer/Camera/CameraController.h
+        src/Renderer/Renderer/DebugInformationRenderer.cpp
+        src/Renderer/Renderer/DebugInformationRenderer.h
+        src/Renderer/EnvironmentProbe/EnvironmentProbe.cpp
+        src/Renderer/EnvironmentProbe/EnvironmentProbe.h
+        src/Renderer/EnvironmentProbe/EnvironmentProbeUniformBuffer.cpp
+        src/Renderer/EnvironmentProbe/EnvironmentProbeUniformBuffer.h
+        src/Renderer/Renderer/EnvironmentProbeRenderer.cpp
+        src/Renderer/Renderer/EnvironmentProbeRenderer.h
+        src/SceneLoader/ModelBuildConfiguration.h
+        src/SceneLoader/BaseConfiguration.h
+        src/SceneLoader/BaseConfiguration.cpp
+        src/SceneLoader/ProbeBuildConfiguration.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

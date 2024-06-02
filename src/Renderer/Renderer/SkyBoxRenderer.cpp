@@ -11,15 +11,15 @@ void SkyBoxRenderer::init() {
     box.create(10.0);
 }
 
-void SkyBoxRenderer::render(Scene &scene) {
+void SkyBoxRenderer::render(Scene &scene, Camera& camera) {
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     shader.use();
     glActiveTexture(GL_TEXTURE4);
-//    texture.bind();
-    glBindTexture(GL_TEXTURE_CUBE_MAP, renderManager->cubeRenderTarget.textureId);
+    texture.bind();
+//    glBindTexture(GL_TEXTURE_CUBE_MAP, renderManager->cubeRenderTarget.textureId);
     shader.setUniform("skyboxTexture", 4);
-    scene.camera.bind(shader);
+    camera.bind(shader);
     box.draw();
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);

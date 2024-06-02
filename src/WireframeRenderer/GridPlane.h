@@ -1,10 +1,9 @@
 #pragma once
 
+#include "LineMesh.h"
 #include <glm/vec3.hpp>
-#include "WireFrame.h"
 
-class GridPlane : public WireFrame
-{
+class GridPlane : public LineMesh {
 public:
     void create(float width, float height, int subdivision);
     void draw();

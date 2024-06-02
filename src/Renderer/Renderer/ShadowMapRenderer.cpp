@@ -14,10 +14,9 @@ ShadowMapRenderer::ShadowMapRenderer(RenderManager *manager) :
                                                                numLightsPerPass(0)
 {
     ShaderSourceLoader::registerGlobal("MAX_LIGHTVIEWS_PER_PASS", MAX_LIGHTVIEWS_PER_PASS);
-    ShaderSourceLoader::registerGlobal("NUM_SHADOW_ATLAS_REGIONS", 1); // Remove
 }
 
-void ShadowMapRenderer::init()
+void ShadowMapRenderer::init(unsigned int uniformBindingIndex)
 {
     depthShader.loadProgram(
         "resources/shaders/shadowAtlas.vert",
@@ -27,7 +26,7 @@ void ShadowMapRenderer::init()
     debugImageRenderer.init(glm::vec4(-1, -1, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimageDepth.frag");
     debugImageRenderer.textureId = renderManager->atlasManager.getTextureId(TextureAtlasManager::ATLAS_SHADOW_DEPTH);
 
-    lightIndexesUniform.create(MAX_LIGHTVIEWS_PER_PASS, UniformIndexBuffer::DYNAMIC, LIGHT_INDEXES_UNIFORM_BINDING_INDEX);
+    lightIndexesUniform.create(MAX_LIGHTVIEWS_PER_PASS, UniformIndexBuffer::DYNAMIC, uniformBindingIndex);
 }
 
 void ShadowMapRenderer::renderShadowAtlas()

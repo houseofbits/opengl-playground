@@ -4,7 +4,7 @@
 #include <cmath>
 #include <iostream>
 
-Texture::Texture() : textureId(0), isMipmapsEnabled(false), width(0), height(0), type(TYPE_RGBA) {
+Texture::Texture() : textureId(0), isMipmapsEnabled(false), width(0), height(0), type(TYPE_RGBA), arrayDepth(0) {
 }
 
 Texture::~Texture() = default;
@@ -13,6 +13,7 @@ void Texture::create(unsigned int textureWidth, unsigned int textureHeight, Type
     type = textureType;
     width = textureWidth;
     height = textureHeight;
+    arrayDepth = 0;
 
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);
@@ -86,4 +87,12 @@ void Texture::unbind() {
 
 bool Texture::isLoaded() {
     return glIsTexture(textureId);
+}
+void Texture::createArray(unsigned int textureWidth, unsigned int textureHeight, Type textureType, int depth) {
+    type = textureType;
+    width = textureWidth;
+    height = textureHeight;
+    arrayDepth = depth;
+
+    //TODO: Texture array
 }

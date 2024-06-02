@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/mat4x4.hpp>
 
-//TODO Implement ProjectionView
+//TODO WIP: Implement ProjectionView
 //What are the commonalities of LightView, Camera, Decal, RTT
 class ProjectionView {
 public:

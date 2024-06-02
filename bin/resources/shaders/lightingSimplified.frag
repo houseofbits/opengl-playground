@@ -11,7 +11,7 @@ uniform vec3 viewPosition;
 uniform uint diffuseTextureId;
 uniform uint normalTextureId;
 uniform uint specularTextureId;
-uniform vec4 diffuseColor;
+uniform vec3 diffuseColor;
 uniform float selfIllumination;
 uniform bool doesReceiveShadows;
 uniform uint specularPower;
@@ -67,11 +67,7 @@ float calculateLightDistanceAttenuation(float distAttenMax, float distToLight)
 
 void main()
 {
-    vec3 diffuse = diffuseColor.rgb;
-    if (diffuseTextureId > 0) {
-        diffuse = sampleDiffuseAtlasFragment(diffuseTextureId, gsTexcoord);
-        diffuse *= diffuseColor.rgb;
-    }
+    vec3 diffuse = sampleDiffuseAtlasFragment(diffuseTextureId, gsTexcoord, diffuseColor);
 
     if (selfIllumination > 0.9) {
         FragColor = vec4(diffuse, 1.0);
@@ -131,7 +127,8 @@ void main()
     }
 //
 //    vec3 view = normalize(gsPosition.xyz - viewPosition);
-//    vec3 sky = texture(skyboxTexture, view).rgb;
-//
+////    vec3 sky = texture(skyboxTexture, view).rgb;
+//    vec3 sky = textureLod(skyboxTexture, reflect(view, normal), 5).rgb;
+
     FragColor = vec4(lightColor, 1.0);
 }

@@ -16,7 +16,6 @@ private:
     typedef UniformBuffer<unsigned int> UniformIndexBuffer;
 
     static const unsigned int MAX_LIGHTVIEWS_PER_PASS = 16;     //Hard limit by GL_MAX_VIEWPORTS
-    static const unsigned int LIGHT_INDEXES_UNIFORM_BINDING_INDEX = 3;
 
     void prepareViewports();
     void prepareIndexes(unsigned int page);
@@ -31,7 +30,7 @@ public:
     Shader depthShader;
     PostProcessRenderer debugImageRenderer;
 
-    void init();
+    void init(unsigned int uniformBindingIndex);
     void render(Scene &scene);
     void renderShadowAtlas();
 };

@@ -23,6 +23,8 @@ void Entry::run()
     glm::mat4 planeTransform(1.0);
     planeTransform = glm::translate(planeTransform, glm::vec3(0, 1, 0));
 
+    renderManager.preRender(scene);
+
     while (true)
     {
         if (!window.pollEvents() || !eventManager.processEvents())
@@ -52,11 +54,10 @@ void Entry::run()
 
 /**
  * TODO
- *  - Refactor camera !!!!!!!!!!!!!!!!!!!
- *  - Render scene to cubemap
+ *  - Cube map array for probe rendering
  *  - Reflection probe manager and renderer
+ *  - Parallax corrected cube maps
  *  - Debug point lights - has some rendering glitches
- *  - Explore how to render debug information - wireframe generation for lights
  *
  * TODO: NICE TO HAVE
  *  - Add shadow bias variables to light
@@ -65,9 +66,10 @@ void Entry::run()
  *  - Add View abstraction - could be used for Camera, LightView, Decals, RTT
  *
  * TODO: IMPLEMENT
- *  - Create a basic test scene
- *  - Basic animations
- *  - PhysX
+ *  - Add lighting to test scene
+ *  - Basic PhysX - MVP: have static scene collision geometry and player controller
+ *  - Explore animation system
+ *  - Post process render effects (SSAO, SSR, HDR & Gamma correction)
  *
  */
 void Entry::init()
@@ -112,6 +114,11 @@ bool Entry::handleInputEvent(InputEvent *const event)
         {
             debugMode = 4;
         }
+        if (event->keyCode == 15) // 'L'
+        {
+            renderManager.isLightConesVisible = !renderManager.isLightConesVisible;
+        }
+//
 //        std::cout << event->keyCode << std::endl;
     }
 

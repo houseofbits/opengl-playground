@@ -9,6 +9,7 @@
 #include <glm/mat4x4.hpp>
 #include <iostream>
 #include <string>
+#include <optional>
 
 class ModelComponent : public RenderableComponent
 {
@@ -59,14 +60,12 @@ public:
 
     glm::mat4 transform;
     Model model;
-
     unsigned int diffuseTextureId;
     unsigned int normalTextureId;
     unsigned int specularTextureId;
-    glm::vec4 diffuseColor;
+    glm::vec3 diffuseColor;
+    glm::vec3 specularColor;
     float selfIllumination;
     bool doesReceiveShadows;
     unsigned int specularPower;
-    glm::vec3 specularColor;
-
 };

@@ -1,174 +1,97 @@
 #include "Camera.h"
-#include "../../Events/InputEvent.h"
-#include "../../Events/WindowEvent.h"
-#include "../../Helper/Time.h"
+#include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/vec3.hpp>
-#include <iostream>
 
-Camera::Camera() : verticalAngle(-0.4), horizontalAngle(-0.6), position(0), isTransformDirty(true), projectionMatrix(0.0), viewMatrix(0.0), projectionViewMatrix(0.0)
-{
-    position = glm::vec3(145.788, 163.927, 237.684);
-    verticalAngle = -0.219405;
-    horizontalAngle = -2.77744;
+Camera::Camera() : direction(0, 0, -1), up(0, 1, 0), right(-1, 0, 0),
+                   position(0), projectionMatrix(0.0), viewMatrix(0.0), projectionViewMatrix(0.0),
+                   fieldOfView(90.0f), aspectRatio(1.0) {
 }
 
-void Camera::resize(unsigned int viewportWidth, unsigned int viewportHeight)
+glm::mat4 &Camera::getProjectionViewMatrix() {
+    return projectionViewMatrix;
+}
+
+glm::vec3 &Camera::getViewDirection() {
+    return direction;
+}
+
+glm::vec3 &Camera::getUpDirection() {
+    return up;
+}
+
+Camera &Camera::setViewportSize(unsigned int viewportWidth, unsigned int viewportHeight)
 {
+    aspectRatio = (float) viewportWidth / (float) viewportHeight;
+
+    calculateProjection();
+
+    return *this;
+}
+
+Camera &Camera::setFieldOfView(float degrees)
+{
+    fieldOfView = degrees;
+
+    calculateProjection();
+
+    return *this;
+}
+
+Camera &Camera::setPosition(glm::vec3 pos) {
+    position = pos;
     calculateView();
-    projectionMatrix = glm::perspective(glm::radians(90.0f), (float)viewportWidth / viewportHeight, 0.1f, 1000.0f);
-    isTransformDirty = true;
+
+    return *this;
 }
 
-void Camera::registerEventHandlers(EventManager *eventManager)
-{
-    eventManager->registerEventReceiver(this, &Camera::handleWindowEvent);
-    eventManager->registerEventReceiver(this, &Camera::handleInputEvent);
-}
-
-bool Camera::handleWindowEvent(WindowEvent *const event)
-{
-    if (event->eventType == WindowEvent::RESIZE || event->eventType == WindowEvent::CREATE)
-    {
-        resize(event->window->viewportWidth, event->window->viewportHeight);
-    }
-
-    return true;
-}
-
-bool Camera::handleInputEvent(InputEvent *const event)
-{
-    float moveSpeed = 4;
-    float lookSpeed = 0.1;
-
-    if (event->type == InputEvent::MOUSEMOVE && event->mouseButtonLeft)
-    {
-        horizontalAngle += lookSpeed * Time::frameTime * event->mouseMotion.x;
-        verticalAngle += lookSpeed * Time::frameTime * event->mouseMotion.y;
-        calculateView();
-    }
-
-    if (event->type == InputEvent::MOUSEMOVE && event->mouseButtonRight)
-    {
-        position += up * (moveSpeed * event->mouseMotion.y * Time::frameTime);
-        position -= right * (moveSpeed * event->mouseMotion.x * Time::frameTime);
-        calculateView();
-    }
-
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 26)
-    {
-        position += direction * (moveSpeed * Time::frameTime);
-        calculateView();
-    }
-
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 22)
-    {
-        position -= direction * (moveSpeed * Time::frameTime);
-        calculateView();
-    }
-
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 4)
-    {
-        position -= right * (moveSpeed * Time::frameTime);
-        calculateView();
-    }
-
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 7)
-    {
-        position += right * (moveSpeed * Time::frameTime);
-        calculateView();
-    }
-
-    if (event->type == InputEvent::KEYDOWN && event->keyCode == 58) // F1
-    {
-        std::cout << "Camera - vertical angle: "
-                  << (glm::degrees(verticalAngle))
-                  << " horizontal angle: "
-                  << (glm::degrees(horizontalAngle))
-                  << " position:"
-                  << (position.x) << "," << (position.y) << "," << (position.z)
-                  << " direction:"
-                  << (direction.x) << "," << (direction.y) << "," << (direction.z)
-                  << std::endl;
-    }
-    return true;
-}
-
-void Camera::calculateView()
-{
-    isTransformDirty = true;
+Camera &Camera::setAngles(float horizontal, float vertical) {
+    float verticalAngle = glm::radians(vertical);
+    float horizontalAngle = glm::radians(horizontal);
 
     direction = glm::vec3(
-        cos(verticalAngle) * sin(horizontalAngle),
-        sin(verticalAngle),
-        cos(verticalAngle) * cos(horizontalAngle));
-
-    direction = glm::normalize(direction);
+            std::cos(verticalAngle) * std::sin(horizontalAngle),
+            std::sin(verticalAngle),
+            std::cos(verticalAngle) * std::cos(horizontalAngle));
 
     right = glm::vec3(
-        sin(horizontalAngle - 3.14f / 2.0f),
-        0,
-        cos(horizontalAngle - 3.14f / 2.0f));
+            std::sin(horizontalAngle - 3.14f / 2.0f),
+            0,
+            std::cos(horizontalAngle - 3.14f / 2.0f));
 
     right = glm::normalize(right);
 
     up = glm::cross(right, direction);
-
     up = glm::normalize(up);
 
-    viewMatrix = glm::lookAt(position, position + direction, up);
-}
-
-glm::mat4 &Camera::getProjectionViewMatrix()
-{
-    if (isTransformDirty)
-    {
-        projectionViewMatrix = projectionMatrix * viewMatrix;
-        isTransformDirty = false;
-    }
-
-    return projectionViewMatrix;
-}
-
-Camera &Camera::setPosition(glm::vec3 pos)
-{
-    isTransformDirty = true;
-
-    position = pos;
+    calculateView();
 
     return *this;
 }
 
-Camera &Camera::setDirection(glm::vec3 dir)
-{
-    isTransformDirty = true;
+Camera &Camera::setView(glm::vec3 viewDirection, glm::vec3 upDirection) {
 
-    direction = dir;
+    direction = glm::normalize(viewDirection);
+    right = glm::normalize(glm::cross(direction, upDirection));
+    up = glm::normalize(glm::cross(right, direction));
 
-    return *this;
-}
-
-Camera &Camera::setAngles(float horizontal, float vertical)
-{
-    isTransformDirty = true;
-
-    verticalAngle = glm::radians(vertical);
-    horizontalAngle = glm::radians(horizontal);
+    calculateView();
 
     return *this;
 }
 
-Camera &Camera::setView(glm::vec3 dir, glm::vec3 u)
-{
-    isTransformDirty = true;
-
-    viewMatrix = glm::lookAt(position, position + dir, u);
-
-    return *this;
-}
-
-void Camera::bind(Shader &shader)
-{
+void Camera::bind(Shader &shader) {
     shader.setUniform("viewProjectionMatrix", getProjectionViewMatrix());
     shader.setUniform("viewPosition", getPosition());
+}
+
+void Camera::calculateView() {
+    viewMatrix = glm::lookAt(position, position + direction, up);
+    projectionViewMatrix = projectionMatrix * viewMatrix;
+}
+
+void Camera::calculateProjection()
+{
+    projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, 0.1f, 1000.0f);
+    projectionViewMatrix = projectionMatrix * viewMatrix;
 }

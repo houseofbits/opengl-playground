@@ -1,5 +1,4 @@
 #pragma once
-#include "Components//SceneLoader.h"
 #include "Components/ModelComponent.h"
 #include "Components/Scene.h"
 #include "Events/EventManager.h"
@@ -12,7 +11,8 @@
 #include "Renderer/RenderManager.h"
 #include "Renderer/Renderer/ShadowMapRenderer.h"
 #include "Renderer/Shader/Shader.h"
-#include "Renderer/Texture/TextureAtlasManager.h"
+#include "Renderer/TextureAtlas/TextureAtlasManager.h"
+#include "SceneLoader/SceneLoader.h"
 #include "Window.h"
 #include "WireframeRenderer/WireframeRenderer.h"
 #include <string>

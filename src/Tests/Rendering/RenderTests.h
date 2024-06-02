@@ -38,7 +38,7 @@ public:
         EventManager eventManager;
         Window window(&eventManager);
         Camera camera;
-        camera.registerEventHandlers(&eventManager);
+//        camera.registerEventHandlers(&eventManager);
         window.create();
 
         test->setup(window);

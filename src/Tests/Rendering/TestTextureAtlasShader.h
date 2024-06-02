@@ -4,8 +4,8 @@
 #include "../../PostProcessRenderer/PostProcessRenderer.h"
 #include "../../Renderer/Shader/UniformBuffer.h"
 #include "../../Renderer/Texture/Texture.h"
-#include "../../Renderer/Texture/TextureAtlasManager.h"
 #include "../../Renderer/Texture/TextureLoader.h"
+#include "../../Renderer/TextureAtlas/TextureAtlasManager.h"
 #include "BaseRenderTest.h"
 #include <GL/glew.h>
 #include <vector>
@@ -36,7 +36,7 @@ public:
 
 
 
-        atlasManager.init();
+        atlasManager.init(2);
 
 //        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/Duck/DuckCM.png", TextureAtlasManager::ATLAS_DIFFUSE));
 //        textureIds.push_back(atlasManager.loadTextureIntoAtlas("resources/textures/concrete.jpg", TextureAtlasManager::ATLAS_DIFFUSE));
@@ -58,7 +58,7 @@ public:
 
         camera.setPosition(glm::vec3(50, 200, -500))
             .setAngles(glm::radians(-10.0f), glm::radians(-25.0f))
-            .resize(window.viewportWidth, window.viewportHeight);
+            .setViewportSize(window.viewportWidth, window.viewportHeight);
 
         shader.loadProgram("resources/test/shaders/basic.vert", "resources/test/shaders/textureAtlasMapping.frag");
 

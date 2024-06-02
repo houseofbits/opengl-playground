@@ -12,10 +12,10 @@ private:
     Shader shader;
 
 public:
-    SkyBoxRenderer(RenderManager *);
+    explicit SkyBoxRenderer(RenderManager *);
 
     void init();
-    void render(Scene &scene);
+    void render(Scene &scene, Camera& camera);
 
     TextureCube texture;
 };

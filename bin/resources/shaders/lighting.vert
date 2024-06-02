@@ -13,10 +13,10 @@ out vec2 vsTexcoord;
 
 void main()
 {
-    mat3 moderInverse = mat3(transpose(inverse(modelMatrix)));
+    mat3 modelInverse = mat3(transpose(inverse(modelMatrix)));
 
     vec4 p = modelMatrix * vec4(VertexPosition, 1.0);
-    vec3 n = moderInverse * VertexNormal;
+    vec3 n = modelInverse * VertexNormal;
 
     vsPosition = p;
     vsNormal = n;

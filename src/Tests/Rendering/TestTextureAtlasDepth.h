@@ -28,13 +28,13 @@ public:
 
         renderer.init(glm::vec4(-1, -1, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimageDepth.frag");
 
-        atlasManager.init();
+        atlasManager.init(2);
 
         renderer.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_SHADOW_DEPTH);
 
         camera.setPosition(glm::vec3(50, 200, -500))
             .setAngles(glm::radians(-10.0f), glm::radians(-25.0f))
-            .resize(window.viewportWidth, window.viewportHeight);
+            .setViewportSize(window.viewportWidth, window.viewportHeight);
 
         shader.loadProgram("resources/test/shaders/basic.vert", "resources/test/shaders/textureAtlasDepth.frag");
 

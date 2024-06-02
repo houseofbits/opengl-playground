@@ -26,5 +26,5 @@ void GridPlane::create(float width, float height, int subdivision)
 
 void GridPlane::draw()
 {
-    WireFrame::draw();
+    LineMesh::draw();
 }

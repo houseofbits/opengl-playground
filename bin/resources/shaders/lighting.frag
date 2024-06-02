@@ -11,14 +11,15 @@ uniform vec3 viewPosition;
 uniform uint diffuseTextureId;
 uniform uint normalTextureId;
 uniform uint specularTextureId;
-uniform vec4 diffuseColor;
+uniform vec3 diffuseColor;
 uniform float selfIllumination;
 uniform bool doesReceiveShadows;
 uniform uint specularPower;
 uniform vec3 specularColor;
-uniform samplerCube skyboxTexture;
+uniform samplerCubeArray skyboxTexture;
 
 #include include/lightBlock.glsl
+#include include/probeBlock.glsl
 #include include/textureAtlas.glsl
 
 vec3 calculateProjectedCoords(vec4 lightSpacePos)
@@ -50,7 +51,7 @@ float pcfShadowCalculation(vec3 projCoords, uint shadowAtlasIndex, float ndotl)
     //    float dstToSurface = abs(texture(shadowDepthAtlas, uv).r - currentDepth);
 
     float bias = 0.00001;
-    float blurFactor = 1.0 / 800.0; //textureSize(shadowDepthAtlas, 0).x;  //
+    float blurFactor = 1.0 / 800.0;//textureSize(shadowDepthAtlas, 0).x;  //
     float shadow = 0;
     vec2 uv;
     int div=0;
@@ -88,65 +89,100 @@ float calculateLightDistanceAttenuation(float distAttenMax, float distToLight)
     return 1.0 - clamp(distToLight / distAttenMax, 0.0, 1.0);
 }
 
+
+
 void main()
 {
-    vec3 diffuse = diffuseColor.rgb;
-    if (diffuseTextureId > 0) {
-        diffuse = sampleDiffuseAtlasFragment(diffuseTextureId, gsTexcoord);
-        diffuse *= diffuseColor.rgb;
-    }
+    vec3 diffuse = sampleDiffuseAtlasFragment(diffuseTextureId, gsTexcoord, diffuseColor);
 
     if (selfIllumination > 0.9) {
         FragColor = vec4(diffuse, 1.0);
         return;
     }
 
-    vec3 specularLevel = vec3(1.0);
-    if (specularTextureId > 0) {
-        specularLevel = sampleDiffuseAtlasFragment(specularTextureId, gsTexcoord);
-    }
+    vec3 specularLevel = sampleDiffuseAtlasFragment(specularTextureId, gsTexcoord, vec3(1.0));
+    vec3 normal = sampleNormalsAtlasFragment(normalTextureId, gsTexcoord, gsNormal, gsInvTBN);
 
-    vec3 normal = gsNormal;
-    if (normalTextureId > 0) {
-        normal = sampleNormalsAtlasFragment(normalTextureId, gsTexcoord);
-        normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
-    }
-    normal = normalize(normal);
-
-    vec3 viewDir = normalize(viewPosition - gsPosition.xyz);
-    vec3 lightProjColor = vec3(1.0);
-    vec3 lightColor = vec3(selfIllumination) + (diffuse * vec3(0.5,0.5,0.5));
-
-    /////////////////////////////////////////////////////////////////////////////
-    // reflection cubemap
     vec3 view = normalize(gsPosition.xyz - viewPosition);
-    vec3 sky = texture(skyboxTexture, reflect(view, normal)).rgb;
+    vec3 viewReflection = reflect(view, normal);
     float frensnel = pow(1.0 - dot(normal, -view), 2);
 
     /////////////////////////////////////////////////////////////////////////////
-//    //refl probe test
-    vec3 probePos;
-    vec3 lookup;
-    vec3 refl;
-    vec3 probeColor = vec3(0);
-    int miplevel = 7;
-    probePos = vec3(-13.0762,2.45162,11.1766);
-    lookup = normalize(gsPosition.xyz - probePos);
-    refl = reflect(lookup, normal);
-    probeColor += textureLod(skyboxTexture, refl, miplevel).rgb;
+    vec3 reflectionColor = vec3(0.0);
+    vec3 ambientEnvColor = vec3(0.0);
+    vec3 fragmentWorldPos = gsPosition.xyz;
 
-    probePos = vec3(-13.9322,1.82362,6.06079);
-    lookup = normalize(gsPosition.xyz - probePos);
-    refl = reflect(lookup, normal);
-    probeColor += textureLod(skyboxTexture, refl, miplevel).rgb;
+    vec3 pc[3];
+    pc[0] = vec3(1,0,0);
+    pc[1] = vec3(0,1,0);
+    pc[2] = vec3(0,0,1);
 
-    probePos = vec3(-5.71523,4.20533,4.18001);
-    lookup = normalize(gsPosition.xyz - probePos);
-    refl = reflect(lookup, normal);
-    probeColor += textureLod(skyboxTexture, refl, miplevel).rgb;
+    int prevProbeIndex = -1;
+    for (int probeIndex = 0; probeIndex < numProbes; probeIndex++) {
+        EnvProbeStructure probe = probes[probeIndex];
 
-    lightColor = lightColor * (probeColor / 3);
+        if (fragmentWorldPos.x < probe.boundingBoxMin.x || fragmentWorldPos.y < probe.boundingBoxMin.y || fragmentWorldPos.z < probe.boundingBoxMin.z) {
+            continue;
+        }
+
+        if (fragmentWorldPos.x > probe.boundingBoxMax.x || fragmentWorldPos.y > probe.boundingBoxMax.y || fragmentWorldPos.z > probe.boundingBoxMax.z) {
+            continue;
+        }
+
+        vec3 reflectedRay = parallaxCorrectedProbeReflection(probe, fragmentWorldPos, viewReflection);
+        vec3 envRay = ambientReflection(probe, gsPosition.xyz, normalize(gsNormal * 10.0 + normal));
+
+        float ff = 1.0;
+        if(prevProbeIndex >=0) {
+            EnvProbeStructure prevProbe = probes[prevProbeIndex];
+//
+//            float ox1 = probe.boundingBoxMax.x - prevProbe.boundingBoxMin.x;
+//            float ox2 = prevProbe.boundingBoxMax.x - probe.boundingBoxMin.x;
+//
+//            float px1 = fragmentWorldPos.x - prevProbe.boundingBoxMin.x;
+//            float px2 = fragmentWorldPos.x - probe.boundingBoxMin.x;
+
+            float ox = min(probe.boundingBoxMax.x - prevProbe.boundingBoxMin.x,
+                        prevProbe.boundingBoxMax.x - probe.boundingBoxMin.x);
+
+            float px = min(fragmentWorldPos.x - prevProbe.boundingBoxMin.x,
+                        fragmentWorldPos.x - probe.boundingBoxMin.x);
+
+            float oy = min(probe.boundingBoxMax.y - prevProbe.boundingBoxMin.y,
+                        prevProbe.boundingBoxMax.y - probe.boundingBoxMin.y);
+
+            float py = min(fragmentWorldPos.y - prevProbe.boundingBoxMin.y,
+                        fragmentWorldPos.y - probe.boundingBoxMin.y);
+
+            float oz = min(probe.boundingBoxMax.z - prevProbe.boundingBoxMin.z,
+                        prevProbe.boundingBoxMax.z - probe.boundingBoxMin.z);
+
+            float pz = min(fragmentWorldPos.z - prevProbe.boundingBoxMin.z,
+                        fragmentWorldPos.z - probe.boundingBoxMin.z);
+
+            float fx = px/ox;
+            float fy = py/oy;
+            float fz = pz/oz;
+
+            ff = fx;
+        }
+
+        vec3 c1 = pc[probeIndex];
+//        vec3 c1 = textureLod(skyboxTexture, vec4(reflectedRay, probe.cubeMapTextureLayer), 0).rgb;
+        vec3 c2 = textureLod(skyboxTexture, vec4(envRay, probe.cubeMapTextureLayer), 5).rgb;
+
+        reflectionColor = vec3(ff);//mix(reflectionColor, c1, ff);
+        ambientEnvColor = mix(ambientEnvColor, c2, ff);;
+
+        prevProbeIndex = probeIndex;
+    }
     /////////////////////////////////////////////////////////////////////////////
+//    ambientEnvColor *= vec3(0.5);
+
+    vec3 viewDir = normalize(viewPosition - gsPosition.xyz);
+    vec3 lightProjColor = vec3(1.0);
+//    vec3 lightColor = vec3(selfIllumination) + (diffuse * vec3(0.1, 0.1, 0.1));
+        vec3 lightColor = vec3(selfIllumination) + (diffuse * ambientEnvColor);
 
     for (int lightIndex = 0; lightIndex < numActiveLights; lightIndex++) {
         LightStructure light = lights[lightIndex];
@@ -176,15 +212,16 @@ void main()
             }
 
             vec3 diffuseLight = diffuse
-                * ndotl
-                * light.color
-                * light.intensity;
+            * ndotl
+            * light.color
+            * light.intensity;
 
             lightColor +=
-                calculateLightDistanceAttenuation(light.distAttenMax, distToLight)
-                * shadowing
-                * lightProjColor
-                * (diffuseLight + calculateSpecularComponent(lightDir, viewDir, normal, specularLevel * specularColor, specularPower) + (sky * frensnel));
+            calculateLightDistanceAttenuation(light.distAttenMax, distToLight)
+            * shadowing
+            * lightProjColor
+            * (diffuseLight + (reflectionColor * 2.0 * frensnel));
+            //+ calculateSpecularComponent(lightDir, viewDir, normal, specularLevel * specularColor, specularPower)
         }
     }
 
@@ -192,30 +229,5 @@ void main()
         lightColor = mix(lightColor, diffuse, selfIllumination);
     }
 
-//    vec3 probePos;
-//    vec3 lookup;
-//    vec3 refl;
-//    vec3 sky = vec3(0);
-//    probePos = vec3(-13.0762,2.45162,11.1766);
-//    lookup = normalize(gsPosition.xyz - probePos);
-//    refl = reflect(lookup, normal);
-//    sky += textureLod(skyboxTexture, refl, 7).rgb;
-//
-//    probePos = vec3(-13.9322,1.82362,6.06079);
-//    lookup = normalize(gsPosition.xyz - probePos);
-//    refl = reflect(lookup, normal);
-//    sky += textureLod(skyboxTexture, refl, 7).rgb;
-//
-//    probePos = vec3(-5.71523,4.20533,4.18001);
-//    lookup = normalize(gsPosition.xyz - probePos);
-//    refl = reflect(lookup, normal);
-//    sky += textureLod(skyboxTexture, refl, 7).rgb;
-//
-//    sky = sky / 3;
-//
-//    vec3 view = normalize(gsPosition.xyz - viewPosition);
-//    vec3 refl = reflect(view, normal);
-//    vec3 sky = textureLod(skyboxTexture, refl, 1).rgb;
-
-    FragColor = vec4(lightColor, 1.0);
+    FragColor = vec4(reflectionColor, 1.0);
 }

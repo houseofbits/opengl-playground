@@ -3,14 +3,12 @@
 #include "../../Components/Scene.h"
 #include "../Shader/Shader.h"
 #include "../Shader/UniformBuffer.h"
-#include "../Texture/TextureAtlasManager.h"
+#include "../TextureAtlas/TextureAtlasManager.h"
 #include "Light.h"
 
 class LightsUniformBuffer
 {
 public:
-    static const unsigned int LIGHTS_UNIFORM_BINDING_INDEX = 1;
-
     typedef UniformBuffer<LightUniform> LightUniformBuffer;
 
     LightsUniformBuffer();
@@ -24,7 +22,7 @@ private:
     static unsigned int getShadowAtlasRegionIndex(TextureAtlasManager &atlasManager, unsigned int maxTextureSize);
 
 public:
-    void create(unsigned int maxLights);
+    void create(unsigned int maxLights, unsigned int uniformBindingIndex);
     void update(Scene &scene, TextureAtlasManager &atlasManager);
     void bind(Shader &shader);
     LightUniform &get(unsigned int index)

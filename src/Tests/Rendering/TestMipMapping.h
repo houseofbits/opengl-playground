@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../../Renderer/Model/Cube.h"
-#include "../../Renderer/Texture/TextureAtlasManager.h"
 #include "../../Renderer/Texture/TextureLoader.h"
+#include "../../Renderer/TextureAtlas/TextureAtlasManager.h"
 #include "BaseRenderTest.h"
 #include <glm/gtx/transform.hpp>
 
@@ -18,7 +18,7 @@ public:
     void setup(Window &window) override {
         message("Test mip-mapping");
 
-        atlasManager.init();
+        atlasManager.init(2);
 
         shader.loadProgram("resources/test/shaders/basic.vert", "resources/test/shaders/textureAtlasMapping.frag");
 

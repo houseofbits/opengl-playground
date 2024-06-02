@@ -17,9 +17,10 @@ public:
     unsigned int bufferId;
     T *data;
     DrawType drawType;
+    unsigned int uniformBindingIndex;
 
 public:
-    UniformBuffer() : maxSize(0), bufferId(0), data(nullptr), drawType(STATIC)
+    UniformBuffer() : maxSize(0), bufferId(0), data(nullptr), drawType(STATIC), uniformBindingIndex()
     {
     }
 
