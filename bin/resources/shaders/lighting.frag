@@ -15,8 +15,8 @@ uniform vec3 diffuseColor;
 uniform float selfIllumination;
 uniform bool doesReceiveShadows;
 uniform uint specularPower;
+uniform float roughness;
 uniform vec3 specularColor;
-uniform samplerCubeArray skyboxTexture;
 
 #include include/lightBlock.glsl
 #include include/probeBlock.glsl
@@ -73,23 +73,10 @@ float pcfShadowCalculation(vec3 projCoords, uint shadowAtlasIndex, float ndotl)
     return shadow;
 }
 
-vec3 calculateSpecularComponent(vec3 lightDir, vec3 viewDir, vec3 normal, vec3 color, uint power)
-{
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = 0.0;
-
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    spec = pow(max(dot(normal, halfwayDir), 0.0), float(power));
-
-    return spec * color;
-}
-
 float calculateLightDistanceAttenuation(float distAttenMax, float distToLight)
 {
     return 1.0 - clamp(distToLight / distAttenMax, 0.0, 1.0);
 }
-
-
 
 void main()
 {
@@ -100,89 +87,18 @@ void main()
         return;
     }
 
-    vec3 specularLevel = sampleDiffuseAtlasFragment(specularTextureId, gsTexcoord, vec3(1.0));
+    vec3 specularLevel = sampleDiffuseAtlasFragment(specularTextureId, gsTexcoord, specularColor);
     vec3 normal = sampleNormalsAtlasFragment(normalTextureId, gsTexcoord, gsNormal, gsInvTBN);
 
     vec3 view = normalize(gsPosition.xyz - viewPosition);
     vec3 viewReflection = reflect(view, normal);
     float frensnel = pow(1.0 - dot(normal, -view), 2);
 
-    /////////////////////////////////////////////////////////////////////////////
-    vec3 reflectionColor = vec3(0.0);
-    vec3 ambientEnvColor = vec3(0.0);
-    vec3 fragmentWorldPos = gsPosition.xyz;
+    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness) * specularPower;
+    vec3 ambientEnvColor = calculateAmbientColorFromEnvironmentProbes(gsPosition.xyz, normal, gsNormal);
 
-    vec3 pc[3];
-    pc[0] = vec3(1,0,0);
-    pc[1] = vec3(0,1,0);
-    pc[2] = vec3(0,0,1);
-
-    int prevProbeIndex = -1;
-    for (int probeIndex = 0; probeIndex < numProbes; probeIndex++) {
-        EnvProbeStructure probe = probes[probeIndex];
-
-        if (fragmentWorldPos.x < probe.boundingBoxMin.x || fragmentWorldPos.y < probe.boundingBoxMin.y || fragmentWorldPos.z < probe.boundingBoxMin.z) {
-            continue;
-        }
-
-        if (fragmentWorldPos.x > probe.boundingBoxMax.x || fragmentWorldPos.y > probe.boundingBoxMax.y || fragmentWorldPos.z > probe.boundingBoxMax.z) {
-            continue;
-        }
-
-        vec3 reflectedRay = parallaxCorrectedProbeReflection(probe, fragmentWorldPos, viewReflection);
-        vec3 envRay = ambientReflection(probe, gsPosition.xyz, normalize(gsNormal * 10.0 + normal));
-
-        float ff = 1.0;
-        if(prevProbeIndex >=0) {
-            EnvProbeStructure prevProbe = probes[prevProbeIndex];
-//
-//            float ox1 = probe.boundingBoxMax.x - prevProbe.boundingBoxMin.x;
-//            float ox2 = prevProbe.boundingBoxMax.x - probe.boundingBoxMin.x;
-//
-//            float px1 = fragmentWorldPos.x - prevProbe.boundingBoxMin.x;
-//            float px2 = fragmentWorldPos.x - probe.boundingBoxMin.x;
-
-            float ox = min(probe.boundingBoxMax.x - prevProbe.boundingBoxMin.x,
-                        prevProbe.boundingBoxMax.x - probe.boundingBoxMin.x);
-
-            float px = min(fragmentWorldPos.x - prevProbe.boundingBoxMin.x,
-                        fragmentWorldPos.x - probe.boundingBoxMin.x);
-
-            float oy = min(probe.boundingBoxMax.y - prevProbe.boundingBoxMin.y,
-                        prevProbe.boundingBoxMax.y - probe.boundingBoxMin.y);
-
-            float py = min(fragmentWorldPos.y - prevProbe.boundingBoxMin.y,
-                        fragmentWorldPos.y - probe.boundingBoxMin.y);
-
-            float oz = min(probe.boundingBoxMax.z - prevProbe.boundingBoxMin.z,
-                        prevProbe.boundingBoxMax.z - probe.boundingBoxMin.z);
-
-            float pz = min(fragmentWorldPos.z - prevProbe.boundingBoxMin.z,
-                        fragmentWorldPos.z - probe.boundingBoxMin.z);
-
-            float fx = px/ox;
-            float fy = py/oy;
-            float fz = pz/oz;
-
-            ff = fx;
-        }
-
-        vec3 c1 = pc[probeIndex];
-//        vec3 c1 = textureLod(skyboxTexture, vec4(reflectedRay, probe.cubeMapTextureLayer), 0).rgb;
-        vec3 c2 = textureLod(skyboxTexture, vec4(envRay, probe.cubeMapTextureLayer), 5).rgb;
-
-        reflectionColor = vec3(ff);//mix(reflectionColor, c1, ff);
-        ambientEnvColor = mix(ambientEnvColor, c2, ff);;
-
-        prevProbeIndex = probeIndex;
-    }
-    /////////////////////////////////////////////////////////////////////////////
-//    ambientEnvColor *= vec3(0.5);
-
-    vec3 viewDir = normalize(viewPosition - gsPosition.xyz);
     vec3 lightProjColor = vec3(1.0);
-//    vec3 lightColor = vec3(selfIllumination) + (diffuse * vec3(0.1, 0.1, 0.1));
-        vec3 lightColor = vec3(selfIllumination) + (diffuse * ambientEnvColor);
+    vec3 lightColor = vec3(selfIllumination) + (diffuse * ambientEnvColor);
 
     for (int lightIndex = 0; lightIndex < numActiveLights; lightIndex++) {
         LightStructure light = lights[lightIndex];
@@ -212,16 +128,15 @@ void main()
             }
 
             vec3 diffuseLight = diffuse
-            * ndotl
-            * light.color
-            * light.intensity;
+                * ndotl
+                * light.color
+                * light.intensity;
 
             lightColor +=
-            calculateLightDistanceAttenuation(light.distAttenMax, distToLight)
-            * shadowing
-            * lightProjColor
-            * (diffuseLight + (reflectionColor * 2.0 * frensnel));
-            //+ calculateSpecularComponent(lightDir, viewDir, normal, specularLevel * specularColor, specularPower)
+                calculateLightDistanceAttenuation(light.distAttenMax, distToLight)
+                * shadowing
+                * lightProjColor
+                * (diffuseLight + (reflectionColor * 2 * specularLevel * frensnel));
         }
     }
 
@@ -229,5 +144,5 @@ void main()
         lightColor = mix(lightColor, diffuse, selfIllumination);
     }
 
-    FragColor = vec4(reflectionColor, 1.0);
+    FragColor = vec4(lightColor, 1.0);
 }

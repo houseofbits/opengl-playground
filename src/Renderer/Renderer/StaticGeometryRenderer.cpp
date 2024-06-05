@@ -2,7 +2,8 @@
 #include "../Texture/TextureLoader.h"
 
 StaticGeometryRenderer::StaticGeometryRenderer(RenderManager *manager) : BaseRenderer(manager), materialShader(),
-                                                                         materialShaderSimplified() {
+                                                                         materialShaderSimplified(),
+                                                                         materialShaderDepthPrePass() {
 }
 
 void StaticGeometryRenderer::init() {
@@ -15,6 +16,10 @@ void StaticGeometryRenderer::init() {
             "resources/shaders/lighting.vert",
             "resources/shaders/lightingSimplified.frag",
             "resources/shaders/lighting.geom");
+
+    materialShaderDepthPrePass.loadProgram(
+            "resources/shaders/depthPrePass.vert",
+            "resources/shaders/depthPrePass.frag");
 }
 
 void StaticGeometryRenderer::render(Scene &scene, Camera &camera) {
@@ -25,10 +30,8 @@ void StaticGeometryRenderer::render(Scene &scene, Camera &camera) {
     renderManager->environmentProbeUniformBuffer.bind(materialShader);
 
     glActiveTexture(GL_TEXTURE4);
-    //    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, renderManager->cubeRenderTarget.textureId);
     glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, renderManager->environmentProbeRenderer.cubeRenderTarget.textureId);
-    //    renderManager->skyBoxRenderer.texture.bind();
-    materialShader.setUniform("skyboxTexture", 4);
+    materialShader.setUniform("envProbeArray", 4);
 
     scene.render(materialShader);
 }
@@ -45,4 +48,11 @@ void StaticGeometryRenderer::renderSimplified(Scene &scene, Camera &camera) {
     materialShaderSimplified.setUniform("skyboxTexture", 4);
 
     scene.render(materialShaderSimplified);
+}
+
+void StaticGeometryRenderer::renderDepthPrePass(Scene &scene, Camera& camera)
+{
+    materialShaderDepthPrePass.use();
+    camera.bind(materialShaderDepthPrePass);
+    scene.render(materialShaderDepthPrePass);
 }

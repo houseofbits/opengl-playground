@@ -13,6 +13,7 @@ struct ModelBuildConfiguration {
     std::optional<bool> doesCastShadows = std::nullopt;
     std::optional<bool> isSolidMaterial = std::nullopt;
     std::optional<unsigned int> specularPower = std::nullopt;
+    std::optional<float> roughness = std::nullopt;
     std::optional<glm::vec3> specularColor = std::nullopt;
     std::optional<std::string> diffuseTexture = std::nullopt;
     std::optional<std::string> normalTexture = std::nullopt;
@@ -31,6 +32,7 @@ NLOHMANN_JSONIFY_TYPE(
         doesCastShadows,
         isSolidMaterial,
         specularPower,
+        roughness,
         specularColor,
         diffuseTexture,
         normalTexture,

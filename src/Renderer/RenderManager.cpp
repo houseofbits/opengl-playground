@@ -57,6 +57,16 @@ void RenderManager::render(Scene &scene) {
     glViewport(0, 0, window->viewportWidth, window->viewportHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
+
+    skyBoxRenderer.render(scene, scene.camera);
+    staticGeometryRenderer.renderDepthPrePass(scene, scene.camera);
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+
     skyBoxRenderer.render(scene, scene.camera);
     staticGeometryRenderer.render(scene, scene.camera);
 

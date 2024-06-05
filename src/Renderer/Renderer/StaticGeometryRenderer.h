@@ -12,8 +12,10 @@ public:
     void init();
     void render(Scene &scene, Camera& camera);
     void renderSimplified(Scene &scene, Camera& camera);
+    void renderDepthPrePass(Scene &scene, Camera& camera);
 
     Shader materialShader;
     Shader materialShaderSimplified;
+    Shader materialShaderDepthPrePass;
 };
 

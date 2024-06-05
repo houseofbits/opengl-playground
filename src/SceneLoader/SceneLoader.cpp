@@ -71,7 +71,8 @@ void SceneLoader::buildModel(ModelComponent &modelComponent, ModelBuildConfigura
 
     modelComponent.diffuseColor = configuration.diffuseColor.value_or(glm::vec3(1, 1, 1));
     modelComponent.specularColor = configuration.specularColor.value_or(glm::vec3(1, 1, 1));
-    modelComponent.specularPower = configuration.specularPower.value_or(32);
+    modelComponent.specularPower = configuration.specularPower.value_or(1);
+    modelComponent.roughness = configuration.roughness.value_or(0);
     modelComponent.doesReceiveShadows = configuration.doesReceiveShadows.value_or(true);
     modelComponent.doesCastShadows = configuration.doesCastShadows.value_or(true);
     modelComponent.isSolidMaterial = configuration.isSolidMaterial.value_or(true);

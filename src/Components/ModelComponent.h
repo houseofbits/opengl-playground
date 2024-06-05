@@ -55,6 +55,7 @@ public:
         shader.setUniform("selfIllumination", selfIllumination);
         shader.setUniform("doesReceiveShadows", doesReceiveShadows);
         shader.setUniform("specularPower", specularPower);
+        shader.setUniform("roughness", roughness);
         shader.setUniform("specularColor", specularColor);
     }
 
@@ -68,4 +69,5 @@ public:
     float selfIllumination;
     bool doesReceiveShadows;
     unsigned int specularPower;
+    float roughness;
 };

@@ -54,12 +54,12 @@ void Entry::run()
 
 /**
  * TODO
- *  - Cube map array for probe rendering
- *  - Reflection probe manager and renderer
- *  - Parallax corrected cube maps
  *  - Debug point lights - has some rendering glitches
+ *  - Roughness - material attribute to select the reflection blurriness
  *
  * TODO: NICE TO HAVE
+ *  - Serialization/deserialization of objects
+ *  - Tweak mip-mapping algorithm
  *  - Add shadow bias variables to light
  *  - Projection texture per light view
  *  - Optional light views for omni lights - configurable

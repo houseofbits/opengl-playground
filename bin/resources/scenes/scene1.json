@@ -14,64 +14,62 @@
             "diffuseTexture": "resources/scenes/scene1/textures/floor1.png",
             "normalTexture": "resources/scenes/scene1/textures/floor1-n.png",
             "specularTexture": "resources/scenes/scene1/textures/floor1-s.png",
-            "specularPower": 60
+            "specularPower": 2,
+            "roughness": 0.3
         },
         {
             "model": "resources/scenes/scene1/floor2.gltf",
             "diffuseTexture": "resources/scenes/scene1/textures/floor2.png",
             "normalTexture": "resources/scenes/scene1/textures/floor2-n.png",
             "specularTexture": "resources/scenes/scene1/textures/floor2-s.png",
-            "specularPower": 20
+            "roughness": 1,
+            "specularPower": 2
         },
         {
             "model": "resources/scenes/scene1/walls1.gltf",
             "diffuseTexture": "resources/scenes/scene1/textures/walls1.png",
             "normalTexture": "resources/scenes/scene1/textures/walls1-n.png",
-            "specularTexture": "resources/scenes/scene1/textures/walls1.png",
-            "specularPower": 4,
-            "specularColor": [0.01,0.01,0.01]
+            "specularTexture": "resources/scenes/scene1/textures/walls1-s.png",
+            "roughness": 1,
+            "specularPower": 1
         },
         {
             "model": "resources/scenes/scene1/columns1.gltf",
             "diffuseTexture": "resources/scenes/scene1/textures/columns1.png",
             "normalTexture": "resources/scenes/scene1/textures/columns1-n.png",
             "specularTexture": "resources/scenes/scene1/textures/columns1-s.png",
-            "specularPower": 50
+            "roughness": 1,
+            "specularPower": 2
         },
         {
             "model": "resources/scenes/scene1/floor3.gltf",
             "diffuseTexture": "resources/scenes/scene1/textures/floor3.png",
             "normalTexture": "resources/scenes/scene1/textures/floor3-n.png",
-            "specularTexture": "resources/scenes/scene1/textures/floor3-s.png",
-            "specularPower": 50
+            "specularTexture": "resources/scenes/scene1/textures/floor3-s.png"
         },
         {
             "model": "resources/scenes/scene1/walls2.gltf",
             "diffuseTexture": "resources/scenes/scene1/textures/walls2.png",
             "normalTexture": "resources/scenes/scene1/textures/walls2-n.png",
-            "specularTexture": "resources/scenes/scene1/textures/walls2-s.png",
-            "specularPower": 50
+            "specularTexture": "resources/scenes/scene1/textures/walls2-s.png"
         },
         {
             "model": "resources/scenes/scene1/walls3.gltf",
             "diffuseTexture": "resources/scenes/scene1/textures/walls3.png",
             "normalTexture": "resources/scenes/scene1/textures/walls3-n.png",
-            "specularTexture": "resources/scenes/scene1/textures/walls3-s.png",
-            "specularPower": 50
+            "specularTexture": "resources/scenes/scene1/textures/walls3-s.png"
         },
         {
             "model": "resources/scenes/scene1/columns2_fix.gltf",
             "diffuseTexture": "resources/scenes/scene1/textures/columns2.png",
             "normalTexture": "resources/scenes/scene1/textures/columns2-n.png",
-            "specularTexture": "resources/scenes/scene1/textures/columns2-s.png",
-            "specularPower": 50
+            "specularTexture": "resources/scenes/scene1/textures/columns2-s.png"
         },
         {
             "model": "resources/scenes/scene1/columns3.gltf",
             "diffuseTexture": "resources/scenes/scene1/textures/columns3.png",
             "normalTexture": "resources/scenes/scene1/textures/columns3-n.png",
-            "specularTexture": "resources/scenes/scene1/textures/columns3-s.png",
-            "specularPower": 50
+            "specularTexture": "resources/scenes/scene1/textures/columns3-s.png"
         },
         {
             "model": "resources/scenes/scene1/shadow-mask.gltf",
@@ -94,7 +92,7 @@
             ],
             "beamAngle": 80,
             "distAttenMax": 40,
-            "intensity": 2.0,
+            "intensity": 3.0,
             "doesCastShadows": true,
             "projectionTexture": "resources/textures/spot-clouds.png"
         },
@@ -219,23 +217,102 @@
             "intensity": 1.5,
             "doesCastShadows": true,
             "projectionTexture": "resources/textures/spot-proj-3.png"
+        },
+        {
+            "type": "POINT",
+            "position": [2.97456,5.32272,11.9643],
+            "color": [
+                0.8,
+                0.8,
+                1
+            ],
+            "distAttenMax": 12,
+            "intensity": 2,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                -10.0266,2.82674,19.4562
+            ],
+            "direction": [
+                -0.0584652,-0.998259,0.00782594
+            ],
+            "color": [
+                0.6,
+                0.8,
+                1
+            ],
+            "beamAngle": 120,
+            "distAttenMax": 10,
+            "intensity": 2.5,
+            "doesCastShadows": true,
+            "projectionTexture": "resources/textures/spot-proj-3.png"
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                -9.78171,2.71437,3.10238
+            ],
+            "direction": [
+                -0.0584652,-0.998259,0.00782594
+            ],
+            "color": [
+                0.6,
+                0.8,
+                1
+            ],
+            "beamAngle": 120,
+            "distAttenMax": 10,
+            "intensity": 2.5,
+            "doesCastShadows": true,
+            "projectionTexture": "resources/textures/spot-proj-3.png"
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                -7.25389,2.8209,24.1834
+            ],
+            "direction": [
+                -0.0584652,-0.998259,0.00782594
+            ],
+            "color": [
+                0.6,
+                0.8,
+                1
+            ],
+            "beamAngle": 120,
+            "distAttenMax": 10,
+            "intensity": 2.5,
+            "doesCastShadows": true,
+            "projectionTexture": "resources/textures/spot-proj-3.png"
         }
     ],
     "probes": [
         {
             "position": [-12.3296, 2.08944, 11.9947],
-            "boundingBoxMin": [-18, -0.1, 4.5],
+            "boundingBoxMin": [-18, -2, 4.5],
             "boundingBoxMax": [-6, 11, 17.9]
         },
         {
             "position": [-6.41652,3.49035,18.4947],
-            "boundingBoxMin": [-8.5, -0.1, 14],
-            "boundingBoxMax": [-2, 11, 23.2]
+            "boundingBoxMin": [-8.5, -2, 13],
+            "boundingBoxMax": [-2, 11, 23.0]
+        },
+        {
+            "position": [-5.7808,4.70102,2.96408],
+            "boundingBoxMin": [-8.24996,-2,-0.7],
+            "boundingBoxMax": [-3.61553,11,9.6]
         },
         {
             "position": [2.54989,1.9512,24.8731],
             "boundingBoxMin": [-3.6, -0.1, 22],
             "boundingBoxMax": [11, 3, 27.1]
+        },
+        {
+            "position": [-9.74416,1.9013,21.2371],
+            "boundingBoxMin": [-11.1859,-2,17.6767],
+            "boundingBoxMax": [-7.38417,6.67702,26.0974]
         }
     ]
 }
