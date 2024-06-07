@@ -11,7 +11,7 @@ typedef struct alignas(16)
 {
     // 0
     glm::vec3 position; // 12
-    float intensity;    // 4
+    float intensity;    // 40
 
     // 16
     glm::vec3 color;              // 12

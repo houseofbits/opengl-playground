@@ -39,6 +39,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/SceneLoader/BaseConfiguration.h
         src/SceneLoader/BaseConfiguration.cpp
         src/SceneLoader/ProbeBuildConfiguration.h
+        src/Renderer/Shader/ShaderStorageBuffer.cpp
+        src/Renderer/Shader/ShaderStorageBuffer.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

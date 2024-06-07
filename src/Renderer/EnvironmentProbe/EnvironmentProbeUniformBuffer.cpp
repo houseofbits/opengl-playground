@@ -17,7 +17,7 @@ void EnvironmentProbeUniformBuffer::update(Scene &scene) {
         probeUniform.boundingBoxMin = glm::vec4(probe->boundingBoxMin, 1);
         probeUniform.boundingBoxMax = glm::vec4(probe->boundingBoxMax, 1);
 
-        std::cout<<"write uniform "<<index<<std::endl;
+//        std::cout<<"write uniform "<<index<<std::endl;
 
         index++;
     }

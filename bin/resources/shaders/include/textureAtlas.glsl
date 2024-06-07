@@ -64,7 +64,7 @@ int calculateLodLevel(vec2 uv)
     float len2 = length(dy_vtc);
 
     float delta_max_sqr = max(len1, len2);
-    float lod = (log2(delta_max_sqr * 500.0));
+    float lod = (log2(delta_max_sqr * 800.0));
     int mipmapLevel = int(lod);
 
     if (mipmapLevel <= 0) {
@@ -78,10 +78,45 @@ int calculateLodLevel(vec2 uv)
 
 vec3 sampleAtlasFragmentLod(in sampler2D atlas, uint index, vec2 uv)
 {
-    int lod = calculateLodLevel(uv);
-    uv = calculateAtlasUvLod(index, uv, lod);
+    vec4 atlasRect = atlasRegionMapping[index];
+    vec2  dx_vtc        = dFdx(uv);
+    vec2  dy_vtc        = dFdy(uv);
 
-    return textureLod(atlas, uv, lod).xyz;
+    float len1 = length(dx_vtc);// * atlasRect.x;
+    float len2 = length(dy_vtc);// * atlasRect.x;
+
+    float delta_max_sqr = max(len1, len2);
+    float lod = (log2(delta_max_sqr * 800));
+    int mipmapLevel = int(lod);
+
+    if (mipmapLevel <= 0) {
+        mipmapLevel = 0;
+    } else if (mipmapLevel >= 6) {
+        mipmapLevel = 6;
+    }
+
+    lod = min(max(lod, 0), 6);
+    float f = fract(lod);
+    int a = int(floor(lod));
+    int b = int(ceil(lod));
+
+    vec2 uv1 = calculateAtlasUvLod(index, uv, a);
+    vec2 uv2 = calculateAtlasUvLod(index, uv, b);
+
+    return mix(
+        textureLod(atlas, uv1, a).xyz,
+        textureLod(atlas, uv2, b).xyz,
+        f
+    );
+
+//    return vec3(f);
+    return vec3(float(mipmapLevel) / 6.0);
+
+    //    int lod = calculateLodLevel(uv);
+
+//    uv = calculateAtlasUvLod(index, uv, lod);
+
+//    return textureLod(atlas, uv, lod).xyz;
 }
 
 vec3 sampleDiffuseAtlasFragment(uint index, vec2 uv, vec3 diffuseColor)

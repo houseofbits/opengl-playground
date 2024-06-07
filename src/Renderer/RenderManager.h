@@ -7,6 +7,7 @@
 #include "Renderer/ShadowMapRenderer.h"
 #include "Renderer/SkyBoxRenderer.h"
 #include "Renderer/StaticGeometryRenderer.h"
+#include "Shader/ShaderStorageBuffer.h"
 #include "TextureAtlas/TextureAtlasManager.h"
 
 class Window;
@@ -24,7 +25,6 @@ public:
     static const unsigned int ATLAS_REGION_MAPPING_UNIFORM_BINDING_INDEX = 2;
     static const unsigned int LIGHT_INDEXES_UNIFORM_BINDING_INDEX = 3;
     static const unsigned int ENV_PROBES_UNIFORM_BINDING_INDEX = 4;
-
 
     explicit RenderManager(Window*);
 

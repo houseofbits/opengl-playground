@@ -14,7 +14,8 @@
             "diffuseTexture": "resources/scenes/scene1/textures/floor1.png",
             "normalTexture": "resources/scenes/scene1/textures/floor1-n.png",
             "specularTexture": "resources/scenes/scene1/textures/floor1-s.png",
-            "specularPower": 2,
+            "specularPower": 1,
+            "specularColor": 0.5,
             "roughness": 0.3
         },
         {
@@ -23,7 +24,7 @@
             "normalTexture": "resources/scenes/scene1/textures/floor2-n.png",
             "specularTexture": "resources/scenes/scene1/textures/floor2-s.png",
             "roughness": 1,
-            "specularPower": 2
+            "specularPower": 1
         },
         {
             "model": "resources/scenes/scene1/walls1.gltf",
@@ -69,7 +70,8 @@
             "model": "resources/scenes/scene1/columns3.gltf",
             "diffuseTexture": "resources/scenes/scene1/textures/columns3.png",
             "normalTexture": "resources/scenes/scene1/textures/columns3-n.png",
-            "specularTexture": "resources/scenes/scene1/textures/columns3-s.png"
+            "specularTexture": "resources/scenes/scene1/textures/columns3-s.png",
+            "specularPower": 2
         },
         {
             "model": "resources/scenes/scene1/shadow-mask.gltf",
@@ -78,6 +80,7 @@
     ],
     "lights": [
         {
+            "name": "Main direct sun light",
             "type": "SPOT",
             "position": [
                 -13.8365,9.22371,0.31543
@@ -97,39 +100,12 @@
             "projectionTexture": "resources/textures/spot-clouds.png"
         },
         {
-            "type": "SPOT",
-            "position": [
-                -6.1,
-                8,
-                2.2
-            ],
-            "direction": [
-                0,
-                -1,
-                0
-            ],
-            "color": [
-                0.8,
-                0.8,
-                1
-            ],
-            "beamAngle": 100,
-            "distAttenMax": 10,
-            "intensity": 0.6,
-            "doesCastShadows": true,
-            "projectionTexture": "resources/textures/spot-1.png"
-        },
-        {
-            "type": "SPOT",
+            "name": "Supporting omni for sun light",
+            "type": "POINT",
             "position": [
                 -6.27183,
                 8.62005,
                 -1.09586
-            ],
-            "direction": [
-                0.497285,
-                -0.288723,
-                0.818136
             ],
             "color": [
                 1,
@@ -138,17 +114,14 @@
             ],
             "beamAngle": 100,
             "distAttenMax": 20,
-            "intensity": 1.4,
-            "doesCastShadows": true,
-            "projectionTexture": "resources/textures/spot-1.png"
+            "intensity": 0.6,
+            "doesCastShadows": true
         },
         {
-            "type": "SPOT",
+            "name": "Blue atmospheric backlight in one of corners",
+            "type": "POINT",
             "position": [
-                -11.3422,11.6227,21.2245
-            ],
-            "direction": [
-                0.366908,-0.786296,-0.497109
+                -6.48076,4.79793,19.847
             ],
             "color": [
                 0.8,
@@ -156,12 +129,30 @@
                 1
             ],
             "beamAngle": 100,
-            "distAttenMax": 200,
+            "distAttenMax": 10,
             "intensity": 0.6,
-            "doesCastShadows": true,
-            "projectionTexture": "resources/textures/spot-1.png"
+            "doesCastShadows": true
         },
         {
+            "name": "Blue atmospheric backlight in middle of lawn",
+            "type": "POINT",
+            "position": [
+                -12.3717,3.04984,11.3915
+            ],
+            "color": [
+                0.7,
+                0.7,
+                1
+            ],
+            "beamAngle": 100,
+            "distAttenMax": 15,
+            "intensity": 0.5,
+            "doesCastShadows": true
+        },
+
+
+        {
+            "name": "Right room, first spot light",
             "type": "SPOT",
             "position": [
                 -0.350384,2.69039,25.3467
@@ -170,9 +161,9 @@
                 0,-1,0
             ],
             "color": [
-                1,
-                1,
-                0.6
+                0.7,
+                0.7,
+                1
             ],
             "beamAngle": 120,
             "distAttenMax": 10,
@@ -181,6 +172,7 @@
             "projectionTexture": "resources/textures/spot-proj-3.png"
         },
         {
+            "name": "Right room, third spot light",
             "type": "SPOT",
             "position": [
                 7.12714,2.87264,24.1084
@@ -189,9 +181,9 @@
                 0,-1,0
             ],
             "color": [
-                1,
-                1,
-                0.6
+                0.7,
+                0.7,
+                1
             ],
             "beamAngle": 120,
             "distAttenMax": 10,
@@ -200,6 +192,7 @@
             "projectionTexture": "resources/textures/spot-proj-3.png"
         },
         {
+            "name": "Right room, second spot light",
             "type": "SPOT",
             "position": [
                 3.12714,2.87264,24.4084
@@ -208,9 +201,9 @@
                 0,-1,0
             ],
             "color": [
-                1,
-                1,
-                0.6
+                0.7,
+                0.7,
+                1
             ],
             "beamAngle": 120,
             "distAttenMax": 10,
@@ -219,6 +212,7 @@
             "projectionTexture": "resources/textures/spot-proj-3.png"
         },
         {
+            "name": "Middle hall flood light",
             "type": "POINT",
             "position": [2.97456,5.32272,11.9643],
             "color": [
@@ -286,6 +280,64 @@
             "intensity": 2.5,
             "doesCastShadows": true,
             "projectionTexture": "resources/textures/spot-proj-3.png"
+        },
+        {
+            "type": "POINT",
+            "position": [-2.23852,2.51703,-1.67957],
+            "color": [
+                1,
+                1,
+                0.8
+            ],
+            "distAttenMax": 12,
+            "intensity": 2.3,
+            "doesCastShadows": true
+        },
+        {
+            "name": "Right room flood light",
+            "type": "POINT",
+            "position": [7.54115,2.48228,24.3621],
+            "color": [
+                0.8,
+                0.8,
+                1
+            ],
+            "distAttenMax": 12,
+            "intensity": 0.4,
+            "doesCastShadows": true
+        },
+        {
+            "name": "Right room flood light",
+            "type": "POINT",
+            "position": [-1.75187,1.79764,24.5218],
+            "color": [
+                0.8,
+                0.8,
+                1
+            ],
+            "distAttenMax": 12,
+            "intensity": 0.4,
+            "doesCastShadows": true
+        },
+
+        {
+            "type": "SPOT",
+            "position": [
+                -1.44215,4.96244,34.7894
+            ],
+            "direction": [
+                0.422093,-0.463031,-0.779384
+            ],
+            "color": [
+                1,
+                1,
+                0.8
+            ],
+            "beamAngle": 120,
+            "distAttenMax": 20,
+            "intensity": 1.5,
+            "doesCastShadows": true,
+            "projectionTexture": "resources/textures/spot-clouds.png"
         }
     ],
     "probes": [
@@ -297,7 +349,7 @@
         {
             "position": [-6.41652,3.49035,18.4947],
             "boundingBoxMin": [-8.5, -2, 13],
-            "boundingBoxMax": [-2, 11, 23.0]
+            "boundingBoxMax": [-2, 11, 23.1]
         },
         {
             "position": [-5.7808,4.70102,2.96408],
@@ -306,13 +358,28 @@
         },
         {
             "position": [2.54989,1.9512,24.8731],
-            "boundingBoxMin": [-3.6, -0.1, 22],
-            "boundingBoxMax": [11, 3, 27.1]
+            "boundingBoxMin": [-4.3, -2, 25],
+            "boundingBoxMax": [11, 3, 29.5]
+        },
+        {
+            "position": [7,1.9512,24.8731],
+            "boundingBoxMin": [-4.3, -2, 22],
+            "boundingBoxMax": [11, 3, 26.58]
+        },
+        {
+            "position": [-8,1.9512,25],
+            "boundingBoxMin": [-9.59199, -2, 23.0264],
+            "boundingBoxMax": [-4.38761, 3, 28.2484]
         },
         {
             "position": [-9.74416,1.9013,21.2371],
-            "boundingBoxMin": [-11.1859,-2,17.6767],
+            "boundingBoxMin": [-11.1859,-0.1,17.6767],
             "boundingBoxMax": [-7.38417,6.67702,26.0974]
+        },
+        {
+            "position": [2.76458,2.69494,11.6274],
+            "boundingBoxMin": [-0.678336,-0.1,5.01806],
+            "boundingBoxMax": [9.75006,6.67702,14.7043]
         }
     ]
 }

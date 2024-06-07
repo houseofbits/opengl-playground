@@ -5,6 +5,7 @@
 #include "../../Helper/ShaderSourceLoader.h"
 #include "../../PostProcessRenderer/PostProcessRenderer.h"
 #include "../Shader/Shader.h"
+#include "../Shader/ShaderStorageBuffer.h"
 #include "BaseRenderer.h"
 #include <glm/vec3.hpp>
 #include <iostream>
@@ -13,15 +14,14 @@
 class ShadowMapRenderer : public BaseRenderer
 {
 private:
-    typedef UniformBuffer<unsigned int> UniformIndexBuffer;
+    typedef ShaderStorageBuffer<unsigned int> IndexBuffer;
 
     static const unsigned int MAX_LIGHTVIEWS_PER_PASS = 16;     //Hard limit by GL_MAX_VIEWPORTS
 
     void prepareViewports();
-    void prepareIndexes(unsigned int page);
-    unsigned int calculateNumPages();
+    void renderScene(Scene &scene);
 
-    UniformIndexBuffer lightIndexesUniform;
+    IndexBuffer lightIndexesUniform;
     unsigned int numLightsPerPass;
 
 public:

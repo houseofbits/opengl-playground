@@ -53,11 +53,11 @@ void Entry::run()
 }
 
 /**
- * TODO
- *  - Debug point lights - has some rendering glitches
- *  - Roughness - material attribute to select the reflection blurriness
+ * TODO: BLOCKING
+*  - Add lighting to test scene
  *
  * TODO: NICE TO HAVE
+ *  - Material structure
  *  - Serialization/deserialization of objects
  *  - Tweak mip-mapping algorithm
  *  - Add shadow bias variables to light
@@ -65,26 +65,23 @@ void Entry::run()
  *  - Optional light views for omni lights - configurable
  *  - Add View abstraction - could be used for Camera, LightView, Decals, RTT
  *
- * TODO: IMPLEMENT
- *  - Add lighting to test scene
+ * TODO: EXPLORE
  *  - Basic PhysX - MVP: have static scene collision geometry and player controller
  *  - Explore animation system
  *  - Post process render effects (SSAO, SSR, HDR & Gamma correction)
+ *
+ * Instanced rendering for all the static and semi-static geometry
+ *  Materials array - shader storage buffer initiated at the load time
+ *  Instance data array - having materialId and modelMatrix
  *
  */
 void Entry::init()
 {
     renderManager.init();
 
-//     loadSceneFromJson("resources/scenes/ducks-n-lights.json");
-//     loadSceneFromJson("resources/scenes/multiple-spot-lights.json");
-//    loadSceneFromJson("resources/scenes/single-spot-light.json");
-//     loadSceneFromJson("resources/scenes/hall-with-columns.json");
-//     loadSceneFromJson("resources/scenes/hall-with-columns-omni.json");
 //     sceneLoader.loadSceneFromJson("resources/scenes/hall-with-columns-omni.json", scene);
      sceneLoader.loadSceneFromJson("resources/scenes/scene1.json", scene);
 //     sceneLoader.loadSceneFromJson("resources/scenes/gltf-debug.json", scene);
-//     sceneLoader.loadSceneFromJson("resources/scenes/normal-maps.json", scene);
 
 //     scene.camera.registerEventHandlers(&eventManager);
      cameraController.attachCamera(&scene.camera);

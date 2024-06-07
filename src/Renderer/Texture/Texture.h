@@ -9,7 +9,7 @@ public:
         TYPE_RGBA,
     };
 
-    static const int maxMipMapLevels = 5;
+    static const int maxMipMapLevels = 7;
 
     Texture();
     virtual ~Texture();

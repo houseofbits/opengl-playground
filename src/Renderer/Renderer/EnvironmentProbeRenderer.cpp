@@ -48,16 +48,15 @@ void EnvironmentProbeRenderer::render(Scene &scene) {
 
         }
 
-        std::cout << "Render probe: "
-                  << layer
-                  << " - "
-                  << probe->position.x
-                  << ","
-                  << probe->position.y
-                  << ","
-                  << probe->position.z
-                  << std::endl;
-        ;
+//        std::cout << "Render probe: "
+//                  << layer
+//                  << " - "
+//                  << probe->position.x
+//                  << ","
+//                  << probe->position.y
+//                  << ","
+//                  << probe->position.z
+//                  << std::endl;
 
         layer++;
     }

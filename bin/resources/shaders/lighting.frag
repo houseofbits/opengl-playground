@@ -50,7 +50,7 @@ float pcfShadowCalculation(vec3 projCoords, uint shadowAtlasIndex, float ndotl)
     //    vec2 uv = calculateAtlasUV(shadowAtlasIndex, projCoords.xy);
     //    float dstToSurface = abs(texture(shadowDepthAtlas, uv).r - currentDepth);
 
-    float bias = 0.00001;
+    float bias = ndotl * 0.00001;
     float blurFactor = 1.0 / 800.0;//textureSize(shadowDepthAtlas, 0).x;  //
     float shadow = 0;
     vec2 uv;
@@ -95,7 +95,7 @@ void main()
     float frensnel = pow(1.0 - dot(normal, -view), 2);
 
     vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness) * specularPower;
-    vec3 ambientEnvColor = calculateAmbientColorFromEnvironmentProbes(gsPosition.xyz, normal, gsNormal);
+    vec3 ambientEnvColor = vec3(0.1);   //calculateAmbientColorFromEnvironmentProbes(gsPosition.xyz, normal, gsNormal);
 
     vec3 lightProjColor = vec3(1.0);
     vec3 lightColor = vec3(selfIllumination) + (diffuse * ambientEnvColor);

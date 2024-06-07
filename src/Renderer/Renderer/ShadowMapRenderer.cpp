@@ -26,12 +26,20 @@ void ShadowMapRenderer::init(unsigned int uniformBindingIndex)
     debugImageRenderer.init(glm::vec4(-1, -1, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimageDepth.frag");
     debugImageRenderer.textureId = renderManager->atlasManager.getTextureId(TextureAtlasManager::ATLAS_SHADOW_DEPTH);
 
-    lightIndexesUniform.create(MAX_LIGHTVIEWS_PER_PASS, UniformIndexBuffer::DYNAMIC, uniformBindingIndex);
+    lightIndexesUniform.create(MAX_LIGHTVIEWS_PER_PASS, uniformBindingIndex);
 }
 
 void ShadowMapRenderer::renderShadowAtlas()
 {
     debugImageRenderer.draw();
+}
+
+void ShadowMapRenderer::renderScene(Scene &scene)
+{
+    depthShader.setUniform("lightIndexes", lightIndexesUniform.getBufferId());
+    depthShader.setUniform("numLightsPerPass", numLightsPerPass);
+    prepareViewports();
+    scene.renderWithTransform(depthShader);
 }
 
 void ShadowMapRenderer::render(Scene &scene)
@@ -46,44 +54,29 @@ void ShadowMapRenderer::render(Scene &scene)
     glEnable(GL_CULL_FACE);
 //    glCullFace(GL_FRONT);
 
-    unsigned int numPages = calculateNumPages();
-    for(unsigned int page=0; page<numPages; page++)
-    {
-        prepareIndexes(page);
+    lightIndexesUniform.bind();
+    unsigned int numLights = renderManager->lightsUniformBuffer.getNumActiveLights();
+    numLightsPerPass = 0;
+    for(unsigned int i=0; i<numLights; i++) {
+        if (renderManager->lightsUniformBuffer.get(i).doesCastShadows > 0) {
+            lightIndexesUniform.set(i, numLightsPerPass);
+            numLightsPerPass++;
+        }
+        if (numLightsPerPass >= MAX_LIGHTVIEWS_PER_PASS) {
+            lightIndexesUniform.update(0, numLightsPerPass);
+            renderScene(scene);
+            numLightsPerPass = 0;
+        }
+    }
 
-        lightIndexesUniform.bind();
-        depthShader.setUniform("lightIndexes", lightIndexesUniform.getBufferId());
-        depthShader.setUniform("numLightsPerPass", numLightsPerPass);
-
-        prepareViewports();
-
-        scene.renderWithTransform(depthShader);
+    if (numLightsPerPass > 0) {
+        lightIndexesUniform.update(0, numLightsPerPass);
+        renderScene(scene);
     }
 
     glCullFace(GL_BACK);
 
     renderManager->atlasManager.getAtlas(TextureAtlasManager::ATLAS_SHADOW_DEPTH).unbindRenderTarget();
-}
-
-void ShadowMapRenderer::prepareIndexes(unsigned int page)
-{
-//    std::cout<<"page: "<<page<<std::endl;
-    unsigned int numLights = renderManager->lightsUniformBuffer.getNumActiveLights();
-    unsigned int offset = MAX_LIGHTVIEWS_PER_PASS * page;
-    unsigned int size = offset + MAX_LIGHTVIEWS_PER_PASS;
-    if (size > numLights) {
-        size = numLights;
-    }
-    if (offset < size) {
-        unsigned int a = 0;
-        for (unsigned int i = offset; i < size; i++) {
-//            std::cout<<" "<<a<<": "<<i<<std::endl;
-            lightIndexesUniform.set(i, a);
-            a++;
-        }
-        numLightsPerPass = a;
-//        std::cout<<" num:"<<numLightsPerPass<<std::endl;
-    }
 }
 
 void ShadowMapRenderer::prepareViewports()
@@ -102,8 +95,4 @@ void ShadowMapRenderer::prepareViewports()
             viewportIndex++;
         }
     }
-}
-unsigned int ShadowMapRenderer::calculateNumPages() {
-
-    return (unsigned int) ceil((float)renderManager->lightsUniformBuffer.getNumActiveLights() / (float)MAX_LIGHTVIEWS_PER_PASS);
 }
