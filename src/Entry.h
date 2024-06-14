@@ -2,6 +2,7 @@
 #include "Components/ModelComponent.h"
 #include "Components/Scene.h"
 #include "Events/EventManager.h"
+#include "Physics/TestPhysics.h"
 #include "PostProcessRenderer/PostProcessRenderer.h"
 #include "Renderer/Camera/Camera.h"
 #include "Renderer/Camera/CameraController.h"
@@ -28,6 +29,8 @@ private:
     Window window;
     Scene scene;
     CameraController cameraController;
+
+    TestPhysics physics;
 
     int debugMode;
 

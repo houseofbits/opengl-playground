@@ -282,18 +282,6 @@
             "projectionTexture": "resources/textures/spot-proj-3.png"
         },
         {
-            "type": "POINT",
-            "position": [-2.23852,2.51703,-1.67957],
-            "color": [
-                1,
-                1,
-                0.8
-            ],
-            "distAttenMax": 12,
-            "intensity": 2.3,
-            "doesCastShadows": true
-        },
-        {
             "name": "Right room flood light",
             "type": "POINT",
             "position": [7.54115,2.48228,24.3621],
@@ -335,9 +323,73 @@
             ],
             "beamAngle": 120,
             "distAttenMax": 20,
-            "intensity": 1.5,
+            "intensity": 1.0,
             "doesCastShadows": true,
             "projectionTexture": "resources/textures/spot-clouds.png"
+        },
+        {
+            "name": "Left room",
+            "type": "POINT",
+            "position": [-2.23852,2.51703,-1.67957],
+            "color": [
+                0.8,
+                0.8,
+                1
+            ],
+            "distAttenMax": 8,
+            "intensity": 1.0,
+            "doesCastShadows": true
+        },
+        {
+            "type": "POINT",
+            "position": [8.73996,2.19506,-0.833031],
+            "color": [
+                0.7,
+                0.7,
+                1
+            ],
+            "distAttenMax": 6,
+            "intensity": 1.0,
+            "doesCastShadows": true
+        },
+        {
+            "type": "SPOT",
+            "position": [
+                -4.80473,5.30096,-13.3626
+            ],
+            "direction": [
+                0.402949,-0.344565,0.847884
+            ],
+            "color": [
+                1,
+                1,
+                0.8
+            ],
+            "beamAngle": 120,
+            "distAttenMax": 20,
+            "intensity": 5.0,
+            "doesCastShadows": true,
+            "projectionTexture": "resources/textures/spot-clouds.png"
+        },
+        {
+            "name": "Right room, third spot light",
+            "type": "SPOT",
+            "position": [
+                6.99651,2.97341,-1.54727
+            ],
+            "direction": [
+                -0.12586,-0.856378,0.500776
+            ],
+            "color": [
+                0.9,
+                0.9,
+                1
+            ],
+            "beamAngle": 140,
+            "distAttenMax": 15,
+            "intensity": 2.0,
+            "doesCastShadows": true,
+            "projectionTexture": "resources/textures/spot-proj-3.png"
         }
     ],
     "probes": [
@@ -378,8 +430,23 @@
         },
         {
             "position": [2.76458,2.69494,11.6274],
-            "boundingBoxMin": [-0.678336,-0.1,5.01806],
-            "boundingBoxMax": [9.75006,6.67702,14.7043]
+            "boundingBoxMin": [-1,-0.1,7.6],
+            "boundingBoxMax": [9.75006,6.67702,14.35]
+        },
+        {
+            "position": [-2,2.69494,11.6274],
+            "boundingBoxMin": [-6.678336,-0.1,7.6],
+            "boundingBoxMax": [0,6.67702,14.35]
+        },
+        {
+            "position": [2,2,-2],
+            "boundingBoxMin": [-4.19578,0,-4.09799],
+            "boundingBoxMax": [10.3793,4,0.18]
+        },
+        {
+            "position": [2,2,-5.3],
+            "boundingBoxMin": [-4.19578,0,-6.7],
+            "boundingBoxMax": [10.3793,4,-3.4]
         }
     ]
 }

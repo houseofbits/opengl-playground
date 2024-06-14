@@ -1,0 +1,12 @@
+[
+    {
+        "name": "mesh1",
+        "type": "StaticMesh",
+        "transform": {
+            "translation": 1.0
+        },
+        "mesh": {
+            "model": "path to the model"
+        }
+    }
+]

@@ -11,9 +11,9 @@ bool SceneLoader::loadSceneFromJson(const std::string &filename, Scene &scene) {
         scene.clear();
 
         for (auto &modelJson: data["meshes"]) {
-            ModelBuildConfiguration configuration = modelJson.get<ModelBuildConfiguration>();
-            ModelComponent &model = scene.createModel();
-            buildModel(model, configuration);
+//            ModelBuildConfiguration configuration = modelJson.get<ModelBuildConfiguration>();
+//            ModelComponent &model = scene.createModel();
+//            buildModel(model, configuration);
         }
 
         for (auto &lightData: data["lights"]) {
@@ -25,9 +25,9 @@ bool SceneLoader::loadSceneFromJson(const std::string &filename, Scene &scene) {
         }
 
         for (auto &probeJson: data["probes"]) {
-            ProbeBuildConfiguration configuration = probeJson.get<ProbeBuildConfiguration>();
-            auto &probe = scene.createProbe();
-            buildProbe(probe, configuration);
+//            ProbeBuildConfiguration configuration = probeJson.get<ProbeBuildConfiguration>();
+//            auto &probe = scene.createProbe();
+//            buildProbe(probe, configuration);
         }
 
         scene.filename = filename;

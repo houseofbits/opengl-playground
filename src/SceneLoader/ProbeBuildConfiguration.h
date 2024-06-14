@@ -10,8 +10,8 @@ struct ProbeBuildConfiguration {
     glm::vec3 boundingBoxMax{0, 0, 0};
 };
 
-NLOHMANN_JSONIFY_TYPE(
-        ProbeBuildConfiguration,
-        position,
-        boundingBoxMin,
-        boundingBoxMax);
+//NLOHMANN_JSONIFY_TYPE(
+//        ProbeBuildConfiguration,
+//        position,
+//        boundingBoxMin,
+//        boundingBoxMax);

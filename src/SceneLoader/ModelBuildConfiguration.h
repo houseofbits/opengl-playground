@@ -23,20 +23,20 @@ struct ModelBuildConfiguration {
     std::optional<glm::vec3> scale = std::nullopt;
 };
 
-NLOHMANN_JSONIFY_TYPE(
-        ModelBuildConfiguration,
-        model,
-        diffuseColor,
-        selfIllumination,
-        doesReceiveShadows,
-        doesCastShadows,
-        isSolidMaterial,
-        specularPower,
-        roughness,
-        specularColor,
-        diffuseTexture,
-        normalTexture,
-        specularTexture,
-        position,
-        rotation,
-        scale);
+//NLOHMANN_JSONIFY_TYPE(
+//        ModelBuildConfiguration,
+//        model,
+//        diffuseColor,
+//        selfIllumination,
+//        doesReceiveShadows,
+//        doesCastShadows,
+//        isSolidMaterial,
+//        specularPower,
+//        roughness,
+//        specularColor,
+//        diffuseTexture,
+//        normalTexture,
+//        specularTexture,
+//        position,
+//        rotation,
+//        scale);

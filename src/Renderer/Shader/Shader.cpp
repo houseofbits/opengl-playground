@@ -1,6 +1,6 @@
 #include "Shader.h"
 #include "../../Helper/Console.h"
-#include "../../Helper/Logging.h"
+#include "../../Helper/Log.h"
 #include "../../Helper/ShaderSourceLoader.h"
 #include <GL/glew.h>
 #include <fstream>

@@ -44,7 +44,7 @@ int roughnessToLod(float roughness)
     return int(roughness * 5.0);
 }
 
-vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 viewReflection, float roughness)
+vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 viewReflection, float roughness, vec3 normal)
 {
     vec3 selectedColor[4];
     float selectedWeights[4];
@@ -69,6 +69,9 @@ vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 v
         vec3 ray = fragmentWorldPos - probe.position;
         float l = length(ray);
         ray = normalize(ray);
+        if (dot(ray, normal) > 0) {
+            continue;
+        }
         vec3 planeIntersect1 = (probe.boundingBoxMax.xyz - probe.position) / ray;
         vec3 planeIntersect2 = (probe.boundingBoxMin.xyz - probe.position) / ray;
         vec3 furthestPlane = max(planeIntersect1, planeIntersect2);

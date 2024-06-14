@@ -5,7 +5,7 @@
 #include "Events/EventManager.h"
 #include "Events/WindowEvent.h"
 #include "Exception.h"
-#include "Helper/Logging.h"
+#include "Helper/Log.h"
 #include "Helper/Time.h"
 #include "Renderer/Camera/Camera.h"
 #include "Renderer/Model/Cube.h"

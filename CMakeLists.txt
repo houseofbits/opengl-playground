@@ -41,6 +41,45 @@ add_executable(${PROJECT_NAME} ${sources}
         src/SceneLoader/ProbeBuildConfiguration.h
         src/Renderer/Shader/ShaderStorageBuffer.cpp
         src/Renderer/Shader/ShaderStorageBuffer.h
+        src/Physics/TestPhysics.cpp
+        src/Physics/TestPhysics.h
+        src/CoreV2/Entity/Entity.h
+        src/CoreV2/Reflection/Factory.h
+        src/CoreV2/Entity/Component.cpp
+        src/CoreV2/Entity/Component.h
+        src/CoreV2/Entity/EntitySerializer.h
+        src/CoreV2/Entity/EntityContext.cpp
+        src/CoreV2/Entity/EntityContext.h
+        src/CoreV2/System/EntitySystem.h
+        src/CoreV2/Module/EntityModule.cpp
+        src/CoreV2/Module/EntityModule.h
+        src/ModulesV2/Renderer/RendererModule.h
+        src/ModulesV2/Renderer/Components/StaticMeshComponent.cpp
+        src/ModulesV2/Renderer/Components/StaticMeshComponent.h
+        src/ModulesV2/Common/CommonModule.h
+        src/ModulesV2/Common/Components/TransformComponent.cpp
+        src/ModulesV2/Common/Components/TransformComponent.h
+        src/ModulesV2/Renderer/Systems/RendererSystem.cpp
+        src/ModulesV2/Renderer/Systems/RendererSystem.h
+        src/CoreV2/API.h
+        src/CoreV2/Reflection/Type.h
+        src/CoreV2/Entity/Entity.cpp
+        src/ModulesV2/Renderer/Components/LightComponent.cpp
+        src/ModulesV2/Renderer/Components/LightComponent.h
+        src/ModulesV2/Renderer/Components/EnvironmentProbeComponent.cpp
+        src/ModulesV2/Renderer/Components/EnvironmentProbeComponent.h
+        src/ModulesV2/Renderer/Components/MaterialComponent.cpp
+        src/ModulesV2/Renderer/Components/MaterialComponent.h
+        src/CoreV2/Application/Application.cpp
+        src/CoreV2/Application/Application.h
+        src/ModulesV2/Renderer/Components/CameraComponent.cpp
+        src/ModulesV2/Renderer/Components/CameraComponent.h
+        src/CoreV2/Json/Json.cpp
+        src/CoreV2/Json/Json.h
+        src/CoreV2/Json/Json.cpp
+        src/CoreV2/Json/Json.h
+        src/ApplicationsV2/Main/MainApplication.cpp
+        src/ApplicationsV2/Main/MainApplication.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)
@@ -52,6 +91,8 @@ find_package(glm REQUIRED)
 target_link_libraries(SDLWindow glm::glm)
 
 target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)
+
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 

@@ -1,0 +1,49 @@
+[
+    {
+        "name": "StaticMesh",
+        "components": {
+            "transform": {
+                "type": "TransformComponent"
+            },
+            "mesh": {
+                "type": "StaticMeshComponent"
+            },
+            "material": {
+                "type": "MaterialComponent"
+            }
+        }
+    },
+    {
+        "name": "Light",
+        "components": {
+            "transform": {
+                "type": "TransformComponent",
+                "default": {
+                    "allowScaling": false
+                }
+            },
+            "light": {
+                "type": "LightComponent"
+            }
+        }
+    },
+    {
+        "name": "EnvironmentProbe",
+        "components": {
+            "probe": {
+                "type": "EnvironmentProbeComponent"
+            }
+        }
+    },
+    {
+        "name": "Camera",
+        "components": {
+            "transform": {
+                "type": "TransformComponent"
+            },
+            "camera": {
+                "type": "CameraComponent"
+            }
+        }
+    }
+]
