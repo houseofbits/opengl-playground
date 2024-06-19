@@ -26,6 +26,6 @@ public:
     TEntityConfiguration m_EntityConfiguration;
     Factory<Component> &m_ComponentFactory;
 
-    void deserialize(nlohmann::json& json);
-    void buildEntity(Entity& entity, const std::string& configurationName);
+    void deserialize(nlohmann::json &json);
+    void buildEntity(Entity &entity, const std::string &configurationName, ResourceManager &resourceManager);
 };

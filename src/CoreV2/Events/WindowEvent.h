@@ -1,6 +1,6 @@
 #pragma once
+#include "../../Window.h"
 #include "Event.h"
-#include "../Window.h"
 
 class WindowEvent : public BaseEvent
 {

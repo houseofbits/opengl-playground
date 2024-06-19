@@ -9,15 +9,8 @@ EntityContext::EntityContext() : m_ComponentFactory(), m_EntityConfiguration(m_C
 }
 
 Entity::TEntityPtr EntityContext::addEntity() {
-
-    unsigned int lastId = 0;
-    if (!m_Entities.empty()) {
-        lastId = m_Entities.back()->m_Id;
-    }
-
     auto e = std::make_shared<Entity>();
-    e->m_Id = lastId + 1;
-
+    e->m_Id = Identity::create(Identity::ENTITY);
     m_Entities.push_back(e);
 
     return e;
@@ -27,10 +20,10 @@ void EntityContext::deserializeEntityMap(nlohmann::json &j) {
     m_EntityConfiguration.deserialize(j);
 }
 
-Entity::TEntityPtr EntityContext::createEntity(const std::string &configurationName) {
+Entity::TEntityPtr EntityContext::createEntity(const std::string &configurationName, ResourceManager & resourceManager) {
 
     Entity::TEntityPtr e = addEntity();
-    m_EntityConfiguration.buildEntity(*e, configurationName);
+    m_EntityConfiguration.buildEntity(*e, configurationName, resourceManager);
 
     return e;
 }
@@ -43,14 +36,14 @@ void EntityContext::serializeEntities(nlohmann::json &j) {
     }
 }
 
-void EntityContext::deserializeEntities(nlohmann::json &j) {
+void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager & resourceManager) {
     for (const auto &entityJson: j.items()) {
         if (!entityJson.value().contains("type")) {
             Log::error("EntityContext::createEntities: Json does not contain entity type");
             continue;
         }
-        Entity::TEntityPtr entity = createEntity(entityJson.value().at("type"));
-        EntitySerializer::deserialize(*entity, entityJson.value());
+        Entity::TEntityPtr entity = createEntity(entityJson.value().at("type"), resourceManager);
+        EntitySerializer::deserialize(*entity, entityJson.value(), resourceManager);
     }
 }
 
@@ -62,17 +55,22 @@ void EntityContext::unregisterComponentFromSystems(Component *component) {
 
 void EntityContext::registerEntitiesWithSystems() {
     for (const auto &e: m_Entities) {
-        e->registerWithSystems(*this);
+        if (e->m_Status == Entity::CREATED && e->isReadyToRegister()) {
+            e->registerWithSystems(*this);
+        }
     }
 }
 
-void EntityContext::initializeSystems() {
+void EntityContext::initializeSystems(EventManager *eventManager) {
     for (const auto &system: m_Systems) {
         system->initialize();
+        system->registerEventHandlers(eventManager);
     }
 }
 
 void EntityContext::processSystems() {
+    registerEntitiesWithSystems();
+
     for (const auto &system: m_Systems) {
         system->process();
     }

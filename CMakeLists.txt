@@ -80,6 +80,22 @@ add_executable(${PROJECT_NAME} ${sources}
         src/CoreV2/Json/Json.h
         src/ApplicationsV2/Main/MainApplication.cpp
         src/ApplicationsV2/Main/MainApplication.h
+        src/CoreV2/Reflection/Identity.h
+        src/CoreV2/Resources/Resource.cpp
+        src/CoreV2/Resources/Resource.h
+        src/CoreV2/Resources/ResourceManager.cpp
+        src/CoreV2/Resources/ResourceManager.h
+        src/CoreV2/Resources/ResourceHandle.cpp
+        src/CoreV2/Resources/ResourceHandle.h
+        src/ResourcesV2/TextureResource.cpp
+        src/ResourcesV2/TextureResource.h
+        src/ModulesV2/Renderer/Renderers/ColorPassRenderer.cpp
+        src/ModulesV2/Renderer/Renderers/ColorPassRenderer.h
+        src/ResourcesV2/StaticMeshResource.cpp
+        src/ResourcesV2/StaticMeshResource.h
+        src/ModulesV2/Renderer/Systems/CameraControlSystem.cpp
+        src/ModulesV2/Renderer/Systems/CameraControlSystem.h
+        src/ModulesV2/Renderer/Renderers/ColorPassFrameData.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

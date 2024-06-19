@@ -1,7 +1,7 @@
 #pragma once
 #include "Components/ModelComponent.h"
 #include "Components/Scene.h"
-#include "Events/EventManager.h"
+#include "CoreV2/Events/EventManager.h"
 #include "Physics/TestPhysics.h"
 #include "PostProcessRenderer/PostProcessRenderer.h"
 #include "Renderer/Camera/Camera.h"

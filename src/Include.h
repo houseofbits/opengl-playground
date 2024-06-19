@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Entry.h"
-#include "Events/Event.h"
-#include "Events/EventManager.h"
-#include "Events/WindowEvent.h"
+#include "CoreV2/Events/Event.h"
+#include "CoreV2/Events/EventManager.h"
+#include "CoreV2/Events/WindowEvent.h"
 #include "Exception.h"
 #include "Helper/Log.h"
 #include "Helper/Time.h"

@@ -147,6 +147,11 @@ void Shader::setUniform(const char *name, int val)
     glUniform1i(loc, val);
 }
 
+void Shader::setUniform(const char *name, const uint64_t &val) {
+    GLint loc = getUniformLocation(name);
+    glUniformHandleui64ARB(loc, val);
+}
+
 void Shader::setUniform(const char *name, unsigned int val)
 {
     GLint loc = getUniformLocation(name);
@@ -208,3 +213,4 @@ void Shader::checkLinkingError(unsigned int shader)
         std::cout << "LINKING FAILED " << infoLog << std::endl;
     }
 }
+

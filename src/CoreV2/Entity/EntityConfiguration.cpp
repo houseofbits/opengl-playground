@@ -4,7 +4,7 @@
 EntityConfiguration::EntityConfiguration(Factory<Component> &factory) : m_EntityConfiguration(), m_ComponentFactory(factory) {
 }
 
-void EntityConfiguration::buildEntity(Entity &entity, const std::string& configurationName) {
+void EntityConfiguration::buildEntity(Entity &entity, const std::string &configurationName, ResourceManager &resourceManager) {
     entity.m_TypeName = configurationName;
     auto it = m_EntityConfiguration.find(configurationName);
     if (it == m_EntityConfiguration.end()) {
@@ -12,17 +12,18 @@ void EntityConfiguration::buildEntity(Entity &entity, const std::string& configu
         return;
     }
 
-    for (auto const& componentConfig : (*it).second) {
-        Component* c = m_ComponentFactory.createInstance(componentConfig.second.m_ClassName);
+    for (auto const &componentConfig: (*it).second) {
+        Component *c = m_ComponentFactory.createInstance(componentConfig.second.m_ClassName);
         if (c == nullptr) {
             Log::error("EntityConfiguration::buildEntity: Component constructor not found " + componentConfig.second.m_ClassName);
             break;
         }
-        c->m_EntityId = entity.m_Id;
+        c->m_Id = Identity::create(Identity::COMPONENT);
         c->m_Name = componentConfig.second.m_Name;
+        c->m_EntityId = entity.m_Id;
 
         if (!componentConfig.second.m_DefaultJson.empty()) {
-            c->deserialize(componentConfig.second.m_DefaultJson);
+            c->deserialize(componentConfig.second.m_DefaultJson, resourceManager);
         }
 
         entity.addComponent(*c);

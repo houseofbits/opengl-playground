@@ -6,7 +6,19 @@
             "translation": 1.0
         },
         "mesh": {
-            "model": "path to the model"
+            "model": "resources/scenes/scene1/walls1.gltf"
+        },
+        "material": {
+            "diffuseTexture": "resources/scenes/scene1/textures/walls1.png"
+        }
+    },
+    {
+        "name": "main-camera",
+        "type": "Camera",
+        "camera": {
+            "position": [-16.8, 1.9, 4.6],
+            "verticalAngle": 349,
+            "horizontalAngle": -312
         }
     }
 ]

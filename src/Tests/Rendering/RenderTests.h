@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Events/EventManager.h"
+#include "../../CoreV2/Events/EventManager.h"
 #include "../../Window.h"
 #include "BaseRenderTest.h"
 #include "TestMipMapping.h"

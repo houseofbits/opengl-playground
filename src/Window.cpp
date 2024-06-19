@@ -1,14 +1,16 @@
 
 #include "Include.h"
 #include <GL/glew.h>
-#include <SDL2/SDL_opengl.h>
-#include "Events/InputEvent.h"
-#include "Helper/GLDebugMessageCallback.h"
-#include <glm/vec2.hpp>
+#include "CoreV2/Events/InputEvent.h"
 #include "Helper/Time.h"
 #include <iostream>
 
-Window::Window(EventManager *eventManager) : eventManager(eventManager), sdlWindow(nullptr), viewportWidth(1024), viewportHeight(768), isFullScreen(false)
+Window::Window(EventManager *eventManager) : eventManager(eventManager),
+                                             sdlWindow(nullptr),
+                                             viewportWidth(1024),
+                                             viewportHeight(768),
+                                             isFullScreen(false),
+                                             windowFlags()
 {
 }
 
@@ -18,7 +20,7 @@ void Window::create()
     {
         printf("Failed to init SDL Video, error: %s", SDL_GetError());
 
-        throw new Exception(1, "Failed to init SDL Video");
+        throw Exception(1, "Failed to init SDL Video");
     }
 
     windowFlags = SDL_WINDOW_OPENGL;
@@ -38,7 +40,7 @@ void Window::create()
     {
         printf("Could not create window: %s", SDL_GetError());
 
-        throw new Exception(2, "Could not create window");
+        throw Exception(2, "Could not create window");
     }
 
     int contextFlags = 0;
@@ -179,7 +181,7 @@ bool Window::pollEvents()
             break;
 
         case SDL_TEXTINPUT:
-            eventManager->queueEvent(new InputEvent(InputEvent::TEXENTER, std::string(sdl_event.text.text)));
+//            eventManager->queueEvent(new InputEvent(InputEvent::TEXTENTER, std::string(sdl_event.text.text)));
             break;
         };
     }
@@ -207,7 +209,8 @@ void Window::doubleBuffer()
 
 void Window::onKeyEvent(InputEvent::EventType type, int keysym, bool isAlt, bool isCtrl, bool isShift)
 {
-    InputEvent *event = new InputEvent(type, keysym);
+    auto *event = new InputEvent(type);
+    event->keyCode = keysym;
     event->modKeyAlt = isAlt;
     event->modKeyShift = isShift;
     event->modKeyCtrl = isCtrl;
@@ -216,7 +219,11 @@ void Window::onKeyEvent(InputEvent::EventType type, int keysym, bool isAlt, bool
 
 void Window::onMouseEvent(InputEvent::EventType type, glm::vec2 position, glm::vec2 motion, bool mouseLeft, bool mouseRight, bool isAlt, bool isCtrl, bool isShift)
 {
-    InputEvent *event = new InputEvent(type, position, motion, mouseLeft, mouseRight);
+    auto *event = new InputEvent(type);
+    event->mousePosition = position;
+    event->mouseMotion = motion;
+    event->mouseButtonLeft = mouseLeft;
+    event->mouseButtonRight = mouseRight;
     event->modKeyAlt = isAlt;
     event->modKeyShift = isShift;
     event->modKeyCtrl = isCtrl;

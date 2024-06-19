@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Entity/EntityContext.h"
+#include "../Events/EventManager.h"
 
 class Application {
 public:
@@ -8,10 +9,11 @@ public:
 
     virtual void run();
 
-    void initialize(const std::string& entityDefinitionFileName);
     void loadEntitiesFromFile(const std::string& fileName);
 
 protected:
+    EventManager m_EventManager;
+    ResourceManager m_ResourceManager;
     EntityContext m_EntityContext;
     std::string m_EntitySourceFileName;
 };

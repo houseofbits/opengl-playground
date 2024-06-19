@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Events/EventManager.h"
+#include "../../CoreV2/Events/EventManager.h"
 #include "../Shader/Shader.h"
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>

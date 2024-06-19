@@ -5,7 +5,7 @@
 #include "StaticMeshComponent.h"
 #include "../Systems/RendererSystem.h"
 
-StaticMeshComponent::StaticMeshComponent() {
+StaticMeshComponent::StaticMeshComponent() : Component(), m_Mesh() {
 }
 
 void StaticMeshComponent::registerWithSystems(EntityContext& ctx) {

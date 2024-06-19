@@ -1,9 +1,9 @@
-//
-// Created by krists on 24.13.6.
-//
-
 #include "MaterialComponent.h"
+#include "../Systems/RendererSystem.h"
 
+MaterialComponent::MaterialComponent() : Component(), m_Diffuse() {
+}
 
-MaterialComponent::MaterialComponent() {
+void MaterialComponent::registerWithSystems(EntityContext &ctx) {
+    ctx.registerComponentWithEntitySystem<RendererSystem>(this);
 }

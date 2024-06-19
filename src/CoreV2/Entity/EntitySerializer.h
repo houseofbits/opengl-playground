@@ -15,7 +15,7 @@ public:
         }
     }
 
-    static void deserialize(Entity &e, nlohmann::json &json) {
+    static void deserialize(Entity &e, nlohmann::json &json, ResourceManager &resourceManager) {
         if (!json.contains("type")) {
             Log::error("EntitySerializer::deserialize: Json does not contain entity type");
             return;
@@ -28,7 +28,7 @@ public:
         }
         for (auto const &comp: e.m_Components) {
             if (json.contains(comp->m_Name)) {
-                comp->deserialize(json[comp->m_Name]);
+                comp->deserialize(json[comp->m_Name], resourceManager);
             }
         }
     }

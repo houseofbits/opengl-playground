@@ -1,19 +1,25 @@
 #pragma once
 
 #include "../../../CoreV2/API.h"
+#include "../../../ResourcesV2/StaticMeshResource.h"
 
 class StaticMeshComponent : public Component {
 public:
+    inline static const std::string MODEL_KEY = "model";
+
     StaticMeshComponent();
 
     void serialize(nlohmann::json &j) override {
-        j["model"] = modelFileName;
+        j[MODEL_KEY] = m_Mesh().m_Path;
     }
 
-    void deserialize(const nlohmann::json &j) override {
-        j.at("model").get_to(modelFileName);
+    void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override {
+        std::string model = j.value(MODEL_KEY, m_Mesh().m_Path);
+
+        resourceManager.request(m_Mesh, model);
     }
 
     void registerWithSystems(EntityContext& ctx) override;
-    std::string modelFileName;
+
+    ResourceHandle<StaticMeshResource> m_Mesh;
 };

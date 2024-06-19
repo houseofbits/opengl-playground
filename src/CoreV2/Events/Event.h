@@ -1,5 +1,5 @@
 #pragma once
-#include "../TypedClass.h"
+#include "../../TypedClass.h"
 
 class BaseEvent : public BaseClass
 {

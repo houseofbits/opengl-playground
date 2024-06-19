@@ -1,7 +1,8 @@
 #pragma once
 
-#include <memory>
 #include "../Entity/Component.h"
+#include "../Events/EventManager.h"
+#include <memory>
 
 class EntitySystem {
 public:
@@ -11,4 +12,5 @@ public:
     virtual void unregisterComponent(Component*) = 0;
     virtual void initialize() = 0;
     virtual void process() = 0;
+    virtual void registerEventHandlers(EventManager *eventManager) {}
 };

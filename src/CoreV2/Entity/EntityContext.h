@@ -2,6 +2,7 @@
 
 #include "../Module/EntityModule.h"
 #include "../Reflection/Factory.h"
+#include "../Resources/ResourceManager.h"
 #include "../System/EntitySystem.h"
 #include "Component.h"
 #include "Entity.h"
@@ -73,12 +74,12 @@ public:
         }
     }
 
-    void unregisterComponentFromSystems(Component*);
+    void unregisterComponentFromSystems(Component *);
     void deserializeEntityMap(nlohmann::json &j);
-    Entity::TEntityPtr createEntity(const std::string &configurationName);
-    void deserializeEntities(nlohmann::json &j);
+    Entity::TEntityPtr createEntity(const std::string &configurationName, ResourceManager &);
+    void deserializeEntities(nlohmann::json &j, ResourceManager &);
     void serializeEntities(nlohmann::json &j);
     void registerEntitiesWithSystems();
-    void initializeSystems();
+    void initializeSystems(EventManager *eventManager);
     void processSystems();
 };

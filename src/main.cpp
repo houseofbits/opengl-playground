@@ -15,4 +15,5 @@ int main(int argc, char *argv[]) {
     app.initialize("data/entityMap.json");
     app.loadEntitiesFromFile("data/scenes/test.json");
     app.run();
+
 }

@@ -13,7 +13,7 @@ public:
         j["scale"] = m_Scale;
     }
 
-    void deserialize(const nlohmann::json &j) override {
+    void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override {
         m_Translation = j.value("translation", m_Translation);
         m_Rotation = j.value("rotation", m_Rotation);
         m_Scale = j.value("scale", m_Scale);

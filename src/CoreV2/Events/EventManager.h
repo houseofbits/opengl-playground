@@ -1,32 +1,29 @@
 #pragma once
 
 #include "Event.h"
+#include <iostream>
+#include <list>
 #include <map>
 #include <vector>
-#include <list>
 
-class BaseHandlerFunction
-{
+class BaseHandlerFunction {
 public:
     virtual bool call(BaseEvent *) { return true; };
 };
 
-template <class T, class EventT>
-class HandlerFunctionInstance : public BaseHandlerFunction
-{
+template<class T, class EventT>
+class HandlerFunctionInstance : public BaseHandlerFunction {
 public:
     typedef bool (T::*EventHandlerFunction)(EventT *const);
 
-    HandlerFunctionInstance() {}
-    HandlerFunctionInstance(T *source, EventHandlerFunction handler)
-    {
+    HandlerFunctionInstance() : handlerFunction(), instance(nullptr) {}
+    HandlerFunctionInstance(T *source, EventHandlerFunction handler) {
         instance = source;
         handlerFunction = handler;
     }
 
-    bool call(BaseEvent *event)
-    {
-        return (instance->*handlerFunction)((EventT *)event);
+    bool call(BaseEvent *event) override {
+        return (instance->*handlerFunction)((EventT *) event);
     }
 
 private:
@@ -34,11 +31,9 @@ private:
     T *instance;
 };
 
-class EventManager
-{
+class EventManager {
 public:
-    EventManager()
-    {
+    EventManager() {
         current = new TEventList();
         next = new TEventList();
     }
@@ -46,47 +41,36 @@ public:
     typedef std::list<BaseHandlerFunction *> THandlerFunctionsList;
     typedef std::list<BaseEvent *> TEventList;
 
-    template <class T, class EventT>
-    void registerEventReceiver(T *const instance, bool (T::*function)(EventT *const))
-    {
-        THandlerFunctionsList *handlers = eventReceivers[EventT::TypeId()];
-
-        if (handlers == nullptr)
-        {
-            handlers = new THandlerFunctionsList();
-            eventReceivers[EventT::TypeId()] = handlers;
+    template<class T, class EventT>
+    void registerEventReceiver(T *const instance, bool (T::*function)(EventT *const)) {
+        if (eventReceivers.find(EventT::TypeId()) == eventReceivers.end()) {
+            eventReceivers[EventT::TypeId()] = new THandlerFunctionsList();
         }
 
-        handlers->push_back(new HandlerFunctionInstance<T, EventT>(instance, function));
+        eventReceivers[EventT::TypeId()]->push_back(new HandlerFunctionInstance<T, EventT>(instance, function));
     }
 
-    template <typename EventT>
-    void triggerEvent(EventT *const event)
-    {
+    template<typename EventT>
+    void triggerEvent(EventT *const event) {
         THandlerFunctionsList *handlers = eventReceivers[event->getTypeId()];
 
-        if (!handlers)
-        {
+        if (!handlers) {
             return;
         }
 
-        for (auto &handler : *handlers)
-        {
-            if (handler)
-            {
+        for (auto &handler: *handlers) {
+            if (handler) {
                 handler->call(event);
             }
         }
     }
 
-    template <typename EventT>
-    void queueEvent(EventT *const event)
-    {
+    template<typename EventT>
+    void queueEvent(EventT *const event) {
         next->push_back(event);
     }
 
-    bool processEvents()
-    {
+    bool processEvents() {
         std::swap(current, next);
 
         current->sort(SortEventsByTypeName());
@@ -94,17 +78,14 @@ public:
         THandlerFunctionsList *handlers;
         int previousEventType = -1, eventType;
 
-        for (auto const &event : *current)
-        {
+        for (auto const &event: *current) {
             eventType = event->getTypeId();
 
-            if (previousEventType != eventType)
-            {
+            if (previousEventType != eventType) {
                 handlers = eventReceivers[eventType];
             }
 
-            for (auto const &handler : *handlers)
-            {
+            for (auto const &handler: *handlers) {
                 handler->call(event);
             }
 
@@ -127,10 +108,8 @@ private:
     TEventList *current;
     TEventList *next;
 
-    struct SortEventsByTypeName
-    {
-        inline bool operator()(BaseEvent *lhs, BaseEvent *rhs)
-        {
+    struct SortEventsByTypeName {
+        inline bool operator()(BaseEvent *lhs, BaseEvent *rhs) {
             return lhs->getTypeId() < rhs->getTypeId();
         }
     };

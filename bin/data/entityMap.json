@@ -38,9 +38,6 @@
     {
         "name": "Camera",
         "components": {
-            "transform": {
-                "type": "TransformComponent"
-            },
             "camera": {
                 "type": "CameraComponent"
             }
