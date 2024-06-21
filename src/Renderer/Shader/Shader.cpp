@@ -95,7 +95,7 @@ void Shader::loadProgram(std::string vertexProgramFileName, std::string fragment
     glDeleteShader(fragmentShaderId);
 }
 
-void Shader::use()
+void Shader::use() const
 {
     glUseProgram(programId);
 }

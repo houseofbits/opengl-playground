@@ -10,14 +10,16 @@
 
 class ResourceManager {
 public:
-    ResourceManager() : m_FetchThread(&ResourceManager::fetchProcess, this), m_FetchProcessRunning(true) {
+    ResourceManager() : m_Resources(), m_FetchThread(&ResourceManager::fetchProcess, this), m_FetchProcessRunning(true) {
     }
     ~ResourceManager() {
         m_FetchProcessRunning = false;
         m_FetchThread.join();
         for (const auto &resource: m_Resources) {
-            remove(resource);
+            resource->destroy();
+            delete resource;
         }
+        m_Resources.clear();
     }
 
     bool doesResourceExist(const std::string &path) {
@@ -50,6 +52,7 @@ public:
     }
 
     void remove(Resource *resource) {
+        //TODO: Add to list of removable entities and process at some other point
         m_Resources.remove(resource);
         resource->destroy();
         delete resource;

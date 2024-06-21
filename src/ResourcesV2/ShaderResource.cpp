@@ -45,6 +45,7 @@ void ShaderResource::build() {
 }
 
 void ShaderResource::destroy() {
+    glDeleteShader(m_Handle);
 }
 
 unsigned int ShaderResource::getShaderType(const std::string &filename) {

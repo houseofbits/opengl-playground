@@ -48,6 +48,10 @@ void ShaderProgramResource::build() {
 }
 
 void ShaderProgramResource::destroy() {
+    for (auto & shaderHandle : m_ShaderHandles) {
+        shaderHandle.invalidate();
+    }
+    glDeleteProgram(m_ProgramId);
 }
 
 bool ShaderProgramResource::checkLinkingError() const
