@@ -61,9 +61,9 @@ void EntityContext::registerEntitiesWithSystems() {
     }
 }
 
-void EntityContext::initializeSystems(EventManager *eventManager) {
+void EntityContext::initializeSystems(ResourceManager* resourceManager, EventManager *eventManager) {
     for (const auto &system: m_Systems) {
-        system->initialize();
+        system->initialize(resourceManager);
         system->registerEventHandlers(eventManager);
     }
 }

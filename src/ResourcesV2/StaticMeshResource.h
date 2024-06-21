@@ -7,7 +7,7 @@ class StaticMeshResource : public Resource {
 public:
     StaticMeshResource();
 
-    void fetchData() override {
+    void fetchData(ResourceManager&) override {
         setDataReadyStatus();
     }
 

@@ -21,7 +21,7 @@ void MainApplication::initialize(const std::string &entityDefinitionFileName) {
 
     m_Window.create();
 
-    m_EntityContext.initializeSystems(&m_EventManager);
+    m_EntityContext.initializeSystems(&m_ResourceManager, &m_EventManager);
 }
 
 void MainApplication::run() {
@@ -41,9 +41,5 @@ void MainApplication::run() {
 }
 
 bool MainApplication::handleInputEvent(InputEvent *const event) {
-    if (event->type == InputEvent::KEYDOWN) {
-        std::cout << event->keyCode << std::endl;
-    }
-
     return true;
 }

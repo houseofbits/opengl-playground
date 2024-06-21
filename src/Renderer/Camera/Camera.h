@@ -1,5 +1,6 @@
 #pragma once
 #include "../../CoreV2/Events/EventManager.h"
+#include "../../ResourcesV2/ShaderProgramResource.h"
 #include "../Shader/Shader.h"
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
@@ -24,6 +25,7 @@ public:
     Camera();
 
     void bind(Shader &shader);
+    void bind(ShaderProgramResource &shader);
 
     Camera &setFieldOfView(float degrees);
     Camera &setViewportSize(unsigned int viewportWidth, unsigned int viewportHeight);

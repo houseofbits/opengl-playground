@@ -10,7 +10,7 @@ public:
 
     virtual void registerComponent(Component*) = 0;
     virtual void unregisterComponent(Component*) = 0;
-    virtual void initialize() = 0;
+    virtual void initialize(ResourceManager*) = 0;
     virtual void process() = 0;
     virtual void registerEventHandlers(EventManager *eventManager) {}
 };

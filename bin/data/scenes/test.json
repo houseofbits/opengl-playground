@@ -1,9 +1,18 @@
 [
     {
-        "name": "mesh1",
+        "name": "main-camera",
+        "type": "Camera",
+        "camera": {
+            "position": [-16.8, 1.9, 4.6],
+            "verticalAngle": 349,
+            "horizontalAngle": -312
+        }
+    },
+    {
+        "name": "walls1-mesh",
         "type": "StaticMesh",
         "transform": {
-            "translation": 1.0
+            "translation": 0.0
         },
         "mesh": {
             "model": "resources/scenes/scene1/walls1.gltf"
@@ -13,12 +22,66 @@
         }
     },
     {
-        "name": "main-camera",
-        "type": "Camera",
-        "camera": {
-            "position": [-16.8, 1.9, 4.6],
-            "verticalAngle": 349,
-            "horizontalAngle": -312
+        "name": "floor1-mesh",
+        "type": "StaticMesh",
+        "transform": {
+            "translation": 0.0
+        },
+        "mesh": {
+            "model": "resources/scenes/scene1/floor1.gltf"
+        },
+        "material": {
+            "diffuseTexture": "resources/scenes/scene1/textures/floor1.png"
+        }
+    },
+    {
+        "name": "floor2-mesh",
+        "type": "StaticMesh",
+        "transform": {
+            "translation": 0.0
+        },
+        "mesh": {
+            "model": "resources/scenes/scene1/floor2.gltf"
+        },
+        "material": {
+            "diffuseTexture": "resources/scenes/scene1/textures/floor2.png"
+        }
+    },
+    {
+        "name": "columns1-mesh",
+        "type": "StaticMesh",
+        "transform": {
+            "translation": 0.0
+        },
+        "mesh": {
+            "model": "resources/scenes/scene1/columns1.gltf"
+        },
+        "material": {
+            "diffuseTexture": "resources/scenes/scene1/textures/columns1.png"
+        }
+    },
+    {
+        "name": "light1",
+        "type": "Light",
+        "transform": {
+            "translation": 0.0
+        },
+        "light": {
+            "type": "SPOT",
+            "color": [1,0,0],
+            "attenuation": 10
+        }
+    },
+    {
+        "name": "light2",
+        "type": "Light",
+        "transform": {
+            "translation": 0.0
+        },
+        "light": {
+            "type": "SPOT",
+            "color": [0,1,0],
+            "attenuation": 5
         }
     }
 ]

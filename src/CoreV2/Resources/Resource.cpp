@@ -1,4 +1,7 @@
 #include "Resource.h"
 
 
-Resource::Resource() = default;
+Resource::Resource() : m_Path(),
+                       m_Status(UNDEFINED),
+                       m_ReferenceCount(0) {
+}

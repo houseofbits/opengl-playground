@@ -1,10 +1,28 @@
 #include "RendererSystem.h"
+#include "../../../CoreV2/Events/WindowEvent.h"
 #include <GL/glew.h>
 
-RendererSystem::RendererSystem() : m_colorPassRenderer(this) {
+RendererSystem::RendererSystem() : EntitySystem(),
+                                   m_colorPassRenderer(this),
+                                   m_frame(),
+                                   m_viewportWidth(1024),
+                                   m_viewportHeight(768) {
 }
 
-void RendererSystem::initialize() {
+void RendererSystem::registerEventHandlers(EventManager *eventManager) {
+    eventManager->registerEventReceiver(this, &RendererSystem::handleWindowEvent);
+}
+
+bool RendererSystem::handleWindowEvent(WindowEvent *const event) {
+    if (event->eventType == WindowEvent::RESIZE || event->eventType == WindowEvent::CREATE) {
+        m_viewportWidth = event->window->viewportWidth;
+        m_viewportHeight = event->window->viewportHeight;
+    }
+
+    return true;
+}
+
+void RendererSystem::initialize(ResourceManager* resourceManager) {
     glEnable(GL_DEPTH_TEST);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -12,14 +30,14 @@ void RendererSystem::initialize() {
     glEnable(GL_BLEND);
     glEnable(GL_CULL_FACE);
 
-    m_colorPassRenderer.initialize();
+    m_frame.initialize();
+    m_colorPassRenderer.initialize(resourceManager);
 }
 
 void RendererSystem::process() {
 
-
-    glViewport(0, 0, 1024, 768);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, m_viewportWidth, m_viewportHeight);
+    glClear(GL_DEPTH_BUFFER_BIT);
 
     //lights = getVisibleLights(camera);
 
@@ -34,7 +52,7 @@ void RendererSystem::process() {
 
     assert(!m_cameraComponents.empty());
 
-    createFrameData();
+    updateFrameData();
     m_colorPassRenderer.beginRender(m_cameraComponents.begin()->second->m_Camera);
     m_colorPassRenderer.render(m_frame);
 }
@@ -52,12 +70,15 @@ void RendererSystem::registerComponent(Component *comp) {
     if (isOfType<MaterialComponent>(comp)) {
         m_materialComponents[comp->m_EntityId()] = dynamic_cast<MaterialComponent *>(comp);
     }
+    if (isOfType<LightComponent>(comp)) {
+        m_lightComponents[comp->m_EntityId()] = dynamic_cast<LightComponent *>(comp);
+    }
 }
 
 void RendererSystem::unregisterComponent(Component *comp) {
 }
 
-void RendererSystem::createFrameData() {
+void RendererSystem::updateFrameData() {
     unsigned int i = 0;
     m_frame.clear();
     for (const auto &mesh: m_meshComponents) {
@@ -69,6 +90,19 @@ void RendererSystem::createFrameData() {
 
         i++;
     }
+
+    m_frame.m_SpotLightBuffer.reset();
+    for(const auto& light: m_lightComponents) {
+        TransformComponent* transform = findTransform(light.second->m_EntityId);
+        if (transform == nullptr) {
+            continue;
+        }
+
+        if (light.second->m_Type == LightComponent::SPOT) {
+            m_frame.m_SpotLightBuffer.appendLight(*transform, *light.second);
+        }
+    }
+    m_frame.m_SpotLightBuffer.updateAll();
 }
 
 TransformComponent *RendererSystem::findTransform(Identity &entityId) {

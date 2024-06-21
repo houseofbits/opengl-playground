@@ -8,13 +8,13 @@ class TextureResource : public Resource {
 public:
     explicit TextureResource();
 
-    void fetchData() override {
-        setDataReadyStatus();
-    }
+    void fetchData(ResourceManager&) override;
     void build() override;
     void destroy() override;
 
-
-    unsigned int textureId;
-    std::uint64_t handleId;
+    int m_width;
+    int m_height;
+    unsigned char *m_data;
+    unsigned int m_textureId;
+    std::uint64_t m_handleId;
 };

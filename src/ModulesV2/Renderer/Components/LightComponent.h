@@ -4,14 +4,30 @@
 
 class LightComponent : public Component {
 public:
+    inline static const std::string TYPE_KEY = "type";
+    inline static const std::string COLOR_KEY = "color";
+    inline static const std::string INTENSITY_KEY = "intensity";
+    inline static const std::string BEAM_ANGLE_KEY = "beamAngle";
+    inline static const std::string ATTENUATION_KEY = "attenuation";
+
+    enum Type {
+        OMNI = 0,
+        SPOT = 1,
+        DIRECT = 2,
+    };
+
     LightComponent();
 
-    void serialize(nlohmann::json &j) override {
-    }
+    void serialize(nlohmann::json &j) override;
+    void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
+    void registerWithSystems(EntityContext &ctx) override;
+    std::string getTypeName();
+    Type getTypeFromName(const std::string &name);
 
-    void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override {
-    }
-
-    void registerWithSystems(EntityContext &ctx) override {
-    }
+    std::unordered_map<Type, std::string> m_TypeNameMap;
+    Type m_Type;
+    glm::vec3 m_Color;
+    float m_Intensity;
+    float m_beamAngle;
+    float m_Attenuation;
 };

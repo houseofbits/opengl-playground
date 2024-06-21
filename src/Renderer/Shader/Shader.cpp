@@ -15,7 +15,7 @@ struct ShaderFileExt
     unsigned int type;
 };
 
-std::vector<ShaderFileExt> shadeFilerExtensions =
+std::vector<ShaderFileExt> shadeFilerExtensions2 =
     {
         {"vs", GL_VERTEX_SHADER},
         {"vert", GL_VERTEX_SHADER},
@@ -37,11 +37,11 @@ unsigned int Shader::getShaderType(std::string filename)
         return GL_VERTEX_SHADER;
     }
 
-    for (int i = 0; i < shadeFilerExtensions.size(); i++)
+    for (int i = 0; i < shadeFilerExtensions2.size(); i++)
     {
-        if (ext == shadeFilerExtensions[i].ext)
+        if (ext == shadeFilerExtensions2[i].ext)
         {
-            return shadeFilerExtensions[i].type;
+            return shadeFilerExtensions2[i].type;
         }
     }
 

@@ -23,9 +23,8 @@ public:
     std::string m_Path;
     Status m_Status = Status::UNDEFINED;
     unsigned int m_ReferenceCount = 0;
-    Resource *m_Parent = nullptr;
 
-    virtual void fetchData() = 0;
+    virtual void fetchData(ResourceManager&) = 0;
     virtual void build() = 0;
     virtual void destroy() = 0;
 

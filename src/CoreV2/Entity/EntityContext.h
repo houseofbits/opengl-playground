@@ -80,6 +80,6 @@ public:
     void deserializeEntities(nlohmann::json &j, ResourceManager &);
     void serializeEntities(nlohmann::json &j);
     void registerEntitiesWithSystems();
-    void initializeSystems(EventManager *eventManager);
+    void initializeSystems(ResourceManager*, EventManager *eventManager);
     void processSystems();
 };

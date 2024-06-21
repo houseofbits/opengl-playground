@@ -3,20 +3,20 @@
 #include "../../../Renderer/Camera/Camera.h"
 #include "../../../Renderer/Model/Cube.h"
 #include "../../../Renderer/Shader/Shader.h"
+#include "../../../ResourcesV2/ShaderProgramResource.h"
 #include "../Components/StaticMeshComponent.h"
 #include "ColorPassFrameData.h"
 class RendererSystem;
 
 class ColorPassRenderer {
 public:
-    explicit ColorPassRenderer(RendererSystem*);
+    explicit ColorPassRenderer(RendererSystem *);
 
-    RendererSystem* m_RenderSystem;
+    RendererSystem *m_RenderSystem;
 
-    void initialize();
-    void beginRender(Camera&);
-    void render(ColorPassFrameData&);
+    void initialize(ResourceManager *);
+    void beginRender(Camera &);
+    void render(ColorPassFrameData &);
 
-    Camera m_Camera;
-    Shader m_Shader;
+    ResourceHandle<ShaderProgramResource> m_ShaderProgram;
 };

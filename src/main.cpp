@@ -10,10 +10,8 @@ int main(int argc, char *argv[]) {
 
     // LogicTests::run();
     //     RenderTests::run();
-
     MainApplication app;
     app.initialize("data/entityMap.json");
     app.loadEntitiesFromFile("data/scenes/test.json");
     app.run();
-
 }

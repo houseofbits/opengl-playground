@@ -39,7 +39,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/SceneLoader/BaseConfiguration.h
         src/SceneLoader/BaseConfiguration.cpp
         src/SceneLoader/ProbeBuildConfiguration.h
-        src/Renderer/Shader/ShaderStorageBuffer.cpp
         src/Renderer/Shader/ShaderStorageBuffer.h
         src/Physics/TestPhysics.cpp
         src/Physics/TestPhysics.h
@@ -96,6 +95,13 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/Renderer/Systems/CameraControlSystem.cpp
         src/ModulesV2/Renderer/Systems/CameraControlSystem.h
         src/ModulesV2/Renderer/Renderers/ColorPassFrameData.h
+        src/ModulesV2/Renderer/Buffers/SpotLightStorageBuffer.h
+        src/ModulesV2/Renderer/Buffers/SpotLightStorageBuffer.cpp
+        src/ResourcesV2/ShaderResource.cpp
+        src/ResourcesV2/ShaderResource.h
+        src/ResourcesV2/ShaderProgramResource.cpp
+        src/ResourcesV2/ShaderProgramResource.h
+        src/Helper/StringUtils.cpp
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

@@ -16,18 +16,24 @@ public:
     void registerComponent(Component *comp) override;
 
     void unregisterComponent(Component *comp) override;
+    void registerEventHandlers(EventManager *eventManager) override;
+    bool handleWindowEvent(WindowEvent *event);
     void process() override;
-    void initialize() override;
+    void initialize(ResourceManager*) override;
 
-    void createFrameData();
-    TransformComponent* findTransform(Identity& entityId);
-    MaterialComponent* findMaterial(Identity& entityId);
+    void updateFrameData();
+    TransformComponent *findTransform(Identity &entityId);
+    MaterialComponent *findMaterial(Identity &entityId);
 
     std::map<Identity::Type, StaticMeshComponent *> m_meshComponents;
     std::map<Identity::Type, MaterialComponent *> m_materialComponents;
+    std::map<Identity::Type, LightComponent *> m_lightComponents;
     std::map<Identity::Type, TransformComponent *> m_transformComponents;
     std::map<Identity::Type, CameraComponent *> m_cameraComponents;
 
     ColorPassFrameData m_frame;
     ColorPassRenderer m_colorPassRenderer;
+
+    int m_viewportWidth;
+    int m_viewportHeight;
 };

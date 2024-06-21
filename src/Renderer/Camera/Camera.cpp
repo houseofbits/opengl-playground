@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "../../ResourcesV2/ShaderProgramResource.h"
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/vec3.hpp>
@@ -81,6 +82,11 @@ Camera &Camera::setView(glm::vec3 viewDirection, glm::vec3 upDirection) {
 }
 
 void Camera::bind(Shader &shader) {
+    shader.setUniform("viewProjectionMatrix", getProjectionViewMatrix());
+    shader.setUniform("viewPosition", getPosition());
+}
+
+void Camera::bind(ShaderProgramResource &shader) {
     shader.setUniform("viewProjectionMatrix", getProjectionViewMatrix());
     shader.setUniform("viewPosition", getPosition());
 }

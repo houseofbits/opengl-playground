@@ -16,7 +16,7 @@ public:
     void registerComponent(Component *comp) override;
     void unregisterComponent(Component *comp) override;
     void process() override;
-    void initialize() override;
+    void initialize(ResourceManager*) override;
     void registerEventHandlers(EventManager *eventManager) override;
     bool handleWindowEvent(WindowEvent *event);
     bool handleInputEvent(InputEvent *event);

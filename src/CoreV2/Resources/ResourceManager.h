@@ -2,6 +2,7 @@
 
 #include "../../Helper/Log.h"
 #include "Resource.h"
+#include <algorithm>
 #include <atomic>
 #include <list>
 #include <thread>
@@ -19,13 +20,31 @@ public:
         }
     }
 
+    bool doesResourceExist(const std::string &path) {
+        return std::any_of(m_Resources.begin(), m_Resources.end(), [&path](Resource *resource) { return resource->m_Path == path; });
+    }
+
+    [[nodiscard]] Resource *findResource(const std::string &path) const {
+        for (const auto &resource: m_Resources) {
+            if (resource->m_Path == path) {
+                return resource;
+            }
+        }
+
+        return nullptr;
+    }
+
     template<class T>
     void request(T &hand, std::string path) {
-        Resource *resource = new typename T::TYPE();
-        resource->m_Path = std::move(path);
-        resource->m_Status = Resource::DATA_FETCHING;
+        Resource *resource = findResource(path);
 
-        m_Resources.push_back(resource);
+        if (resource == nullptr) {
+            resource = new typename T::TYPE();
+            resource->m_Path = std::move(path);
+            resource->m_Status = Resource::DATA_FETCHING;
+
+            m_Resources.push_back(resource);
+        }
 
         hand.makeValid(this, reinterpret_cast<typename T::TYPE *>(resource));
     }
@@ -44,7 +63,7 @@ public:
         }
     }
 
-    void fetchProcess() const {
+    void fetchProcess() {
         const auto wait_duration = std::chrono::milliseconds(100);
         while (true) {
             if (!m_FetchProcessRunning) {
@@ -52,7 +71,7 @@ public:
             }
             for (const auto &resource: m_Resources) {
                 if (resource->m_Status == Resource::DATA_FETCHING) {
-                    resource->fetchData();
+                    resource->fetchData(*this);
                 }
             }
 

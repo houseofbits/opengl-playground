@@ -9,7 +9,7 @@ CameraControlSystem::CameraControlSystem() : m_cameraComponents() {
 void CameraControlSystem::process() {
 }
 
-void CameraControlSystem::initialize() {
+void CameraControlSystem::initialize(ResourceManager*) {
 }
 
 void CameraControlSystem::registerComponent(Component *comp) {
