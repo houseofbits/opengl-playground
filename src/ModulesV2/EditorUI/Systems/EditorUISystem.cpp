@@ -1,4 +1,5 @@
 #include "EditorUISystem.h"
+#include "../../../CoreV2/Events/EntityCreationEvent.h"
 #include "../../../SourceLibs/imgui/ImGuizmo.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../Events/EditorUIEvent.h"
@@ -175,6 +176,13 @@ void EditorUISystem::processLightsWindow() {
     ImGui::SetNextWindowPos(ImVec2(0, 35));
     ImGui::SetNextWindowSize(ImVec2(300, 500));
     ImGui::Begin("Lights", &m_isLightsWindowVisible);
+
+    if (ImGui::Button("Create new light")) {
+        auto evt = new EntityCreationEvent();
+        evt->m_Name = "Light";
+        m_EventManager->queueEvent(evt);
+    }
+
     ImGui::BeginListBox("##LIGHTS_LIST", ImVec2(ImGui::GetWindowWidth() - 15, 200));
     for (const auto &light: m_lightComponents) {
         Entity *e = m_EntityContext->getEntity(light.first);

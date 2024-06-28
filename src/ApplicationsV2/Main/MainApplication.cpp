@@ -7,6 +7,7 @@
 MainApplication::MainApplication() : Application(), m_Window(&m_EventManager) {
     m_EventManager.registerEventReceiver(this, &MainApplication::handleInputEvent);
     m_EventManager.registerEventReceiver(this, &MainApplication::handleEditorUIEvent);
+    m_EventManager.registerEventReceiver(this, &MainApplication::handleEntityCreationEvent);
 }
 
 void MainApplication::initialize(const std::string &entityDefinitionFileName) {
@@ -28,18 +29,18 @@ void MainApplication::initialize(const std::string &entityDefinitionFileName) {
 }
 
 void MainApplication::run() {
-        while (true) {
-              m_ResourceManager.buildFetchedResources();
-            if (!m_Window.pollEvents() || !m_EventManager.processEvents()) {
-                break;
-            }
-
-            m_EntityContext.processSystems();
-
-            m_Window.doubleBuffer();
+    while (true) {
+        m_ResourceManager.buildFetchedResources();
+        if (!m_Window.pollEvents() || !m_EventManager.processEvents()) {
+            break;
         }
 
-        m_Window.destroy();
+        m_EntityContext.processSystems();
+
+        m_Window.doubleBuffer();
+    }
+
+    m_Window.destroy();
 }
 
 bool MainApplication::handleInputEvent(InputEvent *const event) {
@@ -52,4 +53,10 @@ bool MainApplication::handleEditorUIEvent(EditorUIEvent *event) {
     }
 
     return true;
+}
+
+bool MainApplication::handleEntityCreationEvent(EntityCreationEvent *event) {
+    m_EntityContext.createEntity(event->m_Name, m_ResourceManager);
+    std::cout<<"create"<<std::endl;
+    return false;
 }

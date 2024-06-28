@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../CoreV2/API.h"
+#include "../../CoreV2/Events/EntityCreationEvent.h"
 #include "../../CoreV2/Resources/ResourceManager.h"
 #include "../../ModulesV2/EditorUI/Events/EditorUIEvent.h"
 #include "../../Window.h"
@@ -13,6 +14,7 @@ public:
     void initialize(const std::string &entityDefinitionFileName);
     bool handleInputEvent(InputEvent *event);
     bool handleEditorUIEvent(EditorUIEvent *event);
+    bool handleEntityCreationEvent(EntityCreationEvent *event);
 
     Window m_Window;
 };
