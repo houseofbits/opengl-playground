@@ -113,7 +113,11 @@ void EditorUISystem::processToolbar() {
     }
 
     ImGui::SameLine();
-    ImGui::Checkbox("Lights", &m_isLightsWindowVisible);
+    if (ImGui::Checkbox("Lights", &m_isLightsWindowVisible)) {
+        auto evt = new EditorUIEvent();
+        evt->m_Type = m_isLightsWindowVisible ? EditorUIEvent::EDITOR_ENABLED : EditorUIEvent::EDITOR_DISABLED;
+        m_EventManager->queueEvent(evt);
+    }
 
     if (m_selectedLightEntity != -1) {
         static const char *selected_transform_type_label = "Translate";

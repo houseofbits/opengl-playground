@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../CoreV2/API.h"
+#include "../../EditorUI/Events/EditorUIEvent.h"
 #include "../Components/CameraComponent.h"
 
 class CameraControlSystem : public EntitySystem {
@@ -20,8 +21,10 @@ public:
     void registerEventHandlers(EventManager *eventManager) override;
     bool handleWindowEvent(WindowEvent *event);
     bool handleInputEvent(InputEvent *event);
+    bool handleEditorUIEvent(EditorUIEvent *event);
     Camera* findActiveCamera();
     static TBN calculateTBN(glm::vec3 viewDirection);
 
     std::map<Identity::Type, CameraComponent *> m_cameraComponents;
+    bool m_isEnabled;
 };

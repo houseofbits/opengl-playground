@@ -3,13 +3,13 @@
 #include "../../../CoreV2/Events/WindowEvent.h"
 #include "../../../Helper/Time.h"
 
-CameraControlSystem::CameraControlSystem() : m_cameraComponents() {
+CameraControlSystem::CameraControlSystem() : m_cameraComponents(), m_isEnabled(false) {
 }
 
 void CameraControlSystem::process() {
 }
 
-void CameraControlSystem::initialize(ResourceManager*) {
+void CameraControlSystem::initialize(ResourceManager *) {
 }
 
 void CameraControlSystem::registerComponent(Component *comp) {
@@ -24,6 +24,7 @@ void CameraControlSystem::unregisterComponent(Component *comp) {
 void CameraControlSystem::registerEventHandlers(EventManager *eventManager) {
     eventManager->registerEventReceiver(this, &CameraControlSystem::handleWindowEvent);
     eventManager->registerEventReceiver(this, &CameraControlSystem::handleInputEvent);
+    eventManager->registerEventReceiver(this, &CameraControlSystem::handleEditorUIEvent);
 }
 
 bool CameraControlSystem::handleWindowEvent(WindowEvent *const event) {
@@ -41,7 +42,7 @@ bool CameraControlSystem::handleWindowEvent(WindowEvent *const event) {
 
 bool CameraControlSystem::handleInputEvent(InputEvent *const event) {
 
-    if(!event->modKeyCtrl) {
+    if (!m_isEnabled && !event->modKeyCtrl) {
         return true;
     }
 
@@ -131,4 +132,14 @@ CameraControlSystem::TBN CameraControlSystem::calculateTBN(glm::vec3 viewDirecti
     tbn.up = glm::normalize(glm::cross(tbn.right, viewDirection));
 
     return tbn;
+}
+bool CameraControlSystem::handleEditorUIEvent(EditorUIEvent *event) {
+    if (event->m_Type == EditorUIEvent::EDITOR_ENABLED) {
+        m_isEnabled = false;
+    }
+    if (event->m_Type == EditorUIEvent::EDITOR_DISABLED) {
+        m_isEnabled = true;
+    }
+
+    return true;
 }
