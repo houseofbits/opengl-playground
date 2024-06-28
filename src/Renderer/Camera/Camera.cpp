@@ -46,7 +46,7 @@ Camera &Camera::setPosition(glm::vec3 pos) {
     return *this;
 }
 
-Camera &Camera::setAngles(float horizontal, float vertical) {
+Camera &Camera::setFromAngles(float horizontal, float vertical) {
     float verticalAngle = glm::radians(vertical);
     float horizontalAngle = glm::radians(horizontal);
 

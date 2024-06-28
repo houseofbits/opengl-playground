@@ -40,6 +40,7 @@ public:
     template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value>>
     T *registerEntitySystem() {
         auto *p = new T();
+        p->m_EntityContext = this;
         m_Systems.push_back(p);
 
         return p;
@@ -60,6 +61,16 @@ public:
         for (const auto &elem: m_Systems) {
             if (dynamic_cast<T *>(elem)) {
                 return elem;
+            }
+        }
+
+        return nullptr;
+    }
+
+    Entity* getEntity(Identity::Type id) {
+        for(const auto& e: m_Entities) {
+            if (e->m_Id.id() == id) {
+                return e.get();
             }
         }
 

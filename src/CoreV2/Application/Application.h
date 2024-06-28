@@ -10,6 +10,7 @@ public:
     virtual void run();
 
     void loadEntitiesFromFile(const std::string& fileName);
+    void saveEntitiesToFile();
 
 protected:
     EventManager m_EventManager;

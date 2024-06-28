@@ -9,10 +9,13 @@
 #include <glm/vec3.hpp>
 
 struct SpotLightStructure {
-    glm::mat4 projectionViewMatrix{1.0};
     glm::vec3 color{1.0};
     float intensity{1.0};
-//    float attenuation{1.0};
+    glm::vec3 position{0.0};
+    float attenuation{1.0};
+    glm::mat4 projectionViewMatrix{1.0};
+    int projectorSamplerIndex{-1};
+    glm::vec3 _PLACEHOLDER{0};
 };
 
 class SpotLightStorageBuffer : public ShaderStorageBuffer<SpotLightStructure> {
@@ -22,9 +25,8 @@ public:
     SpotLightStorageBuffer();
 
     void initialize();
-    void appendLight(TransformComponent &, LightComponent &);
+    void appendLight(TransformComponent &, LightComponent &, int projectorIndex);
     void bind(ShaderProgramResource &);
-    void reset();
 
 private:
     static glm::mat4 createProjectionViewMatrix(TransformComponent &, LightComponent &);

@@ -33,7 +33,7 @@ public:
         renderer.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_SHADOW_DEPTH);
 
         camera.setPosition(glm::vec3(50, 200, -500))
-            .setAngles(glm::radians(-10.0f), glm::radians(-25.0f))
+                .setFromAngles(glm::radians(-10.0f), glm::radians(-25.0f))
             .setViewportSize(window.viewportWidth, window.viewportHeight);
 
         shader.loadProgram("resources/test/shaders/basic.vert", "resources/test/shaders/textureAtlasDepth.frag");

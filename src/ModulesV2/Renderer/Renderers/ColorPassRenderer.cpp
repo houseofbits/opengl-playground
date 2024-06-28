@@ -6,7 +6,7 @@ ColorPassRenderer::ColorPassRenderer(RendererSystem *system) : m_RenderSystem(sy
 }
 
 void ColorPassRenderer::initialize(ResourceManager *resourceManager) {
-    resourceManager->request(m_ShaderProgram, "data/shaders/basic|.vert|.frag");
+    resourceManager->request(m_ShaderProgram, "data/shaders/lighting|.vert|.frag|.geom");
 }
 
 void ColorPassRenderer::beginRender(Camera &camera) {
@@ -18,9 +18,11 @@ void ColorPassRenderer::render(ColorPassFrameData &frame) {
     for (const auto &elem: frame.m_Elements) {
         if (elem.second.material != nullptr) {
             m_ShaderProgram().setUniform("diffuseSampler", elem.second.material->m_Diffuse().m_handleId);
+            m_ShaderProgram().setUniform("normalSampler", elem.second.material->m_Normal().m_handleId);
         }
         m_ShaderProgram().setUniform("modelMatrix", elem.second.transform->getModelMatrix());
         frame.m_SpotLightBuffer.bind(m_ShaderProgram());
+        frame.m_ProjectorBuffer.bind();
         elem.second.mesh->m_Mesh().render();
     }
 }

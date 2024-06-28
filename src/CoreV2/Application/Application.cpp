@@ -4,6 +4,9 @@
 Application::Application() : m_EventManager(), m_ResourceManager(), m_EntityContext(), m_EntitySourceFileName() {
 }
 
+void Application::run() {
+}
+
 void Application::loadEntitiesFromFile(const std::string &fileName) {
     m_EntitySourceFileName = fileName;
     std::ifstream file(fileName);
@@ -15,5 +18,13 @@ void Application::loadEntitiesFromFile(const std::string &fileName) {
     m_EntityContext.deserializeEntities(json, m_ResourceManager);
 }
 
-void Application::run() {
+void Application::saveEntitiesToFile() {
+    nlohmann::json j;
+    m_EntityContext.serializeEntities(j);
+
+    std::ofstream file;
+    file.open (m_EntitySourceFileName);
+
+    std::string data(j.dump(4));
+    file << data;
 }

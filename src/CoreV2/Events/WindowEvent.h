@@ -11,6 +11,7 @@ public:
     {
         CREATE,
         RESIZE,
+        OPENGL_CONTEXT_CREATED,
     } Type;
 
     WindowEvent(WindowEvent::Type eventType, Window *window) : eventType(eventType), window(window)

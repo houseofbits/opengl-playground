@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../libs/tinygltf/json.hpp"
+#include <glm/ext/quaternion_float.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <iostream>
@@ -10,8 +11,12 @@ namespace nlohmann {
 
     void to_json(nlohmann::json &j, const glm::vec3 &p);
     void from_json(const nlohmann::json &j, glm::vec3 &p);
+
     void to_json(nlohmann::json &j, const glm::vec4 &p);
     void from_json(const nlohmann::json &j, glm::vec4 &p);
+
+    void to_json(nlohmann::json &j, const glm::quat &p);
+    void from_json(const nlohmann::json &j, glm::quat &p);
 
     template<class T>
     void to_json(nlohmann::json &j, const std::optional<T> &v) {

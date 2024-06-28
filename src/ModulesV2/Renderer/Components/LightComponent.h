@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../CoreV2/API.h"
+#include "../../../ResourcesV2/TextureResource.h"
 
 class LightComponent : public Component {
 public:
@@ -9,6 +10,7 @@ public:
     inline static const std::string INTENSITY_KEY = "intensity";
     inline static const std::string BEAM_ANGLE_KEY = "beamAngle";
     inline static const std::string ATTENUATION_KEY = "attenuation";
+    inline static const std::string PROJECTION_TEXTURE_KEY = "projectionTexture";
 
     enum Type {
         OMNI = 0,
@@ -30,4 +32,5 @@ public:
     float m_Intensity;
     float m_beamAngle;
     float m_Attenuation;
+    ResourceHandle<TextureResource> m_Projection;
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Json/Json.h"
+#include "Events/Event.h"
 #include "Reflection/Type.h"
 #include "Entity/EntityContext.h"
 #include "Resources/ResourceHandle.h"

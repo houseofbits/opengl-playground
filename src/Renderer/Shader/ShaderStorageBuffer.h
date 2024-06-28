@@ -15,6 +15,9 @@ public:
     ShaderStorageBuffer() : maxSize(0), currentSize(0), bufferId(0), data(nullptr), uniformBindingIndex() {
     }
 
+    ShaderStorageBuffer(unsigned int i) : maxSize(0), currentSize(0), bufferId(0), data(nullptr), uniformBindingIndex() {
+    }
+
     void create(unsigned int size, unsigned int bindingIndex) {
         maxSize = size;
         uniformBindingIndex = bindingIndex;
@@ -26,6 +29,10 @@ public:
                              GL_DYNAMIC_STORAGE_BIT);
 
         data = new T[maxSize];
+    }
+
+    void reset() {
+        currentSize = 0;
     }
 
     void updateAll() {

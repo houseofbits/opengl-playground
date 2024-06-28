@@ -50,6 +50,14 @@ public:
         eventReceivers[EventT::TypeId()]->push_back(new HandlerFunctionInstance<T, EventT>(instance, function));
     }
 
+    template<class EventT>
+    EventT* createEvent() {
+        auto evt = new EventT();
+        evt->m_EventManager = this;
+
+        return evt;
+    }
+
     template<typename EventT>
     void triggerEvent(EventT *const event) {
         THandlerFunctionsList *handlers = eventReceivers[event->getTypeId()];
@@ -79,24 +87,26 @@ public:
         int previousEventType = -1, eventType;
 
         for (auto const &event: *current) {
-            eventType = event->getTypeId();
+            eventType = (int)event->getTypeId();
+
+            if (eventReceivers.find(eventType) == eventReceivers.end()) {
+                delete event;
+                continue;
+            }
 
             if (previousEventType != eventType) {
                 handlers = eventReceivers[eventType];
             }
 
             for (auto const &handler: *handlers) {
+
                 handler->call(event);
             }
 
             previousEventType = eventType;
-        }
 
-        // while (!current->empty())
-        // {
-        //     delete current->front();
-        //     current->pop_front();
-        // }
+            delete event;
+        }
 
         current->clear();
 

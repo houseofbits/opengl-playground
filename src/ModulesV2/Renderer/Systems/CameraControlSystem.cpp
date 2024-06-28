@@ -40,6 +40,11 @@ bool CameraControlSystem::handleWindowEvent(WindowEvent *const event) {
 }
 
 bool CameraControlSystem::handleInputEvent(InputEvent *const event) {
+
+    if(!event->modKeyCtrl) {
+        return true;
+    }
+
     Camera *camera = findActiveCamera();
     if (!camera) {
         return true;

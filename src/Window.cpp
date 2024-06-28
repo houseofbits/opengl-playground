@@ -1,8 +1,9 @@
 
+#include "CoreV2/Events/InputEvent.h"
+#include "CoreV2/Events/RawSDLEvent.h"
+#include "Helper/Time.h"
 #include "Include.h"
 #include <GL/glew.h>
-#include "CoreV2/Events/InputEvent.h"
-#include "Helper/Time.h"
 #include <iostream>
 
 Window::Window(EventManager *eventManager) : eventManager(eventManager),
@@ -36,6 +37,8 @@ void Window::create()
         viewportHeight,
         windowFlags);
 
+    eventManager->queueEvent(new WindowEvent(WindowEvent::Type::CREATE, this));
+
     if (sdlWindow == nullptr)
     {
         printf("Could not create window: %s", SDL_GetError());
@@ -50,7 +53,7 @@ void Window::create()
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);   //3
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-    SDL_GLContext Context = SDL_GL_CreateContext(sdlWindow);
+    sdlGlContext = SDL_GL_CreateContext(sdlWindow);
 
     GLenum glewError = glewInit();
     if (glewError != GLEW_OK)
@@ -66,7 +69,7 @@ void Window::create()
     glEnable(GL_MULTISAMPLE);
 //    glDisable(GL_MULTISAMPLE);
 
-    eventManager->queueEvent(new WindowEvent(WindowEvent::Type::CREATE, this));
+
 
     // std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 //     int numViewports;
@@ -75,6 +78,8 @@ void Window::create()
 //    int maxVertices;
 //    glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES, &maxVertices);
 //    std::cout << "GS maximum number of vertices: " << maxVertices << std::endl;
+
+    eventManager->queueEvent(new WindowEvent(WindowEvent::Type::OPENGL_CONTEXT_CREATED, this));
 }
 
 void Window::destroy()
@@ -98,6 +103,9 @@ bool Window::pollEvents()
 
     while (SDL_PollEvent(&sdl_event) != 0)
     {
+        auto evt = RawSDLEvent(sdl_event);
+        eventManager->triggerEvent(&evt);
+
         if (sdl_event.type == SDL_QUIT)
         {
             return false;

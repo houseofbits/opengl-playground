@@ -37,4 +37,19 @@ namespace nlohmann {
             }
         }
     }
+
+    void to_json(nlohmann::json &j, const glm::quat &p) {
+        j = nlohmann::json{p.x, p.y, p.z, p.w};
+    }
+
+    void from_json(const nlohmann::json &j, glm::quat &p) {
+        if (j.is_array()) {
+            if (j.size() >= 4) {
+                j.at(0).get_to(p.x);
+                j.at(1).get_to(p.y);
+                j.at(2).get_to(p.z);
+                j.at(3).get_to(p.w);
+            }
+        }
+    }
 }// namespace nlohmann

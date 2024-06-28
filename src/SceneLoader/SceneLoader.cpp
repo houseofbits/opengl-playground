@@ -121,7 +121,7 @@ void SceneLoader::populateCamera(Camera &camera, nlohmann::json &data) {
     }
 
     if (data["verticalAngle"] != nullptr && data["horizontalAngle"] != nullptr) {
-        camera.setAngles(data["horizontalAngle"], data["verticalAngle"]);
+        camera.setFromAngles(data["horizontalAngle"], data["verticalAngle"]);
     }
 }
 

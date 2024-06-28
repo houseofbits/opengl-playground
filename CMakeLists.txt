@@ -102,6 +102,12 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ResourcesV2/ShaderProgramResource.cpp
         src/ResourcesV2/ShaderProgramResource.h
         src/Helper/StringUtils.cpp
+        src/ModulesV2/Renderer/Buffers/ProjectionSamplerStorageBuffer.cpp
+        src/ModulesV2/Renderer/Buffers/ProjectionSamplerStorageBuffer.h
+        src/ModulesV2/EditorUI/EditorUIModule.h
+        src/ModulesV2/EditorUI/Systems/EditorUISystem.cpp
+        src/ModulesV2/EditorUI/Systems/EditorUISystem.h
+        src/CoreV2/Events/Event.cpp
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

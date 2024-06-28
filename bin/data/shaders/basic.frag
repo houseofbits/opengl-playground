@@ -8,6 +8,8 @@ struct SpotLightStructure {
     mat4 projectionViewMatrix;
     vec3 color;
     float intensity;
+    vec3 position;
+    float attenuation;
 };
 
 layout (std430, binding = ${INDEX_SpotLightStorageBuffer}) readonly buffer SpotLightStorageBuffer {

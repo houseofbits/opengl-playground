@@ -1,10 +1,12 @@
 #include "MainApplication.h"
 #include "../../ModulesV2/Common/CommonModule.h"
+#include "../../ModulesV2/EditorUI/EditorUIModule.h"
 #include "../../ModulesV2/Renderer/RendererModule.h"
 #include <fstream>
 
 MainApplication::MainApplication() : Application(), m_Window(&m_EventManager) {
     m_EventManager.registerEventReceiver(this, &MainApplication::handleInputEvent);
+    m_EventManager.registerEventReceiver(this, &MainApplication::handleEditorUIEvent);
 }
 
 void MainApplication::initialize(const std::string &entityDefinitionFileName) {
@@ -18,6 +20,7 @@ void MainApplication::initialize(const std::string &entityDefinitionFileName) {
 
     m_EntityContext.registerModule<CommonModule>();
     m_EntityContext.registerModule<RendererModule>();
+    m_EntityContext.registerModule<EditorUIModule>();
 
     m_Window.create();
 
@@ -25,13 +28,12 @@ void MainApplication::initialize(const std::string &entityDefinitionFileName) {
 }
 
 void MainApplication::run() {
-
-
         while (true) {
               m_ResourceManager.buildFetchedResources();
             if (!m_Window.pollEvents() || !m_EventManager.processEvents()) {
                 break;
             }
+
             m_EntityContext.processSystems();
 
             m_Window.doubleBuffer();
@@ -41,5 +43,13 @@ void MainApplication::run() {
 }
 
 bool MainApplication::handleInputEvent(InputEvent *const event) {
+    return true;
+}
+
+bool MainApplication::handleEditorUIEvent(EditorUIEvent *event) {
+    if (event->m_Type == EditorUIEvent::SAVE) {
+        saveEntitiesToFile();
+    }
+
     return true;
 }

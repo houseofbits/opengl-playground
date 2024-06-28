@@ -1,4 +1,5 @@
 #include "LightComponent.h"
+#include "../../EditorUI/Systems/EditorUISystem.h"
 #include "../Systems/RendererSystem.h"
 
 LightComponent::LightComponent() : Component(),
@@ -7,7 +8,8 @@ LightComponent::LightComponent() : Component(),
                                    m_Color(1.0),
                                    m_Intensity(1.0),
                                    m_beamAngle(90.0),
-                                   m_Attenuation(1.0) {
+                                   m_Attenuation(1.0),
+                                   m_Projection() {
     m_TypeNameMap[Type::OMNI] = "OMNI";
     m_TypeNameMap[Type::SPOT] = "SPOT";
     m_TypeNameMap[Type::DIRECT] = "DIRECT";
@@ -19,6 +21,9 @@ void LightComponent::serialize(nlohmann::json &j) {
     j[INTENSITY_KEY] = m_Intensity;
     j[BEAM_ANGLE_KEY] = m_beamAngle;
     j[ATTENUATION_KEY] = m_Attenuation;
+    if (m_Projection.isValid()) {
+        j[PROJECTION_TEXTURE_KEY] = m_Projection().m_Path;
+    }
 }
 
 void LightComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -27,10 +32,16 @@ void LightComponent::deserialize(const nlohmann::json &j, ResourceManager &resou
     m_Intensity = j.value(INTENSITY_KEY, m_Intensity);
     m_beamAngle = j.value(BEAM_ANGLE_KEY, m_beamAngle);
     m_Attenuation = j.value(ATTENUATION_KEY, m_Attenuation);
+
+    if (j.contains(PROJECTION_TEXTURE_KEY)) {
+        std::string filename = j.value(PROJECTION_TEXTURE_KEY, m_Projection().m_Path);
+        resourceManager.request(m_Projection, filename);
+    }
 }
 
 void LightComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<RendererSystem>(this);
+    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
 }
 
 std::string LightComponent::getTypeName() {

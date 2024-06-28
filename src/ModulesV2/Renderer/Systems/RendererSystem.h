@@ -14,12 +14,11 @@ public:
     RendererSystem();
 
     void registerComponent(Component *comp) override;
-
     void unregisterComponent(Component *comp) override;
-    void registerEventHandlers(EventManager *eventManager) override;
-    bool handleWindowEvent(WindowEvent *event);
     void process() override;
     void initialize(ResourceManager*) override;
+    void registerEventHandlers(EventManager *eventManager) override;
+    bool handleWindowEvent(WindowEvent *event);
 
     void updateFrameData();
     TransformComponent *findTransform(Identity &entityId);

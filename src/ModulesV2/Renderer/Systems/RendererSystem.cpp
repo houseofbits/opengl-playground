@@ -37,7 +37,7 @@ void RendererSystem::initialize(ResourceManager* resourceManager) {
 void RendererSystem::process() {
 
     glViewport(0, 0, m_viewportWidth, m_viewportHeight);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //lights = getVisibleLights(camera);
 
@@ -92,14 +92,20 @@ void RendererSystem::updateFrameData() {
     }
 
     m_frame.m_SpotLightBuffer.reset();
+    m_frame.m_ProjectorBuffer.reset();
     for(const auto& light: m_lightComponents) {
         TransformComponent* transform = findTransform(light.second->m_EntityId);
         if (transform == nullptr) {
             continue;
         }
 
+        int index = -1;
+        if (light.second->m_Projection.isValid()) {
+            index = m_frame.m_ProjectorBuffer.getOrAppend(light.second->m_Projection().m_handleId);
+        }
+
         if (light.second->m_Type == LightComponent::SPOT) {
-            m_frame.m_SpotLightBuffer.appendLight(*transform, *light.second);
+            m_frame.m_SpotLightBuffer.appendLight(*transform, *light.second, index);
         }
     }
     m_frame.m_SpotLightBuffer.updateAll();

@@ -1,87 +1,207 @@
 [
     {
-        "name": "main-camera",
-        "type": "Camera",
         "camera": {
-            "position": [-16.8, 1.9, 4.6],
-            "verticalAngle": 349,
-            "horizontalAngle": -312
-        }
+            "position": [
+                -15.236434936523438,
+                6.471152305603027,
+                13.127044677734375
+            ],
+            "upDirection": [
+                0.6442367434501648,
+                0.7611141800880432,
+                -0.07526220381259918
+            ],
+            "viewDirection": [
+                0.7559729814529419,
+                -0.6486180424690247,
+                -0.08831565827131271
+            ]
+        },
+        "name": "main-camera",
+        "type": "Camera"
     },
     {
-        "name": "walls1-mesh",
-        "type": "StaticMesh",
-        "transform": {
-            "translation": 0.0
+        "material": {
+            "diffuseTexture": "resources/scenes/scene1/textures/walls1.png",
+            "normalTexture": "resources/scenes/scene1/textures/walls1-n.png"
         },
         "mesh": {
             "model": "resources/scenes/scene1/walls1.gltf"
         },
-        "material": {
-            "diffuseTexture": "resources/scenes/scene1/textures/walls1.png"
-        }
+        "name": "walls1-mesh",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "type": "StaticMesh"
     },
     {
-        "name": "floor1-mesh",
-        "type": "StaticMesh",
-        "transform": {
-            "translation": 0.0
+        "material": {
+            "diffuseTexture": "resources/scenes/scene1/textures/floor1.png",
+            "normalTexture": "resources/scenes/scene1/textures/floor1-n.png"
         },
         "mesh": {
             "model": "resources/scenes/scene1/floor1.gltf"
         },
-        "material": {
-            "diffuseTexture": "resources/scenes/scene1/textures/floor1.png"
-        }
+        "name": "floor1-mesh",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "type": "StaticMesh"
     },
     {
-        "name": "floor2-mesh",
-        "type": "StaticMesh",
-        "transform": {
-            "translation": 0.0
+        "material": {
+            "diffuseTexture": "resources/scenes/scene1/textures/floor2.png",
+            "normalTexture": "resources/scenes/scene1/textures/floor2-n.png"
         },
         "mesh": {
             "model": "resources/scenes/scene1/floor2.gltf"
         },
-        "material": {
-            "diffuseTexture": "resources/scenes/scene1/textures/floor2.png"
-        }
+        "name": "floor2-mesh",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "type": "StaticMesh"
     },
     {
-        "name": "columns1-mesh",
-        "type": "StaticMesh",
-        "transform": {
-            "translation": 0.0
+        "material": {
+            "diffuseTexture": "resources/scenes/scene1/textures/columns1.png",
+            "normalTexture": "resources/scenes/scene1/textures/columns1-n.png"
         },
         "mesh": {
             "model": "resources/scenes/scene1/columns1.gltf"
         },
-        "material": {
-            "diffuseTexture": "resources/scenes/scene1/textures/columns1.png"
-        }
+        "name": "columns1-mesh",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "type": "StaticMesh"
     },
     {
+        "light": {
+            "attenuation": 24.70001792907715,
+            "beamAngle": 90.0,
+            "color": [
+                1.0,
+                1.0,
+                0.0
+            ],
+            "intensity": 2.799999237060547,
+            "projectionTexture": "resources/textures/spot-proj-4.png",
+            "type": "SPOT"
+        },
         "name": "light1",
-        "type": "Light",
         "transform": {
-            "translation": 0.0
+            "rotation": [
+                0.0,
+                -0.13174740970134735,
+                0.0,
+                0.9912833571434021
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -10.073287963867188,
+                1.381307601928711,
+                19.596912384033203
+            ]
         },
-        "light": {
-            "type": "SPOT",
-            "color": [1,0,0],
-            "attenuation": 10
-        }
+        "type": "Light"
     },
     {
-        "name": "light2",
-        "type": "Light",
-        "transform": {
-            "translation": 0.0
-        },
         "light": {
-            "type": "SPOT",
-            "color": [0,1,0],
-            "attenuation": 5
-        }
+            "attenuation": 20.0,
+            "beamAngle": 90.0,
+            "color": [
+                0.0,
+                0.0,
+                1.0
+            ],
+            "intensity": 5.0,
+            "projectionTexture": "resources/textures/spot-proj-4.png",
+            "type": "SPOT"
+        },
+        "name": "light2",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.08898551762104034,
+                0.0,
+                0.9960328936576843
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -13.749699592590332,
+                3.5822501182556152,
+                17.510412216186523
+            ]
+        },
+        "type": "Light"
     }
 ]

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../CoreV2/Module/EntityModule.h"
+#include "../../CoreV2/API.h"
 #include "Components/TransformComponent.h"
 
 class CommonModule : public EntityModule {

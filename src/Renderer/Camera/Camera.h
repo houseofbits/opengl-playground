@@ -30,7 +30,7 @@ public:
     Camera &setFieldOfView(float degrees);
     Camera &setViewportSize(unsigned int viewportWidth, unsigned int viewportHeight);
     Camera &setView(glm::vec3 direction, glm::vec3 up);
-    Camera &setAngles(float horizontal, float vertical);
+    Camera &setFromAngles(float horizontal, float vertical);
     Camera &setPosition(glm::vec3 position);
 
     glm::mat4 &getProjectionViewMatrix();
