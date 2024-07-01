@@ -23,44 +23,37 @@ public:
     }
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override {
-        m_Translation = j.value("translation", m_Translation);
-        m_Rotation = j.value("rotation", m_Rotation);
-        m_Scale = j.value("scale", m_Scale);
+        glm::vec3 t = j.value("translation", glm::vec3(0, 0, 0));
+        glm::quat r = j.value("rotation", glm::quat(1, 0, 0, 0));
+        glm::vec3 s = j.value("scale", glm::vec3(1, 1, 1));
 
         m_isTranslationEnabled = j.value("allowTranslation", m_isTranslationEnabled);
         m_isRotationEnabled = j.value("allowRotation", m_isRotationEnabled);
         m_isScalingEnabled = j.value("allowScaling", m_isScalingEnabled);
 
-        setTranslation(m_Translation);
-        setRotation(m_Rotation);
-        setScale(m_Scale);
+        setTranslation(t);
+        setRotation(r);
+        setScale(s);
     }
 
     void registerWithSystems(EntityContext &ctx) override;
 
     void resetTransform() {
-        m_Translation = glm::vec3(0, 0, 0);
-        m_Scale = glm::vec3(1, 1, 1);
-        m_Rotation = glm::vec3(0, 0, 0);
         m_ModelMatrix = glm::mat4(1.0);
     }
     void setTranslation(glm::vec3 pos) {
         if (m_isTranslationEnabled) {
-            m_Translation = pos;
-            m_ModelMatrix = glm::translate(m_ModelMatrix, m_Translation);
+            m_ModelMatrix = glm::translate(m_ModelMatrix, pos);
         }
     }
     void setScale(glm::vec3 scale) {
         if (m_isScalingEnabled) {
-            m_Scale = scale;
-            m_ModelMatrix = glm::scale(m_ModelMatrix, m_Scale);
+            m_ModelMatrix = glm::scale(m_ModelMatrix, scale);
         }
     }
     void setRotation(glm::quat rotation) {
         if (m_isRotationEnabled) {
-            m_Rotation = rotation;
-
-            glm::mat4 rotationMatrix = glm::mat4_cast(m_Rotation);
+            glm::mat4 rotationMatrix = glm::mat4_cast(rotation);
             m_ModelMatrix *= rotationMatrix;
         }
     }
@@ -73,11 +66,12 @@ public:
         return glm::inverse(m_ModelMatrix);
     }
 
+    glm::vec3 getTranslation() {
+        return m_ModelMatrix[3];
+    }
+
     void decomposeModelMatrix(glm::vec3 &, glm::quat &, glm::vec3 &);
 
-    glm::vec3 m_Translation;
-    glm::quat m_Rotation;
-    glm::vec3 m_Scale;
     bool m_isTranslationEnabled = true;
     bool m_isRotationEnabled = true;
     bool m_isScalingEnabled = true;

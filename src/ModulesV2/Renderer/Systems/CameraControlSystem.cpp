@@ -19,6 +19,7 @@ void CameraControlSystem::registerComponent(Component *comp) {
 }
 
 void CameraControlSystem::unregisterComponent(Component *comp) {
+    m_cameraComponents.erase(comp->m_EntityId.id());
 }
 
 void CameraControlSystem::registerEventHandlers(EventManager *eventManager) {

@@ -76,6 +76,11 @@ void RendererSystem::registerComponent(Component *comp) {
 }
 
 void RendererSystem::unregisterComponent(Component *comp) {
+    m_meshComponents.erase(comp->m_EntityId.id());
+    m_transformComponents.erase(comp->m_EntityId.id());
+    m_cameraComponents.erase(comp->m_EntityId.id());
+    m_materialComponents.erase(comp->m_EntityId.id());
+    m_lightComponents.erase(comp->m_EntityId.id());
 }
 
 void RendererSystem::updateFrameData() {

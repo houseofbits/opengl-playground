@@ -18,7 +18,7 @@ void SpotLightStorageBuffer::appendLight(TransformComponent &transform, LightCom
     structure.projectionViewMatrix = createProjectionViewMatrix(transform, light);
     structure.color = light.m_Color;
     structure.intensity = light.m_Intensity;
-    structure.position = transform.m_Translation;
+    structure.position = transform.getTranslation();
     structure.attenuation = light.m_Attenuation;
     structure.projectorSamplerIndex = projectorIndex;
 

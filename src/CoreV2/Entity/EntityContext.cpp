@@ -28,6 +28,20 @@ Entity::TEntityPtr EntityContext::createEntity(const std::string &configurationN
     return e;
 }
 
+void EntityContext::removeEntity(int entityId) {
+    Entity* e = getEntity(entityId);
+    if (e != nullptr) {
+        e->unregisterFromSystems(*this);
+
+        for(const auto& entity: m_Entities) {
+            if (e->m_Id.id() == entityId) {
+                m_Entities.remove(entity);
+                break;
+            }
+        }
+    }
+}
+
 void EntityContext::serializeEntities(nlohmann::json &j) {
     for (const auto &e: m_Entities) {
         nlohmann::json entityJson;

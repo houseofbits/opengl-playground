@@ -41,11 +41,14 @@ public:
         Resource *resource = findResource(path);
 
         if (resource == nullptr) {
+            Log::info("Fetch resource: " + path);
             resource = new typename T::TYPE();
             resource->m_Path = std::move(path);
             resource->m_Status = Resource::DATA_FETCHING;
 
             m_Resources.push_back(resource);
+        } else {
+            Log::info("Get resource: " + path);
         }
 
         hand.makeValid(this, reinterpret_cast<typename T::TYPE *>(resource));
@@ -62,6 +65,9 @@ public:
         for (const auto &resource: m_Resources) {
             if (resource->m_Status == Resource::DATA_READY) {
                 resource->build();
+                if (resource->m_Status == Resource::BUILD_ERROR) {
+                    Log::warn("Failed to build resource: " + resource->m_Path);
+                }
             }
         }
     }
@@ -75,6 +81,10 @@ public:
             for (const auto &resource: m_Resources) {
                 if (resource->m_Status == Resource::DATA_FETCHING) {
                     resource->fetchData(*this);
+
+                    if (resource->m_Status == Resource::FETCH_ERROR) {
+                        Log::warn("Failed to fetch resource: " + resource->m_Path);
+                    }
                 }
             }
 

@@ -56,7 +56,11 @@ bool MainApplication::handleEditorUIEvent(EditorUIEvent *event) {
 }
 
 bool MainApplication::handleEntityCreationEvent(EntityCreationEvent *event) {
-    m_EntityContext.createEntity(event->m_Name, m_ResourceManager);
-    std::cout<<"create"<<std::endl;
-    return false;
+    if (event->m_Type == EntityCreationEvent::CREATE) {
+        m_EntityContext.createEntity(event->m_Name, m_ResourceManager);
+    }
+    if (event->m_Type == EntityCreationEvent::REMOVE) {
+        m_EntityContext.removeEntity(event->m_entityId);
+    }
+    return true;
 }

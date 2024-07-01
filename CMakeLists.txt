@@ -109,6 +109,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/EditorUI/Systems/EditorUISystem.h
         src/CoreV2/Events/Event.cpp
         src/CoreV2/Events/EntityCreationEvent.h
+        src/ModulesV2/EditorUI/UI/MainToolbarUI.cpp
+        src/ModulesV2/EditorUI/UI/MainToolbarUI.h
+        src/ModulesV2/EditorUI/UI/EditWindowUI.cpp
+        src/ModulesV2/EditorUI/UI/EditWindowUI.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

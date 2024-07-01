@@ -73,7 +73,6 @@ public:
                 return e.get();
             }
         }
-
         return nullptr;
     }
 
@@ -88,6 +87,7 @@ public:
     void unregisterComponentFromSystems(Component *);
     void deserializeEntityMap(nlohmann::json &j);
     Entity::TEntityPtr createEntity(const std::string &configurationName, ResourceManager &);
+    void removeEntity(int entityId);
     void deserializeEntities(nlohmann::json &j, ResourceManager &);
     void serializeEntities(nlohmann::json &j);
     void registerEntitiesWithSystems();
