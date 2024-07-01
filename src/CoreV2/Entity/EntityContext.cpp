@@ -34,7 +34,7 @@ void EntityContext::removeEntity(int entityId) {
         e->unregisterFromSystems(*this);
 
         for(const auto& entity: m_Entities) {
-            if (e->m_Id.id() == entityId) {
+            if (entity->m_Id.id() == entityId) {
                 m_Entities.remove(entity);
                 break;
             }
