@@ -7,9 +7,6 @@
             },
             "mesh": {
                 "class": "StaticMeshComponent"
-            },
-            "material": {
-                "class": "MaterialComponent"
             }
         }
     },

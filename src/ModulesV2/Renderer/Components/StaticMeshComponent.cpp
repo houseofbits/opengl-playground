@@ -2,7 +2,7 @@
 #include "../../EditorUI/Systems/EditorUISystem.h"
 #include "../Systems/RendererSystem.h"
 
-StaticMeshComponent::StaticMeshComponent() : Component(), m_Mesh() {
+StaticMeshComponent::StaticMeshComponent() : Component(), m_Mesh(), m_Material() {
 }
 
 void StaticMeshComponent::registerWithSystems(EntityContext& ctx) {

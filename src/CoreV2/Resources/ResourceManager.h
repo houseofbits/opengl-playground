@@ -38,6 +38,10 @@ public:
 
     template<class T>
     void request(T &hand, std::string path) {
+        if (path.empty()) {
+            return;
+        }
+
         Resource *resource = findResource(path);
 
         if (resource == nullptr) {

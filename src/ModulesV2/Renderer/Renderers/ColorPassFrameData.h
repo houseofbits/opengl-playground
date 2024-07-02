@@ -3,7 +3,6 @@
 #include "../../Common/Components/TransformComponent.h"
 #include "../Buffers/LightStorageBuffer.h"
 #include "../Buffers/ProjectionSamplerStorageBuffer.h"
-#include "../Components/MaterialComponent.h"
 #include "../Components/StaticMeshComponent.h"
 #include <unordered_map>
 
@@ -12,7 +11,6 @@ public:
     struct Element {
         StaticMeshComponent *mesh = nullptr;
         TransformComponent *transform = nullptr;
-        MaterialComponent *material = nullptr;
     };
 
     ColorPassFrameData() : m_Elements(), m_LightBuffer(), m_ProjectorBuffer() {}
@@ -22,10 +20,9 @@ public:
         m_ProjectorBuffer.initialize();
     }
 
-    void add(unsigned int index, StaticMeshComponent *mesh, TransformComponent *transform, MaterialComponent *material) {
+    void add(unsigned int index, StaticMeshComponent *mesh, TransformComponent *transform) {
         m_Elements[index].mesh = mesh;
         m_Elements[index].transform = transform;
-        m_Elements[index].material = material;
     };
 
     void clear() {

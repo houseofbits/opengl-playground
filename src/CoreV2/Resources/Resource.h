@@ -24,7 +24,7 @@ public:
     Status m_Status = Status::UNDEFINED;
     unsigned int m_ReferenceCount = 0;
 
-    virtual void fetchData(ResourceManager&) = 0;
+    virtual void fetchData(ResourceManager &) = 0;
     virtual void build() = 0;
     virtual void destroy() = 0;
 
@@ -42,5 +42,8 @@ public:
     }
     [[nodiscard]] bool isReady() const {
         return m_Status == READY;
+    }
+    [[nodiscard]] bool isFinished() const {
+        return m_Status == UNDEFINED || m_Status == READY || m_Status == FETCH_ERROR || m_Status == BUILD_ERROR;
     }
 };

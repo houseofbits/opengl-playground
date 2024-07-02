@@ -67,9 +67,6 @@ void RendererSystem::registerComponent(Component *comp) {
     if (isOfType<CameraComponent>(comp)) {
         m_cameraComponents[comp->m_EntityId()] = dynamic_cast<CameraComponent *>(comp);
     }
-    if (isOfType<MaterialComponent>(comp)) {
-        m_materialComponents[comp->m_EntityId()] = dynamic_cast<MaterialComponent *>(comp);
-    }
     if (isOfType<LightComponent>(comp)) {
         m_lightComponents[comp->m_EntityId()] = dynamic_cast<LightComponent *>(comp);
     }
@@ -79,7 +76,6 @@ void RendererSystem::unregisterComponent(Component *comp) {
     m_meshComponents.erase(comp->m_EntityId.id());
     m_transformComponents.erase(comp->m_EntityId.id());
     m_cameraComponents.erase(comp->m_EntityId.id());
-    m_materialComponents.erase(comp->m_EntityId.id());
     m_lightComponents.erase(comp->m_EntityId.id());
 }
 
@@ -90,8 +86,7 @@ void RendererSystem::updateFrameData() {
         m_frame.add(
                 i,
                 mesh.second,
-                findTransform(mesh.second->m_EntityId),
-                findMaterial(mesh.second->m_EntityId));
+                findTransform(mesh.second->m_EntityId));
 
         i++;
     }
@@ -117,15 +112,6 @@ void RendererSystem::updateFrameData() {
 TransformComponent *RendererSystem::findTransform(Identity &entityId) {
     auto iter = m_transformComponents.find(entityId());
     if (iter != m_transformComponents.end()) {
-        return iter->second;
-    }
-
-    return nullptr;
-}
-
-MaterialComponent *RendererSystem::findMaterial(Identity &entityId) {
-    auto iter = m_materialComponents.find(entityId());
-    if (iter != m_materialComponents.end()) {
         return iter->second;
     }
 

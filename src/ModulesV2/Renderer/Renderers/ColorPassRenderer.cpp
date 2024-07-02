@@ -16,10 +16,7 @@ void ColorPassRenderer::beginRender(Camera &camera) {
 
 void ColorPassRenderer::render(ColorPassFrameData &frame) {
     for (const auto &elem: frame.m_Elements) {
-        if (elem.second.material != nullptr) {
-            m_ShaderProgram().setUniform("diffuseSampler", elem.second.material->m_Diffuse().m_handleId);
-            m_ShaderProgram().setUniform("normalSampler", elem.second.material->m_Normal().m_handleId);
-        }
+        elem.second.mesh->m_Material().bind(m_ShaderProgram());
         m_ShaderProgram().setUniform("modelMatrix", elem.second.transform->getModelMatrix());
         frame.m_LightBuffer.bind(m_ShaderProgram());
         frame.m_ProjectorBuffer.bind();

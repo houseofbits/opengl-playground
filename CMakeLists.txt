@@ -113,6 +113,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/EditorUI/UI/MainToolbarUI.h
         src/ModulesV2/EditorUI/UI/EditWindowUI.cpp
         src/ModulesV2/EditorUI/UI/EditWindowUI.h
+        src/ResourcesV2/MaterialResource.cpp
+        src/ResourcesV2/MaterialResource.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

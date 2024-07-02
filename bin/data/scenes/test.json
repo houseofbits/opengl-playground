@@ -21,11 +21,8 @@
         "type": "Camera"
     },
     {
-        "material": {
-            "diffuseTexture": "resources/scenes/scene1/textures/walls1.png",
-            "normalTexture": "resources/scenes/scene1/textures/walls1-n.png"
-        },
         "mesh": {
+            "material": "data/materials/concrete1.json",
             "model": "resources/scenes/scene1/walls1.gltf"
         },
         "name": "walls1-mesh",
@@ -50,11 +47,8 @@
         "type": "StaticMesh"
     },
     {
-        "material": {
-            "diffuseTexture": "resources/scenes/scene1/textures/floor1.png",
-            "normalTexture": "resources/scenes/scene1/textures/floor1-n.png"
-        },
         "mesh": {
+            "material": "data/materials/tiles1.json",
             "model": "resources/scenes/scene1/floor1.gltf"
         },
         "name": "floor1-mesh",
@@ -79,11 +73,8 @@
         "type": "StaticMesh"
     },
     {
-        "material": {
-            "diffuseTexture": "resources/scenes/scene1/textures/floor2.png",
-            "normalTexture": "resources/scenes/scene1/textures/floor2-n.png"
-        },
         "mesh": {
+            "material": "data/materials/grass1.json",
             "model": "resources/scenes/scene1/floor2.gltf"
         },
         "name": "floor2-mesh",
@@ -108,11 +99,8 @@
         "type": "StaticMesh"
     },
     {
-        "material": {
-            "diffuseTexture": "resources/scenes/scene1/textures/columns1.png",
-            "normalTexture": "resources/scenes/scene1/textures/columns1-n.png"
-        },
         "mesh": {
+            "material": "data/materials/bricks1.json",
             "model": "resources/scenes/scene1/columns1.gltf"
         },
         "name": "columns1-mesh",
@@ -152,7 +140,7 @@
         "name": "light1",
         "transform": {
             "rotation": [
-                0.01820763573050499,
+                0.01820763759315014,
                 0.9421249628067017,
                 0.3196607232093811,
                 -0.09942866116762161
@@ -192,9 +180,9 @@
                 0.1256972998380661
             ],
             "scale": [
-                1.000000238418579,
+                1.0000001192092896,
                 1.0,
-                1.0000001192092896
+                1.0
             ],
             "translation": [
                 -6.095036506652832,
@@ -218,15 +206,15 @@
         "name": "new light",
         "transform": {
             "rotation": [
-                -0.001272624242119491,
+                -0.001272624358534813,
                 0.9821755886077881,
-                -0.0066698817536234856,
-                -0.18784311413764954
+                -0.006669882219284773,
+                -0.18784312903881073
             ],
             "scale": [
                 1.0,
                 1.0,
-                0.9999999403953552
+                1.0
             ],
             "translation": [
                 -9.471506118774414,
@@ -258,9 +246,9 @@
                 0.9818192720413208
             ],
             "scale": [
-                0.9999999403953552,
                 1.0,
-                0.9999999403953552
+                1.0,
+                1.0
             ],
             "translation": [
                 -11.284053802490234,
@@ -289,12 +277,12 @@
                 0.7088420987129211,
                 -0.004339674022048712,
                 0.08069363981485367,
-                -0.7007229328155518
+                -0.7007229924201965
             ],
             "scale": [
                 1.0,
-                1.0000001192092896,
-                1.0000001192092896
+                1.0,
+                1.0
             ],
             "translation": [
                 -6.254361629486084,
