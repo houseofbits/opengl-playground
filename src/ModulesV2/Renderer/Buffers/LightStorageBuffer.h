@@ -38,5 +38,6 @@ public:
 
 private:
     static glm::mat4 createPerspectiveProjectionViewMatrix(TransformComponent &transform, LightComponent &light);
+    static glm::mat4 createPerspectiveProjectionViewMatrix(glm::vec3 direction, glm::vec3 position, float far);
     static glm::mat4 createOrthoProjectionViewMatrix(TransformComponent &transform, LightComponent &light);
 };

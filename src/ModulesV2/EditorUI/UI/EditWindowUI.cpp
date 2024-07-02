@@ -137,7 +137,11 @@ void EditWindowUI::processEditLightComponent() {
     }
 
     if (ImGui::InputText("Projector", &m_lightProjectorPath)) {
-        m_EditorUISystem->m_ResourceManager->request(light->m_Projection, m_lightProjectorPath);
+        if (m_lightProjectorPath.empty()) {
+            light->m_Projection.invalidate();
+        } else {
+            m_EditorUISystem->m_ResourceManager->request(light->m_Projection, m_lightProjectorPath);
+        }
     }
 }
 

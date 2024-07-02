@@ -1,6 +1,7 @@
 #include "LightsUniformBuffer.h"
 #include "../../Helper/ShaderSourceLoader.h"
 
+
 LightsUniformBuffer::LightsUniformBuffer() : uniformBuffer(), maxActiveLights(0), numActiveLights(0) {
 }
 

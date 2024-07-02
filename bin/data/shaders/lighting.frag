@@ -95,7 +95,7 @@ void main()
             if (light.projectorSamplerIndex >= 0) {
                 falloff = texture(projectorSamplers[light.projectorSamplerIndex], lightProjectedPosition.xy).rgb;
             } else {
-                falloff = vec3(1.0 - length(lightSpacePosition.xy / lightSpacePosition.w));
+                falloff = vec3(1.0);
             }
 
             color += light.intensity * ndotl * light.color * attenuation * falloff;
