@@ -70,6 +70,12 @@ public:
         return m_ModelMatrix[3];
     }
 
+    [[nodiscard]] glm::vec3 getDirection() const {
+        glm::quat rotation = glm::quat_cast(m_ModelMatrix);
+
+        return rotation * glm::vec3(0,0,1);
+    }
+
     void decomposeModelMatrix(glm::vec3 &, glm::quat &, glm::vec3 &);
 
     bool m_isTranslationEnabled = true;

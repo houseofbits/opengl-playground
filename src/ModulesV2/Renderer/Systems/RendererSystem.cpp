@@ -96,7 +96,7 @@ void RendererSystem::updateFrameData() {
         i++;
     }
 
-    m_frame.m_SpotLightBuffer.reset();
+    m_frame.m_LightBuffer.reset();
     m_frame.m_ProjectorBuffer.reset();
     for(const auto& light: m_lightComponents) {
         TransformComponent* transform = findTransform(light.second->m_EntityId);
@@ -109,11 +109,9 @@ void RendererSystem::updateFrameData() {
             index = m_frame.m_ProjectorBuffer.getOrAppend(light.second->m_Projection().m_handleId);
         }
 
-        if (light.second->m_Type == LightComponent::SPOT) {
-            m_frame.m_SpotLightBuffer.appendLight(*transform, *light.second, index);
-        }
+        m_frame.m_LightBuffer.appendLight(*transform, *light.second, index);
     }
-    m_frame.m_SpotLightBuffer.updateAll();
+    m_frame.m_LightBuffer.updateAll();
 }
 
 TransformComponent *RendererSystem::findTransform(Identity &entityId) {

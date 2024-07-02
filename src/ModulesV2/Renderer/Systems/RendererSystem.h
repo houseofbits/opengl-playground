@@ -2,7 +2,6 @@
 
 #include "../../../CoreV2/API.h"
 #include "../../../Helper/Log.h"
-#include "../../Common/Components/TransformComponent.h"
 #include "../Components/CameraComponent.h"
 #include "../Components/MaterialComponent.h"
 #include "../Components/StaticMeshComponent.h"

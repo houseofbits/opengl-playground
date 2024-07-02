@@ -40,13 +40,13 @@ void EntityConfiguration::deserialize(nlohmann::json &json) {
         }
 
         for (auto &comp: el.value().at("components").items()) {
-            if (!comp.value().contains("type")) {
-                Log::error("EntityConfiguration::deserialize: type is undefined");
+            if (!comp.value().contains("class")) {
+                Log::error("EntityConfiguration::deserialize: class is undefined");
                 return;
             }
             ComponentRecord componentRecord;
             componentRecord.m_Name = comp.key();
-            componentRecord.m_ClassName = comp.value().at("type");
+            componentRecord.m_ClassName = comp.value().at("class");
 
             if (comp.value().contains("default")) {
                 componentRecord.m_DefaultJson = comp.value().at("default");

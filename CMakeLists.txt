@@ -95,8 +95,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/Renderer/Systems/CameraControlSystem.cpp
         src/ModulesV2/Renderer/Systems/CameraControlSystem.h
         src/ModulesV2/Renderer/Renderers/ColorPassFrameData.h
-        src/ModulesV2/Renderer/Buffers/SpotLightStorageBuffer.h
-        src/ModulesV2/Renderer/Buffers/SpotLightStorageBuffer.cpp
+        src/ModulesV2/Renderer/Buffers/LightStorageBuffer.h
+        src/ModulesV2/Renderer/Buffers/LightStorageBuffer.cpp
         src/ResourcesV2/ShaderResource.cpp
         src/ResourcesV2/ShaderResource.h
         src/ResourcesV2/ShaderProgramResource.cpp

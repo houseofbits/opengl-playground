@@ -28,6 +28,9 @@ public:
     void registerWithSystems(EntityContext &);
     void unregisterFromSystems(EntityContext &);
     bool isReadyToRegister();
+    [[nodiscard]] std::string getListName() const {
+        return m_Name + " - " + m_TypeName;
+    }
 
     template<class T>
     T *getComponent() {

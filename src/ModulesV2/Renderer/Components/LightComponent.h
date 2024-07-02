@@ -10,6 +10,7 @@ public:
     inline static const std::string INTENSITY_KEY = "intensity";
     inline static const std::string BEAM_ANGLE_KEY = "beamAngle";
     inline static const std::string ATTENUATION_KEY = "attenuation";
+    inline static const std::string RADIUS_KEY = "radius";
     inline static const std::string PROJECTION_TEXTURE_KEY = "projectionTexture";
 
     enum Type {
@@ -32,5 +33,6 @@ public:
     float m_Intensity;
     float m_beamAngle;
     float m_Attenuation;
+    float m_Radius;
     ResourceHandle<TextureResource> m_Projection;
 };

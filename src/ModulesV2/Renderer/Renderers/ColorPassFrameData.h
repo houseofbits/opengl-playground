@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../../Common/Components/TransformComponent.h"
+#include "../Buffers/LightStorageBuffer.h"
 #include "../Buffers/ProjectionSamplerStorageBuffer.h"
-#include "../Buffers/SpotLightStorageBuffer.h"
 #include "../Components/MaterialComponent.h"
 #include "../Components/StaticMeshComponent.h"
 #include <unordered_map>
@@ -15,10 +15,10 @@ public:
         MaterialComponent *material = nullptr;
     };
 
-    ColorPassFrameData() : m_Elements(), m_SpotLightBuffer(), m_ProjectorBuffer() {}
+    ColorPassFrameData() : m_Elements(), m_LightBuffer(), m_ProjectorBuffer() {}
 
     void initialize() {
-        m_SpotLightBuffer.initialize();
+        m_LightBuffer.initialize();
         m_ProjectorBuffer.initialize();
     }
 
@@ -33,6 +33,6 @@ public:
     }
 
     std::unordered_map<unsigned int, Element> m_Elements;
-    SpotLightStorageBuffer m_SpotLightBuffer;
+    LightStorageBuffer m_LightBuffer;
     ProjectionSamplerStorageBuffer m_ProjectorBuffer;
 };

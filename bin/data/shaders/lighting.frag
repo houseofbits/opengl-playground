@@ -10,7 +10,9 @@ struct SpotLightStructure {
     vec3 position;
     float attenuation;
     mat4 projectionViewMatrix;
+    vec3 direction;
     int projectorSamplerIndex;
+    int isPointSource;
 };
 
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
@@ -62,6 +64,8 @@ void main()
 
     vec3 color = vec3(0.0);
     vec3 falloff;
+    vec3 lightDir;
+    float distToLight;
 
     for (int lightIndex = 0; lightIndex < numSpotLights; lightIndex++) {
         SpotLightStructure light = spotLights[lightIndex];
@@ -69,12 +73,18 @@ void main()
         vec4 lightSpacePosition = light.projectionViewMatrix * gsPosition;
         vec3 lightProjectedPosition = calculateProjectedCoords(lightSpacePosition);
         if (isProjCoordsClipping(lightProjectedPosition.xy) && lightProjectedPosition.z > 0.0 && lightProjectedPosition.z < 1.0) {
-            vec3 toLight = light.position - gsPosition.xyz;
-            vec3 lightDir = normalize(toLight);
-            float distToLight = length(toLight);
+            if (light.isPointSource == 1) {
+                vec3 toLight = light.position - gsPosition.xyz;
+                distToLight = length(toLight);
+                lightDir = normalize(toLight);
+            } else {
+                distToLight = dot(normalize(light.direction), light.position - gsPosition.xyz);
+                lightDir = normalize(light.direction);
+            }
+
             float ndotlSurf = dot(lightDir, gsNormal);
 
-            if (ndotlSurf < 0 || distToLight > light.attenuation) {
+            if (ndotlSurf < 0) {
                 continue;
             }
 

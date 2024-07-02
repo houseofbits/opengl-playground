@@ -3,27 +3,65 @@
         "name": "StaticMesh",
         "components": {
             "transform": {
-                "type": "TransformComponent"
+                "class": "TransformComponent"
             },
             "mesh": {
-                "type": "StaticMeshComponent"
+                "class": "StaticMeshComponent"
             },
             "material": {
-                "type": "MaterialComponent"
+                "class": "MaterialComponent"
             }
         }
     },
     {
-        "name": "Light",
+        "name": "SpotLight",
         "components": {
             "transform": {
-                "type": "TransformComponent",
+                "class": "TransformComponent",
                 "default": {
                     "allowScaling": false
                 }
             },
             "light": {
-                "type": "LightComponent"
+                "class": "LightComponent",
+                "default": {
+                    "type": "SPOT"
+                }
+            }
+        }
+    },
+    {
+        "name": "DirectLight",
+        "components": {
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowScaling": false
+                }
+            },
+            "light": {
+                "class": "LightComponent",
+                "default": {
+                    "type": "DIRECT"
+                }
+            }
+        }
+    },
+    {
+        "name": "OmniLight",
+        "components": {
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowScaling": false,
+                    "allowRotation": false
+                }
+            },
+            "light": {
+                "class": "LightComponent",
+                "default": {
+                    "type": "OMNI"
+                }
             }
         }
     },
@@ -31,7 +69,7 @@
         "name": "EnvironmentProbe",
         "components": {
             "probe": {
-                "type": "EnvironmentProbeComponent"
+                "class": "EnvironmentProbeComponent"
             }
         }
     },
@@ -39,7 +77,7 @@
         "name": "Camera",
         "components": {
             "camera": {
-                "type": "CameraComponent"
+                "class": "CameraComponent"
             }
         }
     }

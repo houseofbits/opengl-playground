@@ -8,20 +8,46 @@
 #include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../Systems/EditorUISystem.h"
 
+std::vector<std::string> ENTITY_CREATION_OPTIONS = {
+        "SpotLight",
+        "OmniLight",
+        "DirectLight",
+        "StaticMesh"
+};
+
+std::map<LightComponent::Type, std::string> LIGHT_TYPE_NAME_MAP = {
+        {LightComponent::SPOT, "SPOT"},
+        {LightComponent::OMNI, "OMNI"},
+        {LightComponent::DIRECT, "DIRECT"}
+};
+
 EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
                                                      m_EditorUISystem(editor),
                                                      m_lightProjectorPath(),
-                                                     m_meshModelPath() {
+                                                     m_meshModelPath(),
+                                                     m_selectedEntityCreationType(0) {
 
 }
 
 void EditWindowUI::process() {
     ImGui::SetNextWindowPos(ImVec2(0, 25));
-    ImGui::SetNextWindowSize(ImVec2(300, 500));
+    ImGui::SetNextWindowSize(ImVec2(300, 600));
     if (ImGui::Begin("Entities", nullptr, ImGuiWindowFlags_NoCollapse)) {
 
-        if (ImGui::Button("Create light")) {
-            sendEntityCreationEvent("Light");
+        ImGui::PushItemWidth(100);
+        if (ImGui::BeginCombo("##ENTITY_TYPE", ENTITY_CREATION_OPTIONS[m_selectedEntityCreationType].c_str())) {
+            for(int i=0; i<ENTITY_CREATION_OPTIONS.size(); i++) {
+                if (ImGui::Selectable(ENTITY_CREATION_OPTIONS[i].c_str(), m_selectedEntityCreationType == i)) {
+                    m_selectedEntityCreationType = i;
+                }
+            }
+            ImGui::EndCombo();
+        }
+        ImGui::PopItemWidth();
+
+        ImGui::SameLine();
+        if (ImGui::Button("Create")) {
+            sendEntityCreationEvent(ENTITY_CREATION_OPTIONS[m_selectedEntityCreationType], "NEW ENTITY");
         }
 
         if (m_selectedEntity >= 0) {
@@ -52,15 +78,7 @@ void EditWindowUI::processEntitiesList() {
     for (const auto &light: m_EditorUISystem->m_lightComponents) {
         Entity *e = m_EditorUISystem->m_EntityContext->getEntity(light.first);
         if (e != nullptr) {
-            std::string name = e->m_Name;
-            if (light.second->m_Type == LightComponent::SPOT) {
-                name.append(" [SPOT LIGHT]");
-            } else if (light.second->m_Type == LightComponent::OMNI) {
-                name.append(" [OMNI LIGHT]");
-            } else if (light.second->m_Type == LightComponent::DIRECT) {
-                name.append(" [DIRECT LIGHT]");
-            }
-
+            std::string name = e->getListName();
             if (ImGui::Selectable(name.c_str(), m_selectedEntity == light.first)) {
                 m_selectedEntity = (int) light.first;
                 m_lightProjectorPath = light.second->m_Projection().m_Path;
@@ -70,9 +88,7 @@ void EditWindowUI::processEntitiesList() {
     for (const auto &mesh: m_EditorUISystem->m_meshComponents) {
         Entity *e = m_EditorUISystem->m_EntityContext->getEntity(mesh.first);
         if (e != nullptr) {
-            std::string name = e->m_Name;
-            name.append(" [MESH]");
-
+            std::string name = e->getListName();
             if (ImGui::Selectable(name.c_str(), m_selectedEntity == mesh.first)) {
                 m_selectedEntity = (int) mesh.first;
                 m_meshModelPath = mesh.second->m_Mesh().m_Path;
@@ -82,9 +98,7 @@ void EditWindowUI::processEntitiesList() {
     for (const auto &camera: m_EditorUISystem->m_cameraComponents) {
         Entity *e = m_EditorUISystem->m_EntityContext->getEntity(camera.first);
         if (e != nullptr) {
-            std::string name = e->m_Name;
-            name.append(" [CAMERA]");
-
+            std::string name = e->getListName();
             if (ImGui::Selectable(name.c_str(), m_selectedEntity == camera.first)) {
                 m_selectedEntity = (int) camera.first;
             }
@@ -101,10 +115,26 @@ void EditWindowUI::processEditLightComponent() {
     LightComponent *light = m_EditorUISystem->m_lightComponents[m_selectedEntity];
 
     ImGui::SeparatorText("Light");
+
+//    std::cout<<light->m_Type<<std::endl;
+
+    if (ImGui::BeginCombo("Type##LIGHT_TYPE", LIGHT_TYPE_NAME_MAP[light->m_Type].c_str())) {
+        for(const auto& lightName: LIGHT_TYPE_NAME_MAP) {
+            if (ImGui::Selectable(lightName.second.c_str(), light->m_Type == lightName.first)) {
+                light->m_Type = lightName.first;
+            }
+        }
+        ImGui::EndCombo();
+    }
+
     ImGui::ColorEdit3("Color##LIGHT_COLOR", (float *) &light->m_Color);
     ImGui::InputFloat("Intensity##LIGHT_INTENSITY", &light->m_Intensity, 0.1f, 1.0f, "%.1f");
     ImGui::InputFloat("Attenuation##LIGHT_ATTENUATION", &light->m_Attenuation, 0.1f, 1.0f, "%.1f");
-    ImGui::InputFloat("Beam angle##LIGHT_BEAM_ANGLE", &light->m_beamAngle, 0.5f, 1.0f, "%.0f");
+    if (light->m_Type == LightComponent::DIRECT) {
+        ImGui::InputFloat("Radius##LIGHT_DIRECT_RADIUS", &light->m_Radius, 0.1f, 0.5f, "%.1f");
+    } else if (light->m_Type == LightComponent::SPOT) {
+        ImGui::InputFloat("Beam angle##LIGHT_BEAM_ANGLE", &light->m_beamAngle, 0.5f, 1.0f, "%.0f");
+    }
 
     if (ImGui::InputText("Projector", &m_lightProjectorPath)) {
         m_EditorUISystem->m_ResourceManager->request(light->m_Projection, m_lightProjectorPath);
@@ -171,10 +201,11 @@ bool EditWindowUI::isTransformComponentSelected() {
     return true;
 }
 
-void EditWindowUI::sendEntityCreationEvent(std::string name) {
+void EditWindowUI::sendEntityCreationEvent(std::string name, std::string entityName) {
     auto evt = new EntityCreationEvent();
     evt->m_Type = EntityCreationEvent::CREATE;
-    evt->m_Name = std::move(name);
+    evt->m_ConfigurationName = std::move(name);
+    evt->m_name = std::move(entityName);
     m_EditorUISystem->m_EventManager->queueEvent(evt);
 }
 

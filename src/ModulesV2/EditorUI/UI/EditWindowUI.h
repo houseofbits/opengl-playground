@@ -19,10 +19,11 @@ private:
     void processEditTransformComponent();
     void processEditMeshComponent();
     void processEditCameraComponent();
-    void sendEntityCreationEvent(std::string);
+    void sendEntityCreationEvent(std::string, std::string);
     void sendEntityRemovalEvent();
 
     EditorUISystem *m_EditorUISystem;
     std::string m_lightProjectorPath;
     std::string m_meshModelPath;
+    int m_selectedEntityCreationType;
 };

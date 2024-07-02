@@ -57,7 +57,8 @@ bool MainApplication::handleEditorUIEvent(EditorUIEvent *event) {
 
 bool MainApplication::handleEntityCreationEvent(EntityCreationEvent *event) {
     if (event->m_Type == EntityCreationEvent::CREATE) {
-        m_EntityContext.createEntity(event->m_Name, m_ResourceManager);
+        auto e = m_EntityContext.createEntity(event->m_ConfigurationName, m_ResourceManager);
+        e->m_Name = event->m_name;
     }
     if (event->m_Type == EntityCreationEvent::REMOVE) {
         m_EntityContext.removeEntity(event->m_entityId);

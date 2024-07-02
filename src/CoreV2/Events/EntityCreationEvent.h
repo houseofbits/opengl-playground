@@ -12,12 +12,14 @@ public:
     };
 
     EntityCreationEvent() : BaseEvent(),
-                            m_Name(),
+                            m_ConfigurationName(),
                             m_entityId(-1),
+                            m_name(),
                             m_Type(CREATE) {
     }
 
     Type m_Type;
-    std::string m_Name;
+    std::string m_ConfigurationName;
+    std::string m_name;
     int m_entityId;
 };
