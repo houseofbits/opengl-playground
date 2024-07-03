@@ -67,6 +67,12 @@
         "components": {
             "probe": {
                 "class": "EnvironmentProbeComponent"
+            },
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowRotation": false
+                }
             }
         }
     },

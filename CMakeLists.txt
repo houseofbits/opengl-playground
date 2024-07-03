@@ -13,9 +13,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Renderer/BaseRenderer.h
         src/SceneLoader/SceneLoader.cpp
         src/SceneLoader/SceneLoader.h
-        src/Tests/Rendering/TestTangentSpaceCalculation.h
-        src/Tests/Rendering/TestNormalMapping.h
-        src/Tests/Rendering/TestMipMapping.h
         src/Renderer/Texture/TextureCube.cpp
         src/Renderer/Texture/TextureCube.h
         src/Helper/StringUtils.h
@@ -115,6 +112,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/EditorUI/UI/EditWindowUI.h
         src/ResourcesV2/MaterialResource.cpp
         src/ResourcesV2/MaterialResource.h
+        src/ModulesV2/Renderer/Buffers/EnvironmentProbeStorageBuffer.cpp
+        src/ModulesV2/Renderer/Buffers/EnvironmentProbeStorageBuffer.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

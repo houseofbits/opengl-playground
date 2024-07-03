@@ -39,17 +39,6 @@ void RendererSystem::process() {
     glViewport(0, 0, m_viewportWidth, m_viewportHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //lights = getVisibleLights(camera);
-
-    //for each light
-    //  meshes = getVisibleMeshes(light);
-    //  FrameDescriptor shadowPass = {meshes, camera:light}.
-    //  m_shadowPassRenderer.render(shadowPass);
-
-    //meshes = getVisibleMeshes(camera);
-    //FrameDescriptor colorPass = {meshes, lights, probes, camera, materials, etc}.
-    //m_colorPassRenderer.render(colorPass);
-
     assert(!m_cameraComponents.empty());
 
     updateFrameData();
@@ -70,6 +59,9 @@ void RendererSystem::registerComponent(Component *comp) {
     if (isOfType<LightComponent>(comp)) {
         m_lightComponents[comp->m_EntityId()] = dynamic_cast<LightComponent *>(comp);
     }
+    if (isOfType<EnvironmentProbeComponent>(comp)) {
+        m_environmentProbeComponents[comp->m_EntityId()] = dynamic_cast<EnvironmentProbeComponent *>(comp);
+    }
 }
 
 void RendererSystem::unregisterComponent(Component *comp) {
@@ -77,6 +69,7 @@ void RendererSystem::unregisterComponent(Component *comp) {
     m_transformComponents.erase(comp->m_EntityId.id());
     m_cameraComponents.erase(comp->m_EntityId.id());
     m_lightComponents.erase(comp->m_EntityId.id());
+    m_environmentProbeComponents.erase(comp->m_EntityId.id());
 }
 
 void RendererSystem::updateFrameData() {
@@ -107,6 +100,16 @@ void RendererSystem::updateFrameData() {
         m_frame.m_LightBuffer.appendLight(*transform, *light.second, index);
     }
     m_frame.m_LightBuffer.updateAll();
+
+    m_frame.m_EnvironmentProbeBuffer.reset();
+    for(const auto& probe: m_environmentProbeComponents) {
+        TransformComponent* transform = findTransform(probe.second->m_EntityId);
+        if (transform == nullptr) {
+            continue;
+        }
+        m_frame.m_EnvironmentProbeBuffer.appendProbe(*transform, *probe.second);
+    }
+    m_frame.m_EnvironmentProbeBuffer.updateAll();
 }
 
 TransformComponent *RendererSystem::findTransform(Identity &entityId) {

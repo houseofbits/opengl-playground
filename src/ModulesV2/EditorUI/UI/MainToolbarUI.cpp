@@ -78,6 +78,12 @@ void MainToolbarUI::processTransformTypeDropdown(TransformComponent *transform) 
                 selected_transform_type_label = "Scale";
             }
         }
+//        if (transform->m_isScalingEnabled) {
+//            if (ImGui::Selectable("Universal", m_currentGizmoOperation == ImGuizmo::SCALEU)) {
+//                m_currentGizmoOperation = ImGuizmo::SCALEU;
+//                selected_transform_type_label = "Universal";
+//            }
+//        }
         ImGui::EndCombo();
     }
 }

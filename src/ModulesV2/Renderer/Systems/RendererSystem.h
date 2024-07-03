@@ -3,6 +3,7 @@
 #include "../../../CoreV2/API.h"
 #include "../../../Helper/Log.h"
 #include "../Components/CameraComponent.h"
+#include "../Components/EnvironmentProbeComponent.h"
 #include "../Components/StaticMeshComponent.h"
 #include "../Renderers/ColorPassFrameData.h"
 #include "../Renderers/ColorPassRenderer.h"
@@ -25,6 +26,7 @@ public:
     std::map<Identity::Type, LightComponent *> m_lightComponents;
     std::map<Identity::Type, TransformComponent *> m_transformComponents;
     std::map<Identity::Type, CameraComponent *> m_cameraComponents;
+    std::map<Identity::Type, EnvironmentProbeComponent *> m_environmentProbeComponents;
 
     ColorPassFrameData m_frame;
     ColorPassRenderer m_colorPassRenderer;

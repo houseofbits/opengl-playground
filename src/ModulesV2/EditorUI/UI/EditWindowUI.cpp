@@ -12,7 +12,8 @@ std::vector<std::string> ENTITY_CREATION_OPTIONS = {
         "SpotLight",
         "OmniLight",
         "DirectLight",
-        "StaticMesh"
+        "StaticMesh",
+        "EnvironmentProbe"
 };
 
 std::map<LightComponent::Type, std::string> LIGHT_TYPE_NAME_MAP = {
@@ -67,6 +68,7 @@ void EditWindowUI::process() {
             processEditLightComponent();
             processEditMeshComponent();
             processEditCameraComponent();
+            processEditProbeComponent();
             processEditTransformComponent();
         }
     }
@@ -104,6 +106,15 @@ void EditWindowUI::processEntitiesList() {
             }
         }
     }
+    for (const auto &camera: m_EditorUISystem->m_environmentProbeComponents) {
+        Entity *e = m_EditorUISystem->m_EntityContext->getEntity(camera.first);
+        if (e != nullptr) {
+            std::string name = e->getListName();
+            if (ImGui::Selectable(name.c_str(), m_selectedEntity == camera.first)) {
+                m_selectedEntity = (int) camera.first;
+            }
+        }
+    }
     ImGui::EndListBox();
 }
 
@@ -115,8 +126,6 @@ void EditWindowUI::processEditLightComponent() {
     LightComponent *light = m_EditorUISystem->m_lightComponents[m_selectedEntity];
 
     ImGui::SeparatorText("Light");
-
-//    std::cout<<light->m_Type<<std::endl;
 
     if (ImGui::BeginCombo("Type##LIGHT_TYPE", LIGHT_TYPE_NAME_MAP[light->m_Type].c_str())) {
         for(const auto& lightName: LIGHT_TYPE_NAME_MAP) {
@@ -194,6 +203,17 @@ void EditWindowUI::processEditCameraComponent() {
     if (ImGui::InputFloat("FOV##CAMERA_FOV", &fov, 1.0f, 5.0f, "%.0f")) {
         camera->m_Camera.setFieldOfView(fov);
     }
+}
+
+void EditWindowUI::processEditProbeComponent() {
+    if (m_EditorUISystem->m_environmentProbeComponents.find(m_selectedEntity) == m_EditorUISystem->m_environmentProbeComponents.end()) {
+        return;
+    }
+
+    ImGui::SeparatorText("Environment probe");
+    EnvironmentProbeComponent *probe = m_EditorUISystem->m_environmentProbeComponents[m_selectedEntity];
+
+    ImGui::ColorEdit3("Debug color##PROBE_COLOR", (float *) &probe->m_DebugColor);
 }
 
 bool EditWindowUI::isTransformComponentSelected() {

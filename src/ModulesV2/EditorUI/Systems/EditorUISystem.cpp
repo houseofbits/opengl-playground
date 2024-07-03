@@ -11,6 +11,7 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_cameraComponents(),
                                    m_ResourceManager(nullptr),
                                    m_meshComponents(),
+                                   m_environmentProbeComponents(),
                                    m_isImUIInitialized(false),
                                    m_isDemoWindowVisible(false),
                                    m_MainToolbarUI(this),
@@ -30,6 +31,9 @@ void EditorUISystem::registerComponent(Component *comp) {
     if (isOfType<CameraComponent>(comp)) {
         m_cameraComponents[comp->m_EntityId()] = dynamic_cast<CameraComponent *>(comp);
     }
+    if (isOfType<EnvironmentProbeComponent>(comp)) {
+        m_environmentProbeComponents[comp->m_EntityId()] = dynamic_cast<EnvironmentProbeComponent *>(comp);
+    }
 }
 
 void EditorUISystem::unregisterComponent(Component *comp) {
@@ -37,6 +41,7 @@ void EditorUISystem::unregisterComponent(Component *comp) {
     m_transformComponents.erase(comp->m_EntityId.id());
     m_cameraComponents.erase(comp->m_EntityId.id());
     m_lightComponents.erase(comp->m_EntityId.id());
+    m_environmentProbeComponents.erase(comp->m_EntityId.id());
 }
 
 void EditorUISystem::process() {
@@ -63,11 +68,17 @@ void EditorUISystem::process() {
         Camera *camera = findActiveCamera();
         TransformComponent *transform = m_transformComponents[m_EditWindowUI.m_selectedEntity];
 
+        static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
+
         ImGuizmo::Manipulate(glm::value_ptr(camera->viewMatrix),
                              glm::value_ptr(camera->projectionMatrix),
                              (ImGuizmo::OPERATION) m_MainToolbarUI.m_currentGizmoOperation,
                              (ImGuizmo::MODE) m_MainToolbarUI.m_currentGizmoMode,
-                             glm::value_ptr(transform->m_ModelMatrix));
+                             glm::value_ptr(transform->m_ModelMatrix),
+                             nullptr,
+                             nullptr,
+                             bounds
+                             );
     }
 
     ImGui::Render();

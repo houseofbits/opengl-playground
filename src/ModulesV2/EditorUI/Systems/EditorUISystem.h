@@ -5,6 +5,7 @@
 #include "../../../CoreV2/Events/WindowEvent.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../../Renderer/Components/CameraComponent.h"
+#include "../../Renderer/Components/EnvironmentProbeComponent.h"
 #include "../../Renderer/Components/LightComponent.h"
 #include "../../Renderer/Components/StaticMeshComponent.h"
 #include "../Events/EditorUIEvent.h"
@@ -34,6 +35,7 @@ public:
     std::map<Identity::Type, StaticMeshComponent *> m_meshComponents;
     std::map<Identity::Type, TransformComponent *> m_transformComponents;
     std::map<Identity::Type, CameraComponent *> m_cameraComponents;
+    std::map<Identity::Type, EnvironmentProbeComponent *> m_environmentProbeComponents;
 
     MainToolbarUI m_MainToolbarUI;
     EditWindowUI m_EditWindowUI;

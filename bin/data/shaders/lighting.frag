@@ -4,6 +4,14 @@
 
 layout (location=0) out vec4 fragColor;
 
+struct EnvProbeStructure {
+    vec3 position;
+    uint cubeMapTextureLayer;
+    vec4 boundingBoxMin;
+    vec4 boundingBoxMax;
+    vec3 debugColor;
+};
+
 struct SpotLightStructure {
     vec3 color;
     float intensity;
@@ -15,10 +23,16 @@ struct SpotLightStructure {
     int isPointSource;
 };
 
+
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
     SpotLightStructure spotLights[100];
 };
 uniform uint numSpotLights;
+
+layout (binding = ${INDEX_EnvironmentProbeStorageBuffer}, std430) readonly buffer EnvironmentProbeStorageBuffer {
+    EnvProbeStructure probes[100];
+};
+uniform uint numEnvProbes;
 
 layout(binding = ${INDEX_ProjectionSamplerStorageBuffer}, std430) readonly buffer ProjectionSamplerStorageBuffer {
     sampler2D projectorSamplers[];
@@ -102,5 +116,9 @@ void main()
         }
     }
 
-    fragColor = vec4(color * diffuse.rgb, 1.0);
+    EnvProbeStructure probe = probes[0];
+
+    fragColor = vec4(probe.debugColor, 1.0);
+
+//    fragColor = vec4(color * diffuse.rgb, 1.0);
 }

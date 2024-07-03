@@ -17,9 +17,15 @@ public:
 
         decomposeModelMatrix(t, r, s);
 
-        j["translation"] = t;
-        j["rotation"] = r;
-        j["scale"] = s;
+        if (m_isTranslationEnabled) {
+            j["translation"] = t;
+        }
+        if (m_isRotationEnabled) {
+            j["rotation"] = r;
+        }
+        if (m_isScalingEnabled) {
+            j["scale"] = s;
+        }
     }
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override {
@@ -31,9 +37,15 @@ public:
         m_isRotationEnabled = j.value("allowRotation", m_isRotationEnabled);
         m_isScalingEnabled = j.value("allowScaling", m_isScalingEnabled);
 
-        setTranslation(t);
-        setRotation(r);
-        setScale(s);
+        if (m_isTranslationEnabled) {
+            setTranslation(t);
+        }
+        if (m_isRotationEnabled) {
+            setRotation(r);
+        }
+        if (m_isScalingEnabled) {
+            setScale(s);
+        }
     }
 
     void registerWithSystems(EntityContext &ctx) override;
@@ -70,10 +82,19 @@ public:
         return m_ModelMatrix[3];
     }
 
+    glm::vec3 getScale() {
+        glm::vec3 scale;
+        scale[0] = glm::length(glm::vec3(m_ModelMatrix[0]));
+        scale[1] = glm::length(glm::vec3(m_ModelMatrix[1]));
+        scale[2] = glm::length(glm::vec3(m_ModelMatrix[2]));
+        
+        return scale;
+    }
+
     [[nodiscard]] glm::vec3 getDirection() const {
         glm::quat rotation = glm::quat_cast(m_ModelMatrix);
 
-        return rotation * glm::vec3(0,0,1);
+        return rotation * glm::vec3(0, 0, 1);
     }
 
     void decomposeModelMatrix(glm::vec3 &, glm::quat &, glm::vec3 &);

@@ -19,6 +19,7 @@ private:
     void processEditTransformComponent();
     void processEditMeshComponent();
     void processEditCameraComponent();
+    void processEditProbeComponent();
     void sendEntityCreationEvent(std::string, std::string);
     void sendEntityRemovalEvent();
 
