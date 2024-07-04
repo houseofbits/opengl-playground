@@ -116,9 +116,77 @@ void main()
         }
     }
 
-    EnvProbeStructure probe = probes[0];
+    //////////////////////////////////////////////////////////////////////////////////////
+    // probes
+    vec3 fragmentWorldPos = gsPosition.xyz;
+    vec3 probeColor = vec3(0);
 
-    fragColor = vec4(probe.debugColor, 1.0);
+    vec3 selectedColor[4];
+    float selectedWeights[4];
+    int numSelectedProbes = 0;
+
+    for (int probeIndex = 0; probeIndex < numEnvProbes; probeIndex++) {
+        if (numSelectedProbes > 3) {
+            break;
+        }
+
+        EnvProbeStructure probe = probes[probeIndex];
+
+        if (fragmentWorldPos.x < probe.boundingBoxMin.x || fragmentWorldPos.y < probe.boundingBoxMin.y || fragmentWorldPos.z < probe.boundingBoxMin.z) {
+            continue;
+        }
+
+        if (fragmentWorldPos.x > probe.boundingBoxMax.x || fragmentWorldPos.y > probe.boundingBoxMax.y || fragmentWorldPos.z > probe.boundingBoxMax.z) {
+            continue;
+        }
+
+        vec3 ray = fragmentWorldPos - probe.position;
+        float l = length(ray);
+        ray = normalize(ray);
+
+        vec3 planeIntersect1 = (probe.boundingBoxMax.xyz - probe.position) / ray;
+        vec3 planeIntersect2 = (probe.boundingBoxMin.xyz - probe.position) / ray;
+        vec3 furthestPlane = max(planeIntersect1, planeIntersect2);
+        float d = min(min(furthestPlane.x, furthestPlane.y), furthestPlane.z);
+        float fl = max(min(1.0 - (l / d), 1.0), 0);
+
+        selectedColor[numSelectedProbes] = probe.debugColor;
+        selectedWeights[numSelectedProbes] = fl;
+        numSelectedProbes++;
+    }
+
+    float sumWeights = 0;
+    float invSumWeights = 0;
+    for (int i = 0; i < numSelectedProbes; i++) {
+        sumWeights += selectedWeights[i];
+        invSumWeights += (1.0 - selectedWeights[i]);
+    }
+
+    if (numSelectedProbes > 1) {
+        float blendFactor[4];
+        float sumBlendFactor = 0;
+
+        for (int i = 0; i < numSelectedProbes; i++) {
+            blendFactor[i] = ((selectedWeights[i] / sumWeights)) / (numSelectedProbes - 1);
+            blendFactor[i] *= ((selectedWeights[i]) / invSumWeights);
+            sumBlendFactor += blendFactor[i];
+        }
+        vec3 reflectionColor = vec3(0);
+        for (int i = 0; i < numSelectedProbes; i++) {
+            float fl = blendFactor[i] / sumBlendFactor;
+//            reflectionColor = mix(reflectionColor, selectedColor[i], fl);
+            reflectionColor += selectedColor[i] * (selectedWeights[i] / sumWeights);
+        }
+
+        probeColor =  reflectionColor;
+    } else if (numSelectedProbes == 1) {
+        probeColor = selectedColor[0];
+    }
+
+
+//    EnvProbeStructure probe = probes[0];
+
+    fragColor = vec4(probeColor, 1.0);
 
 //    fragColor = vec4(color * diffuse.rgb, 1.0);
 }

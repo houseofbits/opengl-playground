@@ -3,23 +3,14 @@
 #include "../../../CoreV2/Events/WindowEvent.h"
 #include "../../../Helper/Time.h"
 
-CameraControlSystem::CameraControlSystem() : m_cameraComponents(), m_isEnabled(false) {
+CameraControlSystem::CameraControlSystem() : m_isEnabled(false) {
+    usesComponent<CameraComponent>();
 }
 
 void CameraControlSystem::process() {
 }
 
 void CameraControlSystem::initialize(ResourceManager *) {
-}
-
-void CameraControlSystem::registerComponent(Component *comp) {
-    if (isOfType<CameraComponent>(comp)) {
-        m_cameraComponents[comp->m_Id()] = dynamic_cast<CameraComponent *>(comp);
-    }
-}
-
-void CameraControlSystem::unregisterComponent(Component *comp) {
-    m_cameraComponents.erase(comp->m_EntityId.id());
 }
 
 void CameraControlSystem::registerEventHandlers(EventManager *eventManager) {
@@ -116,10 +107,12 @@ bool CameraControlSystem::handleInputEvent(InputEvent *const event) {
 }
 
 Camera *CameraControlSystem::findActiveCamera() {
-    for (const auto &camera: m_cameraComponents) {
-        if (camera.second->m_isActive) {
-            return &camera.second->m_Camera;
-        }
+    auto *c = findComponent<CameraComponent>([](CameraComponent *camera) {
+        return camera->m_isActive;
+    });
+
+    if (c != nullptr) {
+        return &c->m_Camera;
     }
 
     return nullptr;

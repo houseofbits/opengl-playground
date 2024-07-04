@@ -77,7 +77,7 @@ void EditorUISystem::process() {
                              glm::value_ptr(transform->m_ModelMatrix),
                              nullptr,
                              nullptr,
-                             bounds
+                             m_EditWindowUI.m_isBoundsTransformAllowed ? bounds : nullptr
                              );
     }
 

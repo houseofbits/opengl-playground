@@ -1,5 +1,6 @@
 #include "EntityConfiguration.h"
 #include "../../Helper/Log.h"
+#include "Entity.h"
 
 EntityConfiguration::EntityConfiguration(Factory<Component> &factory) : m_EntityConfiguration(), m_ComponentFactory(factory) {
 }

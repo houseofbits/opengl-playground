@@ -3,6 +3,8 @@
 #include "../../../CoreV2/API.h"
 
 class EnvironmentProbeComponent : public Component {
+    TYPE_DEFINITION(EnvironmentProbeComponent);
+
 public:
     inline static const std::string DEBUG_COLOR_KEY = "debugColor";
 
@@ -14,5 +16,5 @@ public:
 
     glm::vec3 m_DebugColor;
 
-//    glm::vec3 m_ViewOffset; //View point offset relative to probe position;
+    //    glm::vec3 m_ViewOffset; //View point offset relative to probe position;
 };

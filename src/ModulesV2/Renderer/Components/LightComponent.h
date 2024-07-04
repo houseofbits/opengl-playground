@@ -4,6 +4,8 @@
 #include "../../../ResourcesV2/TextureResource.h"
 
 class LightComponent : public Component {
+    TYPE_DEFINITION(LightComponent);
+
 public:
     inline static const std::string TYPE_KEY = "type";
     inline static const std::string COLOR_KEY = "color";
@@ -24,8 +26,8 @@ public:
     void serialize(nlohmann::json &j) override;
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
     void registerWithSystems(EntityContext &ctx) override;
-    std::string getTypeName();
-    Type getTypeFromName(const std::string &name);
+    std::string getLightTypeName();
+    Type getLightTypeFromName(const std::string &name);
 
     std::unordered_map<Type, std::string> m_TypeNameMap;
     Type m_Type;

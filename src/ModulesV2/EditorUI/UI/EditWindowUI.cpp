@@ -25,6 +25,7 @@ std::map<LightComponent::Type, std::string> LIGHT_TYPE_NAME_MAP = {
 EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
                                                      m_EditorUISystem(editor),
                                                      m_lightProjectorPath(),
+                                                     m_isBoundsTransformAllowed(false),
                                                      m_meshModelPath(),
                                                      m_selectedEntityCreationType(0) {
 
@@ -84,6 +85,7 @@ void EditWindowUI::processEntitiesList() {
             if (ImGui::Selectable(name.c_str(), m_selectedEntity == light.first)) {
                 m_selectedEntity = (int) light.first;
                 m_lightProjectorPath = light.second->m_Projection().m_Path;
+                m_isBoundsTransformAllowed = false;
             }
         }
     }
@@ -94,6 +96,7 @@ void EditWindowUI::processEntitiesList() {
             if (ImGui::Selectable(name.c_str(), m_selectedEntity == mesh.first)) {
                 m_selectedEntity = (int) mesh.first;
                 m_meshModelPath = mesh.second->m_Mesh().m_Path;
+                m_isBoundsTransformAllowed = false;
             }
         }
     }
@@ -103,6 +106,7 @@ void EditWindowUI::processEntitiesList() {
             std::string name = e->getListName();
             if (ImGui::Selectable(name.c_str(), m_selectedEntity == camera.first)) {
                 m_selectedEntity = (int) camera.first;
+                m_isBoundsTransformAllowed = false;
             }
         }
     }
@@ -112,6 +116,7 @@ void EditWindowUI::processEntitiesList() {
             std::string name = e->getListName();
             if (ImGui::Selectable(name.c_str(), m_selectedEntity == camera.first)) {
                 m_selectedEntity = (int) camera.first;
+                m_isBoundsTransformAllowed = true;
             }
         }
     }

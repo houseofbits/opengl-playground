@@ -17,7 +17,7 @@ LightComponent::LightComponent() : Component(),
 }
 
 void LightComponent::serialize(nlohmann::json &j) {
-    j[TYPE_KEY] = getTypeName();
+    j[TYPE_KEY] = getLightTypeName();
     j[COLOR_KEY] = m_Color;
     j[INTENSITY_KEY] = m_Intensity;
     j[ATTENUATION_KEY] = m_Attenuation;
@@ -32,7 +32,7 @@ void LightComponent::serialize(nlohmann::json &j) {
 }
 
 void LightComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
-    m_Type = getTypeFromName(j.value(TYPE_KEY, getTypeName()));
+    m_Type = getLightTypeFromName(j.value(TYPE_KEY, getLightTypeName()));
     m_Color = j.value(COLOR_KEY, m_Color);
     m_Intensity = j.value(INTENSITY_KEY, m_Intensity);
     m_Attenuation = j.value(ATTENUATION_KEY, m_Attenuation);
@@ -54,11 +54,11 @@ void LightComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
 }
 
-std::string LightComponent::getTypeName() {
+std::string LightComponent::getLightTypeName() {
     return m_TypeNameMap[m_Type];
 }
 
-LightComponent::Type LightComponent::getTypeFromName(const std::string &name) {
+LightComponent::Type LightComponent::getLightTypeFromName(const std::string &name) {
     for (const auto &[key, value]: m_TypeNameMap) {
         if (value == name) {
             return key;

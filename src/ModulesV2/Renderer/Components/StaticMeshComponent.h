@@ -5,6 +5,8 @@
 #include "../../../ResourcesV2/StaticMeshResource.h"
 
 class StaticMeshComponent : public Component {
+    TYPE_DEFINITION(StaticMeshComponent);
+
 public:
     inline static const std::string MODEL_KEY = "model";
     inline static const std::string MATERIAL_KEY = "material";
@@ -24,7 +26,7 @@ public:
         resourceManager.request(m_Material, path);
     }
 
-    void registerWithSystems(EntityContext& ctx) override;
+    void registerWithSystems(EntityContext &ctx) override;
 
     ResourceHandle<StaticMeshResource> m_Mesh;
     ResourceHandle<MaterialResource> m_Material;

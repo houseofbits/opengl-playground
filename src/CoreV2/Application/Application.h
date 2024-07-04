@@ -2,6 +2,8 @@
 
 #include "../Entity/EntityContext.h"
 #include "../Events/EventManager.h"
+#include "../Resources/ResourceManager.h"
+#include <string>
 
 class Application {
 public:
@@ -9,7 +11,7 @@ public:
 
     virtual void run();
 
-    void loadEntitiesFromFile(const std::string& fileName);
+    void loadEntitiesFromFile(const std::string &fileName);
     void saveEntitiesToFile();
 
 protected:

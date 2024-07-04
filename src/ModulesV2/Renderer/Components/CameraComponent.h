@@ -4,6 +4,8 @@
 #include "../../../Renderer/Camera/Camera.h"
 
 class CameraComponent : public Component {
+    TYPE_DEFINITION(CameraComponent);
+
 public:
     CameraComponent();
 

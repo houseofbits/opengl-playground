@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Entry.h"
 #include "CoreV2/Events/Event.h"
 #include "CoreV2/Events/EventManager.h"
 #include "CoreV2/Events/WindowEvent.h"
+#include "CoreV2/Reflection/TypedClass.h"
+#include "Entry.h"
 #include "Exception.h"
 #include "Helper/Log.h"
 #include "Helper/Time.h"
@@ -12,7 +13,6 @@
 #include "Renderer/Model/VertexArray.h"
 #include "Renderer/RenderManager.h"
 #include "Renderer/Shader/Shader.h"
-#include "TypedClass.h"
 #include "Window.h"
 #include "WireframeRenderer/GridPlane.h"
 #include <iostream>

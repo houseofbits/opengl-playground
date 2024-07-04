@@ -2,15 +2,10 @@
 
 #include "../Module/EntityModule.h"
 #include "../Reflection/Factory.h"
-#include "../Resources/ResourceManager.h"
-#include "../System/EntitySystem.h"
 #include "Component.h"
 #include "Entity.h"
 #include "EntityConfiguration.h"
 #include <memory>
-
-//class EntityModule;
-
 
 //0. add empty entity
 //1. buildEntity - populate with components
@@ -23,11 +18,11 @@ private:
     Factory<Component> m_ComponentFactory;
     EntityConfiguration m_EntityConfiguration;
 
-    std::list<Entity::TEntityPtr> m_Entities;
+    std::list<std::shared_ptr<Entity>> m_Entities;
     std::list<EntitySystem *> m_Systems;
     std::list<EntityModule *> m_Modules;
 
-    Entity::TEntityPtr addEntity();
+    std::shared_ptr<Entity> addEntity();
 
 public:
     EntityContext();
@@ -67,14 +62,7 @@ public:
         return nullptr;
     }
 
-    Entity* getEntity(Identity::Type id) {
-        for(const auto& e: m_Entities) {
-            if (e->m_Id.id() == id) {
-                return e.get();
-            }
-        }
-        return nullptr;
-    }
+    Entity* getEntity(Identity::Type id) ;
 
     template<class T>
     void registerComponentWithEntitySystem(Component *component) {
@@ -86,7 +74,7 @@ public:
 
     void unregisterComponentFromSystems(Component *);
     void deserializeEntityMap(nlohmann::json &j);
-    Entity::TEntityPtr createEntity(const std::string &configurationName, ResourceManager &);
+    std::shared_ptr<Entity> createEntity(const std::string &configurationName, ResourceManager &);
     void removeEntity(int entityId);
     void deserializeEntities(nlohmann::json &j, ResourceManager &);
     void serializeEntities(nlohmann::json &j);

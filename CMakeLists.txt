@@ -64,8 +64,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/Renderer/Components/LightComponent.h
         src/ModulesV2/Renderer/Components/EnvironmentProbeComponent.cpp
         src/ModulesV2/Renderer/Components/EnvironmentProbeComponent.h
-        src/ModulesV2/Renderer/Components/MaterialComponent.cpp
-        src/ModulesV2/Renderer/Components/MaterialComponent.h
         src/CoreV2/Application/Application.cpp
         src/CoreV2/Application/Application.h
         src/ModulesV2/Renderer/Components/CameraComponent.cpp

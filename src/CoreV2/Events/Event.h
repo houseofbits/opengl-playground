@@ -1,5 +1,5 @@
 #pragma once
-#include "../../TypedClass.h"
+#include "../Reflection/TypedClass.h"
 
 class EventManager;
 

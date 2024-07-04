@@ -14,8 +14,6 @@ public:
         glm::vec3 right;
     };
 
-    void registerComponent(Component *comp) override;
-    void unregisterComponent(Component *comp) override;
     void process() override;
     void initialize(ResourceManager*) override;
     void registerEventHandlers(EventManager *eventManager) override;
@@ -25,6 +23,5 @@ public:
     Camera* findActiveCamera();
     static TBN calculateTBN(glm::vec3 viewDirection);
 
-    std::map<Identity::Type, CameraComponent *> m_cameraComponents;
     bool m_isEnabled;
 };

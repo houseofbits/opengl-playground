@@ -12,6 +12,7 @@ public:
     bool isTransformComponentSelected();
 
     int m_selectedEntity;
+    bool m_isBoundsTransformAllowed;
 private:
 
     void processEntitiesList();

@@ -20,6 +20,7 @@ void ColorPassRenderer::render(ColorPassFrameData &frame) {
         m_ShaderProgram().setUniform("modelMatrix", elem.second.transform->getModelMatrix());
         frame.m_LightBuffer.bind(m_ShaderProgram());
         frame.m_ProjectorBuffer.bind();
+        frame.m_EnvironmentProbeBuffer.bind(m_ShaderProgram());
         elem.second.mesh->m_Mesh().render();
     }
 }

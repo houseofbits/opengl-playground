@@ -1,11 +1,12 @@
 #pragma once
 #include "../../../libs/tinygltf/json.hpp"
 #include "../Reflection/Identity.h"
+#include "../Reflection/TypedClass.h"
 #include "../Resources/ResourceManager.h"
 
 class EntityContext;
 
-class Component {
+class Component : public BaseClass {
 public:
     Component() = default;
     virtual ~Component() = default;

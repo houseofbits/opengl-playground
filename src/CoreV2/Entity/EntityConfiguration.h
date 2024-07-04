@@ -3,11 +3,12 @@
 #include "../../../libs/tinygltf/json.hpp"
 #include "../Reflection/Factory.h"
 #include "Component.h"
-#include "Entity.h"
 #include <list>
 #include <map>
 #include <optional>
 #include <string>
+
+class Entity;
 
 class EntityConfiguration {
 public:

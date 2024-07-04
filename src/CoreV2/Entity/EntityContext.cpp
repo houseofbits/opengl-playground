@@ -4,6 +4,7 @@
 #include "EntitySerializer.h"
 #include <iostream>
 #include <memory>
+#include "../System/EntitySystem.h"
 
 EntityContext::EntityContext() : m_ComponentFactory(), m_EntityConfiguration(m_ComponentFactory), m_Entities(), m_Systems() {
 }
@@ -89,4 +90,13 @@ void EntityContext::processSystems() {
     for (const auto &system: m_Systems) {
         system->process();
     }
+}
+
+Entity *EntityContext::getEntity(Identity::Type id) {
+    for(const auto& e: m_Entities) {
+        if (e->m_Id.id() == id) {
+            return e.get();
+        }
+    }
+    return nullptr;
 }
