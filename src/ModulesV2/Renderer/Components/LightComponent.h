@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../CoreV2/API.h"
-#include "../../../ResourcesV2/TextureResource.h"
+#include "../Resources/TextureResource.h"
 
 class LightComponent : public Component {
     TYPE_DEFINITION(LightComponent);

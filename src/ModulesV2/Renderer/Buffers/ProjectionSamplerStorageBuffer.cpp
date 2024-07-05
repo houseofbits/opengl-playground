@@ -1,6 +1,6 @@
 #include "ProjectionSamplerStorageBuffer.h"
 #include "../../../Helper/ShaderSourceLoader.h"
-#include "../../../ResourcesV2/ShaderProgramResource.h"
+#include "../Resources/ShaderProgramResource.h"
 
 ProjectionSamplerStorageBuffer::ProjectionSamplerStorageBuffer() : ShaderStorageBuffer<GLuint64>() {
     uniformBindingIndex = ShaderSourceLoader::registerBindingIndex("ProjectionSamplerStorageBuffer");

@@ -16,27 +16,17 @@ class EditorUISystem : public EntitySystem {
 public:
     EditorUISystem();
 
-    void registerComponent(Component *comp) override;
-    void unregisterComponent(Component *comp) override;
     void process() override;
     void initialize(ResourceManager *) override;
     void registerEventHandlers(EventManager *eventManager) override;
     bool handleWindowEvent(WindowEvent *event);
     bool handleRawSDLEvent(RawSDLEvent *event);
-
     Camera *findActiveCamera();
     TransformComponent *getSelectedTransformComponent();
 
     ResourceManager *m_ResourceManager;
     bool m_isImUIInitialized;
     bool m_isDemoWindowVisible;
-
-    std::map<Identity::Type, LightComponent *> m_lightComponents;
-    std::map<Identity::Type, StaticMeshComponent *> m_meshComponents;
-    std::map<Identity::Type, TransformComponent *> m_transformComponents;
-    std::map<Identity::Type, CameraComponent *> m_cameraComponents;
-    std::map<Identity::Type, EnvironmentProbeComponent *> m_environmentProbeComponents;
-
     MainToolbarUI m_MainToolbarUI;
     EditWindowUI m_EditWindowUI;
 };

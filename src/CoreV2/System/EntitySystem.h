@@ -29,7 +29,7 @@ public:
 
         void registerComponent(Component *comp) override {
             if (isOfType<T>(comp)) {
-                m_components[comp->m_Id()] = dynamic_cast<T *>(comp);
+                m_components[comp->m_EntityId()] = dynamic_cast<T *>(comp);
             }
         }
 
@@ -60,10 +60,10 @@ public:
             return it->second;
         }
 
-        ContainerType m_components;
+        ContainerType m_components{};
     };
 
-    std::unordered_map<unsigned int, VComponentContainer *> m_components;
+    std::unordered_map<unsigned int, VComponentContainer *> m_components{};
 
     template<class T>
     void usesComponent() {
@@ -98,7 +98,6 @@ public:
     typename RComponentContainer<T>::ContainerType &getComponentContainer() {
         return getContainer<T>()->m_components;
     }
-
 
     EntityContext *m_EntityContext{nullptr};
     EventManager *m_EventManager{nullptr};

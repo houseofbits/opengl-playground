@@ -6,42 +6,16 @@
 #include <glm/gtc/type_ptr.hpp>
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
-                                   m_lightComponents(),
-                                   m_transformComponents(),
-                                   m_cameraComponents(),
                                    m_ResourceManager(nullptr),
-                                   m_meshComponents(),
-                                   m_environmentProbeComponents(),
                                    m_isImUIInitialized(false),
                                    m_isDemoWindowVisible(false),
                                    m_MainToolbarUI(this),
                                    m_EditWindowUI(this) {
-}
-
-void EditorUISystem::registerComponent(Component *comp) {
-    if (isOfType<StaticMeshComponent>(comp)) {
-        m_meshComponents[comp->m_EntityId()] = dynamic_cast<StaticMeshComponent *>(comp);
-    }
-    if (isOfType<TransformComponent>(comp)) {
-        m_transformComponents[comp->m_EntityId()] = dynamic_cast<TransformComponent *>(comp);
-    }
-    if (isOfType<LightComponent>(comp)) {
-        m_lightComponents[comp->m_EntityId()] = dynamic_cast<LightComponent *>(comp);
-    }
-    if (isOfType<CameraComponent>(comp)) {
-        m_cameraComponents[comp->m_EntityId()] = dynamic_cast<CameraComponent *>(comp);
-    }
-    if (isOfType<EnvironmentProbeComponent>(comp)) {
-        m_environmentProbeComponents[comp->m_EntityId()] = dynamic_cast<EnvironmentProbeComponent *>(comp);
-    }
-}
-
-void EditorUISystem::unregisterComponent(Component *comp) {
-    m_meshComponents.erase(comp->m_EntityId.id());
-    m_transformComponents.erase(comp->m_EntityId.id());
-    m_cameraComponents.erase(comp->m_EntityId.id());
-    m_lightComponents.erase(comp->m_EntityId.id());
-    m_environmentProbeComponents.erase(comp->m_EntityId.id());
+    usesComponent<StaticMeshComponent>();
+    usesComponent<LightComponent>();
+    usesComponent<TransformComponent>();
+    usesComponent<CameraComponent>();
+    usesComponent<EnvironmentProbeComponent>();
 }
 
 void EditorUISystem::process() {
@@ -66,7 +40,8 @@ void EditorUISystem::process() {
         ImGuizmo::SetRect(viewport->Pos.x, viewport->Pos.y, viewport->Size.x, viewport->Size.y);
 
         Camera *camera = findActiveCamera();
-        TransformComponent *transform = m_transformComponents[m_EditWindowUI.m_selectedEntity];
+        auto *transform = getComponent<TransformComponent>(m_EditWindowUI.m_selectedEntity);
+        assert(transform != nullptr);
 
         static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
 
@@ -119,19 +94,20 @@ bool EditorUISystem::handleRawSDLEvent(RawSDLEvent *event) {
 }
 
 Camera *EditorUISystem::findActiveCamera() {
-    for (const auto &camera: m_cameraComponents) {
-        if (camera.second->m_isActive) {
-            return &camera.second->m_Camera;
-        }
+    auto *c = findComponent<CameraComponent>([](CameraComponent *camera) {
+        return camera->m_isActive;
+    });
+
+    if (c != nullptr) {
+        return &c->m_Camera;
     }
 
     return nullptr;
 }
 
 TransformComponent *EditorUISystem::getSelectedTransformComponent() {
-    if (m_EditWindowUI.isTransformComponentSelected()
-        && m_transformComponents.find(m_EditWindowUI.m_selectedEntity) != m_transformComponents.end()) {
-        return m_transformComponents[m_EditWindowUI.m_selectedEntity];
+    if (m_EditWindowUI.isTransformComponentSelected()) {
+        return getComponent<TransformComponent>(m_EditWindowUI.m_selectedEntity);
     }
     return nullptr;
 }

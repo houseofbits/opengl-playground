@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../../../CoreV2/API.h"
-#include "../../../ResourcesV2/MaterialResource.h"
-#include "../../../ResourcesV2/StaticMeshResource.h"
+#include "../Resources/MaterialResource.h"
+#include "../Resources/StaticMeshResource.h"
 
 class StaticMeshComponent : public Component {
     TYPE_DEFINITION(StaticMeshComponent);

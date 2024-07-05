@@ -2,6 +2,6 @@
 
 
 Resource::Resource() : m_Path(),
-                       m_Status(UNDEFINED),
+                       m_Status(STATUS_UNDEFINED),
                        m_ReferenceCount(0) {
 }

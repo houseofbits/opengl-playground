@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../../../Renderer/Shader/ShaderStorageBuffer.h"
-#include "../../../ResourcesV2/ShaderProgramResource.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../Components/EnvironmentProbeComponent.h"
+#include "../Resources/ShaderProgramResource.h"
 #include <glm/vec3.hpp>
 
 struct EnvironmentProbeStructure {

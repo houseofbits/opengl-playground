@@ -2,9 +2,9 @@
 
 #include "../../../Renderer/Shader/Shader.h"
 #include "../../../Renderer/Shader/ShaderStorageBuffer.h"
-#include "../../../ResourcesV2/ShaderProgramResource.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../Components/LightComponent.h"
+#include "../Resources/ShaderProgramResource.h"
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 

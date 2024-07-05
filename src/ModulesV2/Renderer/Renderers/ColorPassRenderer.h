@@ -3,8 +3,8 @@
 #include "../../../Renderer/Camera/Camera.h"
 #include "../../../Renderer/Model/Cube.h"
 #include "../../../Renderer/Shader/Shader.h"
-#include "../../../ResourcesV2/ShaderProgramResource.h"
 #include "../Components/StaticMeshComponent.h"
+#include "../Resources/ShaderProgramResource.h"
 #include "ColorPassFrameData.h"
 class RendererSystem;
 

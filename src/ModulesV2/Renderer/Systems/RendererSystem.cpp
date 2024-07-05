@@ -5,8 +5,14 @@
 RendererSystem::RendererSystem() : EntitySystem(),
                                    m_colorPassRenderer(this),
                                    m_frame(),
+                                   m_ShaderProgram(),
                                    m_viewportWidth(1024),
                                    m_viewportHeight(768) {
+    usesComponent<StaticMeshComponent>();
+    usesComponent<LightComponent>();
+    usesComponent<TransformComponent>();
+    usesComponent<CameraComponent>();
+    usesComponent<EnvironmentProbeComponent>();
 }
 
 void RendererSystem::registerEventHandlers(EventManager *eventManager) {
@@ -32,6 +38,8 @@ void RendererSystem::initialize(ResourceManager* resourceManager) {
 
     m_frame.initialize();
     m_colorPassRenderer.initialize(resourceManager);
+
+    resourceManager->request(m_ShaderProgram, "data/shaders/lighting|.vert|.frag|.geom");
 }
 
 void RendererSystem::process() {
@@ -39,43 +47,21 @@ void RendererSystem::process() {
     glViewport(0, 0, m_viewportWidth, m_viewportHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    assert(!m_cameraComponents.empty());
+    Camera* camera = findActiveCamera();
+    assert(camera != nullptr);
+
+//    m_ShaderProgram().use();
+//    camera->bind(m_ShaderProgram());
 
     updateFrameData();
-    m_colorPassRenderer.beginRender(m_cameraComponents.begin()->second->m_Camera);
+    m_colorPassRenderer.beginRender(*camera);
     m_colorPassRenderer.render(m_frame);
-}
-
-void RendererSystem::registerComponent(Component *comp) {
-    if (isOfType<StaticMeshComponent>(comp)) {
-        m_meshComponents[comp->m_EntityId()] = dynamic_cast<StaticMeshComponent *>(comp);
-    }
-    if (isOfType<TransformComponent>(comp)) {
-        m_transformComponents[comp->m_EntityId()] = dynamic_cast<TransformComponent *>(comp);
-    }
-    if (isOfType<CameraComponent>(comp)) {
-        m_cameraComponents[comp->m_EntityId()] = dynamic_cast<CameraComponent *>(comp);
-    }
-    if (isOfType<LightComponent>(comp)) {
-        m_lightComponents[comp->m_EntityId()] = dynamic_cast<LightComponent *>(comp);
-    }
-    if (isOfType<EnvironmentProbeComponent>(comp)) {
-        m_environmentProbeComponents[comp->m_EntityId()] = dynamic_cast<EnvironmentProbeComponent *>(comp);
-    }
-}
-
-void RendererSystem::unregisterComponent(Component *comp) {
-    m_meshComponents.erase(comp->m_EntityId.id());
-    m_transformComponents.erase(comp->m_EntityId.id());
-    m_cameraComponents.erase(comp->m_EntityId.id());
-    m_lightComponents.erase(comp->m_EntityId.id());
-    m_environmentProbeComponents.erase(comp->m_EntityId.id());
 }
 
 void RendererSystem::updateFrameData() {
     unsigned int i = 0;
     m_frame.clear();
-    for (const auto &mesh: m_meshComponents) {
+    for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
         m_frame.add(
                 i,
                 mesh.second,
@@ -86,7 +72,7 @@ void RendererSystem::updateFrameData() {
 
     m_frame.m_LightBuffer.reset();
     m_frame.m_ProjectorBuffer.reset();
-    for(const auto& light: m_lightComponents) {
+    for(const auto& light: getComponentContainer<LightComponent>()) {
         TransformComponent* transform = findTransform(light.second->m_EntityId);
         if (transform == nullptr) {
             continue;
@@ -102,7 +88,7 @@ void RendererSystem::updateFrameData() {
     m_frame.m_LightBuffer.updateAll();
 
     m_frame.m_EnvironmentProbeBuffer.reset();
-    for(const auto& probe: m_environmentProbeComponents) {
+    for(const auto& probe: getComponentContainer<EnvironmentProbeComponent>()) {
         TransformComponent* transform = findTransform(probe.second->m_EntityId);
         if (transform == nullptr) {
             continue;
@@ -113,9 +99,16 @@ void RendererSystem::updateFrameData() {
 }
 
 TransformComponent *RendererSystem::findTransform(Identity &entityId) {
-    auto iter = m_transformComponents.find(entityId());
-    if (iter != m_transformComponents.end()) {
-        return iter->second;
+    return getComponent<TransformComponent>(entityId.id());
+}
+
+Camera *RendererSystem::findActiveCamera() {
+    auto *c = findComponent<CameraComponent>([](CameraComponent *camera) {
+        return camera->m_isActive;
+    });
+
+    if (c != nullptr) {
+        return &c->m_Camera;
     }
 
     return nullptr;

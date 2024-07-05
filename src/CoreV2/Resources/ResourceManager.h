@@ -48,7 +48,7 @@ public:
             Log::info("Fetch resource: " + path);
             resource = new typename T::TYPE();
             resource->m_Path = std::move(path);
-            resource->m_Status = Resource::DATA_FETCHING;
+            resource->m_Status = Resource::STATUS_DATA_FETCHING;
 
             m_Resources.push_back(resource);
         } else {
@@ -67,9 +67,9 @@ public:
 
     void buildFetchedResources() {
         for (const auto &resource: m_Resources) {
-            if (resource->m_Status == Resource::DATA_READY) {
-                resource->build();
-                if (resource->m_Status == Resource::BUILD_ERROR) {
+            if (resource->m_Status == Resource::STATUS_DATA_READY) {
+                resource->m_Status = resource->build();
+                if (resource->m_Status == Resource::STATUS_BUILD_ERROR) {
                     Log::warn("Failed to build resource: " + resource->m_Path);
                 }
             }
@@ -83,10 +83,9 @@ public:
                 return;
             }
             for (const auto &resource: m_Resources) {
-                if (resource->m_Status == Resource::DATA_FETCHING) {
-                    resource->fetchData(*this);
-
-                    if (resource->m_Status == Resource::FETCH_ERROR) {
+                if (resource->m_Status == Resource::STATUS_DATA_FETCHING) {
+                    resource->m_Status = resource->fetchData(*this);
+                    if (resource->m_Status != Resource::STATUS_DATA_READY) {
                         Log::warn("Failed to fetch resource: " + resource->m_Path);
                     }
                 }

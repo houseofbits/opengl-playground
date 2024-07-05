@@ -12,38 +12,31 @@ public:
     inline static Resource *m_DefaultInstance = nullptr;
 
     enum Status {
-        UNDEFINED,
-        DATA_FETCHING,
-        DATA_READY,
-        READY,
-        FETCH_ERROR,
-        BUILD_ERROR,
+        STATUS_UNDEFINED,
+        STATUS_DATA_FETCHING,
+        STATUS_DATA_READY,
+        STATUS_BUILDING,
+        STATUS_READY,
+        STATUS_FETCH_ERROR,
+        STATUS_BUILD_ERROR,
     };
 
     std::string m_Path;
-    Status m_Status = Status::UNDEFINED;
+    Status m_Status = Status::STATUS_UNDEFINED;
     unsigned int m_ReferenceCount = 0;
 
-    virtual void fetchData(ResourceManager &) = 0;
-    virtual void build() = 0;
+    virtual Status fetchData(ResourceManager &) {
+        return STATUS_DATA_READY;
+    }
+    virtual Status build() {
+        return STATUS_READY;
+    }
     virtual void destroy() = 0;
 
-    void setDataReadyStatus() {
-        m_Status = DATA_READY;
-    }
-    void setFetchErrorStatus() {
-        m_Status = FETCH_ERROR;
-    }
-    void setBuildErrorStatus() {
-        m_Status = BUILD_ERROR;
-    }
-    void setReadyStatus() {
-        m_Status = READY;
-    }
     [[nodiscard]] bool isReady() const {
-        return m_Status == READY;
+        return m_Status == STATUS_READY;
     }
     [[nodiscard]] bool isFinished() const {
-        return m_Status == UNDEFINED || m_Status == READY || m_Status == FETCH_ERROR || m_Status == BUILD_ERROR;
+        return m_Status == STATUS_UNDEFINED || m_Status == STATUS_READY || m_Status == STATUS_FETCH_ERROR || m_Status == STATUS_BUILD_ERROR;
     }
 };

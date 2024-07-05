@@ -78,7 +78,7 @@ void EditWindowUI::process() {
 
 void EditWindowUI::processEntitiesList() {
     ImGui::BeginListBox("##ENTITY_LIST", ImVec2(ImGui::GetWindowWidth() - 15, 200));
-    for (const auto &light: m_EditorUISystem->m_lightComponents) {
+    for (const auto &light: m_EditorUISystem->getComponentContainer<LightComponent>()) {
         Entity *e = m_EditorUISystem->m_EntityContext->getEntity(light.first);
         if (e != nullptr) {
             std::string name = e->getListName();
@@ -89,7 +89,7 @@ void EditWindowUI::processEntitiesList() {
             }
         }
     }
-    for (const auto &mesh: m_EditorUISystem->m_meshComponents) {
+    for (const auto &mesh: m_EditorUISystem->getComponentContainer<StaticMeshComponent>()) {
         Entity *e = m_EditorUISystem->m_EntityContext->getEntity(mesh.first);
         if (e != nullptr) {
             std::string name = e->getListName();
@@ -100,7 +100,7 @@ void EditWindowUI::processEntitiesList() {
             }
         }
     }
-    for (const auto &camera: m_EditorUISystem->m_cameraComponents) {
+    for (const auto &camera: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
         Entity *e = m_EditorUISystem->m_EntityContext->getEntity(camera.first);
         if (e != nullptr) {
             std::string name = e->getListName();
@@ -110,7 +110,7 @@ void EditWindowUI::processEntitiesList() {
             }
         }
     }
-    for (const auto &camera: m_EditorUISystem->m_environmentProbeComponents) {
+    for (const auto &camera: m_EditorUISystem->getComponentContainer<EnvironmentProbeComponent>()) {
         Entity *e = m_EditorUISystem->m_EntityContext->getEntity(camera.first);
         if (e != nullptr) {
             std::string name = e->getListName();
@@ -124,11 +124,10 @@ void EditWindowUI::processEntitiesList() {
 }
 
 void EditWindowUI::processEditLightComponent() {
-    if (m_EditorUISystem->m_lightComponents.find(m_selectedEntity) == m_EditorUISystem->m_lightComponents.end()) {
+    auto *light = m_EditorUISystem->getComponent<LightComponent>(m_selectedEntity);
+    if (light == nullptr) {
         return;
     }
-
-    LightComponent *light = m_EditorUISystem->m_lightComponents[m_selectedEntity];
 
     ImGui::SeparatorText("Light");
 
@@ -160,11 +159,10 @@ void EditWindowUI::processEditLightComponent() {
 }
 
 void EditWindowUI::processEditMeshComponent() {
-    if (m_EditorUISystem->m_meshComponents.find(m_selectedEntity) == m_EditorUISystem->m_meshComponents.end()) {
+    auto *mesh = m_EditorUISystem->getComponent<StaticMeshComponent>(m_selectedEntity);
+    if (mesh == nullptr) {
         return;
     }
-
-    StaticMeshComponent *mesh = m_EditorUISystem->m_meshComponents[m_selectedEntity];
 
     ImGui::SeparatorText("Mesh");
 
@@ -174,12 +172,12 @@ void EditWindowUI::processEditMeshComponent() {
 }
 
 void EditWindowUI::processEditTransformComponent() {
-    if (m_EditorUISystem->m_transformComponents.find(m_selectedEntity) == m_EditorUISystem->m_transformComponents.end()) {
+    auto *transform = m_EditorUISystem->getComponent<TransformComponent>(m_selectedEntity);
+    if (transform == nullptr) {
         return;
     }
 
     ImGui::SeparatorText("Transform");
-    TransformComponent *transform = m_EditorUISystem->m_transformComponents[m_selectedEntity];
 
     float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 
@@ -197,12 +195,12 @@ void EditWindowUI::processEditTransformComponent() {
 }
 
 void EditWindowUI::processEditCameraComponent() {
-    if (m_EditorUISystem->m_cameraComponents.find(m_selectedEntity) == m_EditorUISystem->m_cameraComponents.end()) {
+    auto *camera = m_EditorUISystem->getComponent<CameraComponent>(m_selectedEntity);
+    if (camera == nullptr) {
         return;
     }
 
     ImGui::SeparatorText("Camera");
-    CameraComponent *camera = m_EditorUISystem->m_cameraComponents[m_selectedEntity];
 
     float fov = camera->m_Camera.fieldOfView;
     if (ImGui::InputFloat("FOV##CAMERA_FOV", &fov, 1.0f, 5.0f, "%.0f")) {
@@ -211,19 +209,19 @@ void EditWindowUI::processEditCameraComponent() {
 }
 
 void EditWindowUI::processEditProbeComponent() {
-    if (m_EditorUISystem->m_environmentProbeComponents.find(m_selectedEntity) == m_EditorUISystem->m_environmentProbeComponents.end()) {
+    auto *probe = m_EditorUISystem->getComponent<EnvironmentProbeComponent>(m_selectedEntity);
+    if (probe == nullptr) {
         return;
     }
 
     ImGui::SeparatorText("Environment probe");
-    EnvironmentProbeComponent *probe = m_EditorUISystem->m_environmentProbeComponents[m_selectedEntity];
 
     ImGui::ColorEdit3("Debug color##PROBE_COLOR", (float *) &probe->m_DebugColor);
 }
 
 bool EditWindowUI::isTransformComponentSelected() {
     if (m_selectedEntity < 0
-        || m_EditorUISystem->m_transformComponents.find(m_selectedEntity) == m_EditorUISystem->m_transformComponents.end()) {
+        || m_EditorUISystem->getComponent<TransformComponent>(m_selectedEntity) == nullptr) {
         return false;
     }
 

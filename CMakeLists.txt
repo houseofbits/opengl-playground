@@ -81,21 +81,21 @@ add_executable(${PROJECT_NAME} ${sources}
         src/CoreV2/Resources/ResourceManager.h
         src/CoreV2/Resources/ResourceHandle.cpp
         src/CoreV2/Resources/ResourceHandle.h
-        src/ResourcesV2/TextureResource.cpp
-        src/ResourcesV2/TextureResource.h
+        src/ModulesV2/Renderer/Resources/TextureResource.cpp
+        src/ModulesV2/Renderer/Resources/TextureResource.h
         src/ModulesV2/Renderer/Renderers/ColorPassRenderer.cpp
         src/ModulesV2/Renderer/Renderers/ColorPassRenderer.h
-        src/ResourcesV2/StaticMeshResource.cpp
-        src/ResourcesV2/StaticMeshResource.h
+        src/ModulesV2/Renderer/Resources/StaticMeshResource.cpp
+        src/ModulesV2/Renderer/Resources/StaticMeshResource.h
         src/ModulesV2/Renderer/Systems/CameraControlSystem.cpp
         src/ModulesV2/Renderer/Systems/CameraControlSystem.h
         src/ModulesV2/Renderer/Renderers/ColorPassFrameData.h
         src/ModulesV2/Renderer/Buffers/LightStorageBuffer.h
         src/ModulesV2/Renderer/Buffers/LightStorageBuffer.cpp
-        src/ResourcesV2/ShaderResource.cpp
-        src/ResourcesV2/ShaderResource.h
-        src/ResourcesV2/ShaderProgramResource.cpp
-        src/ResourcesV2/ShaderProgramResource.h
+        src/ModulesV2/Renderer/Resources/ShaderResource.cpp
+        src/ModulesV2/Renderer/Resources/ShaderResource.h
+        src/ModulesV2/Renderer/Resources/ShaderProgramResource.cpp
+        src/ModulesV2/Renderer/Resources/ShaderProgramResource.h
         src/Helper/StringUtils.cpp
         src/ModulesV2/Renderer/Buffers/ProjectionSamplerStorageBuffer.cpp
         src/ModulesV2/Renderer/Buffers/ProjectionSamplerStorageBuffer.h
@@ -108,10 +108,14 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/EditorUI/UI/MainToolbarUI.h
         src/ModulesV2/EditorUI/UI/EditWindowUI.cpp
         src/ModulesV2/EditorUI/UI/EditWindowUI.h
-        src/ResourcesV2/MaterialResource.cpp
-        src/ResourcesV2/MaterialResource.h
+        src/ModulesV2/Renderer/Resources/MaterialResource.cpp
+        src/ModulesV2/Renderer/Resources/MaterialResource.h
         src/ModulesV2/Renderer/Buffers/EnvironmentProbeStorageBuffer.cpp
         src/ModulesV2/Renderer/Buffers/EnvironmentProbeStorageBuffer.h
+        src/ModulesV2/Renderer/Systems/MainRenderSystem.cpp
+        src/ModulesV2/Renderer/Systems/MainRenderSystem.h
+        src/ModulesV2/Renderer/Resources/LightsBufferResource.cpp
+        src/ModulesV2/Renderer/Resources/LightsBufferResource.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

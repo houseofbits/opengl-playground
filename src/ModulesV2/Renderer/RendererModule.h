@@ -6,6 +6,8 @@
 #include "Components/LightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Systems/CameraControlSystem.h"
+#include "Systems/EnvironmentProbeRenderSystem.h"
+#include "Systems/MainRenderSystem.h"
 #include "Systems/RendererSystem.h"
 
 class RendererModule : public EntityModule {
@@ -18,7 +20,9 @@ public:
     };
 
     void registerSystems(EntityContext &ctx) override {
-        ctx.registerEntitySystem<RendererSystem>();
+//        ctx.registerEntitySystem<RendererSystem>();
         ctx.registerEntitySystem<CameraControlSystem>();
+        ctx.registerEntitySystem<MainRenderSystem>();
+        ctx.registerEntitySystem<EnvironmentProbeRenderSystem>();
     };
 };
