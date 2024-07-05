@@ -7,6 +7,7 @@
 #include <list>
 #include <thread>
 #include <utility>
+#include <vector>
 
 class ResourceManager {
 public:
@@ -36,8 +37,14 @@ public:
         return nullptr;
     }
 
+    /**
+     * @tparam T Instance of ResourceHandle
+     * @param hand Resource handle
+     * @param path Path to the resource
+     * @param dependencies Array of resource paths. Resource will only be loaded when all of the dependencies are READY
+     */
     template<class T>
-    void request(T &hand, std::string path) {
+    void request(T &hand, std::string path, std::vector<std::string> dependencies = {}) {
         if (path.empty()) {
             return;
         }
@@ -49,6 +56,7 @@ public:
             resource = new typename T::TYPE();
             resource->m_Path = std::move(path);
             resource->m_Status = Resource::STATUS_DATA_FETCHING;
+            resource->m_Dependencies = std::move(dependencies);
 
             m_Resources.push_back(resource);
         } else {
@@ -67,7 +75,7 @@ public:
 
     void buildFetchedResources() {
         for (const auto &resource: m_Resources) {
-            if (resource->m_Status == Resource::STATUS_DATA_READY) {
+            if (resource->m_Status == Resource::STATUS_DATA_READY && areDependenciesReady(resource)) {
                 resource->m_Status = resource->build();
                 if (resource->m_Status == Resource::STATUS_BUILD_ERROR) {
                     Log::warn("Failed to build resource: " + resource->m_Path);
@@ -83,7 +91,7 @@ public:
                 return;
             }
             for (const auto &resource: m_Resources) {
-                if (resource->m_Status == Resource::STATUS_DATA_FETCHING) {
+                if (resource->m_Status == Resource::STATUS_DATA_FETCHING && areDependenciesReady(resource)) {
                     resource->m_Status = resource->fetchData(*this);
                     if (resource->m_Status != Resource::STATUS_DATA_READY) {
                         Log::warn("Failed to fetch resource: " + resource->m_Path);
@@ -93,6 +101,22 @@ public:
 
             std::this_thread::sleep_for(wait_duration);
         }
+    }
+
+    bool areDependenciesReady(Resource *resource) const {
+        if (!resource->m_Dependencies.empty()) {
+            for (const auto &dependencyPath: resource->m_Dependencies) {
+                Resource *r = findResource(dependencyPath);
+                if (r == nullptr) {
+                    return false;
+                }
+                if (!r->isReady()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     std::list<Resource *> m_Resources;

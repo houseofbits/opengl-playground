@@ -12,10 +12,12 @@ Resource::Status MaterialResource::fetchData(ResourceManager &manager) {
     auto json = nlohmann::json::parse(file);
 
     if (json.contains(DIFFUSE_TEXTURE_KEY)) {
+        addDependency(json[DIFFUSE_TEXTURE_KEY]);
         manager.request(m_Diffuse, json[DIFFUSE_TEXTURE_KEY]);
     }
 
     if (json.contains(NORMAL_TEXTURE_KEY)) {
+        addDependency(json[NORMAL_TEXTURE_KEY]);
         manager.request(m_Normal, json[NORMAL_TEXTURE_KEY]);
     }
 
@@ -23,14 +25,6 @@ Resource::Status MaterialResource::fetchData(ResourceManager &manager) {
 }
 
 Resource::Status MaterialResource::build() {
-    if (m_Diffuse.isValid() && !m_Diffuse.m_Resource->isFinished()) {
-        return STATUS_BUILDING;
-    }
-
-    if (m_Normal.isValid() && !m_Normal.m_Resource->isFinished()) {
-        return STATUS_BUILDING;
-    }
-
     return STATUS_READY;
 }
 

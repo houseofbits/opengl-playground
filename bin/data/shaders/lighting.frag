@@ -34,7 +34,7 @@ layout (binding = ${INDEX_EnvironmentProbeStorageBuffer}, std430) readonly buffe
 };
 uniform uint numEnvProbes;
 
-layout(binding = ${INDEX_ProjectionSamplerStorageBuffer}, std430) readonly buffer ProjectionSamplerStorageBuffer {
+layout(binding = ${INDEX_SamplerIndexStorageBuffer}, std430) readonly buffer SamplerIndexStorageBuffer {
     sampler2D projectorSamplers[];
 };
 

@@ -5,14 +5,28 @@
 #include "../Components/StaticMeshComponent.h"
 #include <GL/glew.h>
 
-EnvironmentProbeRenderSystem::EnvironmentProbeRenderSystem() : EntitySystem(), m_ShaderProgram(),
-                                       m_viewportWidth(1024),
-                                       m_viewportHeight(768) {
+EnvironmentProbeRenderSystem::EnvironmentProbeRenderSystem() : EntitySystem(),
+                                                               m_ShaderProgram(),
+                                                               m_LightsBuffer(),
+                                                               m_viewportWidth(1024),
+                                                               m_viewportHeight(768) {
     usesComponent<StaticMeshComponent>();
     usesComponent<LightComponent>();
     usesComponent<TransformComponent>();
     usesComponent<CameraComponent>();
     usesComponent<EnvironmentProbeComponent>();
+}
+
+void EnvironmentProbeRenderSystem::initialize(ResourceManager *resourceManager) {
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
+
+    resourceManager->request(m_ShaderProgram, "data/shaders/lighting|.vert|.frag|.geom");
+    resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
 }
 
 void EnvironmentProbeRenderSystem::registerEventHandlers(EventManager *eventManager) {
@@ -28,23 +42,12 @@ bool EnvironmentProbeRenderSystem::handleWindowEvent(WindowEvent *const event) {
     return true;
 }
 
-void EnvironmentProbeRenderSystem::initialize(ResourceManager *resourceManager) {
-    glEnable(GL_DEPTH_TEST);
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    glEnable(GL_CULL_FACE);
-
-    resourceManager->request(m_ShaderProgram, "data/shaders/lighting|.vert|.frag|.geom");
-}
-
 void EnvironmentProbeRenderSystem::process() {
 
     glViewport(0, 0, m_viewportWidth, m_viewportHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//    m_ShaderProgram().use();
+    //    m_ShaderProgram().use();
 }
 
 TransformComponent *EnvironmentProbeRenderSystem::findTransform(Identity &entityId) {

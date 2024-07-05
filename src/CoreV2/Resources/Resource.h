@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 class ResourceManager;
 
@@ -24,6 +25,7 @@ public:
     std::string m_Path;
     Status m_Status = Status::STATUS_UNDEFINED;
     unsigned int m_ReferenceCount = 0;
+    std::vector<std::string> m_Dependencies;
 
     virtual Status fetchData(ResourceManager &) {
         return STATUS_DATA_READY;
@@ -38,5 +40,8 @@ public:
     }
     [[nodiscard]] bool isFinished() const {
         return m_Status == STATUS_UNDEFINED || m_Status == STATUS_READY || m_Status == STATUS_FETCH_ERROR || m_Status == STATUS_BUILD_ERROR;
+    }
+    void addDependency(const std::string &path) {
+        m_Dependencies.push_back(path);
     }
 };

@@ -7,6 +7,7 @@
 #include "../Components/StaticMeshComponent.h"
 #include "../Renderers/ColorPassFrameData.h"
 #include "../Renderers/ColorPassRenderer.h"
+#include "../Resources/LightsBufferResource.h"
 
 class RendererSystem : public EntitySystem {
 public:

@@ -3,6 +3,7 @@
 #include "../../../CoreV2/API.h"
 #include "../../../Renderer/Camera/Camera.h"
 #include "../../Common/Components/TransformComponent.h"
+#include "../Resources/LightsBufferResource.h"
 #include "../Resources/ShaderProgramResource.h"
 
 class EnvironmentProbeRenderSystem : public EntitySystem {
@@ -21,4 +22,5 @@ private:
     int m_viewportWidth;
     int m_viewportHeight;
     ResourceHandle<ShaderProgramResource> m_ShaderProgram;
+    ResourceHandle<LightsBufferResource> m_LightsBuffer;
 };

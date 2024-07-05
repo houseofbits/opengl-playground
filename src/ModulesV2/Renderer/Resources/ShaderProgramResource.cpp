@@ -16,6 +16,7 @@ Resource::Status ShaderProgramResource::fetchData(ResourceManager& manager) {
     }
 
     for (const auto &path: paths) {
+        addDependency(path);
         m_ShaderHandles.emplace_back();
         manager.request(m_ShaderHandles.back(), path);
     }
@@ -24,12 +25,6 @@ Resource::Status ShaderProgramResource::fetchData(ResourceManager& manager) {
 }
 
 Resource::Status ShaderProgramResource::build() {
-    for (auto & shaderHandle : m_ShaderHandles) {
-        if (!shaderHandle.isValid() || !shaderHandle().isReady()) {
-            return STATUS_BUILDING;
-        }
-    }
-
     m_ProgramId = glCreateProgram();
 
     for (auto & shaderHandle : m_ShaderHandles) {

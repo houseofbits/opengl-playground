@@ -5,7 +5,11 @@
 #include "../Components/StaticMeshComponent.h"
 #include <GL/glew.h>
 
-MainRenderSystem::MainRenderSystem() : EntitySystem(), m_ShaderProgram(),
+MainRenderSystem::MainRenderSystem() : EntitySystem(),
+                                       m_ShaderProgram(),
+                                       m_LightsBuffer(),
+                                       m_ProbesBuffer(),
+                                       m_SamplersIndexBuffer(),
                                        m_viewportWidth(1024),
                                        m_viewportHeight(768) {
     usesComponent<StaticMeshComponent>();
@@ -36,7 +40,12 @@ void MainRenderSystem::initialize(ResourceManager *resourceManager) {
     glEnable(GL_BLEND);
     glEnable(GL_CULL_FACE);
 
-    resourceManager->request(m_ShaderProgram, "data/shaders/lighting|.vert|.frag|.geom");
+    resourceManager->request(m_ShaderProgram,
+                             "data/shaders/lighting|.vert|.frag|.geom",
+                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "ProjectionSamplerStorageBuffer"});
+    resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
+    resourceManager->request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
+    resourceManager->request(m_SamplersIndexBuffer, "SamplerIndexStorageBuffer");
 }
 
 void MainRenderSystem::process() {
