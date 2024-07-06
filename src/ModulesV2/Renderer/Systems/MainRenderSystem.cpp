@@ -1,7 +1,5 @@
 #include "MainRenderSystem.h"
 #include "../Components/CameraComponent.h"
-#include "../Components/EnvironmentProbeComponent.h"
-#include "../Components/LightComponent.h"
 #include "../Components/StaticMeshComponent.h"
 #include <GL/glew.h>
 
@@ -13,10 +11,8 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_viewportWidth(1024),
                                        m_viewportHeight(768) {
     usesComponent<StaticMeshComponent>();
-    usesComponent<LightComponent>();
     usesComponent<TransformComponent>();
     usesComponent<CameraComponent>();
-    usesComponent<EnvironmentProbeComponent>();
 }
 
 void MainRenderSystem::registerEventHandlers(EventManager *eventManager) {
