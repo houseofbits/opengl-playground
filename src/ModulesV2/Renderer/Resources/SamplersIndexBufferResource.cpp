@@ -14,3 +14,16 @@ Resource::Status SamplersIndexBufferResource::build() {
 
 void SamplersIndexBufferResource::destroy() {
 }
+
+void SamplersIndexBufferResource::bind(ShaderProgramResource &shader) {
+    m_StorageBuffer.bind();
+}
+
+int SamplersIndexBufferResource::getOrAppend(GLuint64 handleId) {
+
+    //TODO: Solve duplicate entries
+    m_StorageBuffer.append(handleId);
+    m_StorageBuffer.updateAll();
+
+    return int(m_StorageBuffer.currentSize) - 1;
+}

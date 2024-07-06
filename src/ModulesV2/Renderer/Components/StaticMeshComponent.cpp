@@ -2,7 +2,6 @@
 #include "../../EditorUI/Systems/EditorUISystem.h"
 #include "../Systems/EnvironmentProbeRenderSystem.h"
 #include "../Systems/MainRenderSystem.h"
-#include "../Systems/RendererSystem.h"
 
 StaticMeshComponent::StaticMeshComponent() : Component(), m_Mesh(), m_Material() {
 }

@@ -1,6 +1,7 @@
 #include "LightComponent.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
-#include "../Systems/RendererSystem.h"
+#include "../Systems/MainRenderSystem.h"
+#include "../Systems/StorageBufferUpdateSystem.h"
 
 LightComponent::LightComponent() : Component(),
                                    m_TypeNameMap(),
@@ -50,7 +51,7 @@ void LightComponent::deserialize(const nlohmann::json &j, ResourceManager &resou
 }
 
 void LightComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<RendererSystem>(this);
+    ctx.registerComponentWithEntitySystem<StorageBufferUpdateSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
 }
 

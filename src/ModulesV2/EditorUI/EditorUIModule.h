@@ -10,6 +10,6 @@ public:
     };
 
     void registerSystems(EntityContext &ctx) override {
-        ctx.registerEntitySystem<EditorUISystem>();
+        ctx.registerEntitySystem<EditorUISystem>(10);
     };
 };

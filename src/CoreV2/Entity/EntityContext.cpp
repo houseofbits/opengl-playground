@@ -1,10 +1,10 @@
 #include "EntityContext.h"
 #include "../../Helper/Log.h"
 #include "../Module/EntityModule.h"
+#include "../System/EntitySystem.h"
 #include "EntitySerializer.h"
 #include <iostream>
 #include <memory>
-#include "../System/EntitySystem.h"
 
 EntityContext::EntityContext() : m_ComponentFactory(), m_EntityConfiguration(m_ComponentFactory), m_Entities(), m_Systems() {
 }
@@ -21,7 +21,7 @@ void EntityContext::deserializeEntityMap(nlohmann::json &j) {
     m_EntityConfiguration.deserialize(j);
 }
 
-Entity::TEntityPtr EntityContext::createEntity(const std::string &configurationName, ResourceManager & resourceManager) {
+Entity::TEntityPtr EntityContext::createEntity(const std::string &configurationName, ResourceManager &resourceManager) {
 
     Entity::TEntityPtr e = addEntity();
     m_EntityConfiguration.buildEntity(*e, configurationName, resourceManager);
@@ -30,11 +30,11 @@ Entity::TEntityPtr EntityContext::createEntity(const std::string &configurationN
 }
 
 void EntityContext::removeEntity(int entityId) {
-    Entity* e = getEntity(entityId);
+    Entity *e = getEntity(entityId);
     if (e != nullptr) {
         e->unregisterFromSystems(*this);
 
-        for(const auto& entity: m_Entities) {
+        for (const auto &entity: m_Entities) {
             if (entity->m_Id.id() == entityId) {
                 m_Entities.remove(entity);
                 break;
@@ -51,7 +51,7 @@ void EntityContext::serializeEntities(nlohmann::json &j) {
     }
 }
 
-void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager & resourceManager) {
+void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager &resourceManager) {
     for (const auto &entityJson: j.items()) {
         if (!entityJson.value().contains("type")) {
             Log::error("EntityContext::createEntities: Json does not contain entity type");
@@ -76,7 +76,9 @@ void EntityContext::registerEntitiesWithSystems() {
     }
 }
 
-void EntityContext::initializeSystems(ResourceManager* resourceManager, EventManager *eventManager) {
+void EntityContext::initializeSystems(ResourceManager *resourceManager, EventManager *eventManager) {
+    m_Systems.sort([](const EntitySystem *a, const EntitySystem *b) { return a->m_processPriority < b->m_processPriority; });
+
     for (const auto &system: m_Systems) {
         system->m_EventManager = eventManager;
         system->initialize(resourceManager);
@@ -93,7 +95,7 @@ void EntityContext::processSystems() {
 }
 
 Entity *EntityContext::getEntity(Identity::Type id) {
-    for(const auto& e: m_Entities) {
+    for (const auto &e: m_Entities) {
         if (e->m_Id.id() == id) {
             return e.get();
         }

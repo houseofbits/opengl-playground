@@ -1,12 +1,14 @@
 #include "TransformComponent.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
-#include "../../Renderer/Systems/RendererSystem.h"
+#include "../../Renderer/Systems/MainRenderSystem.h"
+#include "../../Renderer/Systems/StorageBufferUpdateSystem.h"
 
 TransformComponent::TransformComponent() : m_ModelMatrix(1.0) {
 }
 
 void TransformComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<RendererSystem>(this);
+    ctx.registerComponentWithEntitySystem<MainRenderSystem>(this);
+    ctx.registerComponentWithEntitySystem<StorageBufferUpdateSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
 }
 

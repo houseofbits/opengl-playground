@@ -18,15 +18,8 @@ EnvironmentProbeRenderSystem::EnvironmentProbeRenderSystem() : EntitySystem(),
 }
 
 void EnvironmentProbeRenderSystem::initialize(ResourceManager *resourceManager) {
-    glEnable(GL_DEPTH_TEST);
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    glEnable(GL_CULL_FACE);
-
-    resourceManager->request(m_ShaderProgram, "data/shaders/lighting|.vert|.frag|.geom");
-    resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
+//    resourceManager->request(m_ShaderProgram, "data/shaders/lighting|.vert|.frag|.geom");
+//    resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
 }
 
 void EnvironmentProbeRenderSystem::registerEventHandlers(EventManager *eventManager) {
@@ -44,10 +37,6 @@ bool EnvironmentProbeRenderSystem::handleWindowEvent(WindowEvent *const event) {
 
 void EnvironmentProbeRenderSystem::process() {
 
-    glViewport(0, 0, m_viewportWidth, m_viewportHeight);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    //    m_ShaderProgram().use();
 }
 
 TransformComponent *EnvironmentProbeRenderSystem::findTransform(Identity &entityId) {

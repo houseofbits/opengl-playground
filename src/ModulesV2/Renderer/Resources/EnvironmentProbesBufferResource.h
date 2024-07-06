@@ -2,6 +2,9 @@
 
 #include "../../../CoreV2/API.h"
 #include "../../../Renderer/Shader/ShaderStorageBuffer.h"
+#include "../../Common/Components/TransformComponent.h"
+#include "../Components/EnvironmentProbeComponent.h"
+#include "ShaderProgramResource.h"
 
 class EnvironmentProbesBufferResource : public Resource {
 public:
@@ -20,6 +23,13 @@ public:
 
     Resource::Status build() override;
     void destroy() override;
+    void bind(ShaderProgramResource &shader);
+    void appendProbe(TransformComponent &transform, EnvironmentProbeComponent &probe);
 
     ShaderStorageBuffer<EnvironmentProbeStructure> m_StorageBuffer;
+
+private:
+    std::string getSizeAttributeName() {
+        return m_Path + "_size";
+    }
 };

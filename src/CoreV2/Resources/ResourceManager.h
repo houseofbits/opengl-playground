@@ -52,7 +52,7 @@ public:
         Resource *resource = findResource(path);
 
         if (resource == nullptr) {
-            Log::info("Fetch resource: " + path);
+            //            Log::info("Fetch resource: " + path);
             resource = new typename T::TYPE();
             resource->m_Path = std::move(path);
             resource->m_Status = Resource::STATUS_DATA_FETCHING;
@@ -60,7 +60,11 @@ public:
 
             m_Resources.push_back(resource);
         } else {
-            Log::info("Get resource: " + path);
+            if (dependencies != resource->m_Dependencies) {
+                Log::warn("Mismatch in dependency list for: " + path);
+                return;
+            }
+            //            Log::info("Get resource: " + path);
         }
 
         hand.makeValid(this, reinterpret_cast<typename T::TYPE *>(resource));
@@ -75,10 +79,15 @@ public:
 
     void buildFetchedResources() {
         for (const auto &resource: m_Resources) {
-            if (resource->m_Status == Resource::STATUS_DATA_READY && areDependenciesReady(resource)) {
-                resource->m_Status = resource->build();
-                if (resource->m_Status == Resource::STATUS_BUILD_ERROR) {
-                    Log::warn("Failed to build resource: " + resource->m_Path);
+            if (resource->m_Status == Resource::STATUS_DATA_READY) {
+                if (areDependenciesReady(resource)) {
+                    resource->m_Status = resource->build();
+                    if (resource->m_Status == Resource::STATUS_BUILD_ERROR) {
+                        Log::warn("Failed to build resource: " + resource->m_Path);
+                    }
+                } else if (doesDependencyHaveError(resource)) {
+                    resource->m_Status = Resource::STATUS_BUILD_ERROR;
+                    Log::warn("Failed to build resource: " + resource->m_Path + " dependency failed");
                 }
             }
         }
@@ -91,10 +100,15 @@ public:
                 return;
             }
             for (const auto &resource: m_Resources) {
-                if (resource->m_Status == Resource::STATUS_DATA_FETCHING && areDependenciesReady(resource)) {
-                    resource->m_Status = resource->fetchData(*this);
-                    if (resource->m_Status != Resource::STATUS_DATA_READY) {
-                        Log::warn("Failed to fetch resource: " + resource->m_Path);
+                if (resource->m_Status == Resource::STATUS_DATA_FETCHING) {
+                    if (areDependenciesReady(resource)) {
+                        resource->m_Status = resource->fetchData(*this);
+                        if (resource->m_Status != Resource::STATUS_DATA_READY) {
+                            Log::warn("Failed to fetch resource: " + resource->m_Path);
+                        }
+                    } else if (doesDependencyHaveError(resource)) {
+                        resource->m_Status = Resource::STATUS_FETCH_ERROR;
+                        Log::warn("Failed to fetch resource: " + resource->m_Path + " dependency failed");
                     }
                 }
             }
@@ -117,6 +131,22 @@ public:
         }
 
         return true;
+    }
+    bool doesDependencyHaveError(Resource *resource) const {
+        if (!resource->m_Dependencies.empty()) {
+            for (const auto &dependencyPath: resource->m_Dependencies) {
+                Resource *r = findResource(dependencyPath);
+                if (r == nullptr) {
+                    return false;
+                }
+                if (r->m_Status == Resource::STATUS_FETCH_ERROR ||
+                    r->m_Status == Resource::STATUS_BUILD_ERROR) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     std::list<Resource *> m_Resources;

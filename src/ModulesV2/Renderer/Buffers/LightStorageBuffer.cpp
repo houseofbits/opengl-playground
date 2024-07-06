@@ -23,41 +23,27 @@ void LightStorageBuffer::initialize() {
 }
 
 void LightStorageBuffer::appendLight(TransformComponent &transform, LightComponent &light, int projectorIndex) {
+    SpotLightStructure structure;
+    structure.color = light.m_Color;
+    structure.intensity = light.m_Intensity;
+    structure.position = transform.getTranslation();
+    structure.direction = transform.getDirection();
+    structure.attenuation = light.m_Attenuation;
+    structure.projectorSamplerIndex = projectorIndex;
+
     if (light.m_Type == LightComponent::SPOT) {
-        SpotLightStructure structure;
         structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(transform, light);
-        structure.color = light.m_Color;
-        structure.intensity = light.m_Intensity;
-        structure.position = transform.getTranslation();
-        structure.direction = transform.getDirection();
-        structure.attenuation = light.m_Attenuation;
-        structure.projectorSamplerIndex = projectorIndex;
         structure.isPointSource = 1;
 
         append(structure);
     } else if (light.m_Type == LightComponent::DIRECT) {
-        SpotLightStructure structure;
         structure.projectionViewMatrix = createOrthoProjectionViewMatrix(transform, light);
-        structure.color = light.m_Color;
-        structure.intensity = light.m_Intensity;
-        structure.position = transform.getTranslation();
-        structure.direction = transform.getDirection();
-        structure.attenuation = light.m_Attenuation;
-        structure.projectorSamplerIndex = projectorIndex;
         structure.isPointSource = 0;
 
         append(structure);
     } else if (light.m_Type == LightComponent::OMNI) {
         for (auto side : CUBE_DIRECTIONS) {
-            SpotLightStructure structure;
-
             structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(side, transform.getTranslation(), light.m_Attenuation);
-            structure.color = light.m_Color;
-            structure.intensity = light.m_Intensity;
-            structure.position = transform.getTranslation();
-            structure.direction = transform.getDirection();
-            structure.attenuation = light.m_Attenuation;
-            structure.projectorSamplerIndex = projectorIndex;
             structure.isPointSource = 1;
 
             append(structure);

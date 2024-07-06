@@ -8,7 +8,7 @@
 #include "Systems/CameraControlSystem.h"
 #include "Systems/EnvironmentProbeRenderSystem.h"
 #include "Systems/MainRenderSystem.h"
-#include "Systems/RendererSystem.h"
+#include "Systems/StorageBufferUpdateSystem.h"
 
 class RendererModule : public EntityModule {
 public:
@@ -20,9 +20,9 @@ public:
     };
 
     void registerSystems(EntityContext &ctx) override {
-//        ctx.registerEntitySystem<RendererSystem>();
-        ctx.registerEntitySystem<CameraControlSystem>();
-        ctx.registerEntitySystem<MainRenderSystem>();
-        ctx.registerEntitySystem<EnvironmentProbeRenderSystem>();
+        ctx.registerEntitySystem<CameraControlSystem>(1);
+        ctx.registerEntitySystem<StorageBufferUpdateSystem>(1);
+        ctx.registerEntitySystem<EnvironmentProbeRenderSystem>(2);
+        ctx.registerEntitySystem<MainRenderSystem>(5);
     };
 };

@@ -14,3 +14,19 @@ Resource::Status EnvironmentProbesBufferResource::build() {
 
 void EnvironmentProbesBufferResource::destroy() {
 }
+
+void EnvironmentProbesBufferResource::bind(ShaderProgramResource &shader) {
+    m_StorageBuffer.bind();
+    shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
+}
+
+void EnvironmentProbesBufferResource::appendProbe(TransformComponent &transform, EnvironmentProbeComponent &probe) {
+    EnvironmentProbeStructure structure;
+    structure.position = transform.getTranslation();
+    glm::vec3 size = transform.getScale();
+    structure.boundingBoxMin = glm::vec4(-(size * glm::vec3(0.5)) + structure.position, 1.0);
+    structure.boundingBoxMax = glm::vec4(size * glm::vec3(0.5) + structure.position, 1.0);
+    structure.debugColor = probe.m_DebugColor;
+
+    m_StorageBuffer.append(structure);
+}

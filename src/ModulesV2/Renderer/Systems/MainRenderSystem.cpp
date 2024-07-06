@@ -42,7 +42,7 @@ void MainRenderSystem::initialize(ResourceManager *resourceManager) {
 
     resourceManager->request(m_ShaderProgram,
                              "data/shaders/lighting|.vert|.frag|.geom",
-                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "ProjectionSamplerStorageBuffer"});
+                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "SamplerIndexStorageBuffer"});
     resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager->request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
     resourceManager->request(m_SamplersIndexBuffer, "SamplerIndexStorageBuffer");
@@ -58,10 +58,17 @@ void MainRenderSystem::process() {
 
     m_ShaderProgram().use();
     camera->bind(m_ShaderProgram());
+    m_SamplersIndexBuffer().bind(m_ShaderProgram());
+    m_LightsBuffer().bind(m_ShaderProgram());
+    m_SamplersIndexBuffer().bind(m_ShaderProgram());
+    m_ProbesBuffer().bind(m_ShaderProgram());
 
-    //    updateFrameData();
-    //    m_colorPassRenderer.beginRender(*camera);
-    //    m_colorPassRenderer.render(m_frame);
+    for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
+        auto *transform = getComponent<TransformComponent>(mesh.first);
+        m_ShaderProgram().setUniform("modelMatrix", transform->getModelMatrix());
+        mesh.second->m_Material().bind(m_ShaderProgram());
+        mesh.second->m_Mesh().render();
+    }
 }
 
 TransformComponent *MainRenderSystem::findTransform(Identity &entityId) {

@@ -23,16 +23,15 @@ struct SpotLightStructure {
     int isPointSource;
 };
 
-
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
     SpotLightStructure spotLights[100];
 };
-uniform uint numSpotLights;
+uniform uint SpotLightStorageBuffer_size;
 
 layout (binding = ${INDEX_EnvironmentProbeStorageBuffer}, std430) readonly buffer EnvironmentProbeStorageBuffer {
     EnvProbeStructure probes[100];
 };
-uniform uint numEnvProbes;
+uniform uint EnvironmentProbeStorageBuffer_size;
 
 layout(binding = ${INDEX_SamplerIndexStorageBuffer}, std430) readonly buffer SamplerIndexStorageBuffer {
     sampler2D projectorSamplers[];
@@ -81,7 +80,7 @@ void main()
     vec3 lightDir;
     float distToLight;
 
-    for (int lightIndex = 0; lightIndex < numSpotLights; lightIndex++) {
+    for (int lightIndex = 0; lightIndex < SpotLightStorageBuffer_size; lightIndex++) {
         SpotLightStructure light = spotLights[lightIndex];
 
         vec4 lightSpacePosition = light.projectionViewMatrix * gsPosition;
@@ -125,7 +124,7 @@ void main()
     float selectedWeights[4];
     int numSelectedProbes = 0;
 
-    for (int probeIndex = 0; probeIndex < numEnvProbes; probeIndex++) {
+    for (int probeIndex = 0; probeIndex < EnvironmentProbeStorageBuffer_size; probeIndex++) {
         if (numSelectedProbes > 3) {
             break;
         }

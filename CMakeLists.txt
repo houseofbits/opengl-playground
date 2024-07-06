@@ -55,8 +55,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/Common/CommonModule.h
         src/ModulesV2/Common/Components/TransformComponent.cpp
         src/ModulesV2/Common/Components/TransformComponent.h
-        src/ModulesV2/Renderer/Systems/RendererSystem.cpp
-        src/ModulesV2/Renderer/Systems/RendererSystem.h
         src/CoreV2/API.h
         src/CoreV2/Reflection/Type.h
         src/CoreV2/Entity/Entity.cpp
@@ -83,13 +81,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/CoreV2/Resources/ResourceHandle.h
         src/ModulesV2/Renderer/Resources/TextureResource.cpp
         src/ModulesV2/Renderer/Resources/TextureResource.h
-        src/ModulesV2/Renderer/Renderers/ColorPassRenderer.cpp
-        src/ModulesV2/Renderer/Renderers/ColorPassRenderer.h
         src/ModulesV2/Renderer/Resources/StaticMeshResource.cpp
         src/ModulesV2/Renderer/Resources/StaticMeshResource.h
         src/ModulesV2/Renderer/Systems/CameraControlSystem.cpp
         src/ModulesV2/Renderer/Systems/CameraControlSystem.h
-        src/ModulesV2/Renderer/Renderers/ColorPassFrameData.h
         src/ModulesV2/Renderer/Buffers/LightStorageBuffer.h
         src/ModulesV2/Renderer/Buffers/LightStorageBuffer.cpp
         src/ModulesV2/Renderer/Resources/ShaderResource.cpp
@@ -116,6 +111,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/Renderer/Systems/MainRenderSystem.h
         src/ModulesV2/Renderer/Resources/LightsBufferResource.cpp
         src/ModulesV2/Renderer/Resources/LightsBufferResource.h
+        src/ModulesV2/Renderer/Systems/StorageBufferUpdateSystem.cpp
+        src/ModulesV2/Renderer/Systems/StorageBufferUpdateSystem.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

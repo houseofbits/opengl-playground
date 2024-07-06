@@ -12,7 +12,14 @@ class EntitySystem {
 public:
     typedef std::shared_ptr<EntitySystem> TEntitySystemPtr;
 
+    /**
+     * Initialize is run for all systems once on startup. After the render context
+     * is created and before entities are deserialized
+     */
     virtual void initialize(ResourceManager *) = 0;
+    /**
+     * Process runs each frame for each system
+     */
     virtual void process() = 0;
     virtual void registerEventHandlers(EventManager *eventManager) {}
 
@@ -63,8 +70,6 @@ public:
         ContainerType m_components{};
     };
 
-    std::unordered_map<unsigned int, VComponentContainer *> m_components{};
-
     template<class T>
     void usesComponent() {
         m_components[T::TypeId()] = new RComponentContainer<T>();
@@ -101,6 +106,8 @@ public:
 
     EntityContext *m_EntityContext{nullptr};
     EventManager *m_EventManager{nullptr};
+    std::unordered_map<unsigned int, VComponentContainer *> m_components{};
+    unsigned int m_processPriority;
 
 protected:
     template<class T>

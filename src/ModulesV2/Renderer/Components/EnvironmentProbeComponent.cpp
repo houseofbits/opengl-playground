@@ -1,7 +1,7 @@
 #include "EnvironmentProbeComponent.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
 #include "../Systems/EnvironmentProbeRenderSystem.h"
-#include "../Systems/RendererSystem.h"
+#include "../Systems/StorageBufferUpdateSystem.h"
 
 EnvironmentProbeComponent::EnvironmentProbeComponent() : Component(), m_DebugColor(1.0) {
 }
@@ -15,7 +15,7 @@ void EnvironmentProbeComponent::deserialize(const nlohmann::json &j, ResourceMan
 }
 
 void EnvironmentProbeComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<RendererSystem>(this);
+    ctx.registerComponentWithEntitySystem<StorageBufferUpdateSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
     ctx.registerComponentWithEntitySystem<EnvironmentProbeRenderSystem>(this);
 }

@@ -33,9 +33,10 @@ public:
     }
 
     template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value>>
-    T *registerEntitySystem() {
+    T *registerEntitySystem(unsigned int processPriority = 0) {
         auto *p = new T();
         p->m_EntityContext = this;
+        p->m_processPriority = processPriority;
         m_Systems.push_back(p);
 
         return p;
@@ -62,8 +63,6 @@ public:
         return nullptr;
     }
 
-    Entity* getEntity(Identity::Type id) ;
-
     template<class T>
     void registerComponentWithEntitySystem(Component *component) {
         auto *system = getSystem<T>();
@@ -72,6 +71,7 @@ public:
         }
     }
 
+    Entity* getEntity(Identity::Type id);
     void unregisterComponentFromSystems(Component *);
     void deserializeEntityMap(nlohmann::json &j);
     std::shared_ptr<Entity> createEntity(const std::string &configurationName, ResourceManager &);
