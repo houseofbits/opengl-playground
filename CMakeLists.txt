@@ -113,6 +113,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/Renderer/Resources/LightsBufferResource.h
         src/ModulesV2/Renderer/Systems/StorageBufferUpdateSystem.cpp
         src/ModulesV2/Renderer/Systems/StorageBufferUpdateSystem.h
+        src/ModulesV2/Renderer/Resources/EnvironmentProbesCubeMapArrayResource.cpp
+        src/ModulesV2/Renderer/Resources/EnvironmentProbesCubeMapArrayResource.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

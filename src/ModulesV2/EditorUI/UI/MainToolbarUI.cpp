@@ -3,6 +3,8 @@
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../../SourceLibs/imgui/ImGuizmo.h" //Note: Order dependent include. Should be after ImGui
 #include "../Systems/EditorUISystem.h"
+#include "MainToolbarUI.h"
+
 
 MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
                                                        m_isEditWindowVisible(true),
@@ -20,6 +22,20 @@ void MainToolbarUI::process() {
             if (ImGui::MenuItem("Edit", nullptr, m_isEditWindowVisible)) {
                 m_isEditWindowVisible = !m_isEditWindowVisible;
                 sendEditorStateEvent();
+            }
+//            ImGui::Separator();
+//            if (ImGui::MenuItem("View shaded")) {
+//
+//            }
+//            if (ImGui::MenuItem("View probes")) {
+//
+//            }
+//            if (ImGui::MenuItem("View reflections")) {
+//
+//            }
+            ImGui::Separator();
+            if (ImGui::MenuItem("Update probes")) {
+                sendUIEvent(EditorUIEvent::TRIGGER_PROBE_RENDER);
             }
             ImGui::EndMenu();
         }
@@ -97,5 +113,11 @@ void MainToolbarUI::sendSaveEvent() {
 void MainToolbarUI::sendEditorStateEvent() {
     auto evt = new EditorUIEvent();
     evt->m_Type = m_isEditWindowVisible ? EditorUIEvent::EDITOR_ENABLED : EditorUIEvent::EDITOR_DISABLED;
+    m_EditorUISystem->m_EventManager->queueEvent(evt);
+}
+
+void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) {
+    auto evt = new EditorUIEvent();
+    evt->m_Type = type;
     m_EditorUISystem->m_EventManager->queueEvent(evt);
 }

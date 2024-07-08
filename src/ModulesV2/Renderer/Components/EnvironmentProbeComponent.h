@@ -15,6 +15,7 @@ public:
     void registerWithSystems(EntityContext &ctx) override;
 
     glm::vec3 m_DebugColor;
+    int m_cubeMapLayerIndex;
 
     //    glm::vec3 m_ViewOffset; //View point offset relative to probe position;
 };

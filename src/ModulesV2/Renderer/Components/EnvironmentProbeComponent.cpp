@@ -3,7 +3,7 @@
 #include "../Systems/EnvironmentProbeRenderSystem.h"
 #include "../Systems/StorageBufferUpdateSystem.h"
 
-EnvironmentProbeComponent::EnvironmentProbeComponent() : Component(), m_DebugColor(1.0) {
+EnvironmentProbeComponent::EnvironmentProbeComponent() : Component(), m_DebugColor(1.0), m_cubeMapLayerIndex(-1) {
 }
 
 void EnvironmentProbeComponent::serialize(nlohmann::json &j) {

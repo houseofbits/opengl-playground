@@ -16,6 +16,7 @@ public:
 private:
     void processTransformTypeDropdown(TransformComponent *transform);
     void processTransformSpaceDropdown();
+    void sendUIEvent(EditorUIEvent::Type type);
     void sendSaveEvent();
     void sendEditorStateEvent();
 

@@ -10,7 +10,8 @@ public:
         UNDEFINED,
         EDITOR_ENABLED,
         EDITOR_DISABLED,
-        SAVE
+        SAVE,
+        TRIGGER_PROBE_RENDER,
     } Type;
 
     Type m_Type{UNDEFINED};
