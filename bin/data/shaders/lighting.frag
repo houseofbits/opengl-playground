@@ -2,15 +2,9 @@
 
 #extension GL_ARB_bindless_texture : require
 
-layout (location=0) out vec4 fragColor;
+#include include/probeBlock.glsl
 
-struct EnvProbeStructure {
-    vec3 position;
-    uint cubeMapTextureLayer;
-    vec4 boundingBoxMin;
-    vec4 boundingBoxMax;
-    vec3 debugColor;
-};
+layout (location=0) out vec4 fragColor;
 
 struct SpotLightStructure {
     vec3 color;
@@ -26,24 +20,24 @@ struct SpotLightStructure {
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
     SpotLightStructure spotLights[100];
 };
-uniform uint SpotLightStorageBuffer_size;
-
-layout (binding = ${INDEX_EnvironmentProbeStorageBuffer}, std430) readonly buffer EnvironmentProbeStorageBuffer {
-    EnvProbeStructure probes[100];
-};
-uniform uint EnvironmentProbeStorageBuffer_size;
-
 layout(binding = ${INDEX_SamplerIndexStorageBuffer}, std430) readonly buffer SamplerIndexStorageBuffer {
     sampler2D projectorSamplers[];
 };
+
+uniform uint SpotLightStorageBuffer_size;
+uniform vec3 viewPosition;
+uniform int hasDiffuseSampler;
+uniform int hasNormalSampler;
+uniform int hasRoughnessSampler;
+
+layout(bindless_sampler) uniform sampler2D diffuseSampler;
+layout(bindless_sampler) uniform sampler2D normalSampler;
+layout(bindless_sampler) uniform sampler2D roughnessSampler;
 
 in vec3 gsNormal;
 in vec4 gsPosition;
 in vec2 gsTexcoord;
 in mat3 gsInvTBN;
-
-layout(bindless_sampler) uniform sampler2D diffuseSampler;
-layout(bindless_sampler) uniform sampler2D normalSampler;
 
 vec3 calculateProjectedCoords(vec4 lightSpacePos)
 {
@@ -68,17 +62,36 @@ bool isProjCoordsClipping(vec2 uv)
 
 void main()
 {
-    vec4 diffuse = texture(diffuseSampler, gsTexcoord);
-    vec3 normal = texture(normalSampler, gsTexcoord).xyz;
+    float specularPower = 1.0;
+    vec3 specularLevel = vec3(1.0);
 
-    normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
+    vec3 diffuse = vec3(0.7);
+    if (hasDiffuseSampler == 1) {
+        diffuse = texture(diffuseSampler, gsTexcoord).xyz;
+    }
 
-//    uint lightIndex = 0;
+    vec3 normal = gsNormal;
+    if (hasNormalSampler == 1) {
+        normal = texture(normalSampler, gsTexcoord).xyz;
+        normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
+    }
+
+    vec3 roughness = vec3(1.0);
+    if (hasRoughnessSampler == 1) {
+        roughness = texture(roughnessSampler, gsTexcoord).xyz;
+    }
+
+    vec3 view = normalize(gsPosition.xyz - viewPosition);
+    vec3 viewReflection = reflect(view, normal);
+    float frensnel = pow(1.0 - dot(normal, -view), 2);
+
+    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness, normal);
 
     vec3 color = vec3(0.0);
     vec3 falloff;
     vec3 lightDir;
     float distToLight;
+    vec3 lightColor = vec3(0.0);    //vec3(selfIllumination) + (diffuse * ambientEnvColor);
 
     for (int lightIndex = 0; lightIndex < SpotLightStorageBuffer_size; lightIndex++) {
         SpotLightStructure light = spotLights[lightIndex];
@@ -111,81 +124,16 @@ void main()
                 falloff = vec3(1.0);
             }
 
-            color += light.intensity * ndotl * light.color * attenuation * falloff;
+            vec3 diffuseLight = diffuse.rgb
+                * ndotl
+                * light.color
+                * light.intensity;
+
+            lightColor += attenuation
+                * falloff
+                * (diffuseLight + (reflectionColor * 2 * specularLevel * frensnel));
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////
-    // probes
-    vec3 fragmentWorldPos = gsPosition.xyz;
-    vec3 probeColor = vec3(0);
-
-    vec3 selectedColor[4];
-    float selectedWeights[4];
-    int numSelectedProbes = 0;
-
-    for (int probeIndex = 0; probeIndex < EnvironmentProbeStorageBuffer_size; probeIndex++) {
-        if (numSelectedProbes > 3) {
-            break;
-        }
-
-        EnvProbeStructure probe = probes[probeIndex];
-
-        if (fragmentWorldPos.x < probe.boundingBoxMin.x || fragmentWorldPos.y < probe.boundingBoxMin.y || fragmentWorldPos.z < probe.boundingBoxMin.z) {
-            continue;
-        }
-
-        if (fragmentWorldPos.x > probe.boundingBoxMax.x || fragmentWorldPos.y > probe.boundingBoxMax.y || fragmentWorldPos.z > probe.boundingBoxMax.z) {
-            continue;
-        }
-
-        vec3 ray = fragmentWorldPos - probe.position;
-        float l = length(ray);
-        ray = normalize(ray);
-
-        vec3 planeIntersect1 = (probe.boundingBoxMax.xyz - probe.position) / ray;
-        vec3 planeIntersect2 = (probe.boundingBoxMin.xyz - probe.position) / ray;
-        vec3 furthestPlane = max(planeIntersect1, planeIntersect2);
-        float d = min(min(furthestPlane.x, furthestPlane.y), furthestPlane.z);
-        float fl = max(min(1.0 - (l / d), 1.0), 0);
-
-        selectedColor[numSelectedProbes] = probe.debugColor;
-        selectedWeights[numSelectedProbes] = fl;
-        numSelectedProbes++;
-    }
-
-    float sumWeights = 0;
-    float invSumWeights = 0;
-    for (int i = 0; i < numSelectedProbes; i++) {
-        sumWeights += selectedWeights[i];
-        invSumWeights += (1.0 - selectedWeights[i]);
-    }
-
-    if (numSelectedProbes > 1) {
-        float blendFactor[4];
-        float sumBlendFactor = 0;
-
-        for (int i = 0; i < numSelectedProbes; i++) {
-            blendFactor[i] = ((selectedWeights[i] / sumWeights)) / (numSelectedProbes - 1);
-            blendFactor[i] *= ((selectedWeights[i]) / invSumWeights);
-            sumBlendFactor += blendFactor[i];
-        }
-        vec3 reflectionColor = vec3(0);
-        for (int i = 0; i < numSelectedProbes; i++) {
-            float fl = blendFactor[i] / sumBlendFactor;
-//            reflectionColor = mix(reflectionColor, selectedColor[i], fl);
-            reflectionColor += selectedColor[i] * (selectedWeights[i] / sumWeights);
-        }
-
-        probeColor =  reflectionColor;
-    } else if (numSelectedProbes == 1) {
-        probeColor = selectedColor[0];
-    }
-
-
-//    EnvProbeStructure probe = probes[0];
-
-    fragColor = vec4(probeColor, 1.0);
-
-//    fragColor = vec4(color * diffuse.rgb, 1.0);
+    fragColor = vec4(lightColor, 1.0);
 }

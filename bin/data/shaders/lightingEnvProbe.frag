@@ -18,7 +18,6 @@ struct SpotLightStructure {
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
     SpotLightStructure spotLights[100];
 };
-uniform uint SpotLightStorageBuffer_size;
 
 layout(binding = ${INDEX_SamplerIndexStorageBuffer}, std430) readonly buffer SamplerIndexStorageBuffer {
     sampler2D projectorSamplers[];
@@ -29,8 +28,14 @@ in vec4 gsPosition;
 in vec2 gsTexcoord;
 in mat3 gsInvTBN;
 
+uniform uint SpotLightStorageBuffer_size;
+uniform int hasDiffuseSampler;
+uniform int hasNormalSampler;
+uniform int hasRoughnessSampler;
+
 layout(bindless_sampler) uniform sampler2D diffuseSampler;
 layout(bindless_sampler) uniform sampler2D normalSampler;
+layout(bindless_sampler) uniform sampler2D roughnessSampler;
 
 vec3 calculateProjectedCoords(vec4 lightSpacePos)
 {
@@ -55,8 +60,16 @@ bool isProjCoordsClipping(vec2 uv)
 
 void main()
 {
-    vec4 diffuse = texture(diffuseSampler, gsTexcoord);
-    vec3 normal = texture(normalSampler, gsTexcoord).xyz;
+    vec3 diffuse = vec3(0.7);
+    if (hasDiffuseSampler == 1) {
+        diffuse = texture(diffuseSampler, gsTexcoord).xyz;
+    }
+
+    vec3 normal = gsNormal;
+    if (hasNormalSampler == 1) {
+        normal = texture(normalSampler, gsTexcoord).xyz;
+        normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
+    }
 
     normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
 

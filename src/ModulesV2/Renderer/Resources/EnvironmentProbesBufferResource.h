@@ -12,7 +12,7 @@ public:
 
     struct EnvironmentProbeStructure {
         glm::vec3 position{0};
-        unsigned int cubeMapTextureLayer{0};
+        int cubeMapTextureLayer{-1};
         glm::vec4 boundingBoxMin{-0.5};
         glm::vec4 boundingBoxMax{0.5};
         glm::vec3 debugColor{1};

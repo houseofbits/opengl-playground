@@ -8,6 +8,7 @@
 
 MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
                                                        m_isEditWindowVisible(true),
+                                                       m_renderShaderType(0),
                                                        m_currentGizmoOperation(ImGuizmo::TRANSLATE),
                                                        m_currentGizmoMode(ImGuizmo::WORLD) {
 }
@@ -23,16 +24,19 @@ void MainToolbarUI::process() {
                 m_isEditWindowVisible = !m_isEditWindowVisible;
                 sendEditorStateEvent();
             }
-//            ImGui::Separator();
-//            if (ImGui::MenuItem("View shaded")) {
-//
-//            }
-//            if (ImGui::MenuItem("View probes")) {
-//
-//            }
-//            if (ImGui::MenuItem("View reflections")) {
-//
-//            }
+            ImGui::Separator();
+            if (ImGui::MenuItem("View shaded", nullptr, m_renderShaderType == 0)) {
+                sendUIEvent(EditorUIEvent::TOGGLE_RENDER_SHADED);
+                m_renderShaderType = 0;
+            }
+            if (ImGui::MenuItem("View probes", nullptr, m_renderShaderType == 1)) {
+                sendUIEvent(EditorUIEvent::TOGGLE_RENDER_PROBES);
+                m_renderShaderType = 1;
+            }
+            if (ImGui::MenuItem("View reflections", nullptr, m_renderShaderType == 2)) {
+                sendUIEvent(EditorUIEvent::TOGGLE_RENDER_REFLECTIONS);
+                m_renderShaderType = 2;
+            }
             ImGui::Separator();
             if (ImGui::MenuItem("Update probes")) {
                 sendUIEvent(EditorUIEvent::TRIGGER_PROBE_RENDER);

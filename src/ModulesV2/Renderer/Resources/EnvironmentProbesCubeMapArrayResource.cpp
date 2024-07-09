@@ -4,7 +4,8 @@
 EnvironmentProbesCubeMapArrayResource::EnvironmentProbesCubeMapArrayResource() : Resource(),
                                                                                  m_TextureCube(),
                                                                                  m_framebufferId(),
-                                                                                 m_renderbufferId() {
+                                                                                 m_renderbufferId(),
+                                                                                 m_handleId() {
 }
 
 Resource::Status EnvironmentProbesCubeMapArrayResource::build() {
@@ -23,6 +24,17 @@ Resource::Status EnvironmentProbesCubeMapArrayResource::build() {
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    generateMipMaps();
+
+    m_handleId = glGetTextureHandleARB(m_TextureCube.textureId);
+    if (m_handleId == 0) {
+        std::cout << "Error! Handle returned null " << m_Path << std::endl;
+
+        return STATUS_BUILD_ERROR;
+    }
+
+    glMakeTextureHandleResidentARB(m_handleId);
+
     return Resource::STATUS_READY;
 }
 
@@ -33,6 +45,7 @@ void EnvironmentProbesCubeMapArrayResource::destroy() {
 }
 
 void EnvironmentProbesCubeMapArrayResource::bindRenderTarget() {
+    glMakeTextureHandleNonResidentARB(m_handleId);
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebufferId);
     m_TextureCube.bind();
 }

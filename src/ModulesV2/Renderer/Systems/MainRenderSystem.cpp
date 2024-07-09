@@ -4,7 +4,8 @@
 #include <GL/glew.h>
 
 MainRenderSystem::MainRenderSystem() : EntitySystem(),
-                                       m_ShaderProgram(),
+                                       m_shaderType(SHADER_SHADED),
+                                       m_ShaderPrograms(),
                                        m_LightsBuffer(),
                                        m_ProbesBuffer(),
                                        m_SamplersIndexBuffer(),
@@ -17,6 +18,7 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
 
 void MainRenderSystem::registerEventHandlers(EventManager *eventManager) {
     eventManager->registerEventReceiver(this, &MainRenderSystem::handleWindowEvent);
+    eventManager->registerEventReceiver(this, &MainRenderSystem::handleEditorUIEvent);
 }
 
 bool MainRenderSystem::handleWindowEvent(WindowEvent *const event) {
@@ -36,12 +38,22 @@ void MainRenderSystem::initialize(ResourceManager *resourceManager) {
     glEnable(GL_BLEND);
     glEnable(GL_CULL_FACE);
 
-    resourceManager->request(m_ShaderProgram,
+    resourceManager->request(m_ShaderPrograms[SHADER_SHADED],
                              "data/shaders/lighting|.vert|.frag|.geom",
-                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "SamplerIndexStorageBuffer"});
+                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "SamplerIndexStorageBuffer", "EnvironmentProbesCubeMapArray"});
+
+    resourceManager->request(m_ShaderPrograms[SHADER_PROBES],
+                             "data/shaders/|lighting.vert|lighting.geom|lightingProbeEdit.frag",
+                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "SamplerIndexStorageBuffer", "EnvironmentProbesCubeMapArray"});
+
+    resourceManager->request(m_ShaderPrograms[SHADER_REFLECTION],
+                             "data/shaders/|lighting.vert|lighting.geom|lightingReflection.frag",
+                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "SamplerIndexStorageBuffer", "EnvironmentProbesCubeMapArray"});
+
     resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager->request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
     resourceManager->request(m_SamplersIndexBuffer, "SamplerIndexStorageBuffer");
+    resourceManager->request(m_ProbesCubeMapArray, "EnvironmentProbesCubeMapArray");
 }
 
 void MainRenderSystem::process() {
@@ -52,17 +64,18 @@ void MainRenderSystem::process() {
     Camera *camera = findActiveCamera();
     assert(camera != nullptr);
 
-    m_ShaderProgram().use();
-    camera->bind(m_ShaderProgram());
-    m_SamplersIndexBuffer().bind(m_ShaderProgram());
-    m_LightsBuffer().bind(m_ShaderProgram());
-    m_SamplersIndexBuffer().bind(m_ShaderProgram());
-    m_ProbesBuffer().bind(m_ShaderProgram());
+    m_ShaderPrograms[m_shaderType]().use();
+    camera->bind(m_ShaderPrograms[m_shaderType]());
+    m_SamplersIndexBuffer().bind(m_ShaderPrograms[m_shaderType]());
+    m_LightsBuffer().bind(m_ShaderPrograms[m_shaderType]());
+    m_SamplersIndexBuffer().bind(m_ShaderPrograms[m_shaderType]());
+    m_ProbesBuffer().bind(m_ShaderPrograms[m_shaderType]());
+    m_ShaderPrograms[m_shaderType]().setUniform("probesCubeArraySampler", m_ProbesCubeMapArray().m_handleId);
 
     for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
         auto *transform = getComponent<TransformComponent>(mesh.first);
-        m_ShaderProgram().setUniform("modelMatrix", transform->getModelMatrix());
-        mesh.second->m_Material().bind(m_ShaderProgram());
+        m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getModelMatrix());
+        mesh.second->m_Material().bind(m_ShaderPrograms[m_shaderType]());
         mesh.second->m_Mesh().render();
     }
 }
@@ -81,4 +94,17 @@ Camera *MainRenderSystem::findActiveCamera() {
     }
 
     return nullptr;
+}
+
+bool MainRenderSystem::handleEditorUIEvent(EditorUIEvent *event) {
+    if (event->m_Type == EditorUIEvent::TOGGLE_RENDER_SHADED) {
+        m_shaderType = SHADER_SHADED;
+    }
+    if (event->m_Type == EditorUIEvent::TOGGLE_RENDER_PROBES) {
+        m_shaderType = SHADER_PROBES;
+    }
+    if (event->m_Type == EditorUIEvent::TOGGLE_RENDER_REFLECTIONS) {
+        m_shaderType = SHADER_REFLECTION;
+    }
+    return true;
 }

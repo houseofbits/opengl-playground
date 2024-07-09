@@ -27,6 +27,7 @@ void EnvironmentProbesBufferResource::appendProbe(TransformComponent &transform,
     structure.boundingBoxMin = glm::vec4(-(size * glm::vec3(0.5)) + structure.position, 1.0);
     structure.boundingBoxMax = glm::vec4(size * glm::vec3(0.5) + structure.position, 1.0);
     structure.debugColor = probe.m_DebugColor;
+    structure.cubeMapTextureLayer = probe.m_cubeMapLayerIndex;
 
     m_StorageBuffer.append(structure);
 }

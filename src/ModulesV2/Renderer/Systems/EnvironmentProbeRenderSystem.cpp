@@ -47,9 +47,7 @@ void EnvironmentProbeRenderSystem::initialize(ResourceManager *resourceManager) 
                              "data/shaders/|lighting.vert|lighting.geom|lightingEnvProbe.frag",
                              {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "SamplerIndexStorageBuffer"});
 
-    m_Camera.setPosition({-11.8, 0.5, 12.5});
     m_Camera.setFieldOfView(90.0);
-    m_Camera.setView({1, 0, 0}, {0, 1, 0});
 }
 
 void EnvironmentProbeRenderSystem::process() {
@@ -63,15 +61,20 @@ void EnvironmentProbeRenderSystem::process() {
     m_cubeMapArray().bindRenderTarget();
     int layer = 0;
     for (const auto &probe: getComponentContainer<EnvironmentProbeComponent>()) {
+        auto *probeTransform = getComponent<TransformComponent>(probe.first);
+        m_Camera.setPosition(probeTransform->getTranslation());
+        probe.second->m_cubeMapLayerIndex = layer;
+//
+//        std::cout << layer << " " << probeTransform->getTranslation().x
+//                  << ", " << probeTransform->getTranslation().y
+//                  << ", " << probeTransform->getTranslation().z
+//                  << std::endl;
+
         for (int i = 0; i < 6; ++i) {
             int face = layer * 6 + i;
-            probe.second->m_cubeMapLayerIndex = layer;
             m_cubeMapArray().selectCubeFace(face);
 
-            auto *probeTransform = getComponent<TransformComponent>(probe.first);
-            m_Camera.setPosition(probeTransform->getTranslation());
             m_Camera.setView(m_cubeMapViewDirection[i], m_cubeMapUpDirection[i]);
-
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             renderGeometry();
         }
@@ -85,13 +88,14 @@ void EnvironmentProbeRenderSystem::process() {
 
 void EnvironmentProbeRenderSystem::bindGeometry() {
     m_ShaderProgram().use();
-    m_Camera.bind(m_ShaderProgram());
     m_SamplersIndexBuffer().bind(m_ShaderProgram());
     m_LightsBuffer().bind(m_ShaderProgram());
     m_SamplersIndexBuffer().bind(m_ShaderProgram());
 }
 
 void EnvironmentProbeRenderSystem::renderGeometry() {
+    m_Camera.bind(m_ShaderProgram());
+
     for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
         auto *transform = getComponent<TransformComponent>(mesh.first);
 

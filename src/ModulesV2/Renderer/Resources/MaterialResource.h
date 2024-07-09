@@ -8,6 +8,7 @@ class MaterialResource : public Resource {
 public:
     inline static const std::string DIFFUSE_TEXTURE_KEY = "diffuseTexture";
     inline static const std::string NORMAL_TEXTURE_KEY = "normalTexture";
+    inline static const std::string ROUGHNESS_TEXTURE_KEY = "roughnessTexture";
 
     MaterialResource();
 
@@ -19,4 +20,5 @@ public:
 
     ResourceHandle<TextureResource> m_Diffuse;
     ResourceHandle<TextureResource> m_Normal;
+    ResourceHandle<TextureResource> m_Roughness;
 };

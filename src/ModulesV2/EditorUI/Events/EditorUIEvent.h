@@ -12,6 +12,9 @@ public:
         EDITOR_DISABLED,
         SAVE,
         TRIGGER_PROBE_RENDER,
+        TOGGLE_RENDER_SHADED,
+        TOGGLE_RENDER_PROBES,
+        TOGGLE_RENDER_REFLECTIONS,
     } Type;
 
     Type m_Type{UNDEFINED};

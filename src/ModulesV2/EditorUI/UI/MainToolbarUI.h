@@ -12,6 +12,7 @@ public:
     bool m_isEditWindowVisible;
     long m_currentGizmoOperation;
     long m_currentGizmoMode;
+    int m_renderShaderType;
 
 private:
     void processTransformTypeDropdown(TransformComponent *transform);

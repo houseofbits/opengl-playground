@@ -2,6 +2,7 @@
 
 #include "../../../CoreV2/API.h"
 #include "../../../Renderer/Texture/TextureCube.h"
+#include "ShaderProgramResource.h"
 
 class EnvironmentProbesCubeMapArrayResource : public Resource {
 public:
@@ -18,6 +19,7 @@ public:
     void selectCubeFace(int layer);
 
     TextureCube m_TextureCube;
+    std::uint64_t m_handleId;
     unsigned int m_framebufferId;
     unsigned int m_renderbufferId;
 };
