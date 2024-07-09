@@ -28,7 +28,7 @@ EnvironmentProbeRenderSystem::EnvironmentProbeRenderSystem() : EntitySystem(),
                                                                m_SamplersIndexBuffer(),
                                                                m_cubeMapArray(),
                                                                m_Camera(),
-                                                               m_isRenderEnabled(false) {
+                                                               m_isRenderEnabled(true) {
     usesComponent<StaticMeshComponent>();
     usesComponent<TransformComponent>();
     usesComponent<EnvironmentProbeComponent>();

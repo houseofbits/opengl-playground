@@ -85,7 +85,9 @@ void main()
     vec3 viewReflection = reflect(view, normal);
     float frensnel = pow(1.0 - dot(normal, -view), 2);
 
-    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness, normal);
+    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness, normal)
+     * (1.0 - roughness)
+     * frensnel;
 
     vec3 color = vec3(0.0);
     vec3 falloff;
@@ -131,7 +133,7 @@ void main()
 
             lightColor += attenuation
                 * falloff
-                * (diffuseLight + (reflectionColor * 2 * specularLevel * frensnel));
+                * (diffuseLight + reflectionColor);
         }
     }
 

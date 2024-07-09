@@ -73,12 +73,10 @@ void main()
         normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
     }
 
-    vec3 roughness = vec3(1.0);
+    vec3 roughness = vec3(0.0);
     if (hasRoughnessSampler == 1) {
         roughness = texture(roughnessSampler, gsTexcoord).xyz;
     }
-
-    normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
 
     vec3 view = normalize(gsPosition.xyz - viewPosition);
     vec3 viewReflection = reflect(view, normal);

@@ -115,6 +115,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/Renderer/Systems/StorageBufferUpdateSystem.h
         src/ModulesV2/Renderer/Resources/EnvironmentProbesCubeMapArrayResource.cpp
         src/ModulesV2/Renderer/Resources/EnvironmentProbesCubeMapArrayResource.h
+        src/ModulesV2/Renderer/Systems/ShadowMapRenderSystem.cpp
+        src/ModulesV2/Renderer/Systems/ShadowMapRenderSystem.h
+        src/ModulesV2/Renderer/Resources/ShadowAtlasResource.cpp
+        src/ModulesV2/Renderer/Resources/ShadowAtlasResource.h
 )
 
 target_link_libraries(SDLWindow SDL2main SDL2 GL)

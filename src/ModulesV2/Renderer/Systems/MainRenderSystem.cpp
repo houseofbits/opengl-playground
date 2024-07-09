@@ -80,10 +80,6 @@ void MainRenderSystem::process() {
     }
 }
 
-TransformComponent *MainRenderSystem::findTransform(Identity &entityId) {
-    return getComponent<TransformComponent>(entityId.id());
-}
-
 Camera *MainRenderSystem::findActiveCamera() {
     auto *c = findComponent<CameraComponent>([](CameraComponent *camera) {
         return camera->m_isActive;

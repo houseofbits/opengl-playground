@@ -27,7 +27,6 @@ private:
         SHADER_REFLECTION = 2,
     };
     Camera *findActiveCamera();
-    TransformComponent *findTransform(Identity &entityId);
 
     ShaderType m_shaderType;
     int m_viewportWidth;
