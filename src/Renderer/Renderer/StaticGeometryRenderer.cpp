@@ -27,10 +27,10 @@ void StaticGeometryRenderer::render(Scene &scene, Camera &camera) {
     renderManager->atlasManager.bindAll(materialShader);
     camera.bind(materialShader);
     renderManager->lightsUniformBuffer.bind(materialShader);
-    renderManager->environmentProbeUniformBuffer.bind(materialShader);
+//    renderManager->environmentProbeUniformBuffer.bind(materialShader);
 
     glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, renderManager->environmentProbeRenderer.cubeRenderTarget.textureId);
+//    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, renderManager->environmentProbeRenderer.cubeRenderTarget.textureId);
     materialShader.setUniform("envProbeArray", 4);
 
     scene.render(materialShader);

@@ -3,7 +3,7 @@
 #include "../../Components/Scene.h"
 #include "../../Helper/AtlasGraph.h"
 #include "../../Helper/ShaderSourceLoader.h"
-#include "../../PostProcessRenderer/PostProcessRenderer.h"
+//#include "../../PostProcessRenderer/PostProcessRenderer.h"
 #include "../Shader/Shader.h"
 #include "../Shader/ShaderStorageBuffer.h"
 #include "BaseRenderer.h"
@@ -28,7 +28,7 @@ public:
     explicit ShadowMapRenderer(RenderManager *);
 
     Shader depthShader;
-    PostProcessRenderer debugImageRenderer;
+//    PostProcessRenderer debugImageRenderer;
 
     void init(unsigned int uniformBindingIndex);
     void render(Scene &scene);

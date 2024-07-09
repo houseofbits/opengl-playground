@@ -24,7 +24,7 @@ RenderManager::RenderManager(Window *w) : window(w),
                                           staticGeometryRenderer(this),
                                           skyBoxRenderer(this),
                                           debugInformationRenderer(this),
-                                          environmentProbeRenderer(this),
+//                                          environmentProbeRenderer(this),
                                           isLightConesVisible(false) {
 
     ShaderSourceLoader::registerGlobal("LIGHTS_UNIFORM_BINDING_INDEX", LIGHTS_UNIFORM_BINDING_INDEX);
@@ -37,17 +37,17 @@ void RenderManager::init() {
     staticGeometryRenderer.init();
     skyBoxRenderer.init();
     debugInformationRenderer.init();
-    environmentProbeUniformBuffer.create(32, ENV_PROBES_UNIFORM_BINDING_INDEX);
-    environmentProbeRenderer.init(32);
+//    environmentProbeUniformBuffer.create(32, ENV_PROBES_UNIFORM_BINDING_INDEX);
+//    environmentProbeRenderer.init(32);
 
-    debugRendererColor.init(glm::vec4(-1, -1, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimageColor.frag");
+//    debugRendererColor.init(glm::vec4(-1, -1, 1, 1), "resources/shaders/2dimage.vert", "resources/shaders/2dimageColor.frag");
 }
 
 void RenderManager::preRender(Scene &scene) {
     lightsUniformBuffer.update(scene, atlasManager);
     shadowMapRenderer.render(scene);
-    environmentProbeRenderer.render(scene);
-    environmentProbeUniformBuffer.update(scene);
+//    environmentProbeRenderer.render(scene);
+//    environmentProbeUniformBuffer.update(scene);
 }
 
 void RenderManager::render(Scene &scene) {
@@ -76,19 +76,19 @@ void RenderManager::render(Scene &scene) {
 }
 
 void RenderManager::renderDebug(int mode) {
-    if (mode == 1) {
-        shadowMapRenderer.renderShadowAtlas();
-    }
-    if (mode == 2) {
-        debugRendererColor.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_DIFFUSE);
-        debugRendererColor.draw();
-    }
-    if (mode == 3) {
-        debugRendererColor.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_EFFECTS);
-        debugRendererColor.draw();
-    }
-    if (mode == 4) {
-        debugRendererColor.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_NORMALS);
-        debugRendererColor.draw();
-    }
+//    if (mode == 1) {
+//        shadowMapRenderer.renderShadowAtlas();
+//    }
+//    if (mode == 2) {
+//        debugRendererColor.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_DIFFUSE);
+//        debugRendererColor.draw();
+//    }
+//    if (mode == 3) {
+//        debugRendererColor.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_EFFECTS);
+//        debugRendererColor.draw();
+//    }
+//    if (mode == 4) {
+//        debugRendererColor.textureId = atlasManager.getTextureId(TextureAtlasManager::ATLAS_NORMALS);
+//        debugRendererColor.draw();
+//    }
 }

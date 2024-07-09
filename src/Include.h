@@ -4,7 +4,6 @@
 #include "CoreV2/Events/EventManager.h"
 #include "CoreV2/Events/WindowEvent.h"
 #include "CoreV2/Reflection/TypedClass.h"
-#include "Entry.h"
 #include "Exception.h"
 #include "Helper/Log.h"
 #include "Helper/Time.h"

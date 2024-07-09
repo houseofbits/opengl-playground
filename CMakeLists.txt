@@ -11,8 +11,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Renderer/StaticGeometryRenderer.h
         src/Renderer/Renderer/BaseRenderer.cpp
         src/Renderer/Renderer/BaseRenderer.h
-        src/SceneLoader/SceneLoader.cpp
-        src/SceneLoader/SceneLoader.h
         src/Renderer/Texture/TextureCube.cpp
         src/Renderer/Texture/TextureCube.h
         src/Helper/StringUtils.h
@@ -26,16 +24,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Camera/CameraController.h
         src/Renderer/Renderer/DebugInformationRenderer.cpp
         src/Renderer/Renderer/DebugInformationRenderer.h
-        src/Renderer/EnvironmentProbe/EnvironmentProbe.cpp
-        src/Renderer/EnvironmentProbe/EnvironmentProbe.h
-        src/Renderer/EnvironmentProbe/EnvironmentProbeUniformBuffer.cpp
-        src/Renderer/EnvironmentProbe/EnvironmentProbeUniformBuffer.h
-        src/Renderer/Renderer/EnvironmentProbeRenderer.cpp
-        src/Renderer/Renderer/EnvironmentProbeRenderer.h
-        src/SceneLoader/ModelBuildConfiguration.h
-        src/SceneLoader/BaseConfiguration.h
-        src/SceneLoader/BaseConfiguration.cpp
-        src/SceneLoader/ProbeBuildConfiguration.h
         src/Renderer/Shader/ShaderStorageBuffer.h
         src/Physics/TestPhysics.cpp
         src/Physics/TestPhysics.h

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "EnvironmentProbe/EnvironmentProbeUniformBuffer.h"
+//#include "EnvironmentProbe/EnvironmentProbeUniformBuffer.h"
 #include "Light/LightsUniformBuffer.h"
 #include "Renderer/DebugInformationRenderer.h"
-#include "Renderer/EnvironmentProbeRenderer.h"
+//#include "Renderer/EnvironmentProbeRenderer.h"
 #include "Renderer/ShadowMapRenderer.h"
 #include "Renderer/SkyBoxRenderer.h"
 #include "Renderer/StaticGeometryRenderer.h"
@@ -19,7 +19,7 @@ class RenderManager
 protected:
     Window* window;
 
-    PostProcessRenderer debugRendererColor;
+//    PostProcessRenderer debugRendererColor;
 public:
     static const unsigned int LIGHTS_UNIFORM_BINDING_INDEX = 1;
     static const unsigned int ATLAS_REGION_MAPPING_UNIFORM_BINDING_INDEX = 2;
@@ -29,13 +29,13 @@ public:
     explicit RenderManager(Window*);
 
     LightsUniformBuffer lightsUniformBuffer;
-    EnvironmentProbeUniformBuffer environmentProbeUniformBuffer;
+//    EnvironmentProbeUniformBuffer environmentProbeUniformBuffer;
     TextureAtlasManager atlasManager;
     ShadowMapRenderer shadowMapRenderer;
     StaticGeometryRenderer staticGeometryRenderer;
     SkyBoxRenderer skyBoxRenderer;
     DebugInformationRenderer debugInformationRenderer;
-    EnvironmentProbeRenderer environmentProbeRenderer;
+//    EnvironmentProbeRenderer environmentProbeRenderer;
 
     void init();
     void preRender(Scene& scene);

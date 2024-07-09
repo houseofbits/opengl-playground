@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Renderer/Camera/Camera.h"
-#include "../Renderer/EnvironmentProbe/EnvironmentProbe.h"
+//#include "../Renderer/EnvironmentProbe/EnvironmentProbe.h"
 #include "../Renderer/Light/Light.h"
 #include "../Renderer/Model/Cube.h"
 #include "../Renderer/Model/Plane.h"
@@ -18,11 +18,11 @@ public:
     Camera camera;
     std::list<RenderableComponent *> renderables;
     std::list<Light *> lights;
-    std::list<EnvironmentProbe *> probes;
+//    std::list<EnvironmentProbe *> probes;
 
     ModelComponent &createModel();
     Light &createLight();
-    EnvironmentProbe &createProbe();
+//    EnvironmentProbe &createProbe();
 
     void render(Shader &shader);
     void renderWithTransform(Shader &shader);
