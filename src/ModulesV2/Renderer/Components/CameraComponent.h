@@ -29,6 +29,9 @@ public:
     }
 
     void registerWithSystems(EntityContext &ctx) override;
+    std::string getListName(Entity* e) {
+        return e->m_Name + " " + " CAMERA";
+    }
 
     Camera m_Camera;
     bool m_isActive;

@@ -18,13 +18,17 @@ public:
         return m_ResourceManager != nullptr && m_Resource != nullptr;
     }
 
-    T &operator()() {
+    T &get() {
         if (!isValid()) {
             createDefaultInstance();
             return *reinterpret_cast<T *>(T::m_DefaultInstance);
         }
 
         return *m_Resource;
+    }
+
+    T &operator()() {
+        return get();
     }
 
     void invalidate() {

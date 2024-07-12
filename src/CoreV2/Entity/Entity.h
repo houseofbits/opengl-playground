@@ -29,7 +29,7 @@ public:
     void unregisterFromSystems(EntityContext &);
     bool isReadyToRegister();
     [[nodiscard]] std::string getListName() const {
-        return m_Name + " - " + m_TypeName;
+        return m_Name;
     }
 
     template<class T>

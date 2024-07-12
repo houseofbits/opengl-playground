@@ -39,13 +39,13 @@ Resource::Status EnvironmentProbesCubeMapArrayResource::build() {
 }
 
 void EnvironmentProbesCubeMapArrayResource::destroy() {
+    glMakeTextureHandleNonResidentARB(m_handleId);
     m_TextureCube.destroy();
     glDeleteFramebuffers(1, &m_framebufferId);
     glDeleteRenderbuffers(1, &m_renderbufferId);
 }
 
 void EnvironmentProbesCubeMapArrayResource::bindRenderTarget() {
-    glMakeTextureHandleNonResidentARB(m_handleId);
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebufferId);
     m_TextureCube.bind();
 }

@@ -2,19 +2,19 @@
     {
         "camera": {
             "position": [
-                -14.959507942199707,
-                2.9016966819763184,
-                15.08331298828125
+                -14.596077919006348,
+                2.193397045135498,
+                16.935590744018555
             ],
             "upDirection": [
-                0.10739528387784958,
-                0.9900211095809937,
-                -0.09123839437961578
+                0.01764109544456005,
+                0.9996676445007324,
+                -0.018801454454660416
             ],
             "viewDirection": [
-                0.7545009851455688,
-                -0.14091908931732178,
-                -0.6409914493560791
+                0.6840177178382874,
+                -0.02578183077275753,
+                -0.7290096282958984
             ]
         },
         "name": "main-camera",
@@ -126,29 +126,32 @@
     },
     {
         "light": {
-            "attenuation": 19.799999237060547,
+            "attenuation": 40.29991912841797,
+            "castShadows": true,
             "color": [
                 1.0,
                 1.0,
                 0.6372548937797546
             ],
             "intensity": 5.0,
+            "isEnabled": true,
             "projectionTexture": "resources/textures/spot-clouds.png",
-            "radius": 50.0,
+            "radius": 18.20022201538086,
+            "shadowResolution": 512,
             "type": "DIRECT"
         },
-        "name": "light1",
+        "name": "sun light",
         "transform": {
             "rotation": [
-                -0.014992563985288143,
-                0.9267690777778625,
-                0.31983280181884766,
-                -0.19642117619514465
+                0.9023643732070923,
+                0.21179316937923431,
+                -0.12387759983539581,
+                -0.35431143641471863
             ],
             "translation": [
-                -12.712055206298828,
-                8.55715274810791,
-                1.1018335819244385
+                -6.988033771514893,
+                9.044886589050293,
+                0.01934785023331642
             ]
         },
         "type": "SpotLight"
@@ -157,27 +160,30 @@
         "light": {
             "attenuation": 4.499958038330078,
             "beamAngle": 76.5,
+            "castShadows": false,
             "color": [
                 1.0,
                 1.0,
                 1.0
             ],
-            "intensity": 5.499999523162842,
+            "intensity": 2.800002098083496,
+            "isEnabled": true,
             "projectionTexture": "resources/textures/spot-proj-4.png",
+            "shadowResolution": 512,
             "type": "SPOT"
         },
         "name": "wall-light1",
         "transform": {
             "rotation": [
-                -0.12152893841266632,
-                0.7079585790634155,
-                0.6842701435089111,
-                0.12569724023342133
+                -0.1215289980173111,
+                0.7079582810401917,
+                0.684270441532135,
+                0.12569718062877655
             ],
             "translation": [
-                -6.095036506652832,
-                4.096660137176514,
-                7.545808792114258
+                -4.424610137939453,
+                4.0966668128967285,
+                17.764089584350586
             ]
         },
         "type": "SpotLight"
@@ -185,21 +191,24 @@
     {
         "light": {
             "attenuation": 4.099958419799805,
+            "castShadows": false,
             "color": [
                 0.0,
                 0.11764693260192871,
                 1.0
             ],
             "intensity": 3.9999983310699463,
+            "isEnabled": false,
+            "shadowResolution": 512,
             "type": "OMNI"
         },
         "name": "new light",
         "transform": {
             "rotation": [
-                -0.0012726244749501348,
+                -0.001272624242119491,
                 0.9821755886077881,
-                -0.00666988268494606,
-                -0.18784314393997192
+                -0.0066698817536234856,
+                -0.18784311413764954
             ],
             "translation": [
                 -9.471506118774414,
@@ -213,13 +222,16 @@
         "light": {
             "attenuation": 40.0,
             "beamAngle": 120.0,
+            "castShadows": false,
             "color": [
                 0.40285971760749817,
                 0.4001585841178894,
                 0.44607841968536377
             ],
             "intensity": 2.6999995708465576,
+            "isEnabled": false,
             "projectionTexture": "resources/textures/spot-proj-4.png",
+            "shadowResolution": 512,
             "type": "SPOT"
         },
         "name": "random light",
@@ -242,22 +254,25 @@
         "light": {
             "attenuation": 5.199997425079346,
             "beamAngle": 63.0,
+            "castShadows": false,
             "color": [
                 1.0,
                 1.0,
                 1.0
             ],
             "intensity": 7.0,
+            "isEnabled": true,
             "projectionTexture": "resources/textures/spot-proj-4.png",
+            "shadowResolution": 512,
             "type": "SPOT"
         },
         "name": "wall-light2",
         "transform": {
             "rotation": [
                 0.7088420987129211,
-                -0.004339763429015875,
-                0.08069353550672531,
-                -0.7007229924201965
+                -0.004339792300015688,
+                0.08069352060556412,
+                -0.7007229328155518
             ],
             "translation": [
                 -6.254361629486084,
@@ -358,5 +373,55 @@
             ]
         },
         "type": "EnvironmentProbe"
+    },
+    {
+        "light": {
+            "attenuation": 20.0,
+            "castShadows": false,
+            "color": [
+                0.5814251899719238,
+                0.5419550538063049,
+                0.8774510025978088
+            ],
+            "intensity": 0.6999999284744263,
+            "isEnabled": true,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "name": "Omni light 1",
+        "transform": {
+            "translation": [
+                -13.533007621765137,
+                3.491866111755371,
+                11.227689743041992
+            ]
+        },
+        "type": "OmniLight"
+    },
+    {
+        "mesh": {
+            "material": "",
+            "model": "resources/scenes/scene1/shadow-mask.gltf"
+        },
+        "name": "Shadow mask",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "type": "StaticMesh"
     }
 ]

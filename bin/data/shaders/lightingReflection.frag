@@ -6,25 +6,6 @@
 
 layout (location=0) out vec4 fragColor;
 
-struct SpotLightStructure {
-    vec3 color;
-    float intensity;
-    vec3 position;
-    float attenuation;
-    mat4 projectionViewMatrix;
-    vec3 direction;
-    int projectorSamplerIndex;
-    int isPointSource;
-};
-
-layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
-    SpotLightStructure spotLights[100];
-};
-layout(binding = ${INDEX_SamplerIndexStorageBuffer}, std430) readonly buffer SamplerIndexStorageBuffer {
-    sampler2D projectorSamplers[];
-};
-
-uniform uint SpotLightStorageBuffer_size;
 uniform vec3 viewPosition;
 uniform int hasDiffuseSampler;
 uniform int hasNormalSampler;

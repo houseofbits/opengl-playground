@@ -11,16 +11,15 @@ struct SpotLightStructure {
     float attenuation;
     mat4 projectionViewMatrix;
     vec3 direction;
-    int projectorSamplerIndex;
     int isPointSource;
+    uvec2 projectorSamplerHandle;
+    uvec2 _PLACEHOLDER1;
+    uvec2 shadowSamplerHandle;
+    uvec2 _PLACEHOLDER2;
 };
 
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
     SpotLightStructure spotLights[100];
-};
-
-layout(binding = ${INDEX_SamplerIndexStorageBuffer}, std430) readonly buffer SamplerIndexStorageBuffer {
-    sampler2D projectorSamplers[];
 };
 
 in vec3 gsNormal;
@@ -36,6 +35,10 @@ uniform int hasRoughnessSampler;
 layout(bindless_sampler) uniform sampler2D diffuseSampler;
 layout(bindless_sampler) uniform sampler2D normalSampler;
 layout(bindless_sampler) uniform sampler2D roughnessSampler;
+
+bool isSamplerHandleValid(uvec2 handle) {
+    return (handle.x != 0 || handle.y != 0);
+}
 
 vec3 calculateProjectedCoords(vec4 lightSpacePos)
 {
@@ -101,10 +104,9 @@ void main()
 
             float attenuation = 1.0 - clamp(distToLight / light.attenuation, 0.0, 1.0);
 
-            if (light.projectorSamplerIndex >= 0) {
-                falloff = texture(projectorSamplers[light.projectorSamplerIndex], lightProjectedPosition.xy).rgb;
-            } else {
-                falloff = vec3(1.0);
+            falloff = vec3(1.0);
+            if (isSamplerHandleValid(light.projectorSamplerHandle)) {
+                falloff = texture(sampler2D(light.projectorSamplerHandle), lightProjectedPosition.xy).rgb;
             }
 
             color += light.intensity * ndotl * light.color * attenuation * falloff;

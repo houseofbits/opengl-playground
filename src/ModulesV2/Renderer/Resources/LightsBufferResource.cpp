@@ -22,35 +22,44 @@ Resource::Status LightsBufferResource::build() {
 }
 
 void LightsBufferResource::destroy() {
-
 }
 
-void LightsBufferResource::appendLight(TransformComponent &transform, LightComponent &light, int projectorIndex) {
-    LightStructure structure;
-    structure.color = light.m_Color;
-    structure.intensity = light.m_Intensity;
-    structure.position = transform.getTranslation();
-    structure.direction = transform.getDirection();
-    structure.attenuation = light.m_Attenuation;
-    structure.projectorSamplerIndex = projectorIndex;
+void LightsBufferResource::appendLight(TransformComponent &transform, LightComponent &light) {
 
-    if (light.m_Type == LightComponent::SPOT) {
-        structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(transform, light);
-        structure.isPointSource = 1;
+    light.m_lightBufferIndices.clear();
+    for (int i = 0; i < light.getNumberOfBufferLights(); i++) {
+        LightStructure structure;
+        structure.color = light.m_Color;
+        structure.intensity = light.m_Intensity;
+        structure.position = transform.getTranslation();
+        structure.direction = transform.getDirection();
+        structure.attenuation = light.m_Attenuation;
+        structure.projectorSamplerHandle = 0;
+        structure.shadowSamplerHandle = 0;
+        structure.isPointSource = light.m_Type == LightComponent::DIRECT ? 0 : 1;
 
-        m_StorageBuffer.append(structure);
-    } else if (light.m_Type == LightComponent::DIRECT) {
-        structure.projectionViewMatrix = createOrthoProjectionViewMatrix(transform, light);
-        structure.isPointSource = 0;
-
-        m_StorageBuffer.append(structure);
-    } else if (light.m_Type == LightComponent::OMNI) {
-        for (auto side : CUBE_DIRECTIONS) {
-            structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(side, transform.getTranslation(), light.m_Attenuation);
-            structure.isPointSource = 1;
-
-            m_StorageBuffer.append(structure);
+        if (light.m_Projection().isReady()) {
+            structure.projectorSamplerHandle = light.m_Projection().m_handleId;
         }
+
+        if (light.m_doesCastShadows && light.m_ShadowMaps.size() > i && light.m_ShadowMaps[i]->get().isReady()) {
+            structure.shadowSamplerHandle = light.m_ShadowMaps[i]->get().m_handleId;
+        }
+
+        switch (light.m_Type) {
+            case LightComponent::OMNI:
+                structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(CUBE_DIRECTIONS[i], transform.getTranslation(), light.m_Attenuation);
+                break;
+            case LightComponent::SPOT:
+                structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(transform, light);
+                break;
+            case LightComponent::DIRECT:
+                structure.projectionViewMatrix = createOrthoProjectionViewMatrix(transform, light);
+                break;
+        }
+
+        m_StorageBuffer.append(structure);
+        light.m_lightBufferIndices.push_back((int) m_StorageBuffer.currentSize - 1);
     }
 }
 

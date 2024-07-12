@@ -27,6 +27,9 @@ public:
     }
 
     void registerWithSystems(EntityContext &ctx) override;
+    std::string getListName(Entity* e) {
+        return e->m_Name + " " + " STATIC MESH";
+    }
 
     ResourceHandle<StaticMeshResource> m_Mesh;
     ResourceHandle<MaterialResource> m_Material;

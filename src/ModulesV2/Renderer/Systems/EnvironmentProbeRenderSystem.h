@@ -7,7 +7,6 @@
 #include "../Resources/EnvironmentProbesBufferResource.h"
 #include "../Resources/EnvironmentProbesCubeMapArrayResource.h"
 #include "../Resources/LightsBufferResource.h"
-#include "../Resources/SamplersIndexBufferResource.h"
 #include "../Resources/ShaderProgramResource.h"
 
 class EnvironmentProbeRenderSystem : public EntitySystem {
@@ -28,7 +27,6 @@ private:
 
     ResourceHandle<ShaderProgramResource> m_ShaderProgram;
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
-    ResourceHandle<SamplersIndexBufferResource> m_SamplersIndexBuffer;
     ResourceHandle<EnvironmentProbesCubeMapArrayResource> m_cubeMapArray;
     Camera m_Camera;
     bool m_isRenderEnabled;

@@ -8,7 +8,6 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_ShaderPrograms(),
                                        m_LightsBuffer(),
                                        m_ProbesBuffer(),
-                                       m_SamplersIndexBuffer(),
                                        m_viewportWidth(1024),
                                        m_viewportHeight(768) {
     usesComponent<StaticMeshComponent>();
@@ -40,19 +39,18 @@ void MainRenderSystem::initialize(ResourceManager *resourceManager) {
 
     resourceManager->request(m_ShaderPrograms[SHADER_SHADED],
                              "data/shaders/lighting|.vert|.frag|.geom",
-                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "SamplerIndexStorageBuffer", "EnvironmentProbesCubeMapArray"});
+                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "EnvironmentProbesCubeMapArray"});
 
     resourceManager->request(m_ShaderPrograms[SHADER_PROBES],
                              "data/shaders/|lighting.vert|lighting.geom|lightingProbeEdit.frag",
-                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "SamplerIndexStorageBuffer", "EnvironmentProbesCubeMapArray"});
+                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "EnvironmentProbesCubeMapArray"});
 
     resourceManager->request(m_ShaderPrograms[SHADER_REFLECTION],
                              "data/shaders/|lighting.vert|lighting.geom|lightingReflection.frag",
-                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "SamplerIndexStorageBuffer", "EnvironmentProbesCubeMapArray"});
+                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "EnvironmentProbesCubeMapArray"});
 
     resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager->request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
-    resourceManager->request(m_SamplersIndexBuffer, "SamplerIndexStorageBuffer");
     resourceManager->request(m_ProbesCubeMapArray, "EnvironmentProbesCubeMapArray");
 }
 
@@ -66,9 +64,7 @@ void MainRenderSystem::process() {
 
     m_ShaderPrograms[m_shaderType]().use();
     camera->bind(m_ShaderPrograms[m_shaderType]());
-    m_SamplersIndexBuffer().bind(m_ShaderPrograms[m_shaderType]());
     m_LightsBuffer().bind(m_ShaderPrograms[m_shaderType]());
-    m_SamplersIndexBuffer().bind(m_ShaderPrograms[m_shaderType]());
     m_ProbesBuffer().bind(m_ShaderPrograms[m_shaderType]());
     m_ShaderPrograms[m_shaderType]().setUniform("probesCubeArraySampler", m_ProbesCubeMapArray().m_handleId);
 

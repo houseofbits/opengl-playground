@@ -23,7 +23,7 @@ public:
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<CameraControlSystem>(1);
         ctx.registerEntitySystem<StorageBufferUpdateSystem>(1);
-        ctx.registerEntitySystem<ShadowMapRenderSystem>(2);
+        ctx.registerEntitySystem<ShadowMapRenderSystem>(6); //2
         ctx.registerEntitySystem<EnvironmentProbeRenderSystem>(3);
         ctx.registerEntitySystem<MainRenderSystem>(5);
     };

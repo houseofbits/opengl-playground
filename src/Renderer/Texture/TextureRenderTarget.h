@@ -11,8 +11,8 @@ private:
 public:
     TextureRenderTarget();
 
-    void create(unsigned int width, unsigned int height, Texture::Type type);
-    void bind();
-    void unbind();
-    void destroy();
+    void create(unsigned int width, unsigned int height, Texture::Type type) override;
+    void bind() override;
+    void unbind() override;
+    void destroy() override;
 };

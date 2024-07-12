@@ -3,7 +3,6 @@
 #include "../../../CoreV2/API.h"
 #include "../../EditorUI/Events/EditorUIEvent.h"
 #include "../Resources/LightsBufferResource.h"
-#include "../Resources/ShadowAtlasResource.h"
 
 class ShadowMapRenderSystem : public EntitySystem {
 public:
@@ -13,7 +12,11 @@ public:
     void initialize(ResourceManager *) override;
     void registerEventHandlers(EventManager *eventManager) override;
     bool handleEditorUIEvent(EditorUIEvent *event);
+private:
+    void renderGeometry(int lightIndex);
+    void prepareShadowMapResources();
 
+    ResourceManager* m_ResourceManager;
+    ResourceHandle<ShaderProgramResource> m_ShaderProgram;
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
-    ResourceHandle<ShadowAtlasResource> m_ShadowAtlas;
 };

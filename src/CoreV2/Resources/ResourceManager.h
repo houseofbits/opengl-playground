@@ -50,7 +50,6 @@ public:
         }
 
         Resource *resource = findResource(path);
-
         if (resource == nullptr) {
             //            Log::info("Fetch resource: " + path);
             resource = new typename T::TYPE();
@@ -71,6 +70,7 @@ public:
     }
 
     void remove(Resource *resource) {
+//        std::cout<<"remove "<<resource->m_Path<<std::endl;
         //TODO: Add to list of removable entities and process at some other point
         m_Resources.remove(resource);
         resource->destroy();

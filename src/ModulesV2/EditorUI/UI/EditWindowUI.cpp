@@ -1,34 +1,48 @@
 #include "EditWindowUI.h"
 
-#include <utility>
 #include "../../../CoreV2/Events/EntityCreationEvent.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../Systems/EditorUISystem.h"
+#include <utility>
 
 std::vector<std::string> ENTITY_CREATION_OPTIONS = {
         "SpotLight",
         "OmniLight",
         "DirectLight",
         "StaticMesh",
-        "EnvironmentProbe"
-};
+        "EnvironmentProbe"};
 
 std::map<LightComponent::Type, std::string> LIGHT_TYPE_NAME_MAP = {
         {LightComponent::SPOT, "SPOT"},
         {LightComponent::OMNI, "OMNI"},
-        {LightComponent::DIRECT, "DIRECT"}
+        {LightComponent::DIRECT, "DIRECT"}};
+
+std::map<int, std::string> SHADOW_MAP_RESOLUTION = {
+        {64, "64x64"},
+        {128, "128x128"},
+        {256, "256x256"},
+        {512, "512x512"},
+        {1024, "1024x1024"},
+        {2048, "2048x2048"},
 };
 
 EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
                                                      m_EditorUISystem(editor),
                                                      m_lightProjectorPath(),
                                                      m_isBoundsTransformAllowed(false),
+                                                     m_isPreviewWindowOpen(false),
+                                                     m_previewTextureId(-1),
+                                                     m_previewTextureSize(256),
                                                      m_meshModelPath(),
-                                                     m_selectedEntityCreationType(0) {
-
+                                                     m_meshMaterialPath(),
+                                                     m_selectedEntityCreationType(0),
+                                                     m_isLightEntitiesListed(true),
+                                                     m_isStaticMeshEntitiesListed(true),
+                                                     m_isCameraEntitiesListed(true),
+                                                     m_isProbeEntitiesListed(true) {
 }
 
 void EditWindowUI::process() {
@@ -38,7 +52,7 @@ void EditWindowUI::process() {
 
         ImGui::PushItemWidth(100);
         if (ImGui::BeginCombo("##ENTITY_TYPE", ENTITY_CREATION_OPTIONS[m_selectedEntityCreationType].c_str())) {
-            for(int i=0; i<ENTITY_CREATION_OPTIONS.size(); i++) {
+            for (int i = 0; i < ENTITY_CREATION_OPTIONS.size(); i++) {
                 if (ImGui::Selectable(ENTITY_CREATION_OPTIONS[i].c_str(), m_selectedEntityCreationType == i)) {
                     m_selectedEntityCreationType = i;
                 }
@@ -60,6 +74,17 @@ void EditWindowUI::process() {
             }
         }
 
+        if (ImGui::BeginCombo("##ENTITY_FILTER", "Filter")) {
+            ImGui::Checkbox("LIGHTS", &m_isLightEntitiesListed);
+            ImGui::Checkbox("STATIC MESHES", &m_isStaticMeshEntitiesListed);
+            ImGui::Checkbox("CAMERAS", &m_isCameraEntitiesListed);
+            ImGui::Checkbox("PROBES", &m_isProbeEntitiesListed);
+
+            m_selectedEntity = -1;
+
+            ImGui::EndCombo();
+        }
+
         processEntitiesList();
 
         Entity *e = m_EditorUISystem->m_EntityContext->getEntity(m_selectedEntity);
@@ -74,52 +99,72 @@ void EditWindowUI::process() {
         }
     }
     ImGui::End();
+
+    if (m_isPreviewWindowOpen && ImGui::Begin("Texture preview##TEXTURE_PREVIEW", &m_isPreviewWindowOpen, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::Image((void *) (intptr_t) m_previewTextureId, ImVec2(400, 400));
+
+        ImGui::End();
+    }
 }
 
 void EditWindowUI::processEntitiesList() {
     ImGui::BeginListBox("##ENTITY_LIST", ImVec2(ImGui::GetWindowWidth() - 15, 200));
-    for (const auto &light: m_EditorUISystem->getComponentContainer<LightComponent>()) {
-        Entity *e = m_EditorUISystem->m_EntityContext->getEntity(light.first);
-        if (e != nullptr) {
-            std::string name = e->getListName();
-            if (ImGui::Selectable(name.c_str(), m_selectedEntity == light.first)) {
-                m_selectedEntity = (int) light.first;
-                m_lightProjectorPath = light.second->m_Projection().m_Path;
-                m_isBoundsTransformAllowed = false;
+
+    if (m_isLightEntitiesListed) {
+        for (const auto &light: m_EditorUISystem->getComponentContainer<LightComponent>()) {
+            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(light.first);
+            if (e != nullptr) {
+                std::string name = light.second->getListName(e);
+                if (ImGui::Selectable(name.c_str(), m_selectedEntity == light.first)) {
+                    m_selectedEntity = (int) light.first;
+                    m_lightProjectorPath = light.second->m_Projection().m_Path;
+                    m_isBoundsTransformAllowed = false;
+                }
             }
         }
     }
-    for (const auto &mesh: m_EditorUISystem->getComponentContainer<StaticMeshComponent>()) {
-        Entity *e = m_EditorUISystem->m_EntityContext->getEntity(mesh.first);
-        if (e != nullptr) {
-            std::string name = e->getListName();
-            if (ImGui::Selectable(name.c_str(), m_selectedEntity == mesh.first)) {
-                m_selectedEntity = (int) mesh.first;
-                m_meshModelPath = mesh.second->m_Mesh().m_Path;
-                m_isBoundsTransformAllowed = false;
+
+    if (m_isStaticMeshEntitiesListed) {
+        for (const auto &mesh: m_EditorUISystem->getComponentContainer<StaticMeshComponent>()) {
+            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(mesh.first);
+            if (e != nullptr) {
+                std::string name = mesh.second->getListName(e);
+                if (ImGui::Selectable(name.c_str(), m_selectedEntity == mesh.first)) {
+                    m_selectedEntity = (int) mesh.first;
+                    m_meshModelPath = mesh.second->m_Mesh().m_Path;
+                    m_meshMaterialPath = mesh.second->m_Material().m_Path;
+                    m_isBoundsTransformAllowed = false;
+                }
             }
         }
     }
-    for (const auto &camera: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
-        Entity *e = m_EditorUISystem->m_EntityContext->getEntity(camera.first);
-        if (e != nullptr) {
-            std::string name = e->getListName();
-            if (ImGui::Selectable(name.c_str(), m_selectedEntity == camera.first)) {
-                m_selectedEntity = (int) camera.first;
-                m_isBoundsTransformAllowed = false;
+
+    if (m_isCameraEntitiesListed) {
+        for (const auto &camera: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
+            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(camera.first);
+            if (e != nullptr) {
+                std::string name = camera.second->getListName(e);
+                if (ImGui::Selectable(name.c_str(), m_selectedEntity == camera.first)) {
+                    m_selectedEntity = (int) camera.first;
+                    m_isBoundsTransformAllowed = false;
+                }
             }
         }
     }
-    for (const auto &camera: m_EditorUISystem->getComponentContainer<EnvironmentProbeComponent>()) {
-        Entity *e = m_EditorUISystem->m_EntityContext->getEntity(camera.first);
-        if (e != nullptr) {
-            std::string name = e->getListName();
-            if (ImGui::Selectable(name.c_str(), m_selectedEntity == camera.first)) {
-                m_selectedEntity = (int) camera.first;
-                m_isBoundsTransformAllowed = true;
+
+    if(m_isProbeEntitiesListed) {
+        for (const auto &probe: m_EditorUISystem->getComponentContainer<EnvironmentProbeComponent>()) {
+            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(probe.first);
+            if (e != nullptr) {
+                std::string name = probe.second->getListName(e);
+                if (ImGui::Selectable(name.c_str(), m_selectedEntity == probe.first)) {
+                    m_selectedEntity = (int) probe.first;
+                    m_isBoundsTransformAllowed = true;
+                }
             }
         }
     }
+
     ImGui::EndListBox();
 }
 
@@ -131,8 +176,10 @@ void EditWindowUI::processEditLightComponent() {
 
     ImGui::SeparatorText("Light");
 
+    ImGui::Checkbox("Is enabled", &light->m_isEnabled);
+
     if (ImGui::BeginCombo("Type##LIGHT_TYPE", LIGHT_TYPE_NAME_MAP[light->m_Type].c_str())) {
-        for(const auto& lightName: LIGHT_TYPE_NAME_MAP) {
+        for (const auto &lightName: LIGHT_TYPE_NAME_MAP) {
             if (ImGui::Selectable(lightName.second.c_str(), light->m_Type == lightName.first)) {
                 light->m_Type = lightName.first;
             }
@@ -156,6 +203,33 @@ void EditWindowUI::processEditLightComponent() {
             m_EditorUISystem->m_ResourceManager->request(light->m_Projection, m_lightProjectorPath);
         }
     }
+    ImGui::SameLine();
+    if (ImGui::Button("Preview")) {
+        m_isPreviewWindowOpen = true;
+        m_previewTextureId = light->m_Projection().m_textureId;
+        m_previewTextureSize = light->m_Projection().m_width;
+    }
+
+    ImGui::Checkbox("Cast shadows", &light->m_doesCastShadows);
+    if (light->m_doesCastShadows) {
+        if (ImGui::BeginCombo("Shadow size##SHADOW_RESOLUTION", SHADOW_MAP_RESOLUTION[light->m_shadowResolution].c_str())) {
+            for (const auto &resolution: SHADOW_MAP_RESOLUTION) {
+                if (ImGui::Selectable(resolution.second.c_str(), light->m_shadowResolution == resolution.first)) {
+                    light->m_shadowResolution = resolution.first;
+                }
+            }
+            ImGui::EndCombo();
+        }
+        for (int i = 0; i < light->m_ShadowMaps.size(); ++i) {
+            std::string buttonName = "Preview " +std::to_string(i+1);
+            if (ImGui::Button(buttonName.c_str())) {
+//                std::cout<<light->m_ShadowMaps[i]->get().m_Path<<std::endl;
+                m_isPreviewWindowOpen = true;
+                m_previewTextureId = light->m_ShadowMaps[i]->get().m_textureRenderTarget.textureId;
+                m_previewTextureSize = light->m_ShadowMaps[i]->get().m_textureRenderTarget.width;
+            }
+        }
+    }
 }
 
 void EditWindowUI::processEditMeshComponent() {
@@ -168,6 +242,10 @@ void EditWindowUI::processEditMeshComponent() {
 
     if (ImGui::InputText("Model", &m_meshModelPath)) {
         m_EditorUISystem->m_ResourceManager->request(mesh->m_Mesh, m_meshModelPath);
+    }
+
+    if (ImGui::InputText("Material", &m_meshMaterialPath)) {
+        m_EditorUISystem->m_ResourceManager->request(mesh->m_Material, m_meshMaterialPath);
     }
 }
 
@@ -220,8 +298,7 @@ void EditWindowUI::processEditProbeComponent() {
 }
 
 bool EditWindowUI::isTransformComponentSelected() {
-    if (m_selectedEntity < 0
-        || m_EditorUISystem->getComponent<TransformComponent>(m_selectedEntity) == nullptr) {
+    if (m_selectedEntity < 0 || m_EditorUISystem->getComponent<TransformComponent>(m_selectedEntity) == nullptr) {
         return false;
     }
 

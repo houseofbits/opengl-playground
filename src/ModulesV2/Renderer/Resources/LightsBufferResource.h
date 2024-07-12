@@ -10,7 +10,7 @@ class LightsBufferResource : public Resource {
 public:
     inline static const int MAX_SPOT_LIGHTS = 100;
 
-    struct LightStructure {
+    struct alignas(16) LightStructure {
         glm::vec3 color{1.0};
         float intensity{1.0};
 
@@ -20,12 +20,13 @@ public:
         glm::mat4 projectionViewMatrix{1.0};
 
         glm::vec3 direction{0.0};
-        int projectorSamplerIndex{-1};
-
         int isPointSource{1};
-        float _PLACEHOLDER0{0};
-        float _PLACEHOLDER1{0};
-        float _PLACEHOLDER2{0};
+
+        std::uint64_t projectorSamplerHandle{0};
+        glm::uvec2 _PLACEHOLDER1{0};
+
+        std::uint64_t shadowSamplerHandle{0};
+        glm::uvec2 _PLACEHOLDER2{0};
     };
 
     LightsBufferResource();
@@ -33,7 +34,7 @@ public:
     Resource::Status build() override;
     void destroy() override;
     void bind(ShaderProgramResource &shader);
-    void appendLight(TransformComponent &, LightComponent &, int projectorIndex);
+    void appendLight(TransformComponent &, LightComponent &);
 
     ShaderStorageBuffer<LightStructure> m_StorageBuffer;
 

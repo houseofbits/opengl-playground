@@ -13,6 +13,9 @@ public:
     void serialize(nlohmann::json &j) override;
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
     void registerWithSystems(EntityContext &ctx) override;
+    std::string getListName(Entity* e) {
+        return e->m_Name + " " + " PROBE";
+    }
 
     glm::vec3 m_DebugColor;
     int m_cubeMapLayerIndex;

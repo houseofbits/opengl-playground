@@ -27,5 +27,13 @@ private:
     EditorUISystem *m_EditorUISystem;
     std::string m_lightProjectorPath;
     std::string m_meshModelPath;
+    std::string m_meshMaterialPath;
     int m_selectedEntityCreationType;
+    bool m_isPreviewWindowOpen;
+    int m_previewTextureId;
+    int m_previewTextureSize;
+    bool m_isLightEntitiesListed;
+    bool m_isStaticMeshEntitiesListed;
+    bool m_isCameraEntitiesListed;
+    bool m_isProbeEntitiesListed;
 };

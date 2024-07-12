@@ -25,7 +25,6 @@ glm::vec3 EnvironmentProbeRenderSystem::m_cubeMapUpDirection[6] = {
 EnvironmentProbeRenderSystem::EnvironmentProbeRenderSystem() : EntitySystem(),
                                                                m_ShaderProgram(),
                                                                m_LightsBuffer(),
-                                                               m_SamplersIndexBuffer(),
                                                                m_cubeMapArray(),
                                                                m_Camera(),
                                                                m_isRenderEnabled(true) {
@@ -40,12 +39,11 @@ void EnvironmentProbeRenderSystem::registerEventHandlers(EventManager *eventMana
 
 void EnvironmentProbeRenderSystem::initialize(ResourceManager *resourceManager) {
     resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
-    resourceManager->request(m_SamplersIndexBuffer, "SamplerIndexStorageBuffer");
     resourceManager->request(m_cubeMapArray, "EnvironmentProbesCubeMapArray");
 
     resourceManager->request(m_ShaderProgram,
                              "data/shaders/|lighting.vert|lighting.geom|lightingEnvProbe.frag",
-                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "SamplerIndexStorageBuffer"});
+                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer"});
 
     m_Camera.setFieldOfView(90.0);
 }
@@ -88,9 +86,7 @@ void EnvironmentProbeRenderSystem::process() {
 
 void EnvironmentProbeRenderSystem::bindGeometry() {
     m_ShaderProgram().use();
-    m_SamplersIndexBuffer().bind(m_ShaderProgram());
     m_LightsBuffer().bind(m_ShaderProgram());
-    m_SamplersIndexBuffer().bind(m_ShaderProgram());
 }
 
 void EnvironmentProbeRenderSystem::renderGeometry() {

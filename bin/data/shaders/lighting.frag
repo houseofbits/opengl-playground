@@ -13,15 +13,15 @@ struct SpotLightStructure {
     float attenuation;
     mat4 projectionViewMatrix;
     vec3 direction;
-    int projectorSamplerIndex;
     int isPointSource;
+    uvec2 projectorSamplerHandle;
+    uvec2 _PLACEHOLDER1;
+    uvec2 shadowSamplerHandle;
+    uvec2 _PLACEHOLDER2;
 };
 
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
     SpotLightStructure spotLights[100];
-};
-layout(binding = ${INDEX_SamplerIndexStorageBuffer}, std430) readonly buffer SamplerIndexStorageBuffer {
-    sampler2D projectorSamplers[];
 };
 
 uniform uint SpotLightStorageBuffer_size;
@@ -38,6 +38,10 @@ in vec3 gsNormal;
 in vec4 gsPosition;
 in vec2 gsTexcoord;
 in mat3 gsInvTBN;
+
+bool isSamplerHandleValid(uvec2 handle) {
+    return (handle.x != 0 || handle.y != 0);
+}
 
 vec3 calculateProjectedCoords(vec4 lightSpacePos)
 {
@@ -58,6 +62,38 @@ bool isProjCoordsClipping(vec2 uv)
     }
 
     return true;
+}
+
+float sampleShadow(in sampler2D shadowMap, vec2 uv, float bias, float fragmentDepth)
+{
+    float depth = texture(shadowMap, uv).z;
+    return ((fragmentDepth - bias) > depth) ? 0.0 : 1.0;
+}
+
+float pcfShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
+{
+    sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
+    float bias = ndotl * 0.01;
+    float blurFactor = (1.0 / 800.0); //textureSize(shadowDepthAtlas, 0).x;  //
+    float shadow = 0;
+    vec2 uv;
+    int div=0;
+    for (int x = -2; x <= 2; ++x)
+    {
+        for (int y = -2; y <= 2; ++y)
+        {
+            uv = projCoords.xy + vec2(x, y) * blurFactor;
+            if (isProjCoordsClipping(uv))
+            {
+                shadow += sampleShadow(shadowMap, uv, bias, projCoords.z);
+
+                div++;
+            }
+        }
+    }
+    shadow /= div;
+
+    return shadow;
 }
 
 void main()
@@ -120,10 +156,14 @@ void main()
 
             float attenuation = 1.0 - clamp(distToLight / light.attenuation, 0.0, 1.0);
 
-            if (light.projectorSamplerIndex >= 0) {
-                falloff = texture(projectorSamplers[light.projectorSamplerIndex], lightProjectedPosition.xy).rgb;
-            } else {
-                falloff = vec3(1.0);
+            falloff = vec3(1.0);
+            if (isSamplerHandleValid(light.projectorSamplerHandle)) {
+                falloff = texture(sampler2D(light.projectorSamplerHandle), lightProjectedPosition.xy).rgb;
+            }
+
+            float shadow = 1.0;
+            if (isSamplerHandleValid(light.shadowSamplerHandle)) {
+                shadow = pcfShadowCalculation(light, lightProjectedPosition, dot(lightDir, gsNormal)); //depth > lightProjectedPosition.z;
             }
 
             vec3 diffuseLight = diffuse.rgb
@@ -133,6 +173,7 @@ void main()
 
             lightColor += attenuation
                 * falloff
+                * shadow
                 * (diffuseLight + reflectionColor);
         }
     }
