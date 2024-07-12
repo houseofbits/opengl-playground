@@ -14,4 +14,5 @@ https://ktstephano.github.io/rendering/opengl/bindless
 
 https://juandiegomontoya.github.io/modern_opengl.html
 
+https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
 
