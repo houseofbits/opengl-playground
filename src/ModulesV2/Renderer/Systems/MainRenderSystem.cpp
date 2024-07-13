@@ -1,5 +1,6 @@
 #include "MainRenderSystem.h"
 #include "../Components/CameraComponent.h"
+#include "../Components/SkyComponent.h"
 #include "../Components/StaticMeshComponent.h"
 #include <GL/glew.h>
 
@@ -13,6 +14,7 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
     usesComponent<StaticMeshComponent>();
     usesComponent<TransformComponent>();
     usesComponent<CameraComponent>();
+    usesComponent<SkyComponent>();
 }
 
 void MainRenderSystem::registerEventHandlers(EventManager *eventManager) {
@@ -49,6 +51,8 @@ void MainRenderSystem::initialize(ResourceManager *resourceManager) {
                              "data/shaders/|lighting.vert|lighting.geom|lightingReflection.frag",
                              {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer", "EnvironmentProbesCubeMapArray"});
 
+    resourceManager->request(m_ShaderPrograms[SHADER_SKY], "data/shaders/skybox.|vert|frag");
+
     resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager->request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
     resourceManager->request(m_ProbesCubeMapArray, "EnvironmentProbesCubeMapArray");
@@ -61,6 +65,20 @@ void MainRenderSystem::process() {
 
     Camera *camera = findActiveCamera();
     assert(camera != nullptr);
+
+    auto sky = getComponentContainer<SkyComponent>().begin();
+    if (sky->second->m_cubeMap().isReady()) {
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+
+        m_ShaderPrograms[SHADER_SKY]().use();
+        m_ShaderPrograms[SHADER_SKY]().setUniform("environmentSampler", sky->second->m_cubeMap().m_handleId);
+        camera->bind(m_ShaderPrograms[SHADER_SKY]());
+        sky->second->m_box.draw();
+    }
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 
     m_ShaderPrograms[m_shaderType]().use();
     camera->bind(m_ShaderPrograms[m_shaderType]());

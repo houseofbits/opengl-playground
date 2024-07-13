@@ -4,6 +4,7 @@
 #include "Components/CameraComponent.h"
 #include "Components/EnvironmentProbeComponent.h"
 #include "Components/LightComponent.h"
+#include "Components/SkyComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Systems/CameraControlSystem.h"
 #include "Systems/EnvironmentProbeRenderSystem.h"
@@ -18,6 +19,7 @@ public:
         ctx.registerComponent<LightComponent>("LightComponent");
         ctx.registerComponent<EnvironmentProbeComponent>("EnvironmentProbeComponent");
         ctx.registerComponent<CameraComponent>("CameraComponent");
+        ctx.registerComponent<SkyComponent>("SkyComponent");
     };
 
     void registerSystems(EntityContext &ctx) override {

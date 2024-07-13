@@ -3,6 +3,7 @@
 #include "CoreV2/Events/RawSDLEvent.h"
 #include "Helper/Time.h"
 #include "Include.h"
+#include "Helper/GLDebugMessageCallback.h"
 #include <GL/glew.h>
 #include <iostream>
 

@@ -73,7 +73,7 @@ float sampleShadow(in sampler2D shadowMap, vec2 uv, float bias, float fragmentDe
 float pcfShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
 {
     sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
-    float bias = ndotl * 0.01;
+    float bias = 0.0001 + (ndotl * 0.0001);
     float blurFactor = (1.0 / 800.0); //textureSize(shadowDepthAtlas, 0).x;  //
     float shadow = 0;
     vec2 uv;

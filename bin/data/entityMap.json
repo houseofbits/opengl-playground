@@ -83,5 +83,13 @@
                 "class": "CameraComponent"
             }
         }
+    },
+    {
+        "name": "Sky",
+        "components": {
+            "sky": {
+                "class": "SkyComponent"
+            }
+        }
     }
 ]

@@ -9,7 +9,7 @@ Resource::Status ShadowMapResource::fetchData(ResourceManager &) {
 }
 
 Resource::Status ShadowMapResource::build() {
-    resize(512);
+    resize(1024);
 
 //    std::cout<<"Build "<<m_Path<<std::endl;
     return STATUS_READY;
