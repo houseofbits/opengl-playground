@@ -5,6 +5,10 @@ EnvironmentProbesBufferResource::EnvironmentProbesBufferResource() : Resource(),
 }
 
 Resource::Status EnvironmentProbesBufferResource::build() {
+    if (!m_StorageBuffer.isSupported()) {
+        return STATUS_BUILD_ERROR;
+    }
+
     m_StorageBuffer.create(
             MAX_PROBES,
             ShaderSourceLoader::registerBindingIndex(m_Path));

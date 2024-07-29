@@ -47,23 +47,31 @@ void Window::create()
         throw Exception(2, "Could not create window");
     }
 
-    int contextFlags = 0;
-    SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &contextFlags);
-    contextFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, contextFlags);
+    // int contextFlags = 0;
+    // SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &contextFlags);
+    // contextFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
+    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, contextFlags);
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);   //3
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3); //3
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2); //2
+//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);  //MacOS
+//    SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );    //MacOS
+
     sdlGlContext = SDL_GL_CreateContext(sdlWindow);
+
+    // std::cout<<SDL_GetError()<<std::endl;
 
     GLenum glewError = glewInit();
     if (glewError != GLEW_OK)
     {
+        std::cout<<"Context creation error"<<std::endl;
     }
 
-//     glEnable(GL_DEBUG_OUTPUT);
-//     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-//     glDebugMessageCallback(GLDebugMessageCallback, nullptr);
+    SDL_GL_MakeCurrent(sdlWindow, sdlGlContext);
+
+     // glEnable(GL_DEBUG_OUTPUT);
+     // glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+     // glDebugMessageCallback(GLDebugMessageCallback, nullptr);    //Supported only on gl >=4.3 (Not on MacOS)
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -71,8 +79,9 @@ void Window::create()
 //    glDisable(GL_MULTISAMPLE);
 
 
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+//    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
-    // std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 //     int numViewports;
 //     glGetIntegerv(GL_MAX_VIEWPORTS, &numViewports);
 //     std::cout << "Num viewports: " << numViewports << std::endl;
@@ -81,6 +90,8 @@ void Window::create()
 //    std::cout << "GS maximum number of vertices: " << maxVertices << std::endl;
 
     eventManager->queueEvent(new WindowEvent(WindowEvent::Type::OPENGL_CONTEXT_CREATED, this));
+
+    // std::cout<<"Window created"<<std::endl;
 }
 
 void Window::destroy()

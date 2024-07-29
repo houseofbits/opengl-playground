@@ -26,7 +26,8 @@ public:
         glm::uvec2 _PLACEHOLDER1{0};
 
         std::uint64_t shadowSamplerHandle{0};
-        glm::uvec2 _PLACEHOLDER2{0};
+        float bias{0.0001};
+        float _PLACEHOLDER2{0};
     };
 
     LightsBufferResource();

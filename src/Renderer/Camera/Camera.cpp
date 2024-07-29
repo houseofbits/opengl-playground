@@ -6,7 +6,7 @@
 
 Camera::Camera() : direction(0, 0, -1), up(0, 1, 0), right(-1, 0, 0),
                    position(0), projectionMatrix(0.0), viewMatrix(0.0), projectionViewMatrix(0.0),
-                   fieldOfView(90.0f), aspectRatio(1.0) {
+                   fieldOfView(90.0f), aspectRatio(1.0), zFar(1000) {
 }
 
 glm::mat4 &Camera::getProjectionViewMatrix() {
@@ -45,6 +45,14 @@ Camera &Camera::setPosition(glm::vec3 pos) {
 
     return *this;
 }
+
+Camera &Camera::setZFar(float zfar) {
+    zFar = zfar;
+    calculateProjection();
+
+    return *this;
+}
+
 
 Camera &Camera::setFromAngles(float horizontal, float vertical) {
     float verticalAngle = glm::radians(vertical);
@@ -98,6 +106,7 @@ void Camera::calculateView() {
 
 void Camera::calculateProjection()
 {
-    projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, 0.1f, 1000.0f);
+    projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, 0.1f, zFar);
     projectionViewMatrix = projectionMatrix * viewMatrix;
 }
+

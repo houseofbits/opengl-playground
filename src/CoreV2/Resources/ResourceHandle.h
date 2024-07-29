@@ -18,6 +18,10 @@ public:
         return m_ResourceManager != nullptr && m_Resource != nullptr;
     }
 
+    bool isReady() {
+        return isValid() && m_Resource->isReady();
+    }
+
     T &get() {
         if (!isValid()) {
             createDefaultInstance();
@@ -55,6 +59,18 @@ public:
         if (m_Resource->m_DefaultInstance == nullptr) {
             m_Resource->m_DefaultInstance = new T();
         }
+    }
+
+    void from(ResourceHandle<T>& handle) {
+        if (!handle.isValid()) {
+            return;
+        }
+
+        if (isValid()) {
+            invalidate();
+        }
+
+        makeValid(handle.m_ResourceManager, handle.m_Resource);
     }
 
     T *m_Resource;

@@ -88,7 +88,9 @@ void Texture::enableMipMaps() {
 }
 
 void Texture::destroy() {
-    glDeleteTextures(1, &textureId);
+    if (glIsTexture(textureId)) {
+        glDeleteTextures(1, &textureId);
+    }
 }
 
 void Texture::bind() {

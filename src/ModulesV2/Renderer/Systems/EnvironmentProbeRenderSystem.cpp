@@ -72,6 +72,7 @@ void EnvironmentProbeRenderSystem::process() {
             int face = layer * 6 + i;
             m_cubeMapArray().selectCubeFace(face);
 
+            // m_Camera.setZFar()       //TODO Clip camera by bounding box extents
             m_Camera.setView(m_cubeMapViewDirection[i], m_cubeMapUpDirection[i]);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             renderGeometry();

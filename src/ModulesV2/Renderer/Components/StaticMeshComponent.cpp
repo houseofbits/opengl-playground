@@ -4,7 +4,11 @@
 #include "../Systems/MainRenderSystem.h"
 #include "../Systems/ShadowMapRenderSystem.h"
 
-StaticMeshComponent::StaticMeshComponent() : Component(), m_Mesh(), m_Material() {
+StaticMeshComponent::StaticMeshComponent() : Component(), m_Mesh(), m_Material(), m_targetRenderer(SOLID) {
+    m_TargetRenderNameMap = {
+        {SOLID, "SOLID"},
+        {SHADOW, "SHADOW_ONLY"}
+    };
 }
 
 void StaticMeshComponent::registerWithSystems(EntityContext& ctx) {

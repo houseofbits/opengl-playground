@@ -34,6 +34,9 @@ public:
         return STATUS_READY;
     }
     virtual void destroy() = 0;
+    virtual void write() {
+
+    }
 
     [[nodiscard]] bool isReady() const {
         return m_Status == STATUS_READY;

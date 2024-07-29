@@ -17,7 +17,8 @@ struct SpotLightStructure {
     uvec2 projectorSamplerHandle;
     uvec2 _PLACEHOLDER1;
     uvec2 shadowSamplerHandle;
-    uvec2 _PLACEHOLDER2;
+    float bias;
+    float _PLACEHOLDER2;
 };
 
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
@@ -26,6 +27,7 @@ layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotL
 
 uniform uint SpotLightStorageBuffer_size;
 uniform vec3 viewPosition;
+uniform vec3 diffuseColor;
 uniform int hasDiffuseSampler;
 uniform int hasNormalSampler;
 uniform int hasRoughnessSampler;
@@ -101,7 +103,7 @@ void main()
     float specularPower = 1.0;
     vec3 specularLevel = vec3(1.0);
 
-    vec3 diffuse = vec3(0.7);
+    vec3 diffuse = diffuseColor;
     if (hasDiffuseSampler == 1) {
         diffuse = texture(diffuseSampler, gsTexcoord).xyz;
     }

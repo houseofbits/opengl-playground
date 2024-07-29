@@ -1,4 +1,5 @@
 #include "EditorUISystem.h"
+#include "../UI/TexturePreviewHelper.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
@@ -10,7 +11,8 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_isImUIInitialized(false),
                                    m_isDemoWindowVisible(false),
                                    m_MainToolbarUI(this),
-                                   m_EditWindowUI(this) {
+                                   m_EditWindowUI(this),
+                                   m_MaterialEditWindowUI(this) {
     usesComponent<StaticMeshComponent>();
     usesComponent<LightComponent>();
     usesComponent<TransformComponent>();
@@ -31,6 +33,10 @@ void EditorUISystem::process() {
     if (m_MainToolbarUI.m_isEditWindowVisible) {
         m_EditWindowUI.process();
     }
+
+    m_MaterialEditWindowUI.process();
+
+    TexturePreviewHelper::process();
 
     if (m_EditWindowUI.isTransformComponentSelected()) {
         ImGuizmo::BeginFrame();
@@ -79,7 +85,7 @@ void EditorUISystem::registerEventHandlers(EventManager *eventManager) {
 bool EditorUISystem::handleWindowEvent(WindowEvent *event) {
     if (event->eventType == WindowEvent::OPENGL_CONTEXT_CREATED) {
         ImGui_ImplSDL2_InitForOpenGL(event->window->getSDLWindow(), event->window->getSDLContext());
-        ImGui_ImplOpenGL3_Init("#version 450");
+        ImGui_ImplOpenGL3_Init("#version 410");
         m_isImUIInitialized = true;
     }
     return true;
@@ -110,4 +116,10 @@ TransformComponent *EditorUISystem::getSelectedTransformComponent() {
         return getComponent<TransformComponent>(m_EditWindowUI.m_selectedEntity);
     }
     return nullptr;
+}
+
+void EditorUISystem::openMaterialEditor(ResourceHandle<MaterialResource>& handle) {
+    if (handle.isValid()) {
+        m_MaterialEditWindowUI.open(handle);
+    }
 }

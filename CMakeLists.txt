@@ -7,23 +7,15 @@ enable_testing()
 file(GLOB_RECURSE sources src/*.cpp src/*.h)
 
 add_executable(${PROJECT_NAME} ${sources}
-        src/Renderer/Renderer/StaticGeometryRenderer.cpp
-        src/Renderer/Renderer/StaticGeometryRenderer.h
-        src/Renderer/Renderer/BaseRenderer.cpp
-        src/Renderer/Renderer/BaseRenderer.h
         src/Renderer/Texture/TextureCube.cpp
         src/Renderer/Texture/TextureCube.h
         src/Helper/StringUtils.h
         src/Renderer/Texture/TextureCubeRenderTarget.cpp
         src/Renderer/Texture/TextureCubeRenderTarget.h
-        src/Renderer/Renderer/SkyBoxRenderer.cpp
-        src/Renderer/Renderer/SkyBoxRenderer.h
         src/Renderer/Common/ProjectionView.cpp
         src/Renderer/Common/ProjectionView.h
         src/Renderer/Camera/CameraController.cpp
         src/Renderer/Camera/CameraController.h
-        src/Renderer/Renderer/DebugInformationRenderer.cpp
-        src/Renderer/Renderer/DebugInformationRenderer.h
         src/Renderer/Shader/ShaderStorageBuffer.h
         src/Physics/TestPhysics.cpp
         src/Physics/TestPhysics.h
@@ -107,9 +99,19 @@ add_executable(${PROJECT_NAME} ${sources}
         src/ModulesV2/Renderer/Systems/ShadowMapRenderSystem.h
         src/ModulesV2/Renderer/Resources/ShadowMapResource.cpp
         src/ModulesV2/Renderer/Resources/ShadowMapResource.h
+        src/ModulesV2/EditorUI/UI/FileDialogHelper.h
+        src/ModulesV2/EditorUI/UI/MaterialEditWindowUI.cpp
+        src/ModulesV2/EditorUI/UI/MaterialEditWindowUI.h
+        src/ModulesV2/EditorUI/UI/TexturePreviewHelper.h
+        src/ModulesV2/EditorUI/UI/TextPromptHelper.h
 )
 
-target_link_libraries(SDLWindow SDL2main SDL2 GL)
+
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIR})
+target_link_libraries (SDLWindow ${SDL2_LIBRARIES})
+
+target_link_libraries(SDLWindow GL)
 
 find_package(GLEW REQUIRED)
 target_link_libraries(SDLWindow GLEW::GLEW)
@@ -118,8 +120,9 @@ find_package(glm REQUIRED)
 target_link_libraries(SDLWindow glm::glm)
 
 target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/src/SourceLibs/tinygltf/build/libtinygltf.a)
 
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 

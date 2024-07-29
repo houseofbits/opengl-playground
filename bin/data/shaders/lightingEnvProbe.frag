@@ -15,7 +15,8 @@ struct SpotLightStructure {
     uvec2 projectorSamplerHandle;
     uvec2 _PLACEHOLDER1;
     uvec2 shadowSamplerHandle;
-    uvec2 _PLACEHOLDER2;
+    float bias;
+    float _PLACEHOLDER2;
 };
 
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {

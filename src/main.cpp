@@ -1,5 +1,5 @@
-#include "Include.h"
 #include "ApplicationsV2/Main/MainApplication.h"
+#include "Include.h"
 
 int main(int argc, char *argv[]) {
     //        Entry entry;
@@ -7,6 +7,6 @@ int main(int argc, char *argv[]) {
 
     MainApplication app;
     app.initialize("data/entityMap.json");
-    app.loadEntitiesFromFile("data/scenes/test.json");
+    app.loadEntitiesFromFile("data/scenes/test-partial.json");
     app.run();
 }

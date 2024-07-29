@@ -1,5 +1,7 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include "../../../CoreV2/API.h"
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>

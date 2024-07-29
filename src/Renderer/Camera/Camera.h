@@ -18,6 +18,7 @@ public:
     glm::mat4 projectionViewMatrix;
     glm::vec3 direction;
     glm::vec3 position;
+    float zFar;
     float fieldOfView;
     float aspectRatio;
 
@@ -32,6 +33,7 @@ public:
     Camera &setView(glm::vec3 direction, glm::vec3 up);
     Camera &setFromAngles(float horizontal, float vertical);
     Camera &setPosition(glm::vec3 position);
+    Camera &setZFar(float);
 
     glm::mat4 &getProjectionViewMatrix();
     glm::mat4 &getViewMatrix() { return viewMatrix; }

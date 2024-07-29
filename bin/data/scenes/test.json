@@ -9,7 +9,7 @@
             "upDirection": [
                 0.6567476391792297,
                 0.7375631332397461,
-                -0.1571093052625656
+                -0.1571093201637268
             ],
             "viewDirection": [
                 0.7173232436180115,
@@ -23,7 +23,8 @@
     {
         "mesh": {
             "material": "data/materials/concrete1.json",
-            "model": "resources/scenes/scene1/walls1.gltf"
+            "model": "resources/scenes/scene1/walls1.gltf",
+            "renderer": "SOLID"
         },
         "name": "walls1-mesh",
         "transform": {
@@ -49,7 +50,8 @@
     {
         "mesh": {
             "material": "data/materials/tiles1.json",
-            "model": "resources/scenes/scene1/floor1.gltf"
+            "model": "resources/scenes/scene1/floor1.gltf",
+            "renderer": "SOLID"
         },
         "name": "floor1-mesh",
         "transform": {
@@ -75,7 +77,8 @@
     {
         "mesh": {
             "material": "data/materials/grass1.json",
-            "model": "resources/scenes/scene1/floor2.gltf"
+            "model": "resources/scenes/scene1/floor2.gltf",
+            "renderer": "SOLID"
         },
         "name": "floor2-mesh",
         "transform": {
@@ -101,7 +104,8 @@
     {
         "mesh": {
             "material": "data/materials/bricks1.json",
-            "model": "resources/scenes/scene1/columns1.gltf"
+            "model": "resources/scenes/scene1/columns1.gltf",
+            "renderer": "SOLID"
         },
         "name": "columns1-mesh",
         "transform": {
@@ -205,10 +209,10 @@
         "name": "new light",
         "transform": {
             "rotation": [
-                -0.001272624358534813,
+                -0.0012726247077807784,
                 0.9821755886077881,
-                -0.006669882219284773,
-                -0.18784312903881073
+                -0.0066698831506073475,
+                -0.18784315884113312
             ],
             "translation": [
                 -9.471506118774414,
@@ -238,7 +242,7 @@
         "transform": {
             "rotation": [
                 0.0,
-                -0.18981802463531494,
+                -0.18981803953647614,
                 0.0,
                 0.9818192720413208
             ],
@@ -270,7 +274,7 @@
         "transform": {
             "rotation": [
                 0.7088420987129211,
-                -0.004339795093983412,
+                -0.0043398053385317326,
                 0.08069352060556412,
                 -0.7007229924201965
             ],
@@ -401,7 +405,8 @@
     {
         "mesh": {
             "material": "",
-            "model": "resources/scenes/scene1/shadow-mask.gltf"
+            "model": "resources/scenes/scene1/shadow-mask.gltf",
+            "renderer": "SHADOW_ONLY"
         },
         "name": "Shadow mask",
         "transform": {

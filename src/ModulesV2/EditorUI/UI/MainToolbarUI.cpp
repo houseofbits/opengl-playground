@@ -2,6 +2,8 @@
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../../SourceLibs/imgui/ImGuizmo.h" //Note: Order dependent include. Should be after ImGui
+#include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
+
 #include "../Systems/EditorUISystem.h"
 #include "MainToolbarUI.h"
 
@@ -20,7 +22,7 @@ void MainToolbarUI::process() {
             if (ImGui::MenuItem("Save")) {
                 sendSaveEvent();
             }
-            if (ImGui::MenuItem("Edit", nullptr, m_isEditWindowVisible)) {
+            if (ImGui::MenuItem("Edit components", nullptr, m_isEditWindowVisible)) {
                 m_isEditWindowVisible = !m_isEditWindowVisible;
                 sendEditorStateEvent();
             }

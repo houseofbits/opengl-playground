@@ -1,0 +1,160 @@
+[
+    {
+        "camera": {
+            "position": [
+                -26.324853897094727,
+                12.603522300720215,
+                3.774247884750366
+            ],
+            "upDirection": [
+                0.6335040330886841,
+                0.7509444355964661,
+                0.1864275187253952
+            ],
+            "viewDirection": [
+                0.7203985452651978,
+                -0.6603654623031616,
+                0.2119988352060318
+            ]
+        },
+        "name": "main-camera",
+        "type": "Camera"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-wall.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall1",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.6510141491889954,
+                17.7929630279541,
+                17.00098419189453
+            ],
+            "translation": [
+                0.015051126480102539,
+                6.914565086364746,
+                16.962316513061523
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-wall.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "floor1",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                34.030643463134766,
+                0.2964990437030792,
+                41.46543502807617
+            ],
+            "translation": [
+                -9.510795593261719,
+                -6.103515625e-05,
+                18.12571144104004
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "light": {
+            "attenuation": 25.700061798095703,
+            "castShadows": true,
+            "color": [
+                0.9938004612922668,
+                1.0,
+                0.7892156839370728
+            ],
+            "intensity": 1.0,
+            "isEnabled": true,
+            "shadowBias": 0.0,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "name": "omni1",
+        "transform": {
+            "translation": [
+                -11.147018432617188,
+                13.959803581237793,
+                16.48261070251465
+            ]
+        },
+        "type": "OmniLight"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-wall.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "column1",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                2.0362792015075684,
+                24.708410263061523,
+                1.7806366682052612
+            ],
+            "translation": [
+                -16.470027923583984,
+                0.0,
+                9.79857349395752
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "light": {
+            "attenuation": 20.0,
+            "beamAngle": 90.0,
+            "castShadows": false,
+            "color": [
+                0.7254902124404907,
+                0.7739331722259521,
+                1.0
+            ],
+            "intensity": 0.2999999225139618,
+            "isEnabled": true,
+            "projectionTexture": "resources/textures/spot-proj-2.png",
+            "type": "SPOT"
+        },
+        "name": "Spot light 1",
+        "transform": {
+            "rotation": [
+                -0.5424243807792664,
+                -0.30082353949546814,
+                -0.38042187690734863,
+                0.6859738826751709
+            ],
+            "translation": [
+                -22.23359489440918,
+                10.912332534790039,
+                4.963821887969971
+            ]
+        },
+        "type": "SpotLight"
+    }
+]

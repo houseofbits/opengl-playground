@@ -1,5 +1,5 @@
 #include "UniformBuffer.h"
-#include "../Light/Light.h"
+// #include "../Light/Light.h"
 //#include "../EnvironmentProbe/EnvironmentProbe.h"
 #include <cstring>
 #include <glm/vec4.hpp>
@@ -7,7 +7,7 @@
 template class UniformBuffer<float>;
 template class UniformBuffer<unsigned int>;
 template class UniformBuffer<glm::vec4>;
-template class UniformBuffer<LightUniform>;
+// template class UniformBuffer<LightUniform>;
 //template class UniformBuffer<EnvironmentProbeUniform>;
 
 template <typename T>

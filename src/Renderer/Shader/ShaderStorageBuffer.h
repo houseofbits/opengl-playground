@@ -15,7 +15,15 @@ public:
     ShaderStorageBuffer() : maxSize(0), currentSize(0), bufferId(0), data(nullptr), uniformBindingIndex() {
     }
 
-    ShaderStorageBuffer(unsigned int i) : maxSize(0), currentSize(0), bufferId(0), data(nullptr), uniformBindingIndex() {
+    explicit ShaderStorageBuffer(unsigned int i) : maxSize(0), currentSize(0), bufferId(0), data(nullptr), uniformBindingIndex() {
+    }
+
+    static bool isSupported() {
+        if (!GLEW_ARB_direct_state_access) {
+            return false;
+        }
+
+        return true;
     }
 
     void create(unsigned int size, unsigned int bindingIndex) {

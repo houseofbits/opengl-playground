@@ -10,7 +10,7 @@
 #include "Renderer/Camera/Camera.h"
 #include "Renderer/Model/Cube.h"
 #include "Renderer/Model/VertexArray.h"
-#include "Renderer/RenderManager.h"
+// #include "Renderer/RenderManager.h"
 #include "Renderer/Shader/Shader.h"
 #include "Window.h"
 #include "WireframeRenderer/GridPlane.h"

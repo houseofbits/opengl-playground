@@ -1,7 +1,9 @@
 #include "ShadowMapResource.h"
 #include <GL/glew.h>
 
-ShadowMapResource::ShadowMapResource() : Resource(), m_textureRenderTarget(), m_handleId() {
+ShadowMapResource::ShadowMapResource() : Resource(), m_textureRenderTarget(),
+                                         m_handleId(),
+                                         m_Resolution(512) {
 }
 
 Resource::Status ShadowMapResource::fetchData(ResourceManager &) {
@@ -9,14 +11,24 @@ Resource::Status ShadowMapResource::fetchData(ResourceManager &) {
 }
 
 Resource::Status ShadowMapResource::build() {
-    resize(1024);
+    if (!GLEW_ARB_bindless_texture) {
+        return STATUS_BUILD_ERROR;
+    }
 
-//    std::cout<<"Build "<<m_Path<<std::endl;
+    if (!GLEW_ARB_direct_state_access) {
+        return STATUS_BUILD_ERROR;
+    }
+
+    resize();
+
+    //    std::cout<<"Build "<<m_Path<<std::endl;
     return STATUS_READY;
 }
 
 void ShadowMapResource::destroy() {
-    glMakeTextureHandleNonResidentARB(m_handleId);
+    if (m_handleId > 0) {
+        glMakeTextureHandleNonResidentARB(m_handleId);
+    }
     m_textureRenderTarget.destroy();
 }
 
@@ -28,10 +40,18 @@ void ShadowMapResource::unbindRenderTarget() {
     m_textureRenderTarget.unbind();
 }
 
-void ShadowMapResource::resize(int size) {
+void ShadowMapResource::resize() {
     destroy();
 
-    m_textureRenderTarget.create(size, size, Texture::TYPE_RGBA32);
+    if (!GLEW_ARB_bindless_texture) {
+        return;
+    }
+
+    if (!GLEW_ARB_direct_state_access) {
+        return;
+    }
+
+    m_textureRenderTarget.create(m_Resolution, m_Resolution, Texture::TYPE_RGBA32);
 
     m_handleId = glGetTextureHandleARB(m_textureRenderTarget.textureId);
     if (m_handleId == 0) {

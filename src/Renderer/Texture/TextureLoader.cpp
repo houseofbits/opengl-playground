@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
 
-#include "../../../libs/tinygltf/stb_image.h"
+#include "../../SourceLibs/tinygltf/stb_image.h"
 
 Texture TextureLoader::load(std::string filename, bool withMipmapping)
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../libs/tinygltf/json.hpp"
+#include "../../SourceLibs/tinygltf/json.hpp"
 #include "../Reflection/Identity.h"
 #include "../Reflection/TypedClass.h"
 #include "../Resources/ResourceManager.h"

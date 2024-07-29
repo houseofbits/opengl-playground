@@ -3,7 +3,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
-#include "../../../../libs/tinygltf/stb_image.h"
+#include "../../../SourceLibs/tinygltf/stb_image.h"
 #include "../../../Helper/StringUtils.h"
 
 CubeTextureResource::CubeTextureResource() : Resource(), m_textureId(), m_handleId(), m_width(0), m_height(0), m_data() {
@@ -32,7 +32,15 @@ Resource::Status CubeTextureResource::fetchData(ResourceManager &) {
 }
 
 Resource::Status CubeTextureResource::build() {
-//    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    if (!GLEW_ARB_bindless_texture) {
+        return STATUS_BUILD_ERROR;
+    }
+
+    if (!GLEW_ARB_direct_state_access) {
+        return STATUS_BUILD_ERROR;
+    }
+
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
     glGenTextures(1, &m_textureId);
 
@@ -70,6 +78,10 @@ Resource::Status CubeTextureResource::build() {
 }
 
 void CubeTextureResource::destroy() {
-    glMakeTextureHandleNonResidentARB(m_handleId);
-    glDeleteTextures(1, &m_textureId);
+    if (m_handleId > 0) {
+        glMakeTextureHandleNonResidentARB(m_handleId);
+    }
+    if (glIsTexture(m_textureId)) {
+        glDeleteTextures(1, &m_textureId);
+    }
 }

@@ -18,6 +18,7 @@ public:
     inline static const std::string PROJECTION_TEXTURE_KEY = "projectionTexture";
     inline static const std::string CAST_SHADOWS_KEY = "castShadows";
     inline static const std::string SHADOW_RESOLUTION_KEY = "shadowResolution";
+    inline static const std::string SHADOW_BIAS_KEY = "shadowBias";
 
     enum Type {
         OMNI = 0,
@@ -37,6 +38,7 @@ public:
     std::string getListName(Entity* e) {
         return e->m_Name + " " + m_TypeNameMap[m_Type] + " LIGHT";
     }
+    void resizeShadowMaps(int size);
 
     bool m_isEnabled;
     std::unordered_map<Type, std::string> m_TypeNameMap;
@@ -48,6 +50,7 @@ public:
     float m_Radius;
     bool m_doesCastShadows;
     int m_shadowResolution;
+    float m_shadowBias;
     ResourceHandle<TextureResource> m_Projection;
     std::vector<ResourceHandle<ShadowMapResource>*> m_ShadowMaps;
     std::vector<int> m_lightBufferIndices;

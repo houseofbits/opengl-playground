@@ -13,8 +13,9 @@ public:
     void destroy() override;
     void bindRenderTarget();
     void unbindRenderTarget();
-    void resize(int size);
+    void resize();
 
     TextureRenderTarget m_textureRenderTarget;
     std::uint64_t m_handleId;
+    int m_Resolution;
 };

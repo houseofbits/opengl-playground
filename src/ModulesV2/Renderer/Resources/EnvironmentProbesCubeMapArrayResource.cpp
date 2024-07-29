@@ -9,6 +9,14 @@ EnvironmentProbesCubeMapArrayResource::EnvironmentProbesCubeMapArrayResource() :
 }
 
 Resource::Status EnvironmentProbesCubeMapArrayResource::build() {
+    if (!GLEW_ARB_bindless_texture) {
+        return STATUS_BUILD_ERROR;
+    }
+
+    if (!GLEW_ARB_direct_state_access) {
+        return STATUS_BUILD_ERROR;
+    }
+
     glGenFramebuffers(1, &m_framebufferId);
 
     m_TextureCube.createArray(TEXTURE_SIZE, TEXTURE_SIZE, Texture::TYPE_RGBA, TEXTURE_DEPTH);
@@ -39,7 +47,9 @@ Resource::Status EnvironmentProbesCubeMapArrayResource::build() {
 }
 
 void EnvironmentProbesCubeMapArrayResource::destroy() {
-    glMakeTextureHandleNonResidentARB(m_handleId);
+    if (m_handleId > 0) {
+        glMakeTextureHandleNonResidentARB(m_handleId);
+    }
     m_TextureCube.destroy();
     glDeleteFramebuffers(1, &m_framebufferId);
     glDeleteRenderbuffers(1, &m_renderbufferId);

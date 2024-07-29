@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../libs/tinygltf/json.hpp"
+#include "../../SourceLibs/tinygltf/json.hpp"
 #include "../Reflection/Factory.h"
 #include "Component.h"
 #include <list>

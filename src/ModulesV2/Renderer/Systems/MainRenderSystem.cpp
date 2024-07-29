@@ -66,16 +66,16 @@ void MainRenderSystem::process() {
     Camera *camera = findActiveCamera();
     assert(camera != nullptr);
 
-    auto sky = getComponentContainer<SkyComponent>().begin();
-    if (sky->second->m_cubeMap().isReady()) {
-        glDisable(GL_DEPTH_TEST);
-        glDisable(GL_CULL_FACE);
-
-        m_ShaderPrograms[SHADER_SKY]().use();
-        m_ShaderPrograms[SHADER_SKY]().setUniform("environmentSampler", sky->second->m_cubeMap().m_handleId);
-        camera->bind(m_ShaderPrograms[SHADER_SKY]());
-        sky->second->m_box.draw();
-    }
+    // auto sky = getComponentContainer<SkyComponent>().begin();
+    // if (sky->second->m_cubeMap().isReady()) {
+    //     glDisable(GL_DEPTH_TEST);
+    //     glDisable(GL_CULL_FACE);
+    //
+    //     m_ShaderPrograms[SHADER_SKY]().use();
+    //     m_ShaderPrograms[SHADER_SKY]().setUniform("environmentSampler", sky->second->m_cubeMap().m_handleId);
+    //     camera->bind(m_ShaderPrograms[SHADER_SKY]());
+    //     sky->second->m_box.draw();
+    // }
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -84,7 +84,9 @@ void MainRenderSystem::process() {
     camera->bind(m_ShaderPrograms[m_shaderType]());
     m_LightsBuffer().bind(m_ShaderPrograms[m_shaderType]());
     m_ProbesBuffer().bind(m_ShaderPrograms[m_shaderType]());
-    m_ShaderPrograms[m_shaderType]().setUniform("probesCubeArraySampler", m_ProbesCubeMapArray().m_handleId);
+    if(m_ProbesCubeMapArray().isReady()) {
+        m_ShaderPrograms[m_shaderType]().setUniform("probesCubeArraySampler", m_ProbesCubeMapArray().m_handleId);
+    }
 
     for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
         auto *transform = getComponent<TransformComponent>(mesh.first);

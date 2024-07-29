@@ -1,4 +1,5 @@
 #include "StaticMeshResource.h"
+//#include "../../../SourceLibs/tinygltf/tiny_gltf.h"
 #include "../../../../libs/tinygltf/tiny_gltf.h"
 #include <GL/glew.h>
 #include <iostream>

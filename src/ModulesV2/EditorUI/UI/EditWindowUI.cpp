@@ -1,11 +1,16 @@
 #include "EditWindowUI.h"
 
 #include "../../../CoreV2/Events/EntityCreationEvent.h"
+#include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
+#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
-#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../Systems/EditorUISystem.h"
+#include "FileDialogHelper.h"
+#include "TextPromptHelper.h"
+#include "TexturePreviewHelper.h"
+
 #include <utility>
 
 std::vector<std::string> ENTITY_CREATION_OPTIONS = {
@@ -33,16 +38,14 @@ EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
                                                      m_EditorUISystem(editor),
                                                      m_lightProjectorPath(),
                                                      m_isBoundsTransformAllowed(false),
-                                                     m_isPreviewWindowOpen(false),
-                                                     m_previewTextureId(-1),
-                                                     m_previewTextureSize(256),
                                                      m_meshModelPath(),
                                                      m_meshMaterialPath(),
                                                      m_selectedEntityCreationType(0),
                                                      m_isLightEntitiesListed(true),
                                                      m_isStaticMeshEntitiesListed(true),
                                                      m_isCameraEntitiesListed(true),
-                                                     m_isProbeEntitiesListed(true) {
+                                                     m_isProbeEntitiesListed(true),
+                                                     m_isNewMaterialPromptVisible(false) {
 }
 
 void EditWindowUI::process() {
@@ -97,11 +100,6 @@ void EditWindowUI::process() {
             processEditProbeComponent();
             processEditTransformComponent();
         }
-    }
-    ImGui::End();
-
-    if (m_isPreviewWindowOpen && ImGui::Begin("Texture preview##TEXTURE_PREVIEW", &m_isPreviewWindowOpen, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize)) {
-        ImGui::Image((void *) (intptr_t) m_previewTextureId, ImVec2(400, 400));
 
         ImGui::End();
     }
@@ -152,7 +150,7 @@ void EditWindowUI::processEntitiesList() {
         }
     }
 
-    if(m_isProbeEntitiesListed) {
+    if (m_isProbeEntitiesListed) {
         for (const auto &probe: m_EditorUISystem->getComponentContainer<EnvironmentProbeComponent>()) {
             Entity *e = m_EditorUISystem->m_EntityContext->getEntity(probe.first);
             if (e != nullptr) {
@@ -196,39 +194,34 @@ void EditWindowUI::processEditLightComponent() {
         ImGui::InputFloat("Beam angle##LIGHT_BEAM_ANGLE", &light->m_beamAngle, 0.5f, 1.0f, "%.0f");
     }
 
-    if (ImGui::InputText("Projector", &m_lightProjectorPath)) {
-        if (m_lightProjectorPath.empty()) {
-            light->m_Projection.invalidate();
-        } else {
-            m_EditorUISystem->m_ResourceManager->request(light->m_Projection, m_lightProjectorPath);
-        }
+    if (FileInput("ChooseLightProjectorFile", "Choose image file", ".png,.tga", "Projector", m_lightProjectorPath)) {
+        m_EditorUISystem->m_ResourceManager->request(light->m_Projection, m_lightProjectorPath);
     }
-    ImGui::SameLine();
-    if (ImGui::Button("Preview")) {
-        m_isPreviewWindowOpen = true;
-        m_previewTextureId = light->m_Projection().m_textureId;
-        m_previewTextureSize = light->m_Projection().m_width;
-    }
+
+    TexturePreviewHelper::texturePreview(light->m_Projection);
 
     ImGui::Checkbox("Cast shadows", &light->m_doesCastShadows);
     if (light->m_doesCastShadows) {
         if (ImGui::BeginCombo("Shadow size##SHADOW_RESOLUTION", SHADOW_MAP_RESOLUTION[light->m_shadowResolution].c_str())) {
             for (const auto &resolution: SHADOW_MAP_RESOLUTION) {
                 if (ImGui::Selectable(resolution.second.c_str(), light->m_shadowResolution == resolution.first)) {
-                    light->m_shadowResolution = resolution.first;
+                    light->resizeShadowMaps(resolution.first);
                 }
             }
             ImGui::EndCombo();
         }
-        for (int i = 0; i < light->m_ShadowMaps.size(); ++i) {
-            std::string buttonName = "Preview " +std::to_string(i+1);
-            if (ImGui::Button(buttonName.c_str())) {
-//                std::cout<<light->m_ShadowMaps[i]->get().m_Path<<std::endl;
-                m_isPreviewWindowOpen = true;
-                m_previewTextureId = light->m_ShadowMaps[i]->get().m_textureRenderTarget.textureId;
-                m_previewTextureSize = light->m_ShadowMaps[i]->get().m_textureRenderTarget.width;
-            }
-        }
+
+        ImGui::InputFloat("Bias", &light->m_shadowBias);
+
+        // for (int i = 0; i < light->m_ShadowMaps.size(); ++i) {
+        //     std::string buttonName = "Preview " + std::to_string(i + 1);
+        //     if (ImGui::Button(buttonName.c_str())) {
+        //         //                std::cout<<light->m_ShadowMaps[i]->get().m_Path<<std::endl;
+        //         m_isPreviewWindowOpen = true;
+        //         m_previewTextureId = light->m_ShadowMaps[i]->get().m_textureRenderTarget.textureId;
+        //         m_previewTextureSize = light->m_ShadowMaps[i]->get().m_textureRenderTarget.width;
+        //     }
+        // }
     }
 }
 
@@ -240,12 +233,33 @@ void EditWindowUI::processEditMeshComponent() {
 
     ImGui::SeparatorText("Mesh");
 
-    if (ImGui::InputText("Model", &m_meshModelPath)) {
+    if (ImGui::BeginCombo("Render##RENDER_TYPE", mesh->m_TargetRenderNameMap[mesh->m_targetRenderer].c_str())) {
+        for (const auto &renderType: mesh->m_TargetRenderNameMap) {
+            if (ImGui::Selectable(renderType.second.c_str(), mesh->m_targetRenderer == renderType.first)) {
+                mesh->m_targetRenderer = renderType.first;
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+    if (FileInput("ChooseModelFile", "Choose GLTF Model file", ".gltf", "Model", m_meshModelPath)) {
         m_EditorUISystem->m_ResourceManager->request(mesh->m_Mesh, m_meshModelPath);
     }
 
-    if (ImGui::InputText("Material", &m_meshMaterialPath)) {
+    if (FileInput("ChooseMaterialFile", "Choose JSON Material file", ".json", "Material", m_meshMaterialPath)) {
         m_EditorUISystem->m_ResourceManager->request(mesh->m_Material, m_meshMaterialPath);
+    }
+    if (mesh->m_Material.isValid()) {
+        if (ImGui::Button("Edit material")) {
+            m_EditorUISystem->openMaterialEditor(mesh->m_Material);
+        }
+    } else {
+        if(TextPromptHelper::textPrompt("New material", "New material", "Filename")) {
+            m_EditorUISystem->m_ResourceManager->request(mesh->m_Material,
+                "data/materials/" + TextPromptHelper::m_InputValue);
+
+            m_meshMaterialPath = mesh->m_Material().m_Path;
+        }
     }
 }
 

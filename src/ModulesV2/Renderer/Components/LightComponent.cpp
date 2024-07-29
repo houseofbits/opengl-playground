@@ -17,6 +17,7 @@ LightComponent::LightComponent() : Component(),
                                    m_Projection(),
                                    m_doesCastShadows(false),
                                    m_shadowResolution(512),
+                                   m_shadowBias(0),
                                    m_lightBufferIndices() {
     m_TypeNameMap[Type::OMNI] = "OMNI";
     m_TypeNameMap[Type::SPOT] = "SPOT";
@@ -30,7 +31,10 @@ void LightComponent::serialize(nlohmann::json &j) {
     j[INTENSITY_KEY] = m_Intensity;
     j[ATTENUATION_KEY] = m_Attenuation;
     j[CAST_SHADOWS_KEY] = m_doesCastShadows;
-    j[SHADOW_RESOLUTION_KEY] = m_shadowResolution;
+    if (m_doesCastShadows) {
+        j[SHADOW_RESOLUTION_KEY] = m_shadowResolution;
+        j[SHADOW_BIAS_KEY] = m_shadowBias;
+    }
     if (m_Projection.isValid()) {
         j[PROJECTION_TEXTURE_KEY] = m_Projection().m_Path;
     }
@@ -49,6 +53,7 @@ void LightComponent::deserialize(const nlohmann::json &j, ResourceManager &resou
     m_Attenuation = j.value(ATTENUATION_KEY, m_Attenuation);
     m_doesCastShadows = j.value(CAST_SHADOWS_KEY, m_doesCastShadows);
     m_shadowResolution = j.value(SHADOW_RESOLUTION_KEY, m_shadowResolution);
+    m_shadowBias = j.value(SHADOW_BIAS_KEY, m_shadowBias);
 
     if (j.contains(PROJECTION_TEXTURE_KEY)) {
         std::string filename = j.value(PROJECTION_TEXTURE_KEY, m_Projection().m_Path);
@@ -90,6 +95,16 @@ void LightComponent::removeShadowMaps() {
     m_ShadowMaps.clear();
 }
 
+void LightComponent::resizeShadowMaps(int size) {
+    m_shadowResolution = size;
+    for (auto &resource: m_ShadowMaps) {
+        if (resource->isValid()) {
+            resource->get().m_Resolution = m_shadowResolution;
+            resource->get().resize();
+        }
+    }
+}
+
 std::string LightComponent::getShadowMapResourceName(int viewIndex) {
     return "ShadowMap_" + std::to_string(m_Id.id()) + "_" + std::to_string(viewIndex);
 }
@@ -105,7 +120,7 @@ void LightComponent::prepareShadowMapResources(ResourceManager &resourceManager)
 
         //Add needed resources
         while (m_ShadowMaps.size() < m_lightBufferIndices.size()) {
-            auto* p = new ResourceHandle<ShadowMapResource>();
+            auto *p = new ResourceHandle<ShadowMapResource>();
             m_ShadowMaps.push_back(p);
             resourceManager.request(*m_ShadowMaps.back(), getShadowMapResourceName((int) m_ShadowMaps.size() - 1));
         }

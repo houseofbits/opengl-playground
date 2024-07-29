@@ -1,0 +1,9 @@
+{
+    "diffuseColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "doesCastShadows": true,
+    "doesReceiveShadows": true
+}

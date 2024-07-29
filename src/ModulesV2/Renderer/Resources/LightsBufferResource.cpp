@@ -14,6 +14,10 @@ LightsBufferResource::LightsBufferResource() : Resource(), m_StorageBuffer() {
 }
 
 Resource::Status LightsBufferResource::build() {
+    if (!m_StorageBuffer.isSupported()) {
+        return STATUS_BUILD_ERROR;
+    }
+
     m_StorageBuffer.create(
             MAX_SPOT_LIGHTS,
             ShaderSourceLoader::registerBindingIndex(m_Path));
@@ -37,6 +41,7 @@ void LightsBufferResource::appendLight(TransformComponent &transform, LightCompo
         structure.projectorSamplerHandle = 0;
         structure.shadowSamplerHandle = 0;
         structure.isPointSource = light.m_Type == LightComponent::DIRECT ? 0 : 1;
+        structure.bias = light.m_shadowBias;
 
         if (light.m_Projection().isReady()) {
             structure.projectorSamplerHandle = light.m_Projection().m_handleId;
