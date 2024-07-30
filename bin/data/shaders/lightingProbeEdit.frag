@@ -10,6 +10,7 @@ uniform vec3 viewPosition;
 uniform int hasDiffuseSampler;
 
 layout(bindless_sampler) uniform sampler2D diffuseSampler;
+layout(bindless_sampler) uniform samplerCube environmentSampler;
 
 in vec3 gsNormal;
 in vec4 gsPosition;

@@ -211,7 +211,7 @@ void EditWindowUI::processEditLightComponent() {
             ImGui::EndCombo();
         }
 
-        ImGui::InputFloat("Bias", &light->m_shadowBias);
+        ImGui::InputFloat("Bias", &light->m_shadowBias, 0.001f, 0.01f, "%.5f");
 
         // for (int i = 0; i < light->m_ShadowMaps.size(); ++i) {
         //     std::string buttonName = "Preview " + std::to_string(i + 1);

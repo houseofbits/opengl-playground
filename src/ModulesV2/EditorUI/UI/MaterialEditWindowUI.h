@@ -10,7 +10,7 @@ public:
 
     void process();
     void open(ResourceHandle<MaterialResource>& handle);
-    void processTexture(ResourceHandle<TextureResource>& handle) const;
+    void processTexture(std::string name, ResourceHandle<TextureResource>& handle) const;
 
     EditorUISystem *m_EditorUISystem;
 

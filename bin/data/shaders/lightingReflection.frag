@@ -14,6 +14,7 @@ uniform int hasRoughnessSampler;
 layout(bindless_sampler) uniform sampler2D diffuseSampler;
 layout(bindless_sampler) uniform sampler2D normalSampler;
 layout(bindless_sampler) uniform sampler2D roughnessSampler;
+layout(bindless_sampler) uniform samplerCube environmentSampler;
 
 in vec3 gsNormal;
 in vec4 gsPosition;
@@ -61,7 +62,7 @@ void main()
 
     vec3 view = normalize(gsPosition.xyz - viewPosition);
     vec3 viewReflection = reflect(view, normal);
-    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness, normal);
+    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness, normal, environmentSampler);
 
     fragColor = vec4(reflectionColor, 1.0);
 }

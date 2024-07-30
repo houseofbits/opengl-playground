@@ -67,6 +67,10 @@ public:
             return it->second;
         }
 
+        bool isEmpty() {
+            return m_components.empty();
+        }
+
         ContainerType m_components{};
     };
 
@@ -102,6 +106,11 @@ public:
     template<class T>
     typename RComponentContainer<T>::ContainerType &getComponentContainer() {
         return getContainer<T>()->m_components;
+    }
+
+    template<class T>
+    bool doesComponentsExist() {
+        return !getContainer<T>()->isEmpty();
     }
 
     EntityContext *m_EntityContext{nullptr};

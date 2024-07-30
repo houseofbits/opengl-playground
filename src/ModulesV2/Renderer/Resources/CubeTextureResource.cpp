@@ -53,9 +53,11 @@ Resource::Status CubeTextureResource::build() {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     for (unsigned int faceId = 0; faceId < 6; faceId++) {
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceId, 0, GL_RGB8, (int) m_width, (int) m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_data[faceId]);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceId, 0, GL_RGB8, (int) m_width, (int) m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, m_data[faceId]);
         stbi_image_free(m_data[faceId]);
     }
+
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
     if (!glIsTexture(m_textureId)) {
         destroy();

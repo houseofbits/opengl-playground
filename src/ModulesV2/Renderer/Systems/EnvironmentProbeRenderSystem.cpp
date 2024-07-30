@@ -53,6 +53,8 @@ void EnvironmentProbeRenderSystem::process() {
         return;
     }
 
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
     glViewport(0, 0, m_cubeMapArray().TEXTURE_SIZE, m_cubeMapArray().TEXTURE_SIZE);
 
     bindGeometry();
@@ -62,17 +64,21 @@ void EnvironmentProbeRenderSystem::process() {
         auto *probeTransform = getComponent<TransformComponent>(probe.first);
         m_Camera.setPosition(probeTransform->getTranslation());
         probe.second->m_cubeMapLayerIndex = layer;
-//
-//        std::cout << layer << " " << probeTransform->getTranslation().x
-//                  << ", " << probeTransform->getTranslation().y
-//                  << ", " << probeTransform->getTranslation().z
-//                  << std::endl;
+        //
+        //        std::cout << layer << " " << probeTransform->getTranslation().x
+        //                  << ", " << probeTransform->getTranslation().y
+        //                  << ", " << probeTransform->getTranslation().z
+        //                  << std::endl;
+
+        glm::vec3 size = probeTransform->getScale();
 
         for (int i = 0; i < 6; ++i) {
+            int axis = std::floor(i / 2);
+
             int face = layer * 6 + i;
             m_cubeMapArray().selectCubeFace(face);
 
-            // m_Camera.setZFar()       //TODO Clip camera by bounding box extents
+            m_Camera.setZFar(size[axis] / 2);
             m_Camera.setView(m_cubeMapViewDirection[i], m_cubeMapUpDirection[i]);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             renderGeometry();
@@ -110,4 +116,13 @@ bool EnvironmentProbeRenderSystem::handleEditorUIEvent(EditorUIEvent *event) {
     }
 
     return true;
+}
+
+float EnvironmentProbeRenderSystem::calculateZFar(glm::vec3 position, glm::vec3 direction, glm::vec3 min, glm::vec3 max) {
+    glm::vec3 planeIntersect1 = (max - position) / direction;
+    glm::vec3 planeIntersect2 = (min - position) / direction;
+
+    glm::vec3 furthestPlane = glm::max(planeIntersect1, planeIntersect2);
+
+    return std::min(std::min(furthestPlane.x, furthestPlane.y), furthestPlane.z);
 }

@@ -38,7 +38,7 @@ int roughnessToLod(float roughness)
     return int(roughness * 5.0);
 }
 
-vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 viewReflection, vec3 roughness, vec3 normal)
+vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 viewReflection, vec3 roughness, vec3 normal, in samplerCube environmentSampler)
 {
     vec3 selectedColor[4];
     float selectedWeights[4];
@@ -72,12 +72,17 @@ vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 v
         float d = min(min(furthestPlane.x, furthestPlane.y), furthestPlane.z);
         float fl = max(min(1.0 - (l / d), 1.0), 0);
 
-        selectedColor[numSelectedProbes] = textureLod(
+        vec4 color = textureLod(
                 probesCubeArraySampler,
                 vec4(reflectedRay, probe.cubeMapTextureLayer),
                 roughnessToLod(length(roughness))
-        ).rgb;
+        );
 
+        if (color.a == 0) {
+            continue;
+        }
+
+        selectedColor[numSelectedProbes] = color.rgb;
         selectedWeights[numSelectedProbes] = fl;
         numSelectedProbes++;
     }
@@ -108,4 +113,6 @@ vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 v
     } else if (numSelectedProbes == 1) {
         return selectedColor[0];
     }
+
+    return texture(environmentSampler, viewReflection).rgb;;
 }

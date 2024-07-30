@@ -67,11 +67,11 @@ void Window::create()
         std::cout<<"Context creation error"<<std::endl;
     }
 
-    SDL_GL_MakeCurrent(sdlWindow, sdlGlContext);
+//    SDL_GL_MakeCurrent(sdlWindow, sdlGlContext);
 
-     // glEnable(GL_DEBUG_OUTPUT);
-     // glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-     // glDebugMessageCallback(GLDebugMessageCallback, nullptr);    //Supported only on gl >=4.3 (Not on MacOS)
+//      glEnable(GL_DEBUG_OUTPUT);
+//      glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+//      glDebugMessageCallback(GLDebugMessageCallback, nullptr);    //Supported only on gl >=4.3 (Not on MacOS)
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);

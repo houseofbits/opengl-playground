@@ -21,15 +21,15 @@ void MaterialEditWindowUI::process() {
             ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
             ImGui::Text("Diffuse texture");
-            processTexture(m_material().m_Diffuse);
+            processTexture("DiffuseTexturePicker", m_material().m_Diffuse);
             ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
             ImGui::Text("Normals texture");
-            processTexture(m_material().m_Normal);
+            processTexture("NormalsTexturePicker", m_material().m_Normal);
             ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
             ImGui::Text("Roughness texture");
-            processTexture(m_material().m_Roughness);
+            processTexture("RoughnessTexturePicker", m_material().m_Roughness);
 
             ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
@@ -54,7 +54,7 @@ void MaterialEditWindowUI::process() {
     }
 }
 
-void MaterialEditWindowUI::processTexture(ResourceHandle<TextureResource> &handle) const {
+void MaterialEditWindowUI::processTexture(std::string name, ResourceHandle<TextureResource> &handle) const {
     if (handle.isValid()) {
         ImGui::Image((void *) (intptr_t) handle().m_textureId, ImVec2(200, 200));
 
@@ -63,7 +63,7 @@ void MaterialEditWindowUI::processTexture(ResourceHandle<TextureResource> &handl
         }
         ImGui::SameLine();
     }
-    if (FileInput("ChooseNormalsFile", "Choose image file", ".png,.tga", "Path", handle().m_Path)) {
+    if (FileInput(name, "Choose image file", ".png,.tga", "Path", handle().m_Path)) {
         m_EditorUISystem->m_ResourceManager->request(handle, handle().m_Path);
     }
 }

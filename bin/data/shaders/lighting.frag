@@ -35,6 +35,7 @@ uniform int hasRoughnessSampler;
 layout(bindless_sampler) uniform sampler2D diffuseSampler;
 layout(bindless_sampler) uniform sampler2D normalSampler;
 layout(bindless_sampler) uniform sampler2D roughnessSampler;
+layout(bindless_sampler) uniform samplerCube environmentSampler;
 
 in vec3 gsNormal;
 in vec4 gsPosition;
@@ -75,7 +76,7 @@ float sampleShadow(in sampler2D shadowMap, vec2 uv, float bias, float fragmentDe
 float pcfShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
 {
     sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
-    float bias = 0.0001 + (ndotl * 0.0001);
+    float bias = light.bias;    //0.0001 + (ndotl * 0.0001);
     float blurFactor = (1.0 / 800.0); //textureSize(shadowDepthAtlas, 0).x;  //
     float shadow = 0;
     vec2 uv;
@@ -123,7 +124,7 @@ void main()
     vec3 viewReflection = reflect(view, normal);
     float frensnel = pow(1.0 - dot(normal, -view), 2);
 
-    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness, normal)
+    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness, normal, environmentSampler)
      * (1.0 - roughness)
      * frensnel;
 
