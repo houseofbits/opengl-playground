@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "../../ModulesV2/Renderer/Resources/ShaderProgramResource.h"
+#include "../../Modules/Renderer/Resources/ShaderProgramResource.h"
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/vec3.hpp>

@@ -1,6 +1,6 @@
 #pragma once
-#include "../../CoreV2/Events/EventManager.h"
-#include "../../ModulesV2/Renderer/Resources/ShaderProgramResource.h"
+#include "../../Core/Events/EventManager.h"
+#include "../../Modules/Renderer/Resources/ShaderProgramResource.h"
 #include "../Shader/Shader.h"
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>

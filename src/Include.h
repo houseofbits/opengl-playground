@@ -1,9 +1,9 @@
 #pragma once
 
-#include "CoreV2/Events/Event.h"
-#include "CoreV2/Events/EventManager.h"
-#include "CoreV2/Events/WindowEvent.h"
-#include "CoreV2/Reflection/TypedClass.h"
+#include "Core/Events/Event.h"
+#include "Core/Events/EventManager.h"
+#include "Core/Events/WindowEvent.h"
+#include "Core/Reflection/TypedClass.h"
 #include "Exception.h"
 #include "Helper/Log.h"
 #include "Helper/Time.h"
@@ -13,6 +13,6 @@
 // #include "Renderer/RenderManager.h"
 #include "Renderer/Shader/Shader.h"
 #include "Window.h"
-#include "WireframeRenderer/GridPlane.h"
+//#include "WireframeRenderer/GridPlane.h"
 #include <iostream>
 #include <math.h>

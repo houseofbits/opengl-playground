@@ -1,6 +1,6 @@
 
-#include "CoreV2/Events/InputEvent.h"
-#include "CoreV2/Events/RawSDLEvent.h"
+#include "Core/Events/InputEvent.h"
+#include "Core/Events/RawSDLEvent.h"
 #include "Helper/Time.h"
 #include "Include.h"
 #include "Helper/GLDebugMessageCallback.h"

@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include "CoreV2/Events/EventManager.h"
-#include "CoreV2/Events/InputEvent.h"
+#include "Core/Events/EventManager.h"
+#include "Core/Events/InputEvent.h"
 
 class Window
 {
