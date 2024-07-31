@@ -3,10 +3,9 @@
 
 class VertexArray
 {
-protected:
-    unsigned int numberOfVerts{0};
+public:
+    virtual void draw();
     unsigned int vertexArrayObjectId{0};
-
     struct Element
     {
         int mode;
@@ -15,6 +14,8 @@ protected:
         int bufferOffset;
         unsigned int bufferId;
     };
+
+    unsigned int numberOfVerts{0};
 
     std::vector<Element> elementsArray;
     std::vector<unsigned int> bufferIds;
@@ -32,6 +33,5 @@ private:
     unsigned int generateIndexBuffer(std::vector<unsigned int> *array);
     unsigned int generateFloatBuffer(std::vector<float> *array);
 
-public:
-    virtual void draw();
+
 };

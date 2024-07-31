@@ -60,7 +60,7 @@ void Model::createFromFile(std::string filename)
 
                 tinygltf::Accessor indexAccessor = model.accessors[primitive.indices];
 
-                Element el;
+                VertexArray::Element el{};
                 el.mode = primitive.mode;
                 el.count = indexAccessor.count;
                 el.componentType = indexAccessor.componentType;

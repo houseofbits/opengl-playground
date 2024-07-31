@@ -46,12 +46,12 @@ float sampleShadow(uint shadowAtlasIndex, vec2 uv, float bias, float fragmentDep
 //
 float pcfShadowCalculation(vec3 projCoords, uint shadowAtlasIndex, float ndotl)
 {
-    //    float currentDepth = projCoords.z;
-    //    vec2 uv = calculateAtlasUV(shadowAtlasIndex, projCoords.xy);
-    //    float dstToSurface = abs(texture(shadowDepthAtlas, uv).r - currentDepth);
+//        float currentDepth = projCoords.z;
+//        vec2 uv1 = calculateAtlasUV(shadowAtlasIndex, projCoords.xy);
+//        float dstToSurface = abs(texture(shadowDepthAtlas, uv1).r - currentDepth);
 
     float bias = ndotl * 0.00001;
-    float blurFactor = 1.0 / 800.0;//textureSize(shadowDepthAtlas, 0).x;  //
+    float blurFactor = (1.0 / 800.0); //textureSize(shadowDepthAtlas, 0).x;  //
     float shadow = 0;
     vec2 uv;
     int div=0;
@@ -94,12 +94,14 @@ void main()
     vec3 viewReflection = reflect(view, normal);
     float frensnel = pow(1.0 - dot(normal, -view), 2);
 
-    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness) * specularPower;
+    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness, normal) * specularPower;
     vec3 ambientEnvColor = vec3(0.1);   //calculateAmbientColorFromEnvironmentProbes(gsPosition.xyz, normal, gsNormal);
 
     vec3 lightProjColor = vec3(1.0);
     vec3 lightColor = vec3(selfIllumination) + (diffuse * ambientEnvColor);
 
+    float shadows = 0;
+    uint numShadows = 0;
     for (int lightIndex = 0; lightIndex < numActiveLights; lightIndex++) {
         LightStructure light = lights[lightIndex];
 
@@ -118,8 +120,12 @@ void main()
 
             float shadowing = 1.0;
             if (light.doesCastShadows == 1 && doesReceiveShadows) {
-                shadowing = pcfShadowCalculation(lightProjectedPosition, light.shadowAtlasIndex, ndotl);
+                shadowing = pcfShadowCalculation(lightProjectedPosition, light.shadowAtlasIndex, dot(lightDir, gsNormal));
+                shadows += shadowing;
+                numShadows++;
             }
+
+
 
             lightProjColor = vec3(1.0);
             if (light.projectionTextureId != 0) {
@@ -140,9 +146,12 @@ void main()
         }
     }
 
+    shadows = shadows / numShadows;
+
     if (selfIllumination > 0) {
         lightColor = mix(lightColor, diffuse, selfIllumination);
     }
 
     FragColor = vec4(lightColor, 1.0);
+//    FragColor = vec4(vec3(shadows), 1.0);
 }

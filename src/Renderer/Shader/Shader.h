@@ -20,13 +20,14 @@ private:
 
 public:
     void loadProgram(std::string vertexProgramFileName, std::string fragmentProgramFileName, std::string geometryProgramFileName = "");
-    void use();
+    void use() const;
     void setUniform(const char *name, float x, float y, float z);
     void setUniform(const char *name, const glm::vec2 &v);
     void setUniform(const char *name, const glm::vec3 &v);
     void setUniform(const char *name, const glm::vec4 &v);
     void setUniform(const char *name, const glm::mat4 &m);
     void setUniform(const char *name, const glm::mat3 &m);
+    void setUniform(const char *name, const std::uint64_t &v);
     void setUniform(const char *name, float val);
     void setUniform(const char *name, int val);
     void setUniform(const char *name, bool val);

@@ -1,6 +1,6 @@
 #include "Shader.h"
 #include "../../Helper/Console.h"
-#include "../../Helper/Logging.h"
+#include "../../Helper/Log.h"
 #include "../../Helper/ShaderSourceLoader.h"
 #include <GL/glew.h>
 #include <fstream>
@@ -15,7 +15,7 @@ struct ShaderFileExt
     unsigned int type;
 };
 
-std::vector<ShaderFileExt> shadeFilerExtensions =
+std::vector<ShaderFileExt> shadeFilerExtensions2 =
     {
         {"vs", GL_VERTEX_SHADER},
         {"vert", GL_VERTEX_SHADER},
@@ -37,11 +37,11 @@ unsigned int Shader::getShaderType(std::string filename)
         return GL_VERTEX_SHADER;
     }
 
-    for (int i = 0; i < shadeFilerExtensions.size(); i++)
+    for (int i = 0; i < shadeFilerExtensions2.size(); i++)
     {
-        if (ext == shadeFilerExtensions[i].ext)
+        if (ext == shadeFilerExtensions2[i].ext)
         {
-            return shadeFilerExtensions[i].type;
+            return shadeFilerExtensions2[i].type;
         }
     }
 
@@ -95,7 +95,7 @@ void Shader::loadProgram(std::string vertexProgramFileName, std::string fragment
     glDeleteShader(fragmentShaderId);
 }
 
-void Shader::use()
+void Shader::use() const
 {
     glUseProgram(programId);
 }
@@ -145,6 +145,11 @@ void Shader::setUniform(const char *name, int val)
 {
     GLint loc = getUniformLocation(name);
     glUniform1i(loc, val);
+}
+
+void Shader::setUniform(const char *name, const uint64_t &val) {
+    GLint loc = getUniformLocation(name);
+    glUniformHandleui64ARB(loc, val);
 }
 
 void Shader::setUniform(const char *name, unsigned int val)
@@ -208,3 +213,4 @@ void Shader::checkLinkingError(unsigned int shader)
         std::cout << "LINKING FAILED " << infoLog << std::endl;
     }
 }
+

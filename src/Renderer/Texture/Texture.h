@@ -7,6 +7,8 @@ public:
     {
         TYPE_DEPTH,
         TYPE_RGBA,
+        TYPE_RGBA16,
+        TYPE_RGBA32,
     };
 
     static const int maxMipMapLevels = 7;

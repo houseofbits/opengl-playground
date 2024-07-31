@@ -54,7 +54,7 @@ void TextureCube::createArray(unsigned int w, unsigned int h, Type t, int depth)
 
     glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY,
                    7,
-                   GL_RGB8,
+                   GL_RGBA16,
                    (int) width, (int) height,
                    (int) arrayDepth);
 

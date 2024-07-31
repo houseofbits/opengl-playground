@@ -1,0 +1,10 @@
+{
+    "diffuseColor": [
+        0.9884659647941589,
+        1.0,
+        0.9019607901573181
+    ],
+    "doesCastShadows": true,
+    "doesReceiveShadows": false,
+    "selfIllumination": 0.8510000109672546
+}

@@ -45,6 +45,8 @@ void TextureRenderTarget::bind()
 void TextureRenderTarget::destroy()
 {
     Texture::destroy();
+    glDeleteFramebuffers(1, &framebufferId);
+    glDeleteRenderbuffers(1, &renderbufferId);
 }
 
 void TextureRenderTarget::unbind()

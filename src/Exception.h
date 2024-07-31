@@ -1,16 +1,17 @@
 #pragma once
 #include <string>
+#include <utility>
 
-class Exception
+class Exception : public std::exception
 {
 private:
     int code;
     std::string name;
 
 public:
-    Exception(int code, std::string name = "") : name(name), code(code) {}
+    explicit Exception(int code, std::string name = "") : name(std::move(name)), code(code) {}
 
-    virtual const char *what() const throw()
+    [[nodiscard]] const char *what() const noexcept override
     {
         return name.c_str();
     }

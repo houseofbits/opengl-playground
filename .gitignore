@@ -45,7 +45,8 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 build/
-libs/
+libs/*
+src/source-libs/*
 .clang-format
 .cmake/
 .idea/

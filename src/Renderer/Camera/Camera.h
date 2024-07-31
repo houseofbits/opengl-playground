@@ -1,5 +1,6 @@
 #pragma once
-#include "../../Events/EventManager.h"
+#include "../../CoreV2/Events/EventManager.h"
+#include "../../ModulesV2/Renderer/Resources/ShaderProgramResource.h"
 #include "../Shader/Shader.h"
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
@@ -17,6 +18,7 @@ public:
     glm::mat4 projectionViewMatrix;
     glm::vec3 direction;
     glm::vec3 position;
+    float zFar;
     float fieldOfView;
     float aspectRatio;
 
@@ -24,12 +26,14 @@ public:
     Camera();
 
     void bind(Shader &shader);
+    void bind(ShaderProgramResource &shader);
 
     Camera &setFieldOfView(float degrees);
     Camera &setViewportSize(unsigned int viewportWidth, unsigned int viewportHeight);
     Camera &setView(glm::vec3 direction, glm::vec3 up);
-    Camera &setAngles(float horizontal, float vertical);
+    Camera &setFromAngles(float horizontal, float vertical);
     Camera &setPosition(glm::vec3 position);
+    Camera &setZFar(float);
 
     glm::mat4 &getProjectionViewMatrix();
     glm::mat4 &getViewMatrix() { return viewMatrix; }

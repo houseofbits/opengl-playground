@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../libs/tinygltf/tiny_gltf.h"
+#include "../../SourceLibs/tinygltf/tiny_gltf.h"
 #include "VertexArray.h"
 #include <GL/glew.h>
 #include <list>

@@ -1,7 +1,7 @@
 #include "CameraController.h"
-#include "../../Events/EventManager.h"
-#include "../../Events/InputEvent.h"
-#include "../../Events/WindowEvent.h"
+#include "../../CoreV2/Events/EventManager.h"
+#include "../../CoreV2/Events/InputEvent.h"
+#include "../../CoreV2/Events/WindowEvent.h"
 #include "../../Helper/Time.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>

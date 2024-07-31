@@ -1,0 +1,5 @@
+{
+    "diffuseTexture": "resources/scenes/scene1/textures/walls1.png",
+    "normalTexture": "resources/scenes/scene1/textures/walls1-n.png",
+    "roughnessTexture": "resources/scenes/scene1/textures/walls1-s.png"
+}

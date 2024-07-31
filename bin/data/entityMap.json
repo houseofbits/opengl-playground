@@ -1,0 +1,95 @@
+[
+    {
+        "name": "StaticMesh",
+        "components": {
+            "transform": {
+                "class": "TransformComponent"
+            },
+            "mesh": {
+                "class": "StaticMeshComponent"
+            }
+        }
+    },
+    {
+        "name": "SpotLight",
+        "components": {
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowScaling": false
+                }
+            },
+            "light": {
+                "class": "LightComponent",
+                "default": {
+                    "type": "SPOT"
+                }
+            }
+        }
+    },
+    {
+        "name": "DirectLight",
+        "components": {
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowScaling": false
+                }
+            },
+            "light": {
+                "class": "LightComponent",
+                "default": {
+                    "type": "DIRECT"
+                }
+            }
+        }
+    },
+    {
+        "name": "OmniLight",
+        "components": {
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowScaling": false,
+                    "allowRotation": false
+                }
+            },
+            "light": {
+                "class": "LightComponent",
+                "default": {
+                    "type": "OMNI"
+                }
+            }
+        }
+    },
+    {
+        "name": "EnvironmentProbe",
+        "components": {
+            "probe": {
+                "class": "EnvironmentProbeComponent"
+            },
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowRotation": false
+                }
+            }
+        }
+    },
+    {
+        "name": "Camera",
+        "components": {
+            "camera": {
+                "class": "CameraComponent"
+            }
+        }
+    },
+    {
+        "name": "Sky",
+        "components": {
+            "sky": {
+                "class": "SkyComponent"
+            }
+        }
+    }
+]

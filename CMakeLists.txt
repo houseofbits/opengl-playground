@@ -7,43 +7,111 @@ enable_testing()
 file(GLOB_RECURSE sources src/*.cpp src/*.h)
 
 add_executable(${PROJECT_NAME} ${sources}
-        src/Renderer/Renderer/StaticGeometryRenderer.cpp
-        src/Renderer/Renderer/StaticGeometryRenderer.h
-        src/Renderer/Renderer/BaseRenderer.cpp
-        src/Renderer/Renderer/BaseRenderer.h
-        src/SceneLoader/SceneLoader.cpp
-        src/SceneLoader/SceneLoader.h
-        src/Tests/Rendering/TestTangentSpaceCalculation.h
-        src/Tests/Rendering/TestNormalMapping.h
-        src/Tests/Rendering/TestMipMapping.h
         src/Renderer/Texture/TextureCube.cpp
         src/Renderer/Texture/TextureCube.h
         src/Helper/StringUtils.h
         src/Renderer/Texture/TextureCubeRenderTarget.cpp
         src/Renderer/Texture/TextureCubeRenderTarget.h
-        src/Renderer/Renderer/SkyBoxRenderer.cpp
-        src/Renderer/Renderer/SkyBoxRenderer.h
         src/Renderer/Common/ProjectionView.cpp
         src/Renderer/Common/ProjectionView.h
         src/Renderer/Camera/CameraController.cpp
         src/Renderer/Camera/CameraController.h
-        src/Renderer/Renderer/DebugInformationRenderer.cpp
-        src/Renderer/Renderer/DebugInformationRenderer.h
-        src/Renderer/EnvironmentProbe/EnvironmentProbe.cpp
-        src/Renderer/EnvironmentProbe/EnvironmentProbe.h
-        src/Renderer/EnvironmentProbe/EnvironmentProbeUniformBuffer.cpp
-        src/Renderer/EnvironmentProbe/EnvironmentProbeUniformBuffer.h
-        src/Renderer/Renderer/EnvironmentProbeRenderer.cpp
-        src/Renderer/Renderer/EnvironmentProbeRenderer.h
-        src/SceneLoader/ModelBuildConfiguration.h
-        src/SceneLoader/BaseConfiguration.h
-        src/SceneLoader/BaseConfiguration.cpp
-        src/SceneLoader/ProbeBuildConfiguration.h
-        src/Renderer/Shader/ShaderStorageBuffer.cpp
         src/Renderer/Shader/ShaderStorageBuffer.h
+        src/Physics/TestPhysics.cpp
+        src/Physics/TestPhysics.h
+        src/CoreV2/Entity/Entity.h
+        src/CoreV2/Reflection/Factory.h
+        src/CoreV2/Entity/Component.cpp
+        src/CoreV2/Entity/Component.h
+        src/CoreV2/Entity/EntitySerializer.h
+        src/CoreV2/Entity/EntityContext.cpp
+        src/CoreV2/Entity/EntityContext.h
+        src/CoreV2/System/EntitySystem.h
+        src/CoreV2/Module/EntityModule.cpp
+        src/CoreV2/Module/EntityModule.h
+        src/ModulesV2/Renderer/RendererModule.h
+        src/ModulesV2/Renderer/Components/StaticMeshComponent.cpp
+        src/ModulesV2/Renderer/Components/StaticMeshComponent.h
+        src/ModulesV2/Common/CommonModule.h
+        src/ModulesV2/Common/Components/TransformComponent.cpp
+        src/ModulesV2/Common/Components/TransformComponent.h
+        src/CoreV2/API.h
+        src/CoreV2/Reflection/Type.h
+        src/CoreV2/Entity/Entity.cpp
+        src/ModulesV2/Renderer/Components/LightComponent.cpp
+        src/ModulesV2/Renderer/Components/LightComponent.h
+        src/ModulesV2/Renderer/Components/EnvironmentProbeComponent.cpp
+        src/ModulesV2/Renderer/Components/EnvironmentProbeComponent.h
+        src/CoreV2/Application/Application.cpp
+        src/CoreV2/Application/Application.h
+        src/ModulesV2/Renderer/Components/CameraComponent.cpp
+        src/ModulesV2/Renderer/Components/CameraComponent.h
+        src/CoreV2/Json/Json.cpp
+        src/CoreV2/Json/Json.h
+        src/CoreV2/Json/Json.cpp
+        src/CoreV2/Json/Json.h
+        src/ApplicationsV2/Main/MainApplication.cpp
+        src/ApplicationsV2/Main/MainApplication.h
+        src/CoreV2/Reflection/Identity.h
+        src/CoreV2/Resources/Resource.cpp
+        src/CoreV2/Resources/Resource.h
+        src/CoreV2/Resources/ResourceManager.cpp
+        src/CoreV2/Resources/ResourceManager.h
+        src/CoreV2/Resources/ResourceHandle.cpp
+        src/CoreV2/Resources/ResourceHandle.h
+        src/ModulesV2/Renderer/Resources/TextureResource.cpp
+        src/ModulesV2/Renderer/Resources/TextureResource.h
+        src/ModulesV2/Renderer/Resources/StaticMeshResource.cpp
+        src/ModulesV2/Renderer/Resources/StaticMeshResource.h
+        src/ModulesV2/Renderer/Systems/CameraControlSystem.cpp
+        src/ModulesV2/Renderer/Systems/CameraControlSystem.h
+        src/ModulesV2/Renderer/Buffers/LightStorageBuffer.h
+        src/ModulesV2/Renderer/Buffers/LightStorageBuffer.cpp
+        src/ModulesV2/Renderer/Resources/ShaderResource.cpp
+        src/ModulesV2/Renderer/Resources/ShaderResource.h
+        src/ModulesV2/Renderer/Resources/ShaderProgramResource.cpp
+        src/ModulesV2/Renderer/Resources/ShaderProgramResource.h
+        src/Helper/StringUtils.cpp
+        src/ModulesV2/Renderer/Buffers/ProjectionSamplerStorageBuffer.cpp
+        src/ModulesV2/Renderer/Buffers/ProjectionSamplerStorageBuffer.h
+        src/ModulesV2/EditorUI/EditorUIModule.h
+        src/ModulesV2/EditorUI/Systems/EditorUISystem.cpp
+        src/ModulesV2/EditorUI/Systems/EditorUISystem.h
+        src/CoreV2/Events/Event.cpp
+        src/CoreV2/Events/EntityCreationEvent.h
+        src/ModulesV2/EditorUI/UI/MainToolbarUI.cpp
+        src/ModulesV2/EditorUI/UI/MainToolbarUI.h
+        src/ModulesV2/EditorUI/UI/EditWindowUI.cpp
+        src/ModulesV2/EditorUI/UI/EditWindowUI.h
+        src/ModulesV2/Renderer/Resources/MaterialResource.cpp
+        src/ModulesV2/Renderer/Resources/MaterialResource.h
+        src/ModulesV2/Renderer/Buffers/EnvironmentProbeStorageBuffer.cpp
+        src/ModulesV2/Renderer/Buffers/EnvironmentProbeStorageBuffer.h
+        src/ModulesV2/Renderer/Systems/MainRenderSystem.cpp
+        src/ModulesV2/Renderer/Systems/MainRenderSystem.h
+        src/ModulesV2/Renderer/Resources/LightsBufferResource.cpp
+        src/ModulesV2/Renderer/Resources/LightsBufferResource.h
+        src/ModulesV2/Renderer/Systems/StorageBufferUpdateSystem.cpp
+        src/ModulesV2/Renderer/Systems/StorageBufferUpdateSystem.h
+        src/ModulesV2/Renderer/Resources/EnvironmentProbesCubeMapArrayResource.cpp
+        src/ModulesV2/Renderer/Resources/EnvironmentProbesCubeMapArrayResource.h
+        src/ModulesV2/Renderer/Systems/ShadowMapRenderSystem.cpp
+        src/ModulesV2/Renderer/Systems/ShadowMapRenderSystem.h
+        src/ModulesV2/Renderer/Resources/ShadowMapResource.cpp
+        src/ModulesV2/Renderer/Resources/ShadowMapResource.h
+        src/ModulesV2/EditorUI/UI/FileDialogHelper.h
+        src/ModulesV2/EditorUI/UI/MaterialEditWindowUI.cpp
+        src/ModulesV2/EditorUI/UI/MaterialEditWindowUI.h
+        src/ModulesV2/EditorUI/UI/TexturePreviewHelper.h
+        src/ModulesV2/EditorUI/UI/TextPromptHelper.h
 )
 
-target_link_libraries(SDLWindow SDL2main SDL2 GL)
+
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIR})
+target_link_libraries (SDLWindow ${SDL2_LIBRARIES})
+
+target_link_libraries(SDLWindow GL)
 
 find_package(GLEW REQUIRED)
 target_link_libraries(SDLWindow GLEW::GLEW)
@@ -52,6 +120,9 @@ find_package(glm REQUIRED)
 target_link_libraries(SDLWindow glm::glm)
 
 target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/src/SourceLibs/tinygltf/build/libtinygltf.a)
+
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 

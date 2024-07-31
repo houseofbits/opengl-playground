@@ -86,7 +86,7 @@ vec3 sampleAtlasFragmentLod(in sampler2D atlas, uint index, vec2 uv)
     float len2 = length(dy_vtc);// * atlasRect.x;
 
     float delta_max_sqr = max(len1, len2);
-    float lod = (log2(delta_max_sqr * 800));
+    float lod = (log2(delta_max_sqr * 500));
     int mipmapLevel = int(lod);
 
     if (mipmapLevel <= 0) {

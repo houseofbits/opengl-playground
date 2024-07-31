@@ -1,5 +1,7 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include "../Renderer/Camera/Camera.h"
 #include "../Renderer/Model/Model.h"
 #include "../Renderer/Shader/Shader.h"
@@ -17,7 +19,7 @@ public:
     ModelComponent();
 
     void load(std::string filename); // remove, should be created with factory or via config
-    void render();
+    void render() override;
     ModelComponent &resetTransform()
     {
         transform = glm::mat4(1.0);

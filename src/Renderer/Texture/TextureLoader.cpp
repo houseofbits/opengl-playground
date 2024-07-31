@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
 
-#include "../../../libs/tinygltf/stb_image.h"
+#include "../../SourceLibs/tinygltf/stb_image.h"
 
 Texture TextureLoader::load(std::string filename, bool withMipmapping)
 {
@@ -42,7 +42,7 @@ TextureCube TextureLoader::loadCube(std::string imageFileName, bool withMipmappi
     for (unsigned int faceId = 0; faceId < 6; faceId++)
     {
         unsigned char *data = nullptr;
-        std::string filename = ReplaceAll(imageFileName, CUBE_FACE_FILENAME_PLACEHOLDER, CUBE_FACE_FILENAME_SUFFIXES[faceId]);
+        std::string filename = StringUtils::replaceAll(imageFileName, CUBE_FACE_FILENAME_PLACEHOLDER, CUBE_FACE_FILENAME_SUFFIXES[faceId]);
         if (loadData(filename, &width, &height, data)) {
             if (!isTextureCreated) {
                 texture.create(width, height, Texture::TYPE_RGBA);

@@ -1,0 +1,12 @@
+{
+    "diffuseColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "diffuseTexture": "resources/scenes/scene1/textures/floor2.png",
+    "doesCastShadows": true,
+    "doesReceiveShadows": true,
+    "normalTexture": "resources/scenes/scene1/textures/floor2-n.png",
+    "roughnessTexture": "resources/scenes/scene1/textures/floor2-s.png"
+}

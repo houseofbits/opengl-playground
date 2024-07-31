@@ -1,14 +1,18 @@
 
-#include "Include.h"
-#include <GL/glew.h>
-#include <SDL2/SDL_opengl.h>
-#include "Events/InputEvent.h"
-#include "Helper/GLDebugMessageCallback.h"
-#include <glm/vec2.hpp>
+#include "CoreV2/Events/InputEvent.h"
+#include "CoreV2/Events/RawSDLEvent.h"
 #include "Helper/Time.h"
+#include "Include.h"
+#include "Helper/GLDebugMessageCallback.h"
+#include <GL/glew.h>
 #include <iostream>
 
-Window::Window(EventManager *eventManager) : eventManager(eventManager), sdlWindow(nullptr), viewportWidth(1024), viewportHeight(768), isFullScreen(false)
+Window::Window(EventManager *eventManager) : eventManager(eventManager),
+                                             sdlWindow(nullptr),
+                                             viewportWidth(1024),
+                                             viewportHeight(768),
+                                             isFullScreen(false),
+                                             windowFlags()
 {
 }
 
@@ -18,7 +22,7 @@ void Window::create()
     {
         printf("Failed to init SDL Video, error: %s", SDL_GetError());
 
-        throw new Exception(1, "Failed to init SDL Video");
+        throw Exception(1, "Failed to init SDL Video");
     }
 
     windowFlags = SDL_WINDOW_OPENGL;
@@ -34,45 +38,60 @@ void Window::create()
         viewportHeight,
         windowFlags);
 
+    eventManager->queueEvent(new WindowEvent(WindowEvent::Type::CREATE, this));
+
     if (sdlWindow == nullptr)
     {
         printf("Could not create window: %s", SDL_GetError());
 
-        throw new Exception(2, "Could not create window");
+        throw Exception(2, "Could not create window");
     }
 
-    int contextFlags = 0;
-    SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &contextFlags);
-    contextFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, contextFlags);
+    // int contextFlags = 0;
+    // SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &contextFlags);
+    // contextFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
+    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, contextFlags);
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);   //3
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-    SDL_GLContext Context = SDL_GL_CreateContext(sdlWindow);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3); //3
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2); //2
+//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);  //MacOS
+//    SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );    //MacOS
+
+    sdlGlContext = SDL_GL_CreateContext(sdlWindow);
+
+    // std::cout<<SDL_GetError()<<std::endl;
 
     GLenum glewError = glewInit();
     if (glewError != GLEW_OK)
     {
+        std::cout<<"Context creation error"<<std::endl;
     }
 
-//     glEnable(GL_DEBUG_OUTPUT);
-//     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-//     glDebugMessageCallback(GLDebugMessageCallback, nullptr);
+//    SDL_GL_MakeCurrent(sdlWindow, sdlGlContext);
+
+//      glEnable(GL_DEBUG_OUTPUT);
+//      glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+//      glDebugMessageCallback(GLDebugMessageCallback, nullptr);    //Supported only on gl >=4.3 (Not on MacOS)
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     glEnable(GL_MULTISAMPLE);
 //    glDisable(GL_MULTISAMPLE);
 
-    eventManager->queueEvent(new WindowEvent(WindowEvent::Type::CREATE, this));
 
-    // std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+//    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
 //     int numViewports;
 //     glGetIntegerv(GL_MAX_VIEWPORTS, &numViewports);
 //     std::cout << "Num viewports: " << numViewports << std::endl;
 //    int maxVertices;
 //    glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES, &maxVertices);
 //    std::cout << "GS maximum number of vertices: " << maxVertices << std::endl;
+
+    eventManager->queueEvent(new WindowEvent(WindowEvent::Type::OPENGL_CONTEXT_CREATED, this));
+
+    // std::cout<<"Window created"<<std::endl;
 }
 
 void Window::destroy()
@@ -96,6 +115,9 @@ bool Window::pollEvents()
 
     while (SDL_PollEvent(&sdl_event) != 0)
     {
+        auto evt = RawSDLEvent(sdl_event);
+        eventManager->triggerEvent(&evt);
+
         if (sdl_event.type == SDL_QUIT)
         {
             return false;
@@ -179,7 +201,7 @@ bool Window::pollEvents()
             break;
 
         case SDL_TEXTINPUT:
-            eventManager->queueEvent(new InputEvent(InputEvent::TEXENTER, std::string(sdl_event.text.text)));
+//            eventManager->queueEvent(new InputEvent(InputEvent::TEXTENTER, std::string(sdl_event.text.text)));
             break;
         };
     }
@@ -207,7 +229,8 @@ void Window::doubleBuffer()
 
 void Window::onKeyEvent(InputEvent::EventType type, int keysym, bool isAlt, bool isCtrl, bool isShift)
 {
-    InputEvent *event = new InputEvent(type, keysym);
+    auto *event = new InputEvent(type);
+    event->keyCode = keysym;
     event->modKeyAlt = isAlt;
     event->modKeyShift = isShift;
     event->modKeyCtrl = isCtrl;
@@ -216,7 +239,11 @@ void Window::onKeyEvent(InputEvent::EventType type, int keysym, bool isAlt, bool
 
 void Window::onMouseEvent(InputEvent::EventType type, glm::vec2 position, glm::vec2 motion, bool mouseLeft, bool mouseRight, bool isAlt, bool isCtrl, bool isShift)
 {
-    InputEvent *event = new InputEvent(type, position, motion, mouseLeft, mouseRight);
+    auto *event = new InputEvent(type);
+    event->mousePosition = position;
+    event->mouseMotion = motion;
+    event->mouseButtonLeft = mouseLeft;
+    event->mouseButtonRight = mouseRight;
     event->modKeyAlt = isAlt;
     event->modKeyShift = isShift;
     event->modKeyCtrl = isCtrl;
