@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../SourceLibs/tinygltf/json.hpp"
+#include "../../../libs/tinygltf/json.hpp"
 #include <glm/ext/quaternion_float.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>

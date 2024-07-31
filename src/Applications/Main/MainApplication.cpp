@@ -1,6 +1,7 @@
 #include "MainApplication.h"
 #include "../../Modules/Common/CommonModule.h"
 #include "../../Modules/EditorUI/EditorUIModule.h"
+#include "../../Modules/Physics/PhysicsModule.h"
 #include "../../Modules/Renderer/RendererModule.h"
 #include <fstream>
 
@@ -22,6 +23,7 @@ void MainApplication::initialize(const std::string &entityDefinitionFileName) {
     m_EntityContext.registerModule<CommonModule>();
     m_EntityContext.registerModule<RendererModule>();
     m_EntityContext.registerModule<EditorUIModule>();
+    m_EntityContext.registerModule<PhysicsModule>();
 
     m_Window.create();
 

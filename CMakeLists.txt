@@ -17,8 +17,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Camera/CameraController.cpp
         src/Renderer/Camera/CameraController.h
         src/Renderer/Shader/ShaderStorageBuffer.h
-        src/Physics/TestPhysics.cpp
-        src/Physics/TestPhysics.h
         src/Core/Entity/Entity.h
         src/Core/Reflection/Factory.h
         src/Core/Entity/Component.cpp
@@ -72,8 +70,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Resources/ShaderProgramResource.cpp
         src/Modules/Renderer/Resources/ShaderProgramResource.h
         src/Helper/StringUtils.cpp
-        src/Modules/Renderer/Buffers/ProjectionSamplerStorageBuffer.cpp
-        src/Modules/Renderer/Buffers/ProjectionSamplerStorageBuffer.h
         src/Modules/EditorUI/EditorUIModule.h
         src/Modules/EditorUI/Systems/EditorUISystem.cpp
         src/Modules/EditorUI/Systems/EditorUISystem.h
@@ -104,6 +100,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/EditorUI/UI/MaterialEditWindowUI.h
         src/Modules/EditorUI/UI/TexturePreviewHelper.h
         src/Modules/EditorUI/UI/TextPromptHelper.h
+        src/Modules/Physics/Systems/PhysicsSystem.cpp
+        src/Modules/Physics/Systems/PhysicsSystem.h
 )
 
 
@@ -120,9 +118,9 @@ find_package(glm REQUIRED)
 target_link_libraries(SDLWindow glm::glm)
 
 target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)
-#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/src/SourceLibs/tinygltf/build/libtinygltf.a)
 
-#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
+include_directories(${CMAKE_SOURCE_DIR}/libs/PhysX/include)
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 
