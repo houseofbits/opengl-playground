@@ -9,6 +9,12 @@ Dependencies for Linux
 
 History
 
+-   ECS System and ImGUI editor
+
+    <p float="left">
+      <img src="./docs/images/upd4/screen1.png" width="400" />
+    </p>
+
 -   Fix for the texture atlas seams and mip-mapping and various other improvements.
 
     <p float="left">
