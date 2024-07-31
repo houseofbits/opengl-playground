@@ -28,9 +28,11 @@ layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotL
 uniform uint SpotLightStorageBuffer_size;
 uniform vec3 viewPosition;
 uniform vec3 diffuseColor;
+uniform float selfIllumination;
 uniform int hasDiffuseSampler;
 uniform int hasNormalSampler;
 uniform int hasRoughnessSampler;
+uniform int doesReceiveShadows;
 
 layout(bindless_sampler) uniform sampler2D diffuseSampler;
 layout(bindless_sampler) uniform sampler2D normalSampler;
@@ -109,6 +111,11 @@ void main()
         diffuse = texture(diffuseSampler, gsTexcoord).xyz;
     }
 
+    if (selfIllumination > 0.95) {
+        fragColor = vec4(diffuse, 1.0);
+        return;
+    }
+
     vec3 normal = gsNormal;
     if (hasNormalSampler == 1) {
         normal = texture(normalSampler, gsTexcoord).xyz;
@@ -132,7 +139,7 @@ void main()
     vec3 falloff;
     vec3 lightDir;
     float distToLight;
-    vec3 lightColor = vec3(0.0);    //vec3(selfIllumination) + (diffuse * ambientEnvColor);
+    vec3 lightColor = vec3(0);    //vec3(selfIllumination) + (diffuse * ambientEnvColor);
 
     for (int lightIndex = 0; lightIndex < SpotLightStorageBuffer_size; lightIndex++) {
         SpotLightStructure light = spotLights[lightIndex];
@@ -165,7 +172,7 @@ void main()
             }
 
             float shadow = 1.0;
-            if (isSamplerHandleValid(light.shadowSamplerHandle)) {
+            if (doesReceiveShadows == 1 && isSamplerHandleValid(light.shadowSamplerHandle)) {
                 shadow = pcfShadowCalculation(light, lightProjectedPosition, dot(lightDir, gsNormal)); //depth > lightProjectedPosition.z;
             }
 
@@ -181,5 +188,5 @@ void main()
         }
     }
 
-    fragColor = vec4(lightColor, 1.0);
+    fragColor = vec4(mix(lightColor, diffuse, selfIllumination), 1.0);
 }

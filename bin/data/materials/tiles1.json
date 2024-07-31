@@ -1,4 +1,13 @@
 {
+    "diffuseColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
     "diffuseTexture": "resources/scenes/scene1/textures/floor1.png",
-    "normalTexture": "resources/scenes/scene1/textures/floor1-n.png"
+    "doesCastShadows": true,
+    "doesReceiveShadows": true,
+    "normalTexture": "resources/scenes/scene1/textures/floor1-n.png",
+    "roughnessTexture": "resources/scenes/scene1/textures/floor1-s.png",
+    "selfIllumination": 0.0
 }

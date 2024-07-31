@@ -32,6 +32,8 @@ uniform uint SpotLightStorageBuffer_size;
 uniform int hasDiffuseSampler;
 uniform int hasNormalSampler;
 uniform int hasRoughnessSampler;
+uniform float selfIllumination;
+uniform int doesReceiveShadows;
 
 layout(bindless_sampler) uniform sampler2D diffuseSampler;
 layout(bindless_sampler) uniform sampler2D normalSampler;
@@ -110,9 +112,9 @@ void main()
                 falloff = texture(sampler2D(light.projectorSamplerHandle), lightProjectedPosition.xy).rgb;
             }
 
-            color += light.intensity * ndotl * light.color * attenuation * falloff;
+            color += light.intensity * ndotl * light.color * attenuation * falloff * diffuse;
         }
     }
 
-    fragColor = vec4(color * diffuse.rgb, 1.0);
+    fragColor = vec4(mix(color, diffuse, selfIllumination), 1.0);
 }

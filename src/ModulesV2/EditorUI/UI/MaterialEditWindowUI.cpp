@@ -33,6 +33,8 @@ void MaterialEditWindowUI::process() {
 
             ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
+            ImGui::SliderFloat("Self illumination", &m_material().m_selfIllumination, 0.0f, 1.0f, "%.3f");
+
             ImGui::Checkbox("Does cast shadows", &m_material().m_doesCastShadows);
             ImGui::Checkbox("Does receive shadows", &m_material().m_doesReceiveShadows);
 

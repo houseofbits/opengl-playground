@@ -249,17 +249,18 @@ void EditWindowUI::processEditMeshComponent() {
     if (FileInput("ChooseMaterialFile", "Choose JSON Material file", ".json", "Material", m_meshMaterialPath)) {
         m_EditorUISystem->m_ResourceManager->request(mesh->m_Material, m_meshMaterialPath);
     }
+
     if (mesh->m_Material.isValid()) {
         if (ImGui::Button("Edit material")) {
             m_EditorUISystem->openMaterialEditor(mesh->m_Material);
         }
-    } else {
-        if(TextPromptHelper::textPrompt("New material", "New material", "Filename")) {
-            m_EditorUISystem->m_ResourceManager->request(mesh->m_Material,
-                "data/materials/" + TextPromptHelper::m_InputValue);
+    }
 
-            m_meshMaterialPath = mesh->m_Material().m_Path;
-        }
+    if(TextPromptHelper::textPrompt("New material", "New material", "Filename")) {
+        m_EditorUISystem->m_ResourceManager->request(mesh->m_Material,
+            "data/materials/" + TextPromptHelper::m_InputValue);
+
+        m_meshMaterialPath = mesh->m_Material().m_Path;
     }
 }
 
