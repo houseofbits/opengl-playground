@@ -10,6 +10,7 @@
 
 MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
                                                        m_isEditWindowVisible(true),
+                                                       m_isSimulationEnabled(true),
                                                        m_renderShaderType(0),
                                                        m_currentGizmoOperation(ImGuizmo::TRANSLATE),
                                                        m_currentGizmoMode(ImGuizmo::WORLD) {
@@ -25,6 +26,14 @@ void MainToolbarUI::process() {
             if (ImGui::MenuItem("Edit components", nullptr, m_isEditWindowVisible)) {
                 m_isEditWindowVisible = !m_isEditWindowVisible;
                 sendEditorStateEvent();
+            }
+            if (ImGui::MenuItem("Simulation enabled", nullptr, m_isSimulationEnabled)) {
+                m_isSimulationEnabled = !m_isSimulationEnabled;
+                sendUIEvent(m_isSimulationEnabled ? EditorUIEvent::TOGGLE_SIMULATION_ENABLED : EditorUIEvent::TOGGLE_SIMULATION_DISABLED);
+            }
+            if (ImGui::MenuItem("Reset rigid bodies")) {
+                m_isSimulationEnabled = false;
+                sendUIEvent(EditorUIEvent::RESET_TO_INITIAL_TRANSFORM);
             }
             ImGui::Separator();
             if (ImGui::MenuItem("View shaded", nullptr, m_renderShaderType == 0)) {

@@ -7,6 +7,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
+#include <PhysX/PxPhysics.h>
 
 class TransformComponent : public Component {
     TYPE_DEFINITION(TransformComponent);
@@ -27,6 +28,8 @@ public:
     glm::vec3 getScale();
     [[nodiscard]] glm::vec3 getDirection() const;
     void decomposeModelMatrix(glm::vec3 &, glm::quat &, glm::vec3 &);
+    physx::PxTransform getPxTransform();
+    void setFromPxTransform(physx::PxTransform);
 
     bool m_isTranslationEnabled = true;
     bool m_isRotationEnabled = true;

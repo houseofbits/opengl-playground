@@ -1,6 +1,8 @@
 #pragma once
 
+#include "ComponentEdit/BaseComponentEdit.h"
 #include <string>
+#include <map>
 
 class EditorUISystem;
 
@@ -16,11 +18,6 @@ public:
 private:
 
     void processEntitiesList();
-    void processEditLightComponent();
-    void processEditTransformComponent();
-    void processEditMeshComponent();
-    void processEditCameraComponent();
-    void processEditProbeComponent();
     void sendEntityCreationEvent(std::string, std::string);
     void sendEntityRemovalEvent();
 
@@ -29,9 +26,6 @@ private:
     std::string m_meshModelPath;
     std::string m_meshMaterialPath;
     int m_selectedEntityCreationType;
-    bool m_isLightEntitiesListed;
-    bool m_isStaticMeshEntitiesListed;
-    bool m_isCameraEntitiesListed;
-    bool m_isProbeEntitiesListed;
-    bool m_isNewMaterialPromptVisible;
+    std::map<std::string, BaseComponentEdit*> m_componentEditors;
+    std::map<std::string, bool> m_entityListFilter;
 };

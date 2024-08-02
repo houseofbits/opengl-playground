@@ -1,14 +1,13 @@
 #pragma once
 
 #include "../../Core/API.h"
+#include "Components/RigidBodyComponent.h"
 #include "Systems/PhysicsSystem.h"
-#include <PhysX/PxPhysics.h>
-#include <PhysX/PxPhysicsAPI.h>
 
 class PhysicsModule : public EntityModule {
 public:
     void registerComponents(EntityContext &ctx) override {
-
+        ctx.registerComponent<RigidBodyComponent>("RigidBodyComponent");
     };
 
     void registerSystems(EntityContext &ctx) override {

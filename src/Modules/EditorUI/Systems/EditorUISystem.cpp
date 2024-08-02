@@ -1,9 +1,10 @@
 #include "EditorUISystem.h"
-#include "../UI/TexturePreviewHelper.h"
+#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
-#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
+#include "../../Physics/Components/RigidBodyComponent.h"
+#include "../UI/TexturePreviewHelper.h"
 #include <glm/gtc/type_ptr.hpp>
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
@@ -18,6 +19,7 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
     usesComponent<TransformComponent>();
     usesComponent<CameraComponent>();
     usesComponent<EnvironmentProbeComponent>();
+    usesComponent<RigidBodyComponent>();
 }
 
 void EditorUISystem::process() {

@@ -27,6 +27,10 @@ private:
 public:
     EntityContext();
 
+    std::list<std::shared_ptr<Entity>>& getAllEntities() {
+        return m_Entities;
+    }
+
     template<class T>
     void registerComponent(std::string name) {
         m_ComponentFactory.registerName<T>(name);
@@ -69,6 +73,18 @@ public:
         if (system != nullptr) {
             system->registerComponent(component);
         }
+    }
+
+    template<class T>
+    bool doesEntityHaveComponent(Identity::Type id) {
+        auto* e = getEntity(id);
+        if (e != nullptr) {
+            auto *c = e->getComponent<T>();
+
+            return c != nullptr;
+        }
+
+        return false;
     }
 
     Entity* getEntity(Identity::Type id);

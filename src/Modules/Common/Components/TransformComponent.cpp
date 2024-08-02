@@ -1,5 +1,6 @@
 #include "TransformComponent.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../../Physics/Systems/PhysicsSystem.h"
 #include "../../Renderer/Systems/EnvironmentProbeRenderSystem.h"
 #include "../../Renderer/Systems/MainRenderSystem.h"
 #include "../../Renderer/Systems/ShadowMapRenderSystem.h"
@@ -14,6 +15,7 @@ void TransformComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<StorageBufferUpdateSystem>(this);
     ctx.registerComponentWithEntitySystem<ShadowMapRenderSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+    ctx.registerComponentWithEntitySystem<PhysicsSystem>(this);
 }
 
 void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat &rotation, glm::vec3 &scale) {
@@ -115,4 +117,38 @@ glm::vec3 TransformComponent::getDirection() const {
     glm::quat rotation = glm::quat_cast(m_ModelMatrix);
 
     return rotation * glm::vec3(0, 0, 1);
+}
+
+physx::PxTransform TransformComponent::getPxTransform() {
+    glm::quat rq = glm::quat_cast(m_ModelMatrix);
+
+    physx::PxQuat rotation(rq.x, rq.y, rq.z, rq.w);
+
+    physx::PxTransform transform(m_ModelMatrix[3].x, m_ModelMatrix[3].y, m_ModelMatrix[3].z, rotation);
+
+    return transform;
+}
+
+void TransformComponent::setFromPxTransform(physx::PxTransform transform) {
+    auto rotation = physx::PxMat33(transform.q);
+
+    m_ModelMatrix[0][0] = rotation.column0[0];
+    m_ModelMatrix[0][1] = rotation.column0[1];
+    m_ModelMatrix[0][2] = rotation.column0[2];
+    m_ModelMatrix[0][3] = 0;
+
+    m_ModelMatrix[1][0] = rotation.column1[0];
+    m_ModelMatrix[1][1] = rotation.column1[1];
+    m_ModelMatrix[1][2] = rotation.column1[2];
+    m_ModelMatrix[1][3] = 0;
+
+    m_ModelMatrix[2][0] = rotation.column2[0];
+    m_ModelMatrix[2][1] = rotation.column2[1];
+    m_ModelMatrix[2][2] = rotation.column2[2];
+    m_ModelMatrix[2][3] = 0;
+
+    m_ModelMatrix[3][0] = transform.p[0];
+    m_ModelMatrix[3][1] = transform.p[1];
+    m_ModelMatrix[3][2] = transform.p[2];
+    m_ModelMatrix[3][3] = 1;
 }

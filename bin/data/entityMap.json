@@ -11,6 +11,20 @@
         }
     },
     {
+        "name": "RigidBody",
+        "components": {
+            "transform": {
+                "class": "TransformComponent"
+            },
+            "mesh": {
+                "class": "StaticMeshComponent"
+            },
+            "rigidBody": {
+                "class": "RigidBodyComponent"
+            }
+        }
+    },
+    {
         "name": "SpotLight",
         "components": {
             "transform": {

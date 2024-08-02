@@ -13,6 +13,7 @@ public:
     long m_currentGizmoOperation;
     long m_currentGizmoMode;
     int m_renderShaderType;
+    bool m_isSimulationEnabled;
 
 private:
     void processTransformTypeDropdown(TransformComponent *transform);

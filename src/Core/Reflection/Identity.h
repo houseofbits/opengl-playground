@@ -25,6 +25,22 @@ public:
         m_Subject = id.m_Subject;
     }
 
+    static Identity fromEntityId(Type id) {
+        Identity i;
+        i.m_id = id;
+        i.m_Subject = ENTITY;
+
+        return i;
+    }
+
+    static Identity fromComponentId(Type id) {
+        Identity i;
+        i.m_id = id;
+        i.m_Subject = COMPONENT;
+
+        return i;
+    }
+
     static Identity create(Subject subject) {
         m_LastId++;
         return Identity(m_LastId, subject);

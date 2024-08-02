@@ -35,8 +35,8 @@ public:
     template<class T>
     T *getComponent() {
         for (const auto &c: m_Components) {
-            if (dynamic_cast<T *>(c)) {
-                return c;
+            if (dynamic_cast<T *>(c.get())) {
+                return dynamic_cast<T *>(c.get());
             }
         }
 
