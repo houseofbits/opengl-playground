@@ -9,7 +9,7 @@ Dependencies for Linux
 
 History
 
--   ECS System and ImGUI editor
+-   ECS System, ImGUI editor, bindless textures and serialization/deserialization.
 
     <p float="left">
       <img src="./docs/images/upd4/screen1.png" width="400" />
