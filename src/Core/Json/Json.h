@@ -2,12 +2,16 @@
 
 #include "../../../libs/tinygltf/json.hpp"
 #include <glm/ext/quaternion_float.hpp>
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <iostream>
 #include <optional>
 
 namespace nlohmann {
+
+    void to_json(nlohmann::json &j, const glm::vec2 &p);
+    void from_json(const nlohmann::json &j, glm::vec2 &p);
 
     void to_json(nlohmann::json &j, const glm::vec3 &p);
     void from_json(const nlohmann::json &j, glm::vec3 &p);
@@ -34,7 +38,6 @@ namespace nlohmann {
             v = j.get<T>();
     }
 
-    //Here begins the fun part to get the std::optional working
     template<class J, class T>
     void optional_to_json(J &j, const char *name, const std::optional<T> &value) {
         if (value) {

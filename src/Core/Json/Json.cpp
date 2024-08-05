@@ -1,6 +1,23 @@
 #include "Json.h"
 
 namespace nlohmann {
+    void to_json(nlohmann::json &j, const glm::vec2 &p) {
+        j = nlohmann::json{p.x, p.y};
+    }
+
+    void from_json(const nlohmann::json &j, glm::vec2 &p) {
+        if (j.is_number()) {
+            p = glm::vec2(j.get<float>());
+        } else if (j.is_array()) {
+            if (j.size() == 1) {
+                p = glm::vec2(j.at(0).get<float>());
+            } else if (j.size() >= 2) {
+                j.at(0).get_to(p.x);
+                j.at(1).get_to(p.y);
+            }
+        }
+    }
+
     void to_json(nlohmann::json &j, const glm::vec3 &p) {
         j = nlohmann::json{p.x, p.y, p.z};
     }

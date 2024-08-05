@@ -1,17 +1,25 @@
 #include "PhysicsSystem.h"
 #include "../../../Helper/Time.h"
 #include "../../Common/Components/TransformComponent.h"
+#include "../Components/CharacterControllerComponent.h"
 #include "../Components/RigidBodyComponent.h"
 
 using namespace physx;
 
 static PxDefaultErrorCallback gDefaultErrorCallback;
 static PxDefaultAllocator gDefaultAllocatorCallback;
+static PxControllerFilters filters;
 PxTolerancesScale toleranceScale;
 
-PhysicsSystem::PhysicsSystem() : EntitySystem(), m_pxFoundation(nullptr), m_pxPhysics(nullptr), m_pxScene(nullptr), m_isSimulationDisabled(false) {
+PhysicsSystem::PhysicsSystem() : EntitySystem(),
+                                 m_pxFoundation(nullptr),
+                                 m_pxPhysics(nullptr),
+                                 m_pxScene(nullptr),
+                                 m_isSimulationDisabled(false),
+                                 m_ControllerManager(nullptr) {
     usesComponent<RigidBodyComponent>();
     usesComponent<TransformComponent>();
+    usesComponent<CharacterControllerComponent>();
 }
 
 void PhysicsSystem::initialize(ResourceManager *resourceManager) {
@@ -50,7 +58,9 @@ void PhysicsSystem::initialize(ResourceManager *resourceManager) {
     m_pxScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0);
     m_pxScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
 
-    //Ground plane
+    m_ControllerManager = PxCreateControllerManager(*m_pxScene, true);
+
+    //Test ground plane
     PxMaterial *m_material = m_pxPhysics->createMaterial(0.5, 0.5, 0.5);
     physx::PxRigidStatic *groundPlane = PxCreatePlane(*m_pxPhysics, physx::PxPlane(0, 1, 0, 0), *m_material);
     m_pxScene->addActor(*groundPlane);
@@ -59,6 +69,7 @@ void PhysicsSystem::initialize(ResourceManager *resourceManager) {
 void PhysicsSystem::process() {
 
     buildRigidBodies();
+    buildCCTs();
 
     if (!m_isSimulationDisabled) {
         //    std::cout<<Time::frameTime<<" "<<1.0 / 60.0<<std::endl;
@@ -75,6 +86,20 @@ void PhysicsSystem::process() {
                 rigidBody.second->m_pxInitialTransform = rigidBody.second->m_pxRigidBody->getGlobalPose();
             } else {
                 transform->setFromPxTransform(rigidBody.second->m_pxRigidBody->getGlobalPose());
+            }
+        }
+    }
+
+    for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
+        if (component.second->m_CCTController != nullptr) {
+            component.second->m_CCTController->move(PxVec3(0, -0.1, 0), 0, Time::frameTime, filters);
+
+            auto *transform = getComponent<TransformComponent>(component.first);
+            if (m_isSimulationDisabled) {
+                component.second->setPhysicsPosition(transform->getTranslation());
+            } else {
+                transform->resetTransform();
+                transform->setTranslation(component.second->getPhysicsPosition());
             }
         }
     }
@@ -98,8 +123,33 @@ void PhysicsSystem::buildRigidBodies() {
     }
 }
 
+void PhysicsSystem::buildCCTs() {
+    for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
+        if (component.second->m_CCTController == nullptr) {
+            auto *transform = getComponent<TransformComponent>(component.first);
+
+            PxCapsuleControllerDesc desc;
+            desc.scaleCoeff = 1;
+            desc.position = PxExtendedVec3(transform->getTranslation().x, transform->getTranslation().y, transform->getTranslation().z);
+            desc.contactOffset = 0.01;
+            desc.stepOffset = 0.1;
+            desc.slopeLimit = 0;
+            desc.radius = component.second->m_radius;
+            desc.height = component.second->m_height;
+            desc.upDirection = PxVec3(0, 1, 0);
+            desc.material = m_pxPhysics->createMaterial(0.5, 0.5, 0.5);
+            desc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;
+            //    desc.reportCallback = actor.GetCCTHitReportHandler();
+
+            component.second->m_CCTController = m_ControllerManager->createController(desc);
+            component.second->setPhysicsPosition(transform->getTranslation());
+        }
+    }
+}
+
 void PhysicsSystem::registerEventHandlers(EventManager *eventManager) {
     eventManager->registerEventReceiver(this, &PhysicsSystem::handleEditorUIEvent);
+    eventManager->registerEventReceiver(this, &PhysicsSystem::handleInputEvent);
 }
 
 bool PhysicsSystem::handleEditorUIEvent(EditorUIEvent *event) {
@@ -108,9 +158,45 @@ bool PhysicsSystem::handleEditorUIEvent(EditorUIEvent *event) {
         m_isSimulationDisabled = false;
     } else if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
         m_isSimulationDisabled = true;
-    } else if(event->m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
+    } else if (event->m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
         resetToInitialTransform();
         m_isSimulationDisabled = true;
+    }
+
+    return true;
+}
+
+bool PhysicsSystem::handleInputEvent(InputEvent *event) {
+    bool doMove = false;
+    PxVec3 direction(0);
+
+    //Up
+    if (event->type == InputEvent::KEYPRESS && event->keyCode == 82) {
+        direction = direction + PxVec3(1, 0, 0);
+        doMove = true;
+    }
+    //Down
+    if (event->type == InputEvent::KEYPRESS && event->keyCode == 81) {
+        direction = direction + PxVec3(-1, 0, 0);
+        doMove = true;
+    }
+    //Left
+    if (event->type == InputEvent::KEYPRESS && event->keyCode == 80) {
+        direction = direction + PxVec3(0, 0, 1);
+        doMove = true;
+    }
+    //Right
+    if (event->type == InputEvent::KEYPRESS && event->keyCode == 79) {
+        direction = direction + PxVec3(0, 0, -1);
+        doMove = true;
+    }
+
+    if (doMove && !getComponentContainer<CharacterControllerComponent>().empty()) {
+        direction.normalize();
+        direction = direction * 0.1;
+
+        auto cct = getComponentContainer<CharacterControllerComponent>().begin()->second;
+        cct->m_CCTController->move(direction, 0, Time::frameTime, filters);
     }
 
     return true;
@@ -123,6 +209,16 @@ void PhysicsSystem::resetToInitialTransform() {
 
             transform->setFromPxTransform(rigidBody.second->m_pxInitialTransform);
             rigidBody.second->m_pxRigidBody->setGlobalPose(rigidBody.second->m_pxInitialTransform);
+        }
+    }
+
+    for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
+        if (component.second->m_CCTController != nullptr) {
+            auto *transform = getComponent<TransformComponent>(component.first);
+
+            transform->resetTransform();
+            transform->setTranslation(component.second->m_initialPosition);
+            component.second->setPhysicsPosition(component.second->m_initialPosition);
         }
     }
 }

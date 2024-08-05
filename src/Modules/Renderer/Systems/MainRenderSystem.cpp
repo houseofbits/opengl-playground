@@ -92,6 +92,9 @@ void MainRenderSystem::process() {
     }
 
     for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
+        if (mesh.second->m_targetRenderer != StaticMeshComponent::SOLID) {
+            continue;
+        }
         auto *transform = getComponent<TransformComponent>(mesh.first);
         m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getModelMatrix());
         mesh.second->m_Material().bind(m_ShaderPrograms[m_shaderType]());

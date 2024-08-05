@@ -2,22 +2,21 @@
 
 #include "../../../Core/Events/EntityCreationEvent.h"
 #include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
-#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
-#include "../../../SourceLibs/imgui/imgui.h"
+//#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
+//#include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
+#include "../../Physics/Components/CharacterControllerComponent.h"
 #include "../../Physics/Components/RigidBodyComponent.h"
 #include "../Systems/EditorUISystem.h"
 #include "ComponentEdit/CameraComponentEdit.h"
+#include "ComponentEdit/CharacterControllerComponentEdit.h"
 #include "ComponentEdit/EnvironmentProbeComponentEdit.h"
 #include "ComponentEdit/LightComponentEdit.h"
 #include "ComponentEdit/RigidBodyComponentEdit.h"
 #include "ComponentEdit/StaticMeshComponentEdit.h"
 #include "ComponentEdit/TransformComponentEdit.h"
 #include "FileDialogHelper.h"
-#include "TextPromptHelper.h"
-#include "TexturePreviewHelper.h"
-
 #include <utility>
 
 std::vector<std::string> ENTITY_CREATION_OPTIONS = {
@@ -26,7 +25,9 @@ std::vector<std::string> ENTITY_CREATION_OPTIONS = {
         "DirectLight",
         "StaticMesh",
         "EnvironmentProbe",
-        "RigidBody"};
+        "RigidBody",
+        "CharacterController"
+};
 
 EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
                                                      m_EditorUISystem(editor),
@@ -44,6 +45,7 @@ EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
     m_componentEditors[CameraComponent::TypeName()] = new CameraComponentEdit(editor);
     m_componentEditors[EnvironmentProbeComponent::TypeName()] = new EnvironmentProbeComponentEdit(editor);
     m_componentEditors[RigidBodyComponent::TypeName()] = new RigidBodyComponentEdit(editor);
+    m_componentEditors[CharacterControllerComponent::TypeName()] = new CharacterControllerComponentEdit(editor);
 }
 
 void EditWindowUI::process() {

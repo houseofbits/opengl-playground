@@ -105,5 +105,23 @@
                 "class": "SkyComponent"
             }
         }
+    },
+    {
+        "name": "CharacterController",
+        "components": {
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowRotation": false,
+                    "allowScaling": false
+                }
+            },
+            "mesh": {
+                "class": "StaticMeshComponent"
+            },
+            "cct": {
+                "class": "CharacterControllerComponent"
+            }
+        }
     }
 ]
