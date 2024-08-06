@@ -123,6 +123,11 @@ void LightComponent::prepareShadowMapResources(ResourceManager &resourceManager)
             auto *p = new ResourceHandle<ShadowMapResource>();
             m_ShadowMaps.push_back(p);
             resourceManager.request(*m_ShadowMaps.back(), getShadowMapResourceName((int) m_ShadowMaps.size() - 1));
+
+            if (m_ShadowMaps.back()->get().m_Resolution != m_shadowResolution) {
+                m_ShadowMaps.back()->get().m_Resolution = m_shadowResolution;
+                m_ShadowMaps.back()->get().resize();
+            }
         }
     } else {
         removeShadowMaps();

@@ -60,8 +60,9 @@ public:
             ImGui::InputFloat("Beam angle##LIGHT_BEAM_ANGLE", &light->m_beamAngle, 0.5f, 1.0f, "%.0f");
         }
 
-        if (FileInput("ChooseLightProjectorFile", "Choose image file", ".png,.tga", "Projector", light->m_Projection().m_Path)) {
-            m_EditorUISystem->m_ResourceManager->request(light->m_Projection, light->m_Projection().m_Path);
+        if (FileInput("ChooseLightProjectorFile", "Choose image file", ".png,.tga", "Projector", m_projectorPath, light->m_Projection().m_Path)) {
+            light->m_Projection.invalidate();
+            m_EditorUISystem->m_ResourceManager->request(light->m_Projection, m_projectorPath);
         }
 
         TexturePreviewHelper::texturePreview(light->m_Projection);
@@ -90,4 +91,6 @@ public:
             // }
         }
     }
+
+    std::string m_projectorPath;
 };

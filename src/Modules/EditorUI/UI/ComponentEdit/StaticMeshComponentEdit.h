@@ -38,12 +38,14 @@ public:
             ImGui::EndCombo();
         }
 
-        if (FileInput("ChooseModelFile", "Choose GLTF Model file", ".gltf", "Model", mesh->m_Mesh().m_Path)) {
-            m_EditorUISystem->m_ResourceManager->request(mesh->m_Mesh, mesh->m_Mesh().m_Path);
+        if (FileInput("ChooseModelFile", "Choose GLTF Model file", ".gltf", "Model", m_meshPath, mesh->m_Mesh().m_Path)) {
+            mesh->m_Mesh.invalidate();
+            m_EditorUISystem->m_ResourceManager->request(mesh->m_Mesh, m_meshPath);
         }
 
-        if (FileInput("ChooseMaterialFile", "Choose JSON Material file", ".json", "Material", mesh->m_Material().m_Path)) {
-            m_EditorUISystem->m_ResourceManager->request(mesh->m_Material, mesh->m_Material().m_Path);
+        if (FileInput("ChooseMaterialFile", "Choose JSON Material file", ".json", "Material", m_materialPath, mesh->m_Material().m_Path)) {
+            mesh->m_Material.invalidate();
+            m_EditorUISystem->m_ResourceManager->request(mesh->m_Material, m_materialPath);
         }
 
         if (mesh->m_Material.isValid()) {
@@ -57,4 +59,7 @@ public:
                                                          "data/materials/" + TextPromptHelper::m_InputValue);
         }
     }
+
+    std::string m_meshPath;
+    std::string m_materialPath;
 };

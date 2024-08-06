@@ -26,7 +26,7 @@ void CharacterControllerComponent::registerWithSystems(EntityContext &ctx) {
 glm::vec3 CharacterControllerComponent::getPhysicsPosition() const {
     if (m_CCTController != nullptr) {
         auto p = m_CCTController->getPosition();
-        return {p.x, p.y, p.z};
+        return {p.x, p.y - (m_height * 0.5), p.z};
     }
     return glm::vec3(0);
 }

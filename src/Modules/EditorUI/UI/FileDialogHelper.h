@@ -9,7 +9,7 @@
 #include <string>
 #include <unistd.h>
 
-inline bool FileInput(const std::string &name, const std::string &title, const std::string &ext, const std::string &label, std::string &path) {
+inline bool FileInput(const std::string &name, const std::string &title, const std::string &ext, const std::string &label, std::string &path, const std::string& displayPath = "") {
     std::string buttonName = "Browse##" + name + "BrowseButton";
     if (ImGui::Button(buttonName.c_str())) {
         IGFD::FileDialogConfig config;
@@ -17,10 +17,10 @@ inline bool FileInput(const std::string &name, const std::string &title, const s
         ImGuiFileDialog::Instance()->OpenDialog(name, title, ext.c_str(), config);
     }
     ImGui::SameLine();
-    if (path.empty()) {
+    if (displayPath.empty()) {
         ImGui::Text("%s: -", label.c_str());
     } else {
-        ImGui::Text("%s: %s", label.c_str(), path.c_str());
+        ImGui::Text("%s: %s", label.c_str(), displayPath.c_str());
     }
 
     if (ImGuiFileDialog::Instance()->Display(name)) {

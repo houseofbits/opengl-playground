@@ -131,11 +131,11 @@ void PhysicsSystem::buildCCTs() {
             PxCapsuleControllerDesc desc;
             desc.scaleCoeff = 1;
             desc.position = PxExtendedVec3(transform->getTranslation().x, transform->getTranslation().y, transform->getTranslation().z);
-            desc.contactOffset = 0.01;
-            desc.stepOffset = 0.1;
+            desc.contactOffset = 0.001;
+            desc.stepOffset = 0.001;
             desc.slopeLimit = 0;
             desc.radius = component.second->m_radius;
-            desc.height = component.second->m_height;
+            desc.height = component.second->m_height - (component.second->m_radius * 2.0f);
             desc.upDirection = PxVec3(0, 1, 0);
             desc.material = m_pxPhysics->createMaterial(0.5, 0.5, 0.5);
             desc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;

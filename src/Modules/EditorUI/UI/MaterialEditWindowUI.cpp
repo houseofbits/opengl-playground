@@ -8,7 +8,8 @@
 #include "TexturePreviewHelper.h"
 
 MaterialEditWindowUI::MaterialEditWindowUI(EditorUISystem *editor) : m_EditorUISystem(editor),
-                                                                     m_material() {
+                                                                     m_material(),
+                                                                     m_texturePaths() {
 }
 
 void MaterialEditWindowUI::process() {
@@ -56,7 +57,7 @@ void MaterialEditWindowUI::process() {
     }
 }
 
-void MaterialEditWindowUI::processTexture(std::string name, ResourceHandle<TextureResource> &handle) const {
+void MaterialEditWindowUI::processTexture(const std::string& name, ResourceHandle<TextureResource> &handle) const {
     if (handle.isValid()) {
         ImGui::Image((void *) (intptr_t) handle().m_textureId, ImVec2(200, 200));
 
@@ -65,8 +66,11 @@ void MaterialEditWindowUI::processTexture(std::string name, ResourceHandle<Textu
         }
         ImGui::SameLine();
     }
-    if (FileInput(name, "Choose image file", ".png,.tga", "Path", handle().m_Path)) {
-        m_EditorUISystem->m_ResourceManager->request(handle, handle().m_Path);
+
+    std::string value = m_texturePaths.at(name);
+    if (FileInput(name, "Choose image file", ".png,.tga", "Path", value, handle().m_Path)) {
+        handle.invalidate();
+        m_EditorUISystem->m_ResourceManager->request(handle, value);
     }
 }
 
