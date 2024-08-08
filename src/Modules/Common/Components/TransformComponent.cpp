@@ -123,16 +123,6 @@ glm::vec3 TransformComponent::getDirection() const {
     return rotation * glm::vec3(0, 0, 1);
 }
 
-physx::PxTransform TransformComponent::getPxTransform() {
-    glm::quat rq = glm::quat_cast(m_transform);
-
-    physx::PxQuat rotation(rq.x, rq.y, rq.z, rq.w);
-
-    physx::PxTransform transform(m_transform[3].x, m_transform[3].y, m_transform[3].z, rotation);
-
-    return transform;
-}
-
 void TransformComponent::setFromPxTransform(physx::PxTransform transform) {
     auto rotation = physx::PxMat33(transform.q);
 

@@ -35,7 +35,6 @@ public:
     glm::vec3 getScale();
     [[nodiscard]] glm::vec3 getDirection() const;
     void decomposeModelMatrix(glm::vec3 &, glm::quat &, glm::vec3 &);
-    physx::PxTransform getPxTransform();
     void setFromPxTransform(physx::PxTransform);
 
     bool m_isTranslationEnabled;

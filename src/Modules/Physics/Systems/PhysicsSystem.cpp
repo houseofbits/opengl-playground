@@ -75,42 +75,13 @@ void PhysicsSystem::process() {
     buildCCTs();
 
     if (!m_isSimulationDisabled) {
-        //    std::cout<<Time::frameTime<<" "<<1.0 / 60.0<<std::endl;
         m_pxScene->simulate(1.0 / 60.0);
         while (!m_pxScene->fetchResults(true)) {
         }
     }
 
-    for (const auto rigidBody: getComponentContainer<RigidBodyComponent>()) {
-        if (rigidBody.second->m_pxRigidBody != nullptr) {
-            auto *transform = getComponent<TransformComponent>(rigidBody.first);
-            if (m_isSimulationDisabled) {
-                rigidBody.second->m_pxRigidBody->setGlobalPose(transform->getPxTransform());
-                rigidBody.second->m_pxInitialTransform = rigidBody.second->m_pxRigidBody->getGlobalPose();
-            } else {
-                transform->setFromPxTransform(rigidBody.second->m_pxRigidBody->getGlobalPose());
-            }
-        }
-    }
-
-    for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
-        if (component.second->m_CCTController != nullptr) {
-            component.second->m_CCTController->move(PxVec3(0, -0.1, 0), 0, Time::frameTime, filters);
-
-            auto *transform = getComponent<TransformComponent>(component.first);
-            if (m_isSimulationDisabled) {
-                component.second->setPhysicsPosition(transform->getTranslation());
-            } else {
-                transform->resetTransform();
-                transform->setTranslation(component.second->getPhysicsPosition());
-
-                auto *cameraComp = getComponent<CameraComponent>(component.first);
-                if (cameraComp && cameraComp->m_isActive) {
-                    cameraComp->m_Camera.setPosition(transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
-                }
-            }
-        }
-    }
+    updateRigidBodies();
+    updateCCTs();
 }
 
 void PhysicsSystem::buildRigidBodies() {
@@ -121,8 +92,8 @@ void PhysicsSystem::buildRigidBodies() {
             PxMaterial *m_material = m_pxPhysics->createMaterial(0.5, 0.5, 0.5);
             float halfExtent = .5f;
             physx::PxShape *shape = m_pxPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *m_material);
-            rigidBody.second->m_pxRigidBody = m_pxPhysics->createRigidDynamic(transform->getPxTransform());
-            rigidBody.second->m_pxInitialTransform = transform->getPxTransform();
+            rigidBody.second->m_pxRigidBody = m_pxPhysics->createRigidDynamic(Types::GLMtoPxTransform(transform->getModelMatrix()));
+            rigidBody.second->m_pxInitialTransform = Types::GLMtoPxTransform(transform->getModelMatrix());
             rigidBody.second->m_pxRigidBody->attachShape(*shape);
             physx::PxRigidBodyExt::updateMassAndInertia(*rigidBody.second->m_pxRigidBody, 100.0f);
             m_pxScene->addActor(*rigidBody.second->m_pxRigidBody);
@@ -138,7 +109,7 @@ void PhysicsSystem::buildCCTs() {
 
             PxCapsuleControllerDesc desc;
             desc.scaleCoeff = 1;
-            desc.position = PxExtendedVec3(transform->getTranslation().x, transform->getTranslation().y, transform->getTranslation().z);
+            desc.position = Types::GLMtoPxExtendedVec3(transform->getTranslation());
             desc.contactOffset = 0.001;
             desc.stepOffset = 0.001;
             desc.slopeLimit = 0;
@@ -147,7 +118,6 @@ void PhysicsSystem::buildCCTs() {
             desc.upDirection = PxVec3(0, 1, 0);
             desc.material = m_pxPhysics->createMaterial(0.5, 0.5, 0.5);
             desc.climbingMode = PxCapsuleClimbingMode::eCONSTRAINED;
-            //    desc.reportCallback = actor.GetCCTHitReportHandler();
 
             component.second->m_CCTController = m_ControllerManager->createController(desc);
             component.second->setPhysicsPosition(transform->getTranslation());
@@ -219,22 +189,22 @@ void PhysicsSystem::processCCTInput(CameraComponent *camera, CharacterController
 
     //Up
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 82) {
-        direction = direction + Types::GLMtoPX(dir);
+        direction = direction + Types::GLMtoPxVec3(dir);
         doMove = true;
     }
     //Down
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 81) {
-        direction = direction - Types::GLMtoPX(dir);
+        direction = direction - Types::GLMtoPxVec3(dir);
         doMove = true;
     }
     //Left
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 80) {
-        direction = direction - Types::GLMtoPX(right);
+        direction = direction - Types::GLMtoPxVec3(right);
         doMove = true;
     }
     //Right
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 79) {
-        direction = direction + Types::GLMtoPX(right);
+        direction = direction + Types::GLMtoPxVec3(right);
         doMove = true;
     }
 
@@ -243,5 +213,40 @@ void PhysicsSystem::processCCTInput(CameraComponent *camera, CharacterController
         direction = direction * 0.1;
 
         cct->m_CCTController->move(direction, 0, Time::frameTime, filters);
+    }
+}
+
+void PhysicsSystem::updateRigidBodies() {
+    for (const auto rigidBody: getComponentContainer<RigidBodyComponent>()) {
+        if (rigidBody.second->m_pxRigidBody != nullptr) {
+            auto *transform = getComponent<TransformComponent>(rigidBody.first);
+            if (m_isSimulationDisabled) {
+                rigidBody.second->m_pxRigidBody->setGlobalPose(Types::GLMtoPxTransform(transform->getModelMatrix()));
+                rigidBody.second->m_pxInitialTransform = rigidBody.second->m_pxRigidBody->getGlobalPose();
+            } else {
+                transform->setFromPxTransform(rigidBody.second->m_pxRigidBody->getGlobalPose());
+            }
+        }
+    }
+}
+
+void PhysicsSystem::updateCCTs() {
+    for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
+        if (component.second->m_CCTController != nullptr) {
+            component.second->m_CCTController->move(PxVec3(0, -0.1, 0), 0, Time::frameTime, filters);
+
+            auto *transform = getComponent<TransformComponent>(component.first);
+            if (m_isSimulationDisabled) {
+                component.second->setPhysicsPosition(transform->getTranslation());
+            } else {
+                transform->resetTransform();
+                transform->setTranslation(component.second->getPhysicsPosition());
+
+                auto *cameraComp = getComponent<CameraComponent>(component.first);
+                if (cameraComp && cameraComp->m_isActive) {
+                    cameraComp->m_Camera.setPosition(transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
+                }
+            }
+        }
     }
 }

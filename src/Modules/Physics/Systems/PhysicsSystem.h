@@ -20,6 +20,8 @@ public:
     void buildCCTs();
     void resetToInitialTransform();
     void processCCTInput(CameraComponent* camera, CharacterControllerComponent* cct, InputEvent *event);
+    void updateRigidBodies();
+    void updateCCTs();
 
     physx::PxFoundation* m_pxFoundation;
     physx::PxPhysics* m_pxPhysics;
