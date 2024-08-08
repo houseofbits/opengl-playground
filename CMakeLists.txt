@@ -108,6 +108,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/EditorUI/UI/ComponentEdit/TransformComponentEdit.h
         src/Modules/Physics/Components/CharacterControllerComponent.cpp
         src/Modules/Physics/Components/CharacterControllerComponent.h
+        src/Helper/Types.h
 )
 
 

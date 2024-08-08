@@ -1,5 +1,6 @@
 #include "CameraComponent.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../../Physics/Systems/PhysicsSystem.h"
 #include "../Systems/CameraControlSystem.h"
 #include "../Systems/MainRenderSystem.h"
 
@@ -9,4 +10,5 @@ void CameraComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<MainRenderSystem>(this);
     ctx.registerComponentWithEntitySystem<CameraControlSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+    ctx.registerComponentWithEntitySystem<PhysicsSystem>(this);
 }

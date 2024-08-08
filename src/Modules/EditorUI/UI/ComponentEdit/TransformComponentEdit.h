@@ -27,7 +27,7 @@ public:
 
         float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 
-        ImGuizmo::DecomposeMatrixToComponents(&transform->m_ModelMatrix[0][0], matrixTranslation, matrixRotation, matrixScale);
+        ImGuizmo::DecomposeMatrixToComponents(&transform->m_transform[0][0], matrixTranslation, matrixRotation, matrixScale);
         if (transform->m_isTranslationEnabled) {
             ImGui::InputFloat3("Translation", matrixTranslation);
         }
@@ -37,6 +37,6 @@ public:
         if (transform->m_isScalingEnabled) {
             ImGui::InputFloat3("Scaling", matrixScale);
         }
-        ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, &transform->m_ModelMatrix[0][0]);
+        ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, &transform->m_transform[0][0]);
     }
 };

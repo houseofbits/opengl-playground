@@ -79,6 +79,7 @@ void MainRenderSystem::process() {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     m_ShaderPrograms[m_shaderType]().use();
     camera->bind(m_ShaderPrograms[m_shaderType]());

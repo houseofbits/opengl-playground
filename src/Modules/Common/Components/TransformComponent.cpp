@@ -6,7 +6,10 @@
 #include "../../Renderer/Systems/ShadowMapRenderSystem.h"
 #include "../../Renderer/Systems/StorageBufferUpdateSystem.h"
 
-TransformComponent::TransformComponent() : m_ModelMatrix(1.0) {
+TransformComponent::TransformComponent() : m_transform(1.0),
+                                           m_isTranslationEnabled(true),
+                                           m_isRotationEnabled(true),
+                                           m_isScalingEnabled(true){
 }
 
 void TransformComponent::registerWithSystems(EntityContext &ctx) {
@@ -19,18 +22,19 @@ void TransformComponent::registerWithSystems(EntityContext &ctx) {
 }
 
 void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat &rotation, glm::vec3 &scale) {
-    translation = m_ModelMatrix[3];
+    translation = m_transform[3];
 
     for (int i = 0; i < 3; i++)
-        scale[i] = glm::length(glm::vec3(m_ModelMatrix[i]));
+        scale[i] = glm::length(glm::vec3(m_transform[i]));
 
     const glm::mat3 rotMtx(
-            glm::vec3(m_ModelMatrix[0]) / scale[0],
-            glm::vec3(m_ModelMatrix[1]) / scale[1],
-            glm::vec3(m_ModelMatrix[2]) / scale[2]);
+            glm::vec3(m_transform[0]) / scale[0],
+            glm::vec3(m_transform[1]) / scale[1],
+            glm::vec3(m_transform[2]) / scale[2]);
 
     rotation = glm::quat_cast(rotMtx);
 }
+
 void TransformComponent::serialize(nlohmann::json &j) {
     glm::vec3 t;
     glm::quat r;
@@ -39,24 +43,24 @@ void TransformComponent::serialize(nlohmann::json &j) {
     decomposeModelMatrix(t, r, s);
 
     if (m_isTranslationEnabled) {
-        j["translation"] = t;
+        j[TRANSLATION_KEY] = t;
     }
     if (m_isRotationEnabled) {
-        j["rotation"] = r;
+        j[ROTATION_KEY] = r;
     }
     if (m_isScalingEnabled) {
-        j["scale"] = s;
+        j[SCALE_KEY] = s;
     }
 }
 
 void TransformComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
-    glm::vec3 t = j.value("translation", glm::vec3(0, 0, 0));
-    glm::quat r = j.value("rotation", glm::quat(1, 0, 0, 0));
-    glm::vec3 s = j.value("scale", glm::vec3(1, 1, 1));
+    glm::vec3 t = j.value(TRANSLATION_KEY, glm::vec3(0, 0, 0));
+    glm::quat r = j.value(ROTATION_KEY, glm::quat(1, 0, 0, 0));
+    glm::vec3 s = j.value(SCALE_KEY, glm::vec3(1, 1, 1));
 
-    m_isTranslationEnabled = j.value("allowTranslation", m_isTranslationEnabled);
-    m_isRotationEnabled = j.value("allowRotation", m_isRotationEnabled);
-    m_isScalingEnabled = j.value("allowScaling", m_isScalingEnabled);
+    m_isTranslationEnabled = j.value(ALLOW_TRANSLATION_KEY, m_isTranslationEnabled);
+    m_isRotationEnabled = j.value(ALLOW_ROTATION_KEY, m_isRotationEnabled);
+    m_isScalingEnabled = j.value(ALLOW_SCALING_KEY, m_isScalingEnabled);
 
     if (m_isTranslationEnabled) {
         setTranslation(t);
@@ -71,60 +75,60 @@ void TransformComponent::deserialize(const nlohmann::json &j, ResourceManager &r
 
 void TransformComponent::setTranslation(glm::vec3 pos) {
     if (m_isTranslationEnabled) {
-        m_ModelMatrix = glm::translate(m_ModelMatrix, pos);
+        m_transform = glm::translate(m_transform, pos);
     }
 }
 
 void TransformComponent::setScale(glm::vec3 scale) {
     if (m_isScalingEnabled) {
-        m_ModelMatrix = glm::scale(m_ModelMatrix, scale);
+        m_transform = glm::scale(m_transform, scale);
     }
 }
 
 void TransformComponent::setRotation(glm::quat rotation) {
     if (m_isRotationEnabled) {
         glm::mat4 rotationMatrix = glm::mat4_cast(rotation);
-        m_ModelMatrix *= rotationMatrix;
+        m_transform *= rotationMatrix;
     }
 }
 
 void TransformComponent::resetTransform() {
-    m_ModelMatrix = glm::mat4(1.0);
+    m_transform = glm::mat4(1.0);
 }
 
 glm::mat4 &TransformComponent::getModelMatrix() {
-    return m_ModelMatrix;
+    return m_transform;
 }
 
 glm::mat4 TransformComponent::getInverseModelMatrix() const {
-    return glm::inverse(m_ModelMatrix);
+    return glm::inverse(m_transform);
 }
 
 glm::vec3 TransformComponent::getTranslation() {
-    return m_ModelMatrix[3];
+    return m_transform[3];
 }
 
 glm::vec3 TransformComponent::getScale() {
     glm::vec3 scale;
-    scale[0] = glm::length(glm::vec3(m_ModelMatrix[0]));
-    scale[1] = glm::length(glm::vec3(m_ModelMatrix[1]));
-    scale[2] = glm::length(glm::vec3(m_ModelMatrix[2]));
+    scale[0] = glm::length(glm::vec3(m_transform[0]));
+    scale[1] = glm::length(glm::vec3(m_transform[1]));
+    scale[2] = glm::length(glm::vec3(m_transform[2]));
 
     return scale;
 }
 
 glm::vec3 TransformComponent::getDirection() const {
-    glm::quat rotation = glm::quat_cast(m_ModelMatrix);
+    glm::quat rotation = glm::quat_cast(m_transform);
 
     return rotation * glm::vec3(0, 0, 1);
 }
 
 physx::PxTransform TransformComponent::getPxTransform() {
-    glm::quat rq = glm::quat_cast(m_ModelMatrix);
+    glm::quat rq = glm::quat_cast(m_transform);
 
     physx::PxQuat rotation(rq.x, rq.y, rq.z, rq.w);
 
-    physx::PxTransform transform(m_ModelMatrix[3].x, m_ModelMatrix[3].y, m_ModelMatrix[3].z, rotation);
+    physx::PxTransform transform(m_transform[3].x, m_transform[3].y, m_transform[3].z, rotation);
 
     return transform;
 }
@@ -132,23 +136,23 @@ physx::PxTransform TransformComponent::getPxTransform() {
 void TransformComponent::setFromPxTransform(physx::PxTransform transform) {
     auto rotation = physx::PxMat33(transform.q);
 
-    m_ModelMatrix[0][0] = rotation.column0[0];
-    m_ModelMatrix[0][1] = rotation.column0[1];
-    m_ModelMatrix[0][2] = rotation.column0[2];
-    m_ModelMatrix[0][3] = 0;
+    m_transform[0][0] = rotation.column0[0];
+    m_transform[0][1] = rotation.column0[1];
+    m_transform[0][2] = rotation.column0[2];
+    m_transform[0][3] = 0;
 
-    m_ModelMatrix[1][0] = rotation.column1[0];
-    m_ModelMatrix[1][1] = rotation.column1[1];
-    m_ModelMatrix[1][2] = rotation.column1[2];
-    m_ModelMatrix[1][3] = 0;
+    m_transform[1][0] = rotation.column1[0];
+    m_transform[1][1] = rotation.column1[1];
+    m_transform[1][2] = rotation.column1[2];
+    m_transform[1][3] = 0;
 
-    m_ModelMatrix[2][0] = rotation.column2[0];
-    m_ModelMatrix[2][1] = rotation.column2[1];
-    m_ModelMatrix[2][2] = rotation.column2[2];
-    m_ModelMatrix[2][3] = 0;
+    m_transform[2][0] = rotation.column2[0];
+    m_transform[2][1] = rotation.column2[1];
+    m_transform[2][2] = rotation.column2[2];
+    m_transform[2][3] = 0;
 
-    m_ModelMatrix[3][0] = transform.p[0];
-    m_ModelMatrix[3][1] = transform.p[1];
-    m_ModelMatrix[3][2] = transform.p[2];
-    m_ModelMatrix[3][3] = 1;
+    m_transform[3][0] = transform.p[0];
+    m_transform[3][1] = transform.p[1];
+    m_transform[3][2] = transform.p[2];
+    m_transform[3][3] = 1;
 }

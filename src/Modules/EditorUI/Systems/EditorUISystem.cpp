@@ -59,7 +59,7 @@ void EditorUISystem::process() {
                              glm::value_ptr(camera->projectionMatrix),
                              (ImGuizmo::OPERATION) m_MainToolbarUI.m_currentGizmoOperation,
                              (ImGuizmo::MODE) m_MainToolbarUI.m_currentGizmoMode,
-                             glm::value_ptr(transform->m_ModelMatrix),
+                             glm::value_ptr(transform->m_transform),
                              nullptr,
                              nullptr,
                              m_EditWindowUI.m_isBoundsTransformAllowed ? bounds : nullptr

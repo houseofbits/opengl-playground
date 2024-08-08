@@ -215,7 +215,7 @@
             "radius": 0.30000001192092896
         },
         "mesh": {
-            "material": "data/materials/light-column.json",
+            "material": "data/materials/character.json",
             "model": "data/models/character-capsule.gltf",
             "renderer": "SOLID"
         },

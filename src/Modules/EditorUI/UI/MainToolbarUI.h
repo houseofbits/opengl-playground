@@ -14,10 +14,12 @@ public:
     long m_currentGizmoMode;
     int m_renderShaderType;
     bool m_isSimulationEnabled;
+    int m_selectedCameraComponentId;
 
 private:
     void processTransformTypeDropdown(TransformComponent *transform);
     void processTransformSpaceDropdown();
+    void processViewMenu();
     void sendUIEvent(EditorUIEvent::Type type);
     void sendSaveEvent();
     void sendEditorStateEvent();

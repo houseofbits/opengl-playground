@@ -2,6 +2,8 @@
 
 #include "../../../Core/API.h"
 #include "../../EditorUI/Events/EditorUIEvent.h"
+#include "../../Renderer/Components/CameraComponent.h"
+#include "../Components/CharacterControllerComponent.h"
 #include <PhysX/PxPhysics.h>
 #include <PhysX/PxPhysicsAPI.h>
 
@@ -17,6 +19,7 @@ public:
     void buildRigidBodies();
     void buildCCTs();
     void resetToInitialTransform();
+    void processCCTInput(CameraComponent* camera, CharacterControllerComponent* cct, InputEvent *event);
 
     physx::PxFoundation* m_pxFoundation;
     physx::PxPhysics* m_pxPhysics;

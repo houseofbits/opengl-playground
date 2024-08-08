@@ -11,8 +11,7 @@ public:
     };
 
     Identity() {
-        m_id = 0;
-        m_Subject = UNDEFINED;
+        reset();
     }
 
     Identity(Identity &id) {
@@ -60,6 +59,11 @@ public:
 
     bool isUndefined() {
         return m_Subject == UNDEFINED || m_id == 0;
+    }
+
+    void reset() {
+        m_id = 0;
+        m_Subject = UNDEFINED;
     }
 
 private:

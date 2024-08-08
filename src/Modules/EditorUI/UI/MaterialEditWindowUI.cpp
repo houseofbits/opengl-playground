@@ -10,6 +10,9 @@
 MaterialEditWindowUI::MaterialEditWindowUI(EditorUISystem *editor) : m_EditorUISystem(editor),
                                                                      m_material(),
                                                                      m_texturePaths() {
+    m_texturePaths["DiffuseTexturePicker"] = "";
+    m_texturePaths["NormalsTexturePicker"] = "";
+    m_texturePaths["RoughnessTexturePicker"] = "";
 }
 
 void MaterialEditWindowUI::process() {

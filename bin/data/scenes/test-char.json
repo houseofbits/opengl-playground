@@ -1,0 +1,146 @@
+[
+    {
+        "camera": {
+            "isActive": true,
+            "position": [
+                -0.9593098759651184,
+                2.0678420066833496,
+                -8.356782913208008
+            ],
+            "upDirection": [
+                -0.10650941729545593,
+                0.9373465776443481,
+                0.33171871304512024
+            ],
+            "viewDirection": [
+                -0.28655752539634705,
+                -0.3483985662460327,
+                0.8924703598022461
+            ]
+        },
+        "name": "main-camera",
+        "type": "Camera"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-wall.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "floor",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                10.0,
+                0.5,
+                10.0
+            ],
+            "translation": [
+                -5.045999526977539,
+                -0.25,
+                -5.0
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "light": {
+            "attenuation": 17.299989700317383,
+            "castShadows": true,
+            "color": [
+                1.0,
+                0.9752018451690674,
+                0.7892156839370728
+            ],
+            "intensity": 0.49999991059303284,
+            "isEnabled": true,
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 1024,
+            "type": "OMNI"
+        },
+        "name": "omni light",
+        "transform": {
+            "translation": [
+                -5.201831817626953,
+                9.306157112121582,
+                -4.703933238983154
+            ]
+        },
+        "type": "OmniLight"
+    },
+    {
+        "name": "Sky box",
+        "sky": {
+            "cubeMap": "resources/textures/sky2/*.png"
+        },
+        "type": "Sky"
+    },
+    {
+        "light": {
+            "attenuation": 10.0,
+            "castShadows": true,
+            "color": [
+                0.6176470518112183,
+                0.7750865817070007,
+                1.0
+            ],
+            "intensity": 0.49999991059303284,
+            "isEnabled": true,
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "name": "omni-ambient",
+        "transform": {
+            "translation": [
+                -5.438762187957764,
+                3.723975658416748,
+                -8.688417434692383
+            ]
+        },
+        "type": "OmniLight"
+    },
+    {
+        "camera": {
+            "isActive": false,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "upDirection": [
+                0.0,
+                1.0,
+                -0.0
+            ],
+            "viewDirection": [
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "cct": {
+            "height": 1.75,
+            "radius": 0.30000001192092896
+        },
+        "mesh": {
+            "material": "data/materials/character.json",
+            "model": "data/models/character-capsule.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "Main-CCT",
+        "transform": {
+            "translation": [
+                -1.5189054012298584,
+                0.3196353018283844,
+                -5.928508758544922
+            ]
+        },
+        "type": "CharacterController"
+    }
+]

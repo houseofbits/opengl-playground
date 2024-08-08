@@ -1,6 +1,8 @@
 #include "PhysicsSystem.h"
 #include "../../../Helper/Time.h"
+#include "../../../Helper/Types.h"
 #include "../../Common/Components/TransformComponent.h"
+#include "../../Renderer/Components/CameraComponent.h"
 #include "../Components/CharacterControllerComponent.h"
 #include "../Components/RigidBodyComponent.h"
 
@@ -19,6 +21,7 @@ PhysicsSystem::PhysicsSystem() : EntitySystem(),
                                  m_ControllerManager(nullptr) {
     usesComponent<RigidBodyComponent>();
     usesComponent<TransformComponent>();
+    usesComponent<CameraComponent>();
     usesComponent<CharacterControllerComponent>();
 }
 
@@ -100,6 +103,11 @@ void PhysicsSystem::process() {
             } else {
                 transform->resetTransform();
                 transform->setTranslation(component.second->getPhysicsPosition());
+
+                auto *cameraComp = getComponent<CameraComponent>(component.first);
+                if (cameraComp && cameraComp->m_isActive) {
+                    cameraComp->m_Camera.setPosition(transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
+                }
             }
         }
     }
@@ -167,36 +175,11 @@ bool PhysicsSystem::handleEditorUIEvent(EditorUIEvent *event) {
 }
 
 bool PhysicsSystem::handleInputEvent(InputEvent *event) {
-    bool doMove = false;
-    PxVec3 direction(0);
-
-    //Up
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 82) {
-        direction = direction + PxVec3(1, 0, 0);
-        doMove = true;
-    }
-    //Down
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 81) {
-        direction = direction + PxVec3(-1, 0, 0);
-        doMove = true;
-    }
-    //Left
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 80) {
-        direction = direction + PxVec3(0, 0, 1);
-        doMove = true;
-    }
-    //Right
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 79) {
-        direction = direction + PxVec3(0, 0, -1);
-        doMove = true;
-    }
-
-    if (doMove && !getComponentContainer<CharacterControllerComponent>().empty()) {
-        direction.normalize();
-        direction = direction * 0.1;
-
-        auto cct = getComponentContainer<CharacterControllerComponent>().begin()->second;
-        cct->m_CCTController->move(direction, 0, Time::frameTime, filters);
+    for (const auto comp: getComponentContainer<CharacterControllerComponent>()) {
+        auto *cameraComp = getComponent<CameraComponent>(comp.first);
+        if (cameraComp && cameraComp->m_isActive) {
+            processCCTInput(cameraComp, comp.second, event);
+        }
     }
 
     return true;
@@ -220,5 +203,45 @@ void PhysicsSystem::resetToInitialTransform() {
             transform->setTranslation(component.second->m_initialPosition);
             component.second->setPhysicsPosition(component.second->m_initialPosition);
         }
+    }
+}
+
+void PhysicsSystem::processCCTInput(CameraComponent *camera, CharacterControllerComponent *cct, InputEvent *event) {
+
+    glm::vec3 dir = camera->m_Camera.getViewDirection();
+    dir.y = 0;
+    dir = glm::normalize(dir);
+
+    glm::vec3 right = glm::normalize(glm::cross(dir, glm::vec3(0, 1, 0)));
+
+    bool doMove = false;
+    PxVec3 direction(0);
+
+    //Up
+    if (event->type == InputEvent::KEYPRESS && event->keyCode == 82) {
+        direction = direction + Types::GLMtoPX(dir);
+        doMove = true;
+    }
+    //Down
+    if (event->type == InputEvent::KEYPRESS && event->keyCode == 81) {
+        direction = direction - Types::GLMtoPX(dir);
+        doMove = true;
+    }
+    //Left
+    if (event->type == InputEvent::KEYPRESS && event->keyCode == 80) {
+        direction = direction - Types::GLMtoPX(right);
+        doMove = true;
+    }
+    //Right
+    if (event->type == InputEvent::KEYPRESS && event->keyCode == 79) {
+        direction = direction + Types::GLMtoPX(right);
+        doMove = true;
+    }
+
+    if (doMove) {
+        direction.normalize();
+        direction = direction * 0.1;
+
+        cct->m_CCTController->move(direction, 0, Time::frameTime, filters);
     }
 }

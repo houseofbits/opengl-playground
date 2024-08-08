@@ -27,7 +27,7 @@ private:
 public:
     EntityContext();
 
-    std::list<std::shared_ptr<Entity>>& getAllEntities() {
+    std::list<std::shared_ptr<Entity>> &getAllEntities() {
         return m_Entities;
     }
 
@@ -77,7 +77,7 @@ public:
 
     template<class T>
     bool doesEntityHaveComponent(Identity::Type id) {
-        auto* e = getEntity(id);
+        auto *e = getEntity(id);
         if (e != nullptr) {
             auto *c = e->getComponent<T>();
 
@@ -87,7 +87,18 @@ public:
         return false;
     }
 
-    Entity* getEntity(Identity::Type id);
+    template<class T>
+    T *findEntityComponent(const std::string &entityName) {
+        auto *e = findEntity(entityName);
+        if (e) {
+            return e->getComponent<T>();
+        }
+
+        return nullptr;
+    }
+
+    Entity *getEntity(Identity::Type id);
+    Entity *findEntity(const std::string &name);
     void unregisterComponentFromSystems(Component *);
     void deserializeEntityMap(nlohmann::json &j);
     std::shared_ptr<Entity> createEntity(const std::string &configurationName, ResourceManager &);
@@ -95,6 +106,6 @@ public:
     void deserializeEntities(nlohmann::json &j, ResourceManager &);
     void serializeEntities(nlohmann::json &j);
     void registerEntitiesWithSystems();
-    void initializeSystems(ResourceManager*, EventManager *eventManager);
+    void initializeSystems(ResourceManager *, EventManager *eventManager);
     void processSystems();
 };

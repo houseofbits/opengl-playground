@@ -1,9 +1,8 @@
+#include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
-#include "../../../SourceLibs/imgui/ImGuizmo.h" //Note: Order dependent include. Should be after ImGui
-#include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
-
+#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../Systems/EditorUISystem.h"
 #include "MainToolbarUI.h"
 
@@ -13,13 +12,14 @@ MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
                                                        m_isSimulationEnabled(true),
                                                        m_renderShaderType(0),
                                                        m_currentGizmoOperation(ImGuizmo::TRANSLATE),
-                                                       m_currentGizmoMode(ImGuizmo::WORLD) {
+                                                       m_currentGizmoMode(ImGuizmo::WORLD),
+                                                       m_selectedCameraComponentId(0) {
 }
 
 void MainToolbarUI::process() {
 
     if (ImGui::BeginMainMenuBar()) {
-        if (ImGui::BeginMenu("File")) {
+        if (ImGui::BeginMenu("Main")) {
             if (ImGui::MenuItem("Save")) {
                 sendSaveEvent();
             }
@@ -36,24 +36,13 @@ void MainToolbarUI::process() {
                 sendUIEvent(EditorUIEvent::RESET_TO_INITIAL_TRANSFORM);
             }
             ImGui::Separator();
-            if (ImGui::MenuItem("View shaded", nullptr, m_renderShaderType == 0)) {
-                sendUIEvent(EditorUIEvent::TOGGLE_RENDER_SHADED);
-                m_renderShaderType = 0;
-            }
-            if (ImGui::MenuItem("View probes", nullptr, m_renderShaderType == 1)) {
-                sendUIEvent(EditorUIEvent::TOGGLE_RENDER_PROBES);
-                m_renderShaderType = 1;
-            }
-            if (ImGui::MenuItem("View reflections", nullptr, m_renderShaderType == 2)) {
-                sendUIEvent(EditorUIEvent::TOGGLE_RENDER_REFLECTIONS);
-                m_renderShaderType = 2;
-            }
-            ImGui::Separator();
             if (ImGui::MenuItem("Update probes")) {
                 sendUIEvent(EditorUIEvent::TRIGGER_PROBE_RENDER);
             }
             ImGui::EndMenu();
         }
+
+        processViewMenu();
 
         auto *transform = m_EditorUISystem->getSelectedTransformComponent();
         if (transform != nullptr) {
@@ -109,12 +98,12 @@ void MainToolbarUI::processTransformTypeDropdown(TransformComponent *transform) 
                 selected_transform_type_label = "Scale";
             }
         }
-//        if (transform->m_isScalingEnabled) {
-//            if (ImGui::Selectable("Universal", m_currentGizmoOperation == ImGuizmo::SCALEU)) {
-//                m_currentGizmoOperation = ImGuizmo::SCALEU;
-//                selected_transform_type_label = "Universal";
-//            }
-//        }
+        //        if (transform->m_isScalingEnabled) {
+        //            if (ImGui::Selectable("Universal", m_currentGizmoOperation == ImGuizmo::SCALEU)) {
+        //                m_currentGizmoOperation = ImGuizmo::SCALEU;
+        //                selected_transform_type_label = "Universal";
+        //            }
+        //        }
         ImGui::EndCombo();
     }
 }
@@ -135,4 +124,41 @@ void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) {
     auto evt = new EditorUIEvent();
     evt->m_Type = type;
     m_EditorUISystem->m_EventManager->queueEvent(evt);
+}
+
+void MainToolbarUI::processViewMenu() {
+    for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
+        if (comp.second->m_isActive) {
+            m_selectedCameraComponentId = (int)comp.first;
+        }
+    }
+
+    if (ImGui::BeginMenu("View")) {
+        if (ImGui::MenuItem("View shaded", nullptr, m_renderShaderType == 0)) {
+            sendUIEvent(EditorUIEvent::TOGGLE_RENDER_SHADED);
+            m_renderShaderType = 0;
+        }
+        if (ImGui::MenuItem("View probes", nullptr, m_renderShaderType == 1)) {
+            sendUIEvent(EditorUIEvent::TOGGLE_RENDER_PROBES);
+            m_renderShaderType = 1;
+        }
+        if (ImGui::MenuItem("View reflections", nullptr, m_renderShaderType == 2)) {
+            sendUIEvent(EditorUIEvent::TOGGLE_RENDER_REFLECTIONS);
+            m_renderShaderType = 2;
+        }
+        ImGui::SeparatorText("Cameras");
+
+        for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
+            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(comp.first);
+            if (ImGui::MenuItem(e->getListName().c_str(), nullptr, comp.second->m_isActive)) {
+                m_selectedCameraComponentId = (int) comp.first;
+            }
+        }
+
+        ImGui::EndMenu();
+    }
+
+    for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
+        comp.second->m_isActive = m_selectedCameraComponentId == comp.first;
+    }
 }

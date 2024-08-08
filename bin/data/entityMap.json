@@ -121,6 +121,9 @@
             },
             "cct": {
                 "class": "CharacterControllerComponent"
+            },
+            "camera": {
+                "class": "CameraComponent"
             }
         }
     }

@@ -13,6 +13,7 @@ public:
         j["position"] = m_Camera.getPosition();
         j["viewDirection"] = m_Camera.getViewDirection();
         j["upDirection"] = m_Camera.getUpDirection();
+        j["isActive"] = m_isActive;
     }
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override {
@@ -25,7 +26,7 @@ public:
                 .setViewportSize(1024, 768)
                 .setFieldOfView(90);
 
-        m_isActive = true;
+        m_isActive = j.value("isActive", false);
     }
 
     void registerWithSystems(EntityContext &ctx) override;

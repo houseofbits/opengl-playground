@@ -3,16 +3,23 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "../../../Core/API.h"
+#include <PhysX/PxPhysics.h>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
-#include <PhysX/PxPhysics.h>
 
 class TransformComponent : public Component {
     TYPE_DEFINITION(TransformComponent);
 
 public:
+    inline static const std::string TRANSLATION_KEY = "translation";
+    inline static const std::string ROTATION_KEY = "rotation";
+    inline static const std::string SCALE_KEY = "scale";
+    inline static const std::string ALLOW_TRANSLATION_KEY = "allowTranslation";
+    inline static const std::string ALLOW_ROTATION_KEY = "allowRotation";
+    inline static const std::string ALLOW_SCALING_KEY = "allowScaling";
+
     TransformComponent();
 
     void serialize(nlohmann::json &j) override;
@@ -31,9 +38,8 @@ public:
     physx::PxTransform getPxTransform();
     void setFromPxTransform(physx::PxTransform);
 
-    bool m_isTranslationEnabled = true;
-    bool m_isRotationEnabled = true;
-    bool m_isScalingEnabled = true;
-
-    glm::mat4 m_ModelMatrix;
+    bool m_isTranslationEnabled;
+    bool m_isRotationEnabled;
+    bool m_isScalingEnabled;
+    glm::mat4 m_transform;
 };

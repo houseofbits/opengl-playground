@@ -102,3 +102,12 @@ Entity *EntityContext::getEntity(Identity::Type id) {
     }
     return nullptr;
 }
+
+Entity *EntityContext::findEntity(const std::string& name) {
+    for (const auto &e: m_Entities) {
+        if (e->m_Name == name) {
+            return e.get();
+        }
+    }
+    return nullptr;
+}
