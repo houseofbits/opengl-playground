@@ -42,8 +42,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Components/EnvironmentProbeComponent.h
         src/Core/Application/Application.cpp
         src/Core/Application/Application.h
-        src/Modules/Renderer/Components/CameraComponent.cpp
-        src/Modules/Renderer/Components/CameraComponent.h
+        src/Modules/Common/Components/CameraComponent.cpp
+        src/Modules/Common/Components/CameraComponent.h
         src/Core/Json/Json.cpp
         src/Core/Json/Json.h
         src/Core/Json/Json.cpp
@@ -61,8 +61,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Resources/TextureResource.h
         src/Modules/Renderer/Resources/StaticMeshResource.cpp
         src/Modules/Renderer/Resources/StaticMeshResource.h
-        src/Modules/Renderer/Systems/CameraControlSystem.cpp
-        src/Modules/Renderer/Systems/CameraControlSystem.h
+        src/Modules/Common/Systems/CameraControlSystem.cpp
+        src/Modules/Common/Systems/CameraControlSystem.h
         src/Modules/Renderer/Buffers/LightStorageBuffer.h
         src/Modules/Renderer/Buffers/LightStorageBuffer.cpp
         src/Modules/Renderer/Resources/ShaderResource.cpp
@@ -109,6 +109,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Components/CharacterControllerComponent.cpp
         src/Modules/Physics/Components/CharacterControllerComponent.h
         src/Helper/Types.h
+        src/Modules/Physics/Components/PhysicsMeshComponent.cpp
+        src/Modules/Physics/Components/PhysicsMeshComponent.h
 )
 
 

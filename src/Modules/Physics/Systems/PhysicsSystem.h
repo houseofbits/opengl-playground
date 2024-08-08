@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../../../Core/API.h"
+#include "../../Common/Components/CameraComponent.h"
 #include "../../EditorUI/Events/EditorUIEvent.h"
-#include "../../Renderer/Components/CameraComponent.h"
 #include "../Components/CharacterControllerComponent.h"
 #include <PhysX/PxPhysics.h>
 #include <PhysX/PxPhysicsAPI.h>

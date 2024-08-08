@@ -1,8 +1,8 @@
 #include "PhysicsSystem.h"
 #include "../../../Helper/Time.h"
 #include "../../../Helper/Types.h"
+#include "../../Common/Components/CameraComponent.h"
 #include "../../Common/Components/TransformComponent.h"
-#include "../../Renderer/Components/CameraComponent.h"
 #include "../Components/CharacterControllerComponent.h"
 #include "../Components/RigidBodyComponent.h"
 

@@ -1,5 +1,5 @@
 #include "EnvironmentProbeRenderSystem.h"
-#include "../Components/CameraComponent.h"
+#include "../../Common/Components/CameraComponent.h"
 #include "../Components/EnvironmentProbeComponent.h"
 #include "../Components/LightComponent.h"
 #include "../Components/StaticMeshComponent.h"

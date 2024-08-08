@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../../SourceLibs/imgui/imgui.h"
-#include "../../../Renderer/Components/CameraComponent.h"
+#include "../../../Common/Components/CameraComponent.h"
 #include "../FileDialogHelper.h"
 #include "../TextPromptHelper.h"
 #include "BaseComponentEdit.h"

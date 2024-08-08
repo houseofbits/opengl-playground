@@ -1,5 +1,5 @@
 #include "MainRenderSystem.h"
-#include "../Components/CameraComponent.h"
+#include "../../Common/Components/CameraComponent.h"
 #include "../Components/SkyComponent.h"
 #include "../Components/StaticMeshComponent.h"
 #include <GL/glew.h>
