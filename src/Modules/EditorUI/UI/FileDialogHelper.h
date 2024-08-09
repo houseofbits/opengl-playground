@@ -1,7 +1,5 @@
 #pragma once
-#include "../../../Helper/StringUtils.h"
-
-
+#include "../../../Core/Helper/StringUtils.h"
 #include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"

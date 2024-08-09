@@ -1,5 +1,5 @@
 #include "EntityContext.h"
-#include "../../Helper/Log.h"
+#include "../../Core/Helper/Log.h"
 #include "../Module/EntityModule.h"
 #include "../System/EntitySystem.h"
 #include "EntitySerializer.h"

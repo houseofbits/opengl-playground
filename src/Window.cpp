@@ -1,9 +1,9 @@
 
 #include "Core/Events/InputEvent.h"
 #include "Core/Events/RawSDLEvent.h"
-#include "Helper/Time.h"
+#include "Core/Helper/Time.h"
 #include "Include.h"
-#include "Helper/GLDebugMessageCallback.h"
+#include "Core/Helper/GLDebugMessageCallback.h"
 #include <GL/glew.h>
 #include <iostream>
 

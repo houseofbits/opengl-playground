@@ -1,5 +1,5 @@
 #include "LightsBufferResource.h"
-#include "../../../Helper/ShaderSourceLoader.h"
+#include "../../../Core/Helper/ShaderSourceLoader.h"
 
 const glm::vec3 CUBE_DIRECTIONS[] = {
         glm::vec3(1, 0, 0),

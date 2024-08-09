@@ -1,6 +1,6 @@
 #include "PhysicsSystem.h"
-#include "../../../Helper/Time.h"
-#include "../../../Helper/Types.h"
+#include "../../../Core/Helper/Time.h"
+#include "../../../Core/Helper/Types.h"
 #include "../../Common/Components/CameraComponent.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../Components/CharacterControllerComponent.h"

@@ -1,5 +1,5 @@
 #include "ShaderProgramResource.h"
-#include "../../../Helper/StringUtils.h"
+#include "../../../Core/Helper/StringUtils.h"
 #include <GL/glew.h>
 #include <sstream>
 #include <vector>

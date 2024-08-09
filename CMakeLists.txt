@@ -9,13 +9,9 @@ file(GLOB_RECURSE sources src/*.cpp src/*.h)
 add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Texture/TextureCube.cpp
         src/Renderer/Texture/TextureCube.h
-        src/Helper/StringUtils.h
+        src/Core/Helper/StringUtils.h
         src/Renderer/Texture/TextureCubeRenderTarget.cpp
         src/Renderer/Texture/TextureCubeRenderTarget.h
-        src/Renderer/Common/ProjectionView.cpp
-        src/Renderer/Common/ProjectionView.h
-        src/Renderer/Camera/CameraController.cpp
-        src/Renderer/Camera/CameraController.h
         src/Renderer/Shader/ShaderStorageBuffer.h
         src/Core/Entity/Entity.h
         src/Core/Reflection/Factory.h
@@ -69,7 +65,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Resources/ShaderResource.h
         src/Modules/Renderer/Resources/ShaderProgramResource.cpp
         src/Modules/Renderer/Resources/ShaderProgramResource.h
-        src/Helper/StringUtils.cpp
+        src/Core/Helper/StringUtils.cpp
         src/Modules/EditorUI/EditorUIModule.h
         src/Modules/EditorUI/Systems/EditorUISystem.cpp
         src/Modules/EditorUI/Systems/EditorUISystem.h
@@ -108,9 +104,11 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/EditorUI/UI/ComponentEdit/TransformComponentEdit.h
         src/Modules/Physics/Components/CharacterControllerComponent.cpp
         src/Modules/Physics/Components/CharacterControllerComponent.h
-        src/Helper/Types.h
+        src/Core/Helper/Types.h
         src/Modules/Physics/Components/PhysicsMeshComponent.cpp
         src/Modules/Physics/Components/PhysicsMeshComponent.h
+        src/Modules/Physics/Resources/PhysicsMeshResource.cpp
+        src/Modules/Physics/Resources/PhysicsMeshResource.h
 )
 
 

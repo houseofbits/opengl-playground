@@ -1,7 +1,7 @@
 #include "Shader.h"
-#include "../../Helper/Console.h"
-#include "../../Helper/Log.h"
-#include "../../Helper/ShaderSourceLoader.h"
+#include "../../Core/Helper/Console.h"
+#include "../../Core/Helper/Log.h"
+#include "../../Core/Helper/ShaderSourceLoader.h"
 #include <GL/glew.h>
 #include <fstream>
 #include <iostream>

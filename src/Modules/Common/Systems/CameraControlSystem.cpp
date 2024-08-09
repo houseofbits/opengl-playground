@@ -1,7 +1,7 @@
 #include "CameraControlSystem.h"
 #include "../../../Core/Events/InputEvent.h"
 #include "../../../Core/Events/WindowEvent.h"
-#include "../../../Helper/Time.h"
+#include "../../../Core/Helper/Time.h"
 
 CameraControlSystem::CameraControlSystem() : m_isEnabled(false) {
     usesComponent<CameraComponent>();

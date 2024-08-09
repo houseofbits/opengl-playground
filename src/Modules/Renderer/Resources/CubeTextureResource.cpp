@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
 #include "../../../../libs/tinygltf/stb_image.h"
-#include "../../../Helper/StringUtils.h"
+#include "../../../Core/Helper/StringUtils.h"
 
 CubeTextureResource::CubeTextureResource() : Resource(), m_textureId(), m_handleId(), m_width(0), m_height(0), m_data() {
 }

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../../Helper/Log.h"
+#include "../../Core/Helper/Log.h"
+#include "../Reflection/Type.h"
 #include "Resource.h"
 #include <algorithm>
 #include <atomic>
@@ -37,6 +38,17 @@ public:
         return nullptr;
     }
 
+    template<class T>
+    [[nodiscard]] Resource *findResourceOfType(const std::string &path) const {
+        for (auto resource: m_Resources) {
+            if (resource->m_Path == path && isOfType<T>(resource)) {
+                return resource;
+            }
+        }
+
+        return nullptr;
+    }
+
     /**
      * @tparam T Instance of ResourceHandle
      * @param hand Resource handle
@@ -49,7 +61,7 @@ public:
             return;
         }
 
-        Resource *resource = findResource(path);
+        Resource *resource = findResourceOfType<typename T::TYPE>(path);
         if (resource == nullptr) {
             //            Log::info("Fetch resource: " + path);
             resource = new typename T::TYPE();

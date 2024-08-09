@@ -46,6 +46,9 @@
                 -5.0
             ]
         },
+        "physicsMesh": {
+            "model": "data/models/triangle.gltf"
+        },
         "type": "StaticMesh"
     },
     {
