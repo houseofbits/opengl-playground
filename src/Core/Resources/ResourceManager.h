@@ -106,11 +106,12 @@ public:
     }
 
     void fetchProcess() {
-        const auto wait_duration = std::chrono::milliseconds(100);
+        const auto timestep = std::chrono::milliseconds(1000);
         while (true) {
             if (!m_FetchProcessRunning) {
                 return;
             }
+            auto start = std::chrono::steady_clock::now();
             for (const auto &resource: m_Resources) {
                 if (resource->m_Status == Resource::STATUS_DATA_FETCHING) {
                     if (areDependenciesReady(resource)) {
@@ -125,7 +126,11 @@ public:
                 }
             }
 
-            std::this_thread::sleep_for(wait_duration);
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(clock_t::now() - start).count();
+
+            if (elapsed < timestep) {
+                std::this_thread::sleep_for(timestep - elapsed);
+            }
         }
     }
 
