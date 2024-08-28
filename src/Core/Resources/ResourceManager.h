@@ -5,6 +5,8 @@
 #include "Resource.h"
 #include <algorithm>
 #include <atomic>
+#include <cstdio>
+#include <ctime>
 #include <list>
 #include <thread>
 #include <utility>
@@ -63,26 +65,25 @@ public:
 
         Resource *resource = findResourceOfType<typename T::TYPE>(path);
         if (resource == nullptr) {
-            //            Log::info("Fetch resource: " + path);
             resource = new typename T::TYPE();
             resource->m_Path = std::move(path);
             resource->m_Status = Resource::STATUS_DATA_FETCHING;
-            resource->m_Dependencies = std::move(dependencies);
-
+            if (!dependencies.empty()) {
+                resource->m_Dependencies.insert(resource->m_Dependencies.end(), dependencies.begin(), dependencies.end());
+            }
             m_Resources.push_back(resource);
         } else {
-            if (dependencies != resource->m_Dependencies) {
+            if (dependencies.size() > resource->m_Dependencies.size()) {
                 Log::warn("Mismatch in dependency list for: " + path);
                 return;
             }
-            //            Log::info("Get resource: " + path);
         }
 
         hand.makeValid(this, reinterpret_cast<typename T::TYPE *>(resource));
     }
 
     void remove(Resource *resource) {
-//        std::cout<<"remove "<<resource->m_Path<<std::endl;
+        //        std::cout<<"remove "<<resource->m_Path<<std::endl;
         //TODO: Add to list of removable entities and process at some other point
         m_Resources.remove(resource);
         resource->destroy();
@@ -106,7 +107,7 @@ public:
     }
 
     void fetchProcess() {
-        const auto timestep = std::chrono::milliseconds(1000);
+        //        const auto timestep = std::chrono::milliseconds(100);
         while (true) {
             if (!m_FetchProcessRunning) {
                 return;
@@ -126,11 +127,12 @@ public:
                 }
             }
 
-            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(clock_t::now() - start).count();
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
 
-            if (elapsed < timestep) {
-                std::this_thread::sleep_for(timestep - elapsed);
+            if (elapsed < 100) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100 - elapsed));
             }
+            //            std::this_thread::sleep_for(timestep);
         }
     }
 

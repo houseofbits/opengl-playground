@@ -4,6 +4,7 @@
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
+#include "../../Physics/Components/PhysicsMeshComponent.h"
 #include "../../Physics/Components/RigidBodyComponent.h"
 #include "../UI/TexturePreviewHelper.h"
 #include <glm/gtc/type_ptr.hpp>
@@ -22,6 +23,7 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
     usesComponent<EnvironmentProbeComponent>();
     usesComponent<RigidBodyComponent>();
     usesComponent<CharacterControllerComponent>();
+    usesComponent<PhysicsMeshComponent>();
 }
 
 void EditorUISystem::process() {

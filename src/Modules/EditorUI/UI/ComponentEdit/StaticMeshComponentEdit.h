@@ -27,7 +27,7 @@ public:
             return;
         }
 
-        ImGui::SeparatorText("Mesh");
+        ImGui::SeparatorText("Render mesh");
 
         if (ImGui::BeginCombo("Render##RENDER_TYPE", mesh->m_TargetRenderNameMap[mesh->m_targetRenderer].c_str())) {
             for (const auto &renderType: mesh->m_TargetRenderNameMap) {

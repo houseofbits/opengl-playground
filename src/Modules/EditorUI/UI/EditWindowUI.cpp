@@ -7,12 +7,14 @@
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
+#include "../../Physics/Components/PhysicsMeshComponent.h"
 #include "../../Physics/Components/RigidBodyComponent.h"
 #include "../Systems/EditorUISystem.h"
 #include "ComponentEdit/CameraComponentEdit.h"
 #include "ComponentEdit/CharacterControllerComponentEdit.h"
 #include "ComponentEdit/EnvironmentProbeComponentEdit.h"
 #include "ComponentEdit/LightComponentEdit.h"
+#include "ComponentEdit/PhysicsMeshComponentEdit.h"
 #include "ComponentEdit/RigidBodyComponentEdit.h"
 #include "ComponentEdit/StaticMeshComponentEdit.h"
 #include "ComponentEdit/TransformComponentEdit.h"
@@ -46,6 +48,7 @@ EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
     m_componentEditors[EnvironmentProbeComponent::TypeName()] = new EnvironmentProbeComponentEdit(editor);
     m_componentEditors[RigidBodyComponent::TypeName()] = new RigidBodyComponentEdit(editor);
     m_componentEditors[CharacterControllerComponent::TypeName()] = new CharacterControllerComponentEdit(editor);
+    m_componentEditors[PhysicsMeshComponent::TypeName()] = new PhysicsMeshComponentEdit(editor);
 }
 
 void EditWindowUI::process() {

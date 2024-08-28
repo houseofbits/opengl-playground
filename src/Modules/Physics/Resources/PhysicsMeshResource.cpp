@@ -2,11 +2,19 @@
 #include "../../../../libs/tinygltf/tiny_gltf.h"
 #include "foundation/PxSimpleTypes.h"
 #include "foundation/PxVec3.h"
+#include <PhysX/PxPhysics.h>
 
-PhysicsMeshResource::PhysicsMeshResource() : Resource(), m_pxTriangleMeshDescriptor() {
+PhysicsMeshResource::PhysicsMeshResource() : Resource(),
+                                             m_vertices(nullptr),
+                                             m_indices(nullptr),
+                                             m_numIndices(),
+                                             m_numVertices() {
 }
 
-Resource::Status PhysicsMeshResource::fetchData(ResourceManager &) {
+Resource::Status PhysicsMeshResource::fetchData(ResourceManager &resourceManager) {
+    addDependency("physics");
+    resourceManager.request(m_PhysicsResource, "physics");
+
     tinygltf::Model model;
     tinygltf::TinyGLTF loader;
     std::string err;
@@ -38,28 +46,34 @@ Resource::Status PhysicsMeshResource::fetchData(ResourceManager &) {
                 if (primitive.indices < 0 || primitive.mode != TINYGLTF_MODE_TRIANGLES) {
                     continue;
                 }
-
                 tinygltf::Accessor indexAccessor = model.accessors[primitive.indices];
-
-                physx::PxU32 *indices = nullptr;
-                physx::PxVec3 *vertices = nullptr;
-                int numIndices = (int) indexAccessor.count;
-                int numVertices = 0;
+                m_numIndices = (int) indexAccessor.count;
+                m_indices = new physx::PxU32[m_numIndices];
 
                 const tinygltf::BufferView &bufferView = model.bufferViews[indexAccessor.bufferView];
-                indices = (physx::PxU32 *) (&model.buffers[bufferView.buffer].data.at(0) + bufferView.byteOffset);
+                auto idx = (short *) (&model.buffers[bufferView.buffer].data.at(0) + bufferView.byteOffset);
+                for (int i = 0; i < m_numIndices; ++i) {
+                    m_indices[i] = (int) idx[i];
+                }
 
                 for (auto &attrib: primitive.attributes) {
                     if (attrib.first == "POSITION") {
                         tinygltf::Accessor vertexAccessor = model.accessors[attrib.second];
+                        m_numVertices = (int) vertexAccessor.count;
+                        m_vertices = new physx::PxVec3[m_numVertices];
+
                         const tinygltf::BufferView &vertexBufferView = model.bufferViews[vertexAccessor.bufferView];
-                        vertices = (physx::PxVec3 *) (&model.buffers[vertexBufferView.buffer].data.at(0) + vertexBufferView.byteOffset);
-                        numVertices = (int) vertexAccessor.count;
+                        auto vts = (physx::PxVec3 *) (&model.buffers[vertexBufferView.buffer].data.at(0) + vertexAccessor.byteOffset + vertexBufferView.byteOffset);
+
+                        for (int i = 0; i < m_numVertices; ++i) {
+                            m_vertices[i] = vts[i];
+                        }
+
+                        break;
                     }
                 }
 
-                if (indices && vertices) {
-                    m_pxTriangleMeshDescriptor = createTriangleMeshDescriptor(numVertices, vertices, numIndices, indices);
+                if (m_vertices != nullptr) {
                     isSomeMeshLoaded = true;
                 }
             }
@@ -74,17 +88,4 @@ Resource::Status PhysicsMeshResource::build() {
 }
 
 void PhysicsMeshResource::destroy() {
-}
-
-physx::PxTriangleMeshDesc PhysicsMeshResource::createTriangleMeshDescriptor(int numVertices, physx::PxVec3 *vertices, int numIndices, const physx::PxU32 *indices) {
-    physx::PxTriangleMeshDesc meshDesc;
-    meshDesc.points.count = numVertices;
-    meshDesc.points.stride = sizeof(physx::PxVec3);
-    meshDesc.points.data = vertices;
-
-    meshDesc.triangles.count = numIndices / 3;
-    meshDesc.triangles.stride = 3 * sizeof(physx::PxU32);
-    meshDesc.triangles.data = indices;
-
-    return meshDesc;
 }

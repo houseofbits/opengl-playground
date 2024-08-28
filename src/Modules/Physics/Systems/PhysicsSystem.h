@@ -4,6 +4,7 @@
 #include "../../Common/Components/CameraComponent.h"
 #include "../../EditorUI/Events/EditorUIEvent.h"
 #include "../Components/CharacterControllerComponent.h"
+#include "../Resources/PhysicsResource.h"
 #include <PhysX/PxPhysics.h>
 #include <PhysX/PxPhysicsAPI.h>
 
@@ -23,9 +24,9 @@ public:
     void updateRigidBodies();
     void updateCCTs();
 
-    physx::PxFoundation* m_pxFoundation;
-    physx::PxPhysics* m_pxPhysics;
-    physx::PxScene* m_pxScene;
-    physx::PxControllerManager* m_ControllerManager;
     bool m_isSimulationDisabled;
+
+    ResourceHandle<PhysicsResource> m_PhysicsResource;
+
+    physx::PxRigidStatic *groundPlane = nullptr;
 };

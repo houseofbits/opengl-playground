@@ -27,9 +27,29 @@ public:
 
         ImGui::SeparatorText("Rigid body");
 
+        if (FileInput("ChooseRigidBodyMeshFile", "Choose GLTF Model file", ".gltf", "Model", m_meshPath, body->m_meshResource().m_Path)) {
+            body->m_meshResource.invalidate();
+            m_EditorUISystem->m_ResourceManager->request(body->m_meshResource, m_meshPath);
+        }
+
+        if (ImGui::Button("Create from render mesh")) {
+            auto *mesh = m_EditorUISystem->getComponent<StaticMeshComponent>(entityId);
+            if(mesh && mesh->m_Mesh.isReady()) {
+                body->m_meshResource.invalidate();
+                m_EditorUISystem->m_ResourceManager->request(body->m_meshResource, mesh->m_Mesh.get().m_Path);
+            }
+        }
+
+        if (ImGui::Button("Rebuild shape")) {
+            auto *transform = m_EditorUISystem->getComponent<TransformComponent>(entityId);
+            body->createMeshShape(*transform);
+        }
+
         ImGui::InputFloat("Density", &body->m_density);
         ImGui::InputFloat("Dynamic friction", &body->m_friction.x);
         ImGui::InputFloat("Static friction", &body->m_friction.y);
         ImGui::InputFloat("Restitution", &body->m_restitution);
     }
+
+    std::string m_meshPath;
 };
