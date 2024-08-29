@@ -17,11 +17,11 @@ public:
     void registerEventHandlers(EventManager *eventManager) override;
     bool handleEditorUIEvent(EditorUIEvent *event);
     bool handleInputEvent(InputEvent *event);
-    void buildRigidBodies();
+    void buildBodies();
     void buildCCTs();
     void resetToInitialTransform();
     void processCCTInput(CameraComponent* camera, CharacterControllerComponent* cct, InputEvent *event);
-    void updateRigidBodies();
+    void updateBodies();
     void updateCCTs();
 
     bool m_isSimulationDisabled;

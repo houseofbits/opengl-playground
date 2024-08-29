@@ -36,7 +36,7 @@ void PhysicsSystem::process() {
         m_PhysicsResource().m_pxScene->addActor(*groundPlane);
     }
 
-    buildRigidBodies();
+    buildBodies();
     buildCCTs();
 
     if (!m_isSimulationDisabled) {
@@ -45,17 +45,26 @@ void PhysicsSystem::process() {
         }
     }
 
-    updateRigidBodies();
+    updateBodies();
     updateCCTs();
 }
 
-void PhysicsSystem::buildRigidBodies() {
+void PhysicsSystem::buildBodies() {
     for (const auto rigidBody: getComponentContainer<RigidBodyComponent>()) {
         if (rigidBody.second->m_pxRigidBody == nullptr) {
             auto *transform = getComponent<TransformComponent>(rigidBody.first);
 
             rigidBody.second->create(*transform);
             m_PhysicsResource().m_pxScene->addActor(*rigidBody.second->m_pxRigidBody);
+        }
+    }
+
+    for (const auto collisionMesh: getComponentContainer<PhysicsMeshComponent>()) {
+        if (collisionMesh.second->m_staticBody == nullptr && collisionMesh.second->m_meshResource.isReady()) {
+            auto *transform = getComponent<TransformComponent>(collisionMesh.first);
+
+            collisionMesh.second->create(*transform);
+            m_PhysicsResource().m_pxScene->addActor(*collisionMesh.second->m_staticBody);
         }
     }
 }
@@ -172,7 +181,7 @@ void PhysicsSystem::processCCTInput(CameraComponent *camera, CharacterController
     }
 }
 
-void PhysicsSystem::updateRigidBodies() {
+void PhysicsSystem::updateBodies() {
     for (const auto rigidBody: getComponentContainer<RigidBodyComponent>()) {
         if (rigidBody.second->m_pxRigidBody != nullptr) {
             auto *transform = getComponent<TransformComponent>(rigidBody.first);
@@ -182,6 +191,13 @@ void PhysicsSystem::updateRigidBodies() {
             } else {
                 transform->setFromPxTransform(rigidBody.second->m_pxRigidBody->getGlobalPose());
             }
+        }
+    }
+
+    for (const auto collisionMesh: getComponentContainer<PhysicsMeshComponent>()) {
+        if (collisionMesh.second->m_staticBody != nullptr) {
+            auto *transform = getComponent<TransformComponent>(collisionMesh.first);
+            collisionMesh.second->m_staticBody->setGlobalPose(Types::GLMtoPxTransform(transform->getModelMatrix()));
         }
     }
 }
