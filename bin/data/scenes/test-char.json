@@ -3,19 +3,19 @@
         "camera": {
             "isActive": true,
             "position": [
-                -0.9593098759651184,
-                2.0678420066833496,
-                -8.356782913208008
+                -15.49899673461914,
+                5.175297260284424,
+                5.931844711303711
             ],
             "upDirection": [
-                -0.10650941729545593,
-                0.9373465776443481,
-                0.33171871304512024
+                0.3690100312232971,
+                0.9181092977523804,
+                0.14459264278411865
             ],
             "viewDirection": [
-                -0.28655752539634705,
-                -0.3483985662460327,
-                0.8924703598022461
+                0.854827344417572,
+                -0.3963274657726288,
+                0.33495500683784485
             ]
         },
         "name": "main-camera",
@@ -23,11 +23,20 @@
     },
     {
         "mesh": {
-            "material": "data/materials/solid-wall.json",
-            "model": "resources/BoxTextured.gltf",
+            "material": "data/materials/grass1.json",
+            "model": "resources/scenes/scene1/floor2.gltf",
             "renderer": "SOLID"
         },
         "name": "floor",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/floor2.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -36,28 +45,28 @@
                 1.0
             ],
             "scale": [
-                10.0,
-                0.5,
-                10.0
+                1.0,
+                1.0,
+                1.0
             ],
             "translation": [
-                -5.045999526977539,
-                -0.25,
-                -5.0
+                0.0,
+                0.0,
+                0.0
             ]
         },
         "type": "StaticMesh"
     },
     {
         "light": {
-            "attenuation": 17.299989700317383,
+            "attenuation": 20.0,
             "castShadows": true,
             "color": [
                 1.0,
                 0.9752018451690674,
                 0.7892156839370728
             ],
-            "intensity": 0.49999991059303284,
+            "intensity": 1.6000001430511475,
             "isEnabled": true,
             "shadowBias": 9.999999747378752e-05,
             "shadowResolution": 1024,
@@ -66,9 +75,9 @@
         "name": "omni light",
         "transform": {
             "translation": [
-                -5.201831817626953,
-                9.306157112121582,
-                -4.703933238983154
+                -12.643105506896973,
+                6.273838043212891,
+                10.373584747314453
             ]
         },
         "type": "OmniLight"
@@ -89,7 +98,7 @@
                 0.7750865817070007,
                 1.0
             ],
-            "intensity": 0.49999991059303284,
+            "intensity": 1.8000001907348633,
             "isEnabled": true,
             "shadowBias": 9.999999747378752e-05,
             "shadowResolution": 512,
@@ -98,9 +107,9 @@
         "name": "omni-ambient",
         "transform": {
             "translation": [
-                -5.438762187957764,
-                3.723975658416748,
-                -8.688417434692383
+                -5.983063697814941,
+                5.459465026855469,
+                0.12854260206222534
             ]
         },
         "type": "OmniLight"
@@ -109,19 +118,19 @@
         "camera": {
             "isActive": false,
             "position": [
-                0.0,
-                0.0,
-                0.0
+                -11.139669418334961,
+                1.750999927520752,
+                10.221456527709961
             ],
             "upDirection": [
-                0.0,
-                1.0,
-                -0.0
+                0.08788628876209259,
+                0.9871583580970764,
+                0.13339541852474213
             ],
             "viewDirection": [
-                0.0,
-                0.0,
-                1.0
+                0.543102502822876,
+                -0.15974460542201996,
+                0.8243308663368225
             ]
         },
         "cct": {
@@ -136,11 +145,119 @@
         "name": "Main-CCT",
         "transform": {
             "translation": [
-                -1.5189054012298584,
-                0.3196353018283844,
-                -5.928508758544922
+                -11.139669418334961,
+                1.6399388313293457,
+                10.221456527709961
             ]
         },
         "type": "CharacterController"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/concrete1.json",
+            "model": "resources/scenes/scene1/walls1.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "walls 1",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/walls1.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/walls2.json",
+            "model": "resources/scenes/scene1/walls2.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "walls 2",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/walls2.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/floor3.json",
+            "model": "resources/scenes/scene1/floor3.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "floor 2",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/floor3.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "type": "StaticMesh"
     }
 ]
