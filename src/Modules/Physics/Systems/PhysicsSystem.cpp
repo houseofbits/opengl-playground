@@ -30,12 +30,6 @@ void PhysicsSystem::process() {
         return;
     }
 
-    if (groundPlane == nullptr) {
-        PxMaterial *m_material = m_PhysicsResource().m_pxPhysics->createMaterial(0.5, 0.5, 0.5);
-        groundPlane = PxCreatePlane(*m_PhysicsResource().m_pxPhysics, physx::PxPlane(0, 1, 0, 0), *m_material);
-        m_PhysicsResource().m_pxScene->addActor(*groundPlane);
-    }
-
     buildBodies();
     buildCCTs();
 

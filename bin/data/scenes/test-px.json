@@ -3,19 +3,19 @@
         "camera": {
             "isActive": true,
             "position": [
-                -8.420591354370117,
-                5.09453010559082,
-                -8.919068336486816
+                -5.248125076293945,
+                1.1694159507751465,
+                -10.975028991699219
             ],
             "upDirection": [
-                0.2312953770160675,
-                0.9599246978759766,
-                0.1582629680633545
+                -0.04474642500281334,
+                0.983099102973938,
+                -0.17752203345298767
             ],
             "viewDirection": [
-                0.7922196984291077,
-                -0.28025829792022705,
-                0.5420732498168945
+                0.24028544127941132,
+                0.18307459354400635,
+                0.9532819986343384
             ]
         },
         "name": "free-camera",
@@ -34,7 +34,8 @@
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5
+            "restitution": 0.5,
+            "type": "triangle"
         },
         "transform": {
             "rotation": [
@@ -99,13 +100,13 @@
         },
         "transform": {
             "rotation": [
-                -0.0015694104367867112,
+                -0.0015694107860326767,
                 0.8333984017372131,
                 -0.5526427626609802,
                 -0.005537331569939852
             ],
             "scale": [
-                0.2000148445367813,
+                0.20001493394374847,
                 1.000019907951355,
                 1.0000200271606445
             ],
@@ -167,14 +168,14 @@
         },
         "transform": {
             "rotation": [
-                0.1311737447977066,
-                -0.42838215827941895,
+                0.13117371499538422,
+                -0.4283822178840637,
                 0.8784065246582031,
-                0.166385680437088
+                0.16638565063476563
             ],
             "scale": [
-                1.0000455379486084,
-                3.5892505645751953,
+                1.0000460147857666,
+                3.5892529487609863,
                 1.0000628232955933
             ],
             "translation": [
@@ -211,7 +212,7 @@
             "scale": [
                 1.0058999061584473,
                 1.0310319662094116,
-                1.0278240442276
+                1.0278246402740479
             ],
             "translation": [
                 -5.124416351318359,
@@ -225,19 +226,19 @@
         "camera": {
             "isActive": false,
             "position": [
-                -4.7138824462890625,
-                2.0241432189941406,
-                -6.171798229217529
+                -4.304549694061279,
+                2.1940958499908447,
+                -4.899579048156738
             ],
             "upDirection": [
-                -0.0017179411370307207,
-                0.9924267530441284,
-                0.12282581627368927
+                0.0012509337393566966,
+                0.9929170608520508,
+                0.11880370229482651
             ],
             "viewDirection": [
-                -0.013879525475203991,
-                -0.1228378415107727,
-                0.9923297166824341
+                0.01045425608754158,
+                -0.11881028860807419,
+                0.9928619861602783
             ]
         },
         "cct": {
@@ -272,7 +273,8 @@
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5
+            "restitution": 0.5,
+            "type": "triangle"
         },
         "transform": {
             "rotation": [
@@ -307,7 +309,8 @@
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5
+            "restitution": 0.5,
+            "type": "triangle"
         },
         "transform": {
             "rotation": [
@@ -342,7 +345,8 @@
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5
+            "restitution": 0.5,
+            "type": "triangle"
         },
         "transform": {
             "rotation": [
@@ -360,6 +364,114 @@
                 -4.604946613311768,
                 0.17284631729125977,
                 -5.885963439941406
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall 1",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.1924819052219391,
+                3.5285356044769287,
+                6.798940181732178
+            ],
+            "translation": [
+                -0.9559178352355957,
+                1.8192121982574463,
+                -5.9057183265686035
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall 2",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                7.277060508728027,
+                3.4601707458496094,
+                0.1802596002817154
+            ],
+            "translation": [
+                -7.169008255004883,
+                1.60885488986969,
+                -1.8669625520706177
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall 3",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.4677346646785736,
+                3.536203622817993,
+                1.5847777128219604
+            ],
+            "translation": [
+                -8.952436447143555,
+                1.700191617012024,
+                -6.429687023162842
             ]
         },
         "type": "StaticMesh"

@@ -27,6 +27,4 @@ public:
     bool m_isSimulationDisabled;
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
-
-    physx::PxRigidStatic *groundPlane = nullptr;
 };
