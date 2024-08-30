@@ -3,19 +3,19 @@
         "camera": {
             "isActive": true,
             "position": [
-                -15.49899673461914,
-                5.175297260284424,
-                5.931844711303711
+                -15.546467781066895,
+                3.3445582389831543,
+                11.745850563049316
             ],
             "upDirection": [
-                0.3690100312232971,
-                0.9181092977523804,
-                0.14459264278411865
+                0.21524180471897125,
+                0.958807647228241,
+                -0.18536165356636047
             ],
             "viewDirection": [
-                0.854827344417572,
-                -0.3963274657726288,
-                0.33495500683784485
+                0.7265303730964661,
+                -0.28405630588531494,
+                -0.6256722807884216
             ]
         },
         "name": "main-camera",
@@ -123,9 +123,9 @@
                 10.221456527709961
             ],
             "upDirection": [
-                0.08788628876209259,
+                0.0878862664103508,
                 0.9871583580970764,
-                0.13339541852474213
+                0.13339543342590332
             ],
             "viewDirection": [
                 0.543102502822876,
@@ -259,5 +259,113 @@
             ]
         },
         "type": "StaticMesh"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-blue.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "RigidBox1",
+        "rigidBody": {
+            "density": 100.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -10.925596237182617,
+                1.1271404027938843,
+                8.342142105102539
+            ]
+        },
+        "type": "RigidBody"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-green.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "RigidBox2",
+        "rigidBody": {
+            "density": 100.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -10.975396156311035,
+                2.5699167251586914,
+                8.44802188873291
+            ]
+        },
+        "type": "RigidBody"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "RigidBox3",
+        "rigidBody": {
+            "density": 100.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -11.049590110778809,
+                3.9526891708374023,
+                8.470512390136719
+            ]
+        },
+        "type": "RigidBody"
     }
 ]

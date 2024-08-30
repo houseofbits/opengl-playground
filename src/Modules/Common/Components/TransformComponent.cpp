@@ -1,11 +1,13 @@
 #include "TransformComponent.h"
+#include "../../../Core/Helper/Types.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../../Physics/Systems/CharacterControllerSystem.h"
+#include "../../Physics/Systems/PhysicsBodyProcessingSystem.h"
 #include "../../Physics/Systems/PhysicsSystem.h"
 #include "../../Renderer/Systems/EnvironmentProbeRenderSystem.h"
 #include "../../Renderer/Systems/MainRenderSystem.h"
 #include "../../Renderer/Systems/ShadowMapRenderSystem.h"
 #include "../../Renderer/Systems/StorageBufferUpdateSystem.h"
-#include "../../../Core/Helper/Types.h"
 
 TransformComponent::TransformComponent() : m_transform(1.0),
                                            m_isTranslationEnabled(true),
@@ -19,7 +21,8 @@ void TransformComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<StorageBufferUpdateSystem>(this);
     ctx.registerComponentWithEntitySystem<ShadowMapRenderSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<PhysicsSystem>(this);
+    ctx.registerComponentWithEntitySystem<PhysicsBodyProcessingSystem>(this);
+    ctx.registerComponentWithEntitySystem<CharacterControllerSystem>(this);
 }
 
 void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat &rotation, glm::vec3 &scale) {

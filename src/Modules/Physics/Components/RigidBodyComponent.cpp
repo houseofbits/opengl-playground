@@ -1,6 +1,7 @@
 #include "RigidBodyComponent.h"
 #include "../../../Core/Helper/Types.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../Systems/PhysicsBodyProcessingSystem.h"
 #include "../Systems/PhysicsSystem.h"
 
 RigidBodyComponent::RigidBodyComponent() : Component(),
@@ -34,7 +35,7 @@ void RigidBodyComponent::deserialize(const nlohmann::json &j, ResourceManager &r
 }
 
 void RigidBodyComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<PhysicsSystem>(this);
+    ctx.registerComponentWithEntitySystem<PhysicsBodyProcessingSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
 }
 
@@ -124,5 +125,5 @@ void RigidBodyComponent::releaseShapes() const {
 }
 
 bool RigidBodyComponent::isReady() {
-    return m_PhysicsResource.isReady() && m_meshResource.isReady();
+    return m_PhysicsResource.isReady();
 }

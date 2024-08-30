@@ -1,6 +1,7 @@
 #include "PhysicsMeshComponent.h"
 #include "../../../Core/Helper/Types.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../Systems/PhysicsBodyProcessingSystem.h"
 #include "../Systems/PhysicsSystem.h"
 
 PhysicsMeshComponent::PhysicsMeshComponent() : Component(),
@@ -33,7 +34,7 @@ void PhysicsMeshComponent::deserialize(const nlohmann::json &j, ResourceManager 
 }
 
 void PhysicsMeshComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<PhysicsSystem>(this);
+    ctx.registerComponentWithEntitySystem<PhysicsBodyProcessingSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
 }
 

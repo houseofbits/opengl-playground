@@ -111,6 +111,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Resources/PhysicsMeshResource.h
         src/Modules/Physics/Resources/PhysicsResource.cpp
         src/Modules/Physics/Resources/PhysicsResource.h
+        src/Modules/Physics/Systems/PhysicsBodyProcessingSystem.cpp
+        src/Modules/Physics/Systems/PhysicsBodyProcessingSystem.h
+        src/Modules/Physics/Systems/CharacterControllerSystem.cpp
+        src/Modules/Physics/Systems/CharacterControllerSystem.h
 )
 
 

@@ -1,21 +1,21 @@
 [
     {
         "camera": {
-            "isActive": false,
+            "isActive": true,
             "position": [
-                -14.465715408325195,
-                4.299012184143066,
-                14.235355377197266
+                -14.759984970092773,
+                5.166041851043701,
+                13.490117073059082
             ],
             "upDirection": [
-                0.15453188121318817,
-                0.9539533853530884,
-                -0.25708526372909546
+                0.2850685715675354,
+                0.9213823080062866,
+                -0.2641790211200714
             ],
             "viewDirection": [
-                0.49146127700805664,
-                -0.29995492100715637,
-                -0.8176141977310181
+                0.6758061647415161,
+                -0.38865751028060913,
+                -0.6262838244438171
             ]
         },
         "name": "main-camera",
@@ -28,6 +28,15 @@
             "renderer": "SOLID"
         },
         "name": "walls1-mesh",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/walls1.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -55,6 +64,15 @@
             "renderer": "SOLID"
         },
         "name": "floor1-mesh",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/floor1.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -82,6 +100,15 @@
             "renderer": "SOLID"
         },
         "name": "floor2-mesh",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/floor2.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -109,6 +136,15 @@
             "renderer": "SOLID"
         },
         "name": "columns1-mesh",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/columns1.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -211,9 +247,9 @@
         "name": "blue light",
         "transform": {
             "rotation": [
-                -0.0012726251734420657,
+                -0.0012726254062727094,
                 0.9821755886077881,
-                -0.006669884547591209,
+                -0.006669885478913784,
                 -0.1878431886434555
             ],
             "translation": [
@@ -274,7 +310,7 @@
         "transform": {
             "rotation": [
                 0.7088420987129211,
-                -0.004339889623224735,
+                -0.004339899867773056,
                 0.08069344609975815,
                 -0.7007229924201965
             ],
@@ -410,6 +446,15 @@
             "renderer": "SOLID"
         },
         "name": "Shadow mask",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -444,6 +489,15 @@
             "renderer": "SOLID"
         },
         "name": "walls2-mesh",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/walls2.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -471,6 +525,15 @@
             "renderer": "SOLID"
         },
         "name": "walls3-mesh",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/walls3.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -498,6 +561,15 @@
             "renderer": "SOLID"
         },
         "name": "columns2-mesh",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/columns2_fix.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -550,6 +622,15 @@
             "renderer": "SOLID"
         },
         "name": "box-column",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -577,6 +658,15 @@
             "renderer": "SOLID"
         },
         "name": "columns3-mesh",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/columns3.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -604,6 +694,15 @@
             "renderer": "SOLID"
         },
         "name": "floor3-mesh",
+        "physicsMesh": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/scenes/scene1/floor3.gltf",
+            "restitution": 0.5,
+            "type": "triangle"
+        },
         "transform": {
             "rotation": [
                 0.0,
@@ -826,21 +925,21 @@
     },
     {
         "camera": {
-            "isActive": true,
+            "isActive": false,
             "position": [
-                -13.057733535766602,
-                1.751001238822937,
-                11.07086181640625
+                -13.111737251281738,
+                1.750999927520752,
+                16.00450897216797
             ],
             "upDirection": [
-                0.1426885575056076,
-                0.9845826625823975,
-                -0.10117774456739426
+                0.14735838770866394,
+                0.9836558699607849,
+                -0.10347266495227814
             ],
             "viewDirection": [
-                0.8031602501869202,
-                -0.17491987347602844,
-                -0.5695056915283203
+                0.8050156235694885,
+                -0.1800585687160492,
+                -0.5652688145637512
             ]
         },
         "cct": {
@@ -875,12 +974,13 @@
                 0.5,
                 0.5
             ],
+            "model": "resources/BoxTextured.gltf",
             "restitution": 0.5
         },
         "transform": {
             "rotation": [
                 -0.1411503106355667,
-                -0.04082018509507179,
+                -0.040820177644491196,
                 -0.27479615807533264,
                 0.9502091407775879
             ],

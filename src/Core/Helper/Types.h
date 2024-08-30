@@ -1,6 +1,7 @@
 #pragma once
 
-#include <PhysX/foundation/PxVec3.h>
+#include <PhysX/PxPhysics.h>
+#include <PhysX/PxPhysicsAPI.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/vec3.hpp>
 

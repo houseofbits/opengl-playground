@@ -12,19 +12,12 @@ class PhysicsSystem : public EntitySystem {
 public:
     PhysicsSystem();
 
-    void initialize(ResourceManager*) override;
+    void initialize(ResourceManager *) override;
     void process() override;
     void registerEventHandlers(EventManager *eventManager) override;
     bool handleEditorUIEvent(EditorUIEvent *event);
-    bool handleInputEvent(InputEvent *event);
-    void buildBodies();
-    void buildCCTs();
-    void resetToInitialTransform();
-    void processCCTInput(CameraComponent* camera, CharacterControllerComponent* cct, InputEvent *event);
-    void updateBodies();
-    void updateCCTs();
 
-    bool m_isSimulationDisabled;
-
+private:
     ResourceHandle<PhysicsResource> m_PhysicsResource;
+    bool m_isSimulationDisabled;
 };
