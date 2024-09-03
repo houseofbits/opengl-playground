@@ -24,4 +24,10 @@ private:
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     bool m_isSimulationDisabled;
+
+    glm::vec3 m_movementDirection;
+    bool m_isOnGround;
+    bool m_doMove;
+    bool m_doJump;
+    float m_jumpPower;
 };

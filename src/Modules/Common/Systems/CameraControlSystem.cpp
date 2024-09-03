@@ -95,14 +95,14 @@ bool CameraControlSystem::handleInputEvent(InputEvent *const event) {
         camera->setView(tbn.view, tbn.up);
     }
 
-    if (event->type == InputEvent::KEYDOWN && event->keyCode == 58)// F1
-    {
-        std::cout << "Camera - position:"
-                  << (position.x) << "," << (position.y) << "," << (position.z)
-                  << " direction:"
-                  << (tbn.view.x) << "," << (tbn.view.y) << "," << (tbn.view.z)
-                  << std::endl;
-    }
+//    if (event->type == InputEvent::KEYDOWN && event->keyCode == 58)// F1
+//    {
+//        std::cout << "Camera - position:"
+//                  << (position.x) << "," << (position.y) << "," << (position.z)
+//                  << " direction:"
+//                  << (tbn.view.x) << "," << (tbn.view.y) << "," << (tbn.view.z)
+//                  << std::endl;
+//    }
     return true;
 }
 
@@ -111,7 +111,7 @@ Camera *CameraControlSystem::findActiveCamera() {
         return camera->m_isActive;
     });
 
-    if (c != nullptr) {
+    if (c != nullptr && c->m_type == CameraComponent::TYPE_FREE) {
         return &c->m_Camera;
     }
 

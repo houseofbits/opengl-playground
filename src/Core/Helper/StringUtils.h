@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/vec3.hpp>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -16,5 +17,9 @@ namespace StringUtils {
              i != std::basic_string<T>::npos;
              i = s.find(p))
             s.erase(i, n);
+    }
+
+    inline std::string toString(glm::vec3 v) {
+        return std::to_string(v.x) + "," + std::to_string(v.y) + "," + std::to_string(v.z);
     }
 }// namespace StringUtils

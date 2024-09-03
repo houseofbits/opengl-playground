@@ -1,6 +1,7 @@
 #include "CharacterControllerComponent.h"
 #include "../../../Core/Helper/Types.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../Helpers/PhysicsActorUserData.h"
 #include "../Systems/CharacterControllerSystem.h"
 #include "../Systems/PhysicsSystem.h"
 
@@ -59,6 +60,7 @@ void CharacterControllerComponent::create(TransformComponent &transform) {
 
     m_CCTController = m_PhysicsResource().m_ControllerManager->createController(desc);
     setPhysicsPosition(transform.getTranslation());
+    m_CCTController->getActor()->userData = new PhysicsActorUserData(m_EntityId.id()); //reinterpret_cast<void *>(m_EntityId.id());            ///!!!!Memory leak
 }
 
 bool CharacterControllerComponent::isReady() {

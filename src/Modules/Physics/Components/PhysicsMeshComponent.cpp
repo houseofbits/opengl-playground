@@ -1,6 +1,7 @@
 #include "PhysicsMeshComponent.h"
 #include "../../../Core/Helper/Types.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../Helpers/PhysicsActorUserData.h"
 #include "../Systems/PhysicsBodyProcessingSystem.h"
 #include "../Systems/PhysicsSystem.h"
 
@@ -44,6 +45,7 @@ bool PhysicsMeshComponent::isReady() {
 
 void PhysicsMeshComponent::create(TransformComponent &transform) {
     m_staticBody = m_PhysicsResource().m_pxPhysics->createRigidStatic(Types::GLMtoPxTransform(transform.getModelMatrix()));
+    m_staticBody->userData = new PhysicsActorUserData(m_EntityId.id()); //reinterpret_cast<void *>(m_EntityId.id());            ///!!!!Memory leak
 
     createMeshShape(transform);
 }

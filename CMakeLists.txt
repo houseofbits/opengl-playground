@@ -115,6 +115,9 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Systems/PhysicsBodyProcessingSystem.h
         src/Modules/Physics/Systems/CharacterControllerSystem.cpp
         src/Modules/Physics/Systems/CharacterControllerSystem.h
+        src/Modules/Physics/Helpers/PhysicsActorUserData.h
+        src/Modules/Physics/Helpers/ExcludeEntityIdFilterCallback.h
+        src/Modules/Physics/Helpers/RayCastResult.h
 )
 
 

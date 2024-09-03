@@ -1,6 +1,7 @@
 #include "RigidBodyComponent.h"
 #include "../../../Core/Helper/Types.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../Helpers/PhysicsActorUserData.h"
 #include "../Systems/PhysicsBodyProcessingSystem.h"
 #include "../Systems/PhysicsSystem.h"
 
@@ -57,6 +58,7 @@ void RigidBodyComponent::updateBodyParameters() {
 
 void RigidBodyComponent::create(TransformComponent &transform) {
     m_pxRigidBody = m_PhysicsResource().m_pxPhysics->createRigidDynamic(Types::GLMtoPxTransform(transform.getModelMatrix()));
+    m_pxRigidBody->userData = new PhysicsActorUserData(m_EntityId.id()); //reinterpret_cast<void *>(m_EntityId.id());            ///!!!!Memory leak
     m_initialTransform = transform.getModelMatrix();
 
     createMeshShape(transform);

@@ -63,4 +63,66 @@ Resource::Status PhysicsResource::build() {
 }
 
 void PhysicsResource::destroy() {
+    m_pxScene->release();
+    //    m_ControllerManager->release();
+    //    m_pxPhysics->release();
+    //    m_pxFoundation->release();
+}
+
+float PhysicsResource::rayCast(glm::vec3 p, glm::vec3 d, float maxDistance, physx::PxQueryFilterCallback *callback) const {
+    physx::PxVec3 origin(p.x, p.y, p.z);
+    physx::PxVec3 unitDir(d.x, d.y, d.z);
+    physx::PxRaycastBuffer hit;
+
+    physx::PxQueryFilterData filterData;
+    filterData.flags |= physx::PxQueryFlag::ePREFILTER;
+    //    filterData.flags |= physx::PxQueryFlag::ePOSTFILTER; // If you're using postFilter
+
+    if (m_pxScene->raycast(origin, unitDir, maxDistance, hit, physx::PxHitFlags(physx::PxHitFlag::eDEFAULT), filterData, callback)) {
+        //        std::cout << hit.getNbAnyHits() << std::endl;
+        std::cout << "hit " << hit.block.distance << " = " << hit.block.position.x << "," << hit.block.position.y << "," << hit.block.position.z << std::endl;
+        return hit.block.distance;
+    }
+
+    return 0.0;
+}
+
+float PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type characterEntityId) {
+    physx::PxVec3 origin(p.x, p.y, p.z);
+    physx::PxVec3 unitDir(d.x, d.y, d.z);
+    physx::PxRaycastBuffer hit;
+
+    physx::PxQueryFilterData filterData;
+    filterData.flags |= physx::PxQueryFlag::ePREFILTER;
+
+    m_excludeEntityIdFilter.excludedEntityId = characterEntityId;
+
+    if (m_pxScene->raycast(origin, unitDir, 100.0, hit, physx::PxHitFlags(physx::PxHitFlag::eDEFAULT), filterData, (physx::PxQueryFilterCallback *) &m_excludeEntityIdFilter)) {
+        //        std::cout << "character " << hit.block.distance << " = " << hit.block.position.x << "," << hit.block.position.y << "," << hit.block.position.z << std::endl;
+        return hit.block.distance;
+    }
+
+    return 0;
+}
+
+bool PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type characterEntityId, RayCastResult &result) {
+    physx::PxVec3 origin(p.x, p.y, p.z);
+    physx::PxVec3 unitDir(d.x, d.y, d.z);
+    physx::PxRaycastBuffer hit;
+
+    physx::PxQueryFilterData filterData;
+    filterData.flags |= physx::PxQueryFlag::ePREFILTER;
+
+    m_excludeEntityIdFilter.excludedEntityId = characterEntityId;
+    if (m_pxScene->raycast(origin, unitDir, 100.0, hit, physx::PxHitFlags(physx::PxHitFlag::eDEFAULT), filterData, (physx::PxQueryFilterCallback *) &m_excludeEntityIdFilter)) {
+        auto *data = static_cast<PhysicsActorUserData *>(hit.block.actor->userData);
+
+        result.m_entityId = data->entityId;
+        result.m_distance = hit.block.distance;
+        result.m_touchPoint = {hit.block.position.x, hit.block.position.y, hit.block.position.z};
+
+        return true;
+    }
+
+    return false;
 }
