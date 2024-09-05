@@ -144,9 +144,6 @@
             },
             "physicsBody": {
                 "class": "PhysicsBodyComponent"
-            },
-            "door": {
-                "class": "DoorComponent"
             }
         }
     }

@@ -499,20 +499,6 @@
         "type": "StaticMesh"
     },
     {
-        "door": {
-            "axis": [
-                0.0,
-                1.0,
-                0.0
-            ],
-            "maxPosition": 1.0,
-            "pivot": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "type": 1
-        },
         "mesh": {
             "material": "data/materials/concrete1.json",
             "model": "data/models/door.gltf",
