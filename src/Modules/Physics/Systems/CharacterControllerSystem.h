@@ -29,5 +29,6 @@ private:
     bool m_isOnGround;
     bool m_doMove;
     bool m_doJump;
+    bool m_doInteract;
     float m_jumpPower;
 };

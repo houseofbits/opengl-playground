@@ -40,7 +40,7 @@ public:
 
         m_Camera.setPosition(position)
                 .setView(view, up)
-                .setViewportSize(1024, 768)
+                .setViewportSize(1920, 1080)
                 .setFieldOfView(90);
 
         m_isActive = j.value("isActive", false);

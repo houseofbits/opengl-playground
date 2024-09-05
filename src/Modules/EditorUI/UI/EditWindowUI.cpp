@@ -4,18 +4,19 @@
 #include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
 //#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 //#include "../../../SourceLibs/imgui/imgui.h"
+#include "../../../Core/Reflection/TypedClass.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
-#include "../../Physics/Components/PhysicsMeshComponent.h"
-#include "../../Physics/Components/RigidBodyComponent.h"
+#include "../../Physics/Components/PhysicsBodyComponent.h"
+#include "../../WorldMechanics/Components/DoorComponent.h"
 #include "../Systems/EditorUISystem.h"
 #include "ComponentEdit/CameraComponentEdit.h"
 #include "ComponentEdit/CharacterControllerComponentEdit.h"
+#include "ComponentEdit/DoorComponentEdit.h"
 #include "ComponentEdit/EnvironmentProbeComponentEdit.h"
 #include "ComponentEdit/LightComponentEdit.h"
-#include "ComponentEdit/PhysicsMeshComponentEdit.h"
-#include "ComponentEdit/RigidBodyComponentEdit.h"
+#include "ComponentEdit/PhysicsBodyComponentEdit.h"
 #include "ComponentEdit/StaticMeshComponentEdit.h"
 #include "ComponentEdit/TransformComponentEdit.h"
 #include "FileDialogHelper.h"
@@ -28,7 +29,8 @@ std::vector<std::string> ENTITY_CREATION_OPTIONS = {
         "StaticMesh",
         "EnvironmentProbe",
         "RigidBody",
-        "CharacterController"
+        "CharacterController",
+        "Door"
 };
 
 EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
@@ -46,9 +48,9 @@ EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
     m_componentEditors[LightComponent::TypeName()] = new LightComponentEdit(editor);
     m_componentEditors[CameraComponent::TypeName()] = new CameraComponentEdit(editor);
     m_componentEditors[EnvironmentProbeComponent::TypeName()] = new EnvironmentProbeComponentEdit(editor);
-    m_componentEditors[RigidBodyComponent::TypeName()] = new RigidBodyComponentEdit(editor);
+    m_componentEditors[PhysicsBodyComponent::TypeName()] = new PhysicsBodyComponentEdit(editor);
     m_componentEditors[CharacterControllerComponent::TypeName()] = new CharacterControllerComponentEdit(editor);
-    m_componentEditors[PhysicsMeshComponent::TypeName()] = new PhysicsMeshComponentEdit(editor);
+    m_componentEditors[DoorComponent::TypeName()] = new DoorComponentEdit(editor);
 }
 
 void EditWindowUI::process() {

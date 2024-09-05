@@ -2,6 +2,7 @@
 #include "../../../Core/Helper/StringUtils.h"
 #include "../../../Core/Helper/Time.h"
 #include "../../../Core/Helper/Types.h"
+#include "../Events/CharacterPickingEvent.h"
 
 static physx::PxControllerFilters filters;
 
@@ -11,6 +12,7 @@ CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
                                                          m_isOnGround(false),
                                                          m_doMove(false),
                                                          m_doJump(false),
+                                                         m_doInteract(false),
                                                          m_jumpPower(0),
                                                          m_PhysicsResource() {
     usesComponent<TransformComponent>();
@@ -64,10 +66,12 @@ void CharacterControllerSystem::resetToInitialTransform() {
     for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
         if (component.second->m_CCTController != nullptr) {
             auto *transform = getComponent<TransformComponent>(component.first);
+            transform->m_transform = transform->m_initialTransform;
+            component.second->setPhysicsPosition(transform->getTranslation());
 
-            transform->resetTransform();
-            transform->setTranslation(component.second->m_initialPosition);
-            component.second->setPhysicsPosition(component.second->m_initialPosition);
+//            transform->resetTransform();
+//            transform->setTranslation(component.second->m_initialPosition);
+//            component.second->setPhysicsPosition(component.second->m_initialPosition);
         }
     }
 }
@@ -126,12 +130,19 @@ void CharacterControllerSystem::updateCCTs() {
 
                     RayCastResult hit;
                     if (m_PhysicsResource().characterRayCast(cameraComp->m_Camera.position, cameraComp->m_Camera.getViewDirection(), component.first, hit)) {
-//                        std::cout << "Touch " << hit.m_distance << std::endl;
+                        auto *e = new CharacterPickingEvent();
+                        e->m_entityId = hit.m_entityId;
+                        e->m_distance = hit.m_distance;
+                        e->m_touchPoint = hit.m_touchPoint;
+                        e->m_doActivate = m_doInteract;
+                        m_EventManager->queueEvent(e);
                     }
                 }
             }
         }
     }
+
+    m_doInteract = false;
 }
 
 void CharacterControllerSystem::processCCTInput(CameraComponent *camera, CharacterControllerComponent *cct, InputEvent *event) {
@@ -187,5 +198,9 @@ void CharacterControllerSystem::processCCTInput(CameraComponent *camera, Charact
         tbn = camera->calculateTBN(tbn.view + viewChange);
 
         camera->m_Camera.setView(tbn.view, tbn.up);
+    }
+
+    if (event->type == InputEvent::MOUSEDOWN && event->mouseButtonRight) {
+        m_doInteract = true;
     }
 }

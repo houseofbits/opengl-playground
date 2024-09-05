@@ -8,8 +8,8 @@
             "mesh": {
                 "class": "StaticMeshComponent"
             },
-            "physicsMesh": {
-                "class": "PhysicsMeshComponent"
+            "physicsBody": {
+                "class": "PhysicsBodyComponent"
             }
         }
     },
@@ -22,8 +22,8 @@
             "mesh": {
                 "class": "StaticMeshComponent"
             },
-            "rigidBody": {
-                "class": "RigidBodyComponent"
+            "physicsBody": {
+                "class": "PhysicsBodyComponent"
             }
         }
     },
@@ -127,6 +127,26 @@
             },
             "camera": {
                 "class": "CameraComponent"
+            }
+        }
+    },
+    {
+        "name": "Door",
+        "components": {
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowScaling": false
+                }
+            },
+            "mesh": {
+                "class": "StaticMeshComponent"
+            },
+            "physicsBody": {
+                "class": "PhysicsBodyComponent"
+            },
+            "door": {
+                "class": "DoorComponent"
             }
         }
     }

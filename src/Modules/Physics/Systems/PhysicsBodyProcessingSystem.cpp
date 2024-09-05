@@ -1,13 +1,10 @@
 #include "PhysicsBodyProcessingSystem.h"
-#include "../../../Core/Helper/Types.h"
-#include "../Components/PhysicsMeshComponent.h"
-#include "../Components/RigidBodyComponent.h"
+#include "../Components/PhysicsBodyComponent.h"
 
 PhysicsBodyProcessingSystem::PhysicsBodyProcessingSystem() : EntitySystem(),
                                                              m_PhysicsResource(),
                                                              m_isSimulationDisabled(false) {
-    usesComponent<RigidBodyComponent>();
-    usesComponent<PhysicsMeshComponent>();
+    usesComponent<PhysicsBodyComponent>();
     usesComponent<TransformComponent>();
 }
 
@@ -24,51 +21,13 @@ void PhysicsBodyProcessingSystem::process() {
         return;
     }
 
-    updateRigidBodyTransforms();
-    updateStaticBodyTransforms();
-    createRigidBodies();
-    createStaticBodies();
-}
-
-void PhysicsBodyProcessingSystem::createRigidBodies() {
-    for (const auto rigidBody: getComponentContainer<RigidBodyComponent>()) {
-        if (rigidBody.second->m_pxRigidBody == nullptr && rigidBody.second->m_meshResource.isReady()) {
-            auto *transform = getComponent<TransformComponent>(rigidBody.first);
-            rigidBody.second->create(*transform);
-            m_PhysicsResource().m_pxScene->addActor(*rigidBody.second->m_pxRigidBody);
-        }
-    }
-}
-
-void PhysicsBodyProcessingSystem::createStaticBodies() {
-    for (const auto collisionMesh: getComponentContainer<PhysicsMeshComponent>()) {
-        if (collisionMesh.second->m_staticBody == nullptr && collisionMesh.second->m_meshResource.isReady()) {
-            auto *transform = getComponent<TransformComponent>(collisionMesh.first);
-            collisionMesh.second->create(*transform);
-            m_PhysicsResource().m_pxScene->addActor(*collisionMesh.second->m_staticBody);
-        }
-    }
-}
-
-void PhysicsBodyProcessingSystem::updateRigidBodyTransforms() {
-    for (const auto rigidBody: getComponentContainer<RigidBodyComponent>()) {
-        if (rigidBody.second->m_pxRigidBody != nullptr) {
-            auto *transform = getComponent<TransformComponent>(rigidBody.first);
-            if (m_isSimulationDisabled) {
-                rigidBody.second->m_pxRigidBody->setGlobalPose(Types::GLMtoPxTransform(transform->getModelMatrix()));
-                rigidBody.second->m_initialTransform = transform->getModelMatrix();
-            } else {
-                transform->setFromPxTransform(rigidBody.second->m_pxRigidBody->getGlobalPose());
-            }
-        }
-    }
-}
-
-void PhysicsBodyProcessingSystem::updateStaticBodyTransforms() {
-    for (const auto collisionMesh: getComponentContainer<PhysicsMeshComponent>()) {
-        if (collisionMesh.second->m_staticBody != nullptr) {
-            auto *transform = getComponent<TransformComponent>(collisionMesh.first);
-            collisionMesh.second->m_staticBody->setGlobalPose(Types::GLMtoPxTransform(transform->getModelMatrix()));
+    for (const auto body: getComponentContainer<PhysicsBodyComponent>()) {
+        auto *transform = getComponent<TransformComponent>(body.first);
+        if (body.second->m_pxRigidActor == nullptr && body.second->m_meshResource.isReady()) {
+            body.second->create(*transform);
+            m_PhysicsResource().m_pxScene->addActor(*body.second->m_pxRigidActor);
+        } else {
+            body.second->update(*transform, !m_isSimulationDisabled);
         }
     }
 }
@@ -87,10 +46,8 @@ bool PhysicsBodyProcessingSystem::handleEditorUIEvent(EditorUIEvent *event) {
 }
 
 void PhysicsBodyProcessingSystem::resetToInitialTransform() {
-    for (const auto rigidBody: getComponentContainer<RigidBodyComponent>()) {
-        if (rigidBody.second->m_pxRigidBody != nullptr) {
-            auto *transform = getComponent<TransformComponent>(rigidBody.first);
-            transform->m_transform = rigidBody.second->m_initialTransform;
-        }
+    for (const auto body: getComponentContainer<PhysicsBodyComponent>()) {
+        auto *transform = getComponent<TransformComponent>(body.first);
+        transform->m_transform = transform->m_initialTransform;
     }
 }

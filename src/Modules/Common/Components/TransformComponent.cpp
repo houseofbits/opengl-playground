@@ -8,21 +8,27 @@
 #include "../../Renderer/Systems/MainRenderSystem.h"
 #include "../../Renderer/Systems/ShadowMapRenderSystem.h"
 #include "../../Renderer/Systems/StorageBufferUpdateSystem.h"
+#include "../../WorldMechanics/Components/DoorComponent.h"
+#include "../../WorldMechanics/Systems/DoorUpdateSystem.h"
 
 TransformComponent::TransformComponent() : m_transform(1.0),
+                                           m_initialTransform(1.0),
                                            m_isTranslationEnabled(true),
                                            m_isRotationEnabled(true),
-                                           m_isScalingEnabled(true){
+                                           m_isScalingEnabled(true) {
 }
 
 void TransformComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<MainRenderSystem>(this);
-    ctx.registerComponentWithEntitySystem<EnvironmentProbeRenderSystem>(this);
+    ctx.registerComponentWithEntitySystemHaving<MainRenderSystem, StaticMeshComponent>(this);
+    ctx.registerComponentWithEntitySystemHaving<EnvironmentProbeRenderSystem, EnvironmentProbeComponent>(this);
     ctx.registerComponentWithEntitySystem<StorageBufferUpdateSystem>(this);
     ctx.registerComponentWithEntitySystem<ShadowMapRenderSystem>(this);
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<PhysicsBodyProcessingSystem>(this);
-    ctx.registerComponentWithEntitySystem<CharacterControllerSystem>(this);
+    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);             //Multiple dependencies
+    ctx.registerComponentWithEntitySystem<PhysicsBodyProcessingSystem>(this);//Multiple dependencies
+    ctx.registerComponentWithEntitySystemHaving<CharacterControllerSystem, CharacterControllerComponent>(this);
+    ctx.registerComponentWithEntitySystemHaving<DoorUpdateSystem, DoorComponent>(this);
+
+    //    ctx.getEntitySystem<DoorUpdateSystem>().entityHaving<DoorComponent>().registerComponent(this); ????
 }
 
 void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat &rotation, glm::vec3 &scale) {
@@ -40,20 +46,28 @@ void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat 
 }
 
 void TransformComponent::serialize(nlohmann::json &j) {
-    glm::vec3 t;
-    glm::quat r;
-    glm::vec3 s;
+    glm::vec3 translation = m_initialTransform[3];
 
-    decomposeModelMatrix(t, r, s);
+    glm::vec3 scale;
+    for (int i = 0; i < 3; i++) {
+        scale[i] = glm::length(glm::vec3(m_initialTransform[i]));
+    }
+
+    const glm::mat3 rotMtx(
+            glm::vec3(m_initialTransform[0]) / scale[0],
+            glm::vec3(m_initialTransform[1]) / scale[1],
+            glm::vec3(m_initialTransform[2]) / scale[2]);
+
+    glm::quat rotation = glm::quat_cast(rotMtx);
 
     if (m_isTranslationEnabled) {
-        j[TRANSLATION_KEY] = t;
+        j[TRANSLATION_KEY] = translation;
     }
     if (m_isRotationEnabled) {
-        j[ROTATION_KEY] = r;
+        j[ROTATION_KEY] = rotation;
     }
     if (m_isScalingEnabled) {
-        j[SCALE_KEY] = s;
+        j[SCALE_KEY] = scale;
     }
 }
 
@@ -75,6 +89,8 @@ void TransformComponent::deserialize(const nlohmann::json &j, ResourceManager &r
     if (m_isScalingEnabled) {
         setScale(s);
     }
+
+    m_initialTransform = m_transform;
 }
 
 void TransformComponent::setTranslation(glm::vec3 pos) {
@@ -121,38 +137,74 @@ glm::vec3 TransformComponent::getScale() {
     return scale;
 }
 
+glm::quat TransformComponent::getRotation() {
+    glm::vec3 scale;
+    for (int i = 0; i < 3; i++) {
+        scale[i] = glm::length(glm::vec3(m_transform[i]));
+    }
+
+    const glm::mat3 rotMtx(
+            glm::vec3(m_transform[0]) / scale[0],
+            glm::vec3(m_transform[1]) / scale[1],
+            glm::vec3(m_transform[2]) / scale[2]);
+
+    return glm::quat_cast(rotMtx);
+}
+
 glm::vec3 TransformComponent::getDirection() const {
     glm::quat rotation = glm::quat_cast(m_transform);
 
     return rotation * glm::vec3(0, 0, 1);
 }
 
-void TransformComponent::setFromPxTransform(const physx::PxTransform& transform) {
+void TransformComponent::setFromPxTransform(const physx::PxTransform &transform) {
     glm::vec3 scale = getScale();
     m_transform = glm::mat4(1.0);
     setTranslation(glm::vec3(transform.p.x, transform.p.y, transform.p.z));
     setRotation(glm::quat(transform.q.w, transform.q.x, transform.q.y, transform.q.z));
     setScale(scale);
 
-//    auto rotation = physx::PxMat33(transform.q);
-//    m_transform[0][0] = rotation.column0[0];
-//    m_transform[0][1] = rotation.column0[1];
-//    m_transform[0][2] = rotation.column0[2];
-//    m_transform[0][3] = 0;
-//
-//    m_transform[1][0] = rotation.column1[0];
-//    m_transform[1][1] = rotation.column1[1];
-//    m_transform[1][2] = rotation.column1[2];
-//    m_transform[1][3] = 0;
-//
-//    m_transform[2][0] = rotation.column2[0];
-//    m_transform[2][1] = rotation.column2[1];
-//    m_transform[2][2] = rotation.column2[2];
-//    m_transform[2][3] = 0;
-//
-//    m_transform[3][0] = transform.p[0];
-//    m_transform[3][1] = transform.p[1];
-//    m_transform[3][2] = transform.p[2];
-//    m_transform[3][3] = 1;
+    //    auto rotation = physx::PxMat33(transform.q);
+    //    m_transform[0][0] = rotation.column0[0];
+    //    m_transform[0][1] = rotation.column0[1];
+    //    m_transform[0][2] = rotation.column0[2];
+    //    m_transform[0][3] = 0;
+    //
+    //    m_transform[1][0] = rotation.column1[0];
+    //    m_transform[1][1] = rotation.column1[1];
+    //    m_transform[1][2] = rotation.column1[2];
+    //    m_transform[1][3] = 0;
+    //
+    //    m_transform[2][0] = rotation.column2[0];
+    //    m_transform[2][1] = rotation.column2[1];
+    //    m_transform[2][2] = rotation.column2[2];
+    //    m_transform[2][3] = 0;
+    //
+    //    m_transform[3][0] = transform.p[0];
+    //    m_transform[3][1] = transform.p[1];
+    //    m_transform[3][2] = transform.p[2];
+    //    m_transform[3][3] = 1;
+}
 
+glm::vec3 TransformComponent::getInitialTranslation() {
+    return m_initialTransform[3];
+}
+
+glm::vec3 TransformComponent::getInitialScale() {
+    glm::vec3 scale;
+    scale[0] = glm::length(glm::vec3(m_initialTransform[0]));
+    scale[1] = glm::length(glm::vec3(m_initialTransform[1]));
+    scale[2] = glm::length(glm::vec3(m_initialTransform[2]));
+
+    return scale;
+}
+
+glm::quat TransformComponent::getInitialRotation() {
+    glm::vec3 scale = getInitialScale();
+    const glm::mat3 rotMtx(
+            glm::vec3(m_initialTransform[0]) / scale[0],
+            glm::vec3(m_initialTransform[1]) / scale[1],
+            glm::vec3(m_initialTransform[2]) / scale[2]);
+
+    return glm::quat_cast(rotMtx);
 }

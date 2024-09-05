@@ -3,20 +3,20 @@
         "camera": {
             "isActive": true,
             "position": [
-                -4.882985591888428,
-                1.5138351917266846,
-                -10.98698616027832
+                -4.458083152770996,
+                1.275002121925354,
+                -10.069321632385254
             ],
             "type": "FREE",
             "upDirection": [
-                -0.016172023490071297,
-                0.9937403798103333,
-                -0.11053766310214996
+                -0.0030029146000742912,
+                0.9963890910148621,
+                0.08485190570354462
             ],
             "viewDirection": [
-                0.14385604858398438,
-                0.11171441525220871,
-                0.9832728505134583
+                -0.03524022176861763,
+                -0.08490502834320068,
+                0.995765745639801
             ]
         },
         "name": "free-camera",
@@ -29,14 +29,16 @@
             "renderer": "SOLID"
         },
         "name": "floor",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -90,26 +92,28 @@
             "renderer": "SOLID"
         },
         "name": "red-rigid-body",
-        "rigidBody": {
+        "physicsBody": {
             "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
         },
         "transform": {
             "rotation": [
-                -0.00785791501402855,
+                -0.007857921533286572,
                 -0.7070426344871521,
                 0.7070807814598083,
-                -0.008105029352009296
+                -0.008105037733912468
             ],
             "scale": [
-                0.2000146210193634,
-                1.0000197887420654,
-                1.0
+                0.20001426339149475,
+                1.0000183582305908,
+                0.9999992847442627
             ],
             "translation": [
                 -5.920806407928467,
@@ -158,25 +162,27 @@
             "renderer": "SOLID"
         },
         "name": "blue-rigid-body-2",
-        "rigidBody": {
+        "physicsBody": {
             "density": 100.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
         },
         "transform": {
             "rotation": [
-                -0.19942107796669006,
+                -0.19942106306552887,
                 0.6784056425094604,
                 -0.6784039735794067,
-                -0.19941186904907227
+                -0.1994118094444275
             ],
             "scale": [
-                0.9999282956123352,
-                3.589266538619995,
+                0.9999286532402039,
+                3.5892670154571533,
                 1.0000646114349365
             ],
             "translation": [
@@ -194,14 +200,16 @@
             "renderer": "SOLID"
         },
         "name": "green-rigid-body-3",
-        "rigidBody": {
+        "physicsBody": {
             "density": 100.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
-            "restitution": 1.0
+            "restitution": 1.0,
+            "shape": 0,
+            "type": 1
         },
         "transform": {
             "rotation": [
@@ -227,20 +235,20 @@
         "camera": {
             "isActive": false,
             "position": [
-                -4.304549694061279,
-                2.1940958499908447,
-                -4.899579048156738
+                -2.6918070316314697,
+                1.750999927520752,
+                -8.294897079467773
             ],
             "type": "FP",
             "upDirection": [
-                0.001250934088602662,
-                0.9929170608520508,
-                0.11880370229482651
+                -0.015142763964831829,
+                0.9883307814598083,
+                0.15156860649585724
             ],
             "viewDirection": [
-                0.01045425608754158,
-                -0.11881028860807419,
-                0.9928619861602783
+                -0.09825202077627182,
+                -0.1523231416940689,
+                0.9834348559379578
             ]
         },
         "cct": {
@@ -269,14 +277,16 @@
             "renderer": "SOLID"
         },
         "name": "platform 1",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -305,14 +315,16 @@
             "renderer": "SOLID"
         },
         "name": "platform 2",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -341,14 +353,16 @@
             "renderer": "SOLID"
         },
         "name": "platform 3",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -377,14 +391,16 @@
             "renderer": "SOLID"
         },
         "name": "wall 1",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -413,14 +429,16 @@
             "renderer": "SOLID"
         },
         "name": "wall 2",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -449,14 +467,16 @@
             "renderer": "SOLID"
         },
         "name": "wall 3",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -474,6 +494,91 @@
                 -8.952436447143555,
                 1.700191617012024,
                 -6.429687023162842
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "door": {
+            "axis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "maxPosition": 1.0,
+            "pivot": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "type": 1
+        },
+        "mesh": {
+            "material": "data/materials/concrete1.json",
+            "model": "data/models/door.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "test-door-1",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "data/models/door.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                9.094422921407386e-07,
+                1.0,
+                -3.1747899811307434e-06,
+                -0.00016397230501752347
+            ],
+            "translation": [
+                -2.5358388423919678,
+                -0.015432000160217285,
+                -7.225168704986572
+            ]
+        },
+        "type": "Door"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/concrete1.json",
+            "model": "data/models/door-frame.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "door1-frame",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "data/models/door-frame.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -2.526729106903076,
+                1.0564916133880615,
+                -7.187489986419678
             ]
         },
         "type": "StaticMesh"

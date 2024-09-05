@@ -9,8 +9,8 @@
 
 Window::Window(EventManager *eventManager) : eventManager(eventManager),
                                              sdlWindow(nullptr),
-                                             viewportWidth(1024),
-                                             viewportHeight(768),
+                                             viewportWidth(1920),
+                                             viewportHeight(1080),
                                              isFullScreen(false),
                                              windowFlags()
 {
@@ -139,8 +139,8 @@ bool Window::pollEvents()
                 }
                 else
                 {
-                    viewportWidth = 1024;
-                    viewportHeight = 768;
+                    viewportWidth = 1920;
+                    viewportHeight = 1080;
                     SDL_SetWindowFullscreen(sdlWindow, windowFlags);
                 }
 

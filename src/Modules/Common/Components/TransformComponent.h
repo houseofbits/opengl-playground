@@ -33,12 +33,18 @@ public:
     [[nodiscard]] glm::mat4 getInverseModelMatrix() const;
     glm::vec3 getTranslation();
     glm::vec3 getScale();
+    glm::quat getRotation();
     [[nodiscard]] glm::vec3 getDirection() const;
     void decomposeModelMatrix(glm::vec3 &, glm::quat &, glm::vec3 &);
     void setFromPxTransform(const physx::PxTransform&);
+
+    glm::vec3 getInitialTranslation();
+    glm::vec3 getInitialScale();
+    glm::quat getInitialRotation();
 
     bool m_isTranslationEnabled;
     bool m_isRotationEnabled;
     bool m_isScalingEnabled;
     glm::mat4 m_transform;
+    glm::mat4 m_initialTransform;
 };

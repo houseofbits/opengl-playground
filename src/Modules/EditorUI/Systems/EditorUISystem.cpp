@@ -4,8 +4,8 @@
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
-#include "../../Physics/Components/PhysicsMeshComponent.h"
-#include "../../Physics/Components/RigidBodyComponent.h"
+#include "../../Physics/Components/PhysicsBodyComponent.h"
+#include "../../WorldMechanics/Components/DoorComponent.h"
 #include "../UI/TexturePreviewHelper.h"
 #include <glm/gtc/type_ptr.hpp>
 
@@ -21,9 +21,9 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
     usesComponent<TransformComponent>();
     usesComponent<CameraComponent>();
     usesComponent<EnvironmentProbeComponent>();
-    usesComponent<RigidBodyComponent>();
     usesComponent<CharacterControllerComponent>();
-    usesComponent<PhysicsMeshComponent>();
+    usesComponent<PhysicsBodyComponent>();
+    usesComponent<DoorComponent>();
 }
 
 void EditorUISystem::process() {
@@ -57,7 +57,7 @@ void EditorUISystem::process() {
 
         static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
 
-        ImGuizmo::Manipulate(glm::value_ptr(camera->viewMatrix),
+        if(ImGuizmo::Manipulate(glm::value_ptr(camera->viewMatrix),
                              glm::value_ptr(camera->projectionMatrix),
                              (ImGuizmo::OPERATION) m_MainToolbarUI.m_currentGizmoOperation,
                              (ImGuizmo::MODE) m_MainToolbarUI.m_currentGizmoMode,
@@ -65,7 +65,9 @@ void EditorUISystem::process() {
                              nullptr,
                              nullptr,
                              m_EditWindowUI.m_isBoundsTransformAllowed ? bounds : nullptr
-                             );
+                             )) {
+            transform->m_initialTransform = transform->m_transform;
+        }
     }
 
     ImGui::Render();

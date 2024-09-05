@@ -98,15 +98,11 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/EditorUI/UI/TextPromptHelper.h
         src/Modules/Physics/Systems/PhysicsSystem.cpp
         src/Modules/Physics/Systems/PhysicsSystem.h
-        src/Modules/Physics/Components/RigidBodyComponent.cpp
-        src/Modules/Physics/Components/RigidBodyComponent.h
         src/Modules/EditorUI/UI/ComponentEdit/BaseComponentEdit.h
         src/Modules/EditorUI/UI/ComponentEdit/TransformComponentEdit.h
         src/Modules/Physics/Components/CharacterControllerComponent.cpp
         src/Modules/Physics/Components/CharacterControllerComponent.h
         src/Core/Helper/Types.h
-        src/Modules/Physics/Components/PhysicsMeshComponent.cpp
-        src/Modules/Physics/Components/PhysicsMeshComponent.h
         src/Modules/Physics/Resources/PhysicsMeshResource.cpp
         src/Modules/Physics/Resources/PhysicsMeshResource.h
         src/Modules/Physics/Resources/PhysicsResource.cpp
@@ -118,6 +114,13 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/PhysicsActorUserData.h
         src/Modules/Physics/Helpers/ExcludeEntityIdFilterCallback.h
         src/Modules/Physics/Helpers/RayCastResult.h
+        src/Modules/WorldMechanics/Components/DoorComponent.cpp
+        src/Modules/WorldMechanics/Components/DoorComponent.h
+        src/Modules/Physics/Events/CharacterPickingEvent.h
+        src/Modules/WorldMechanics/Systems/DoorUpdateSystem.cpp
+        src/Modules/WorldMechanics/Systems/DoorUpdateSystem.h
+        src/Modules/Physics/Components/PhysicsBodyComponent.cpp
+        src/Modules/Physics/Components/PhysicsBodyComponent.h
 )
 
 

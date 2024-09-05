@@ -75,6 +75,19 @@ public:
         }
     }
 
+    template<class T, class A>
+    void registerComponentWithEntitySystemHaving(Component *component) {
+        auto *system = getSystem<T>();
+        if (system == nullptr) {
+            return;
+        }
+        if (!doesEntityHaveComponent<A>(component->m_EntityId.id())) {
+            return;
+        }
+
+        system->registerComponent(component);
+    }
+
     template<class T>
     bool doesEntityHaveComponent(Identity::Type id) {
         auto *e = getEntity(id);

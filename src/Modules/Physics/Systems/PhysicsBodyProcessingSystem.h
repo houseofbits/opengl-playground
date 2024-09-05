@@ -13,10 +13,6 @@ public:
     bool handleEditorUIEvent(EditorUIEvent *event);
 
 private:
-    void createRigidBodies();
-    void createStaticBodies();
-    void updateRigidBodyTransforms();
-    void updateStaticBodyTransforms();
     void resetToInitialTransform();
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
