@@ -1,6 +1,7 @@
 #include "TransformComponent.h"
 #include "../../../Core/Helper/Types.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../../Physics/Components/PhysicsBodyComponent.h"
 #include "../../Physics/Systems/CharacterControllerSystem.h"
 #include "../../Physics/Systems/PhysicsBodyProcessingSystem.h"
 #include "../../Physics/Systems/PhysicsSystem.h"
@@ -24,7 +25,7 @@ void TransformComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<StorageBufferUpdateSystem>(this);
     ctx.registerComponentWithEntitySystem<ShadowMapRenderSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);             //Multiple dependencies
-    ctx.registerComponentWithEntitySystem<PhysicsBodyProcessingSystem>(this);//Multiple dependencies
+    ctx.registerComponentWithEntitySystemHaving<PhysicsBodyProcessingSystem, PhysicsBodyComponent>(this);
     ctx.registerComponentWithEntitySystemHaving<CharacterControllerSystem, CharacterControllerComponent>(this);
     ctx.registerComponentWithEntitySystemHaving<DoorUpdateSystem, DoorComponent>(this);
 

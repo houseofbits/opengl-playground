@@ -67,6 +67,8 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
     } else if (m_BodyType == BODY_TYPE_DYNAMIC) {
         auto *rigidBody = m_PhysicsResource().m_pxPhysics->createRigidDynamic(Types::GLMtoPxTransform(transform.getModelMatrix()));
 
+//        rigidBody->setSolverIterationCounts(100,100);
+
         rigidBody->setSleepThreshold(0.005f);
         rigidBody->setAngularDamping(0.1f);
 

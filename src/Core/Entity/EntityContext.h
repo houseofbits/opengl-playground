@@ -101,6 +101,16 @@ public:
     }
 
     template<class T>
+    T *getEntityComponent(Identity::Type id) {
+        auto *e = getEntity(id);
+        if (e) {
+            return e->getComponent<T>();
+        }
+
+        return nullptr;
+    }
+
+    template<class T>
     T *findEntityComponent(const std::string &entityName) {
         auto *e = findEntity(entityName);
         if (e) {

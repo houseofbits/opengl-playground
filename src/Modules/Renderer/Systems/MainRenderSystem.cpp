@@ -64,7 +64,9 @@ void MainRenderSystem::process() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     Camera *camera = findActiveCamera();
-    assert(camera != nullptr);
+    if (camera == nullptr) {
+        return;
+    }
 
      auto sky = getComponentContainer<SkyComponent>().begin();
      if (doesComponentsExist<SkyComponent>() && sky->second->m_cubeMap().isReady()) {

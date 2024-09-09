@@ -2,21 +2,21 @@
 
 #include "../../../Core/Events/EntityCreationEvent.h"
 #include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
-//#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 //#include "../../../SourceLibs/imgui/imgui.h"
+//#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../../../Core/Reflection/TypedClass.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
-#include "../../WorldMechanics/Components/DoorComponent.h"
+#include "../../Physics/Components/PhysicsJointComponent.h"
 #include "../Systems/EditorUISystem.h"
 #include "ComponentEdit/CameraComponentEdit.h"
 #include "ComponentEdit/CharacterControllerComponentEdit.h"
-#include "ComponentEdit/DoorComponentEdit.h"
 #include "ComponentEdit/EnvironmentProbeComponentEdit.h"
 #include "ComponentEdit/LightComponentEdit.h"
 #include "ComponentEdit/PhysicsBodyComponentEdit.h"
+#include "ComponentEdit/PhysicsJointComponentEdit.h"
 #include "ComponentEdit/StaticMeshComponentEdit.h"
 #include "ComponentEdit/TransformComponentEdit.h"
 #include "FileDialogHelper.h"
@@ -30,8 +30,7 @@ std::vector<std::string> ENTITY_CREATION_OPTIONS = {
         "EnvironmentProbe",
         "RigidBody",
         "CharacterController",
-        "Door"
-};
+        "Door"};
 
 EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
                                                      m_EditorUISystem(editor),
@@ -50,7 +49,7 @@ EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
     m_componentEditors[EnvironmentProbeComponent::TypeName()] = new EnvironmentProbeComponentEdit(editor);
     m_componentEditors[PhysicsBodyComponent::TypeName()] = new PhysicsBodyComponentEdit(editor);
     m_componentEditors[CharacterControllerComponent::TypeName()] = new CharacterControllerComponentEdit(editor);
-    m_componentEditors[DoorComponent::TypeName()] = new DoorComponentEdit(editor);
+    m_componentEditors[PhysicsJointComponent::TypeName()] = new PhysicsJointComponentEdit(editor);
 }
 
 void EditWindowUI::process() {
@@ -83,7 +82,7 @@ void EditWindowUI::process() {
         }
 
         if (ImGui::BeginCombo("##ENTITY_FILTER", "Filter")) {
-            for(const auto& edit: m_componentEditors) {
+            for (const auto &edit: m_componentEditors) {
                 ImGui::Checkbox(edit.second->getName().c_str(), &m_entityListFilter[edit.first]);
             }
             m_selectedEntity = -1;
@@ -96,7 +95,7 @@ void EditWindowUI::process() {
         if (e != nullptr) {
             ImGui::InputText("Name", &e->m_Name);
 
-            for(const auto& edit: m_componentEditors) {
+            for (const auto &edit: m_componentEditors) {
                 edit.second->process(m_selectedEntity);
             }
         }
@@ -106,26 +105,25 @@ void EditWindowUI::process() {
 }
 
 void EditWindowUI::processEntitiesList() {
-    ImGui::BeginListBox("##ENTITY_LIST", ImVec2(ImGui::GetWindowWidth() - 15, 200));
+    if(ImGui::BeginListBox("##ENTITY_LIST", ImVec2(ImGui::GetWindowWidth() - 15, 200))) {
+        for (const auto &entity: m_EditorUISystem->m_EntityContext->getAllEntities()) {
+            std::string name = entity->m_Name + " (" + entity->m_TypeName + ")";
 
-    for(const auto& entity: m_EditorUISystem->m_EntityContext->getAllEntities()) {
-        std::string name = entity->m_Name + " (" + entity->m_TypeName + ")";
+            bool isEditable = false;
+            for (const auto &edit: m_componentEditors) {
+                if (edit.second->isEntityEditable(entity->m_Id.id()) && m_entityListFilter[edit.first]) {
+                    isEditable = true;
+                    break;
+                }
+            }
 
-        bool isEditable = false;
-        for(const auto& edit: m_componentEditors) {
-            if (edit.second->isEntityEditable(entity->m_Id.id())
-                && m_entityListFilter[edit.first]) {
-                isEditable = true;
-                break;
+            if (isEditable && ImGui::Selectable(name.c_str(), m_selectedEntity == entity->m_Id.id())) {
+                m_selectedEntity = (int) entity->m_Id.id();
             }
         }
 
-        if (isEditable && ImGui::Selectable(name.c_str(), m_selectedEntity == entity->m_Id.id())) {
-            m_selectedEntity = (int) entity->m_Id.id();
-        }
+        ImGui::EndListBox();
     }
-
-    ImGui::EndListBox();
 }
 
 bool EditWindowUI::isTransformComponentSelected() {

@@ -6,6 +6,7 @@
 #include "../Resources/PhysicsResource.h"
 
 class PhysicsBodyComponent : public Component {
+    TYPE_DEFINITION(PhysicsBodyComponent);
 public:
     inline static const std::string MODEL_KEY = "model";
     inline static const std::string TYPE_KEY = "type";
@@ -13,9 +14,6 @@ public:
     inline static const std::string RESTITUTION_KEY = "restitution";
     inline static const std::string FRICTION_KEY = "friction";
     inline static const std::string DENSITY_KEY = "density";
-
-    PhysicsBodyComponent();
-    ~PhysicsBodyComponent() override;
 
     enum BodyType {
         BODY_TYPE_STATIC,
@@ -26,6 +24,9 @@ public:
         MESH_TYPE_CONVEX,
         MESH_TYPE_TRIANGLE,
     };
+
+    PhysicsBodyComponent();
+    ~PhysicsBodyComponent() override;
 
     void serialize(nlohmann::json &j) override;
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;

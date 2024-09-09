@@ -144,6 +144,9 @@
             },
             "physicsBody": {
                 "class": "PhysicsBodyComponent"
+            },
+            "physicsJoint": {
+                "class": "PhysicsJointComponent"
             }
         }
     }

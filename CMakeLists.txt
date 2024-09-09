@@ -121,8 +121,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/WorldMechanics/Systems/DoorUpdateSystem.h
         src/Modules/Physics/Components/PhysicsBodyComponent.cpp
         src/Modules/Physics/Components/PhysicsBodyComponent.h
-        src/Modules/Physics/Components/HingeJointComponent.cpp
-        src/Modules/Physics/Components/HingeJointComponent.h
+        src/Modules/Physics/Components/PhysicsJointComponent.cpp
+        src/Modules/Physics/Components/PhysicsJointComponent.h
+        src/Modules/Physics/Systems/JointsProcessingSystem.cpp
+        src/Modules/Physics/Systems/JointsProcessingSystem.h
 )
 
 

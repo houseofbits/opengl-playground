@@ -5,6 +5,7 @@
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
+#include "../../Physics/Components/PhysicsJointComponent.h"
 #include "../../WorldMechanics/Components/DoorComponent.h"
 #include "../UI/TexturePreviewHelper.h"
 #include <glm/gtc/type_ptr.hpp>
@@ -23,6 +24,7 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
     usesComponent<EnvironmentProbeComponent>();
     usesComponent<CharacterControllerComponent>();
     usesComponent<PhysicsBodyComponent>();
+    usesComponent<PhysicsJointComponent>();
     usesComponent<DoorComponent>();
 }
 

@@ -23,7 +23,7 @@ void PhysicsBodyProcessingSystem::process() {
 
     for (const auto body: getComponentContainer<PhysicsBodyComponent>()) {
         auto *transform = getComponent<TransformComponent>(body.first);
-        if (body.second->m_pxRigidActor == nullptr && body.second->m_meshResource.isReady()) {
+        if (body.second->m_pxRigidActor == nullptr) {
             body.second->create(*transform);
             m_PhysicsResource().m_pxScene->addActor(*body.second->m_pxRigidActor);
         } else {

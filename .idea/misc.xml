@@ -12,6 +12,7 @@
       <file path="$PROJECT_DIR$/Testing" />
       <file path="$PROJECT_DIR$/bin/resources/test/textures" />
       <file path="$PROJECT_DIR$/bin/resources/textures" />
+      <file path="$PROJECT_DIR$/src/SourceLibs" />
     </excludeRoots>
   </component>
 </project>

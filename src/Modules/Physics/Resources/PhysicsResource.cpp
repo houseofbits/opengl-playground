@@ -36,6 +36,7 @@ Resource::Status PhysicsResource::build() {
 
     physx::PxSceneDesc sceneDesc(m_pxPhysics->getTolerancesScale());
     sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+    sceneDesc.solverType = physx::PxSolverType::Enum::eTGS;
 
     physx::PxDefaultCpuDispatcher *m_cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
 
