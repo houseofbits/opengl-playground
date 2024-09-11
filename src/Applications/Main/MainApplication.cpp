@@ -3,7 +3,6 @@
 #include "../../Modules/EditorUI/EditorUIModule.h"
 #include "../../Modules/Physics/PhysicsModule.h"
 #include "../../Modules/Renderer/RendererModule.h"
-#include "../../Modules/WorldMechanics/WorldMechanicsModule.h"
 #include <fstream>
 
 MainApplication::MainApplication() : Application(), m_Window(&m_EventManager) {
@@ -25,7 +24,6 @@ void MainApplication::initialize(const std::string &entityDefinitionFileName) {
     m_EntityContext.registerModule<RendererModule>();
     m_EntityContext.registerModule<EditorUIModule>();
     m_EntityContext.registerModule<PhysicsModule>();
-    m_EntityContext.registerModule<WorldMechanicsModule>();
 
     m_Window.create();
 

@@ -1,4 +1,5 @@
 #include "PhysicsResource.h"
+#include "../Helpers/SceneFilterShader.h"
 
 static physx::PxDefaultErrorCallback gDefaultErrorCallback;
 static physx::PxDefaultAllocator gDefaultAllocatorCallback;
@@ -8,7 +9,7 @@ PhysicsResource::PhysicsResource() : Resource(),
                                      m_pxFoundation(nullptr),
                                      m_pxPhysics(nullptr),
                                      m_pxScene(nullptr),
-                                     m_ControllerManager(nullptr) {
+                                     m_SimulationEventCallback(this) {
 }
 
 Resource::Status PhysicsResource::fetchData(ResourceManager &) {
@@ -37,9 +38,10 @@ Resource::Status PhysicsResource::build() {
     physx::PxSceneDesc sceneDesc(m_pxPhysics->getTolerancesScale());
     sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
     sceneDesc.solverType = physx::PxSolverType::Enum::eTGS;
+    sceneDesc.simulationEventCallback = &m_SimulationEventCallback;
+    sceneDesc.filterShader = &SceneFilterShader;
 
     physx::PxDefaultCpuDispatcher *m_cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
-
     if (!m_cpuDispatcher) {
         Log::error("PhysicsResource: PxDefaultCpuDispatcherCreate failed!");
 
@@ -47,7 +49,6 @@ Resource::Status PhysicsResource::build() {
     }
 
     sceneDesc.cpuDispatcher = m_cpuDispatcher;
-    sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
 
     m_pxScene = m_pxPhysics->createScene(sceneDesc);
     if (!m_pxScene) {
@@ -57,8 +58,6 @@ Resource::Status PhysicsResource::build() {
     }
     m_pxScene->setVisualizationParameter(physx::PxVisualizationParameter::eSCALE, 1.0);
     m_pxScene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
-
-    m_ControllerManager = PxCreateControllerManager(*m_pxScene, true);
 
     return Resource::STATUS_READY;
 }
@@ -126,4 +125,18 @@ bool PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type 
     }
 
     return false;
+}
+
+void PhysicsResource::addContactPoint(Identity::Type entityId, const physx::PxContactPairPoint& contact) {
+    if (m_entityContacts.count(entityId) == 0) {
+        m_entityContacts[entityId].reserve(16);
+    }
+
+    m_entityContacts[entityId].push_back(contact);
+}
+
+void PhysicsResource::clearEntityContacts() {
+    for(auto &pair : m_entityContacts) {
+       pair.second.clear();
+    }
 }

@@ -4,6 +4,8 @@
 #include "../../../Core/Helper/Types.h"
 #include "../Events/CharacterPickingEvent.h"
 
+using namespace physx;
+
 static physx::PxControllerFilters filters;
 
 CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
@@ -30,7 +32,6 @@ void CharacterControllerSystem::process() {
     }
 
     updateCCTs();
-    createCCTs();
 }
 
 void CharacterControllerSystem::registerEventHandlers(EventManager *eventManager) {
@@ -64,79 +65,67 @@ bool CharacterControllerSystem::handleInputEvent(InputEvent *event) {
 
 void CharacterControllerSystem::resetToInitialTransform() {
     for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
-        if (component.second->m_CCTController != nullptr) {
+        if (component.second->m_pxRigidActor != nullptr) {
             auto *transform = getComponent<TransformComponent>(component.first);
             transform->m_transform = transform->m_initialTransform;
-            component.second->setPhysicsPosition(transform->getTranslation());
-
-//            transform->resetTransform();
-//            transform->setTranslation(component.second->m_initialPosition);
-//            component.second->setPhysicsPosition(component.second->m_initialPosition);
-        }
-    }
-}
-
-void CharacterControllerSystem::createCCTs() {
-    for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
-        if (component.second->m_CCTController == nullptr) {
-            auto *transform = getComponent<TransformComponent>(component.first);
-            component.second->create(*transform);
         }
     }
 }
 
 void CharacterControllerSystem::updateCCTs() {
     for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
-        if (component.second->m_CCTController != nullptr) {
-            auto *transform = getComponent<TransformComponent>(component.first);
+        auto *transform = getComponent<TransformComponent>(component.first);
+        if (component.second->m_pxRigidActor == nullptr) {
+            component.second->create(*transform);
+            m_PhysicsResource().m_pxScene->addActor(*component.second->m_pxRigidActor);
+        } else {
+            component.second->update(*transform, !m_isSimulationDisabled);
 
-            if (m_isSimulationDisabled) {
-                component.second->setPhysicsPosition(transform->getTranslation());
-            } else {
-                physx::PxControllerState state;
-                component.second->m_CCTController->getState(state);
-                m_isOnGround = (state.collisionFlags & physx::PxControllerCollisionFlag::eCOLLISION_DOWN) != 0;
+            auto *cameraComp = getComponent<CameraComponent>(component.first);
+            if (cameraComp == nullptr) {
+                return;
+            }
+
+            if (!m_isSimulationDisabled) {
+
+                RayCastResult hit;
+                if (m_PhysicsResource().characterRayCast(transform->getTranslation(), glm::vec3(0. - 1.0), component.first, hit)) {
+                    m_isOnGround = hit.m_distance < 0.1;
+                }
+
+                auto *actor = component.second->m_pxRigidActor;
                 if (m_doMove || m_doJump || !m_isOnGround) {
-                    glm::vec3 velocity(0);
-
+                    PxVec3 force(0);
                     if (m_doMove) {
-                        velocity = velocity + (glm::normalize(m_movementDirection) * 2.0f);
+                        float f = m_isOnGround ? 150 : 50;
+                        force = Types::GLMtoPxVec3(glm::normalize(m_movementDirection) * f);
                     }
 
-                    if (m_jumpPower > 0.1) {
-                        float ty = std::min(m_jumpPower * 0.3f, 2.0f);
-                        velocity = velocity + glm::vec3(0, ty, 0);
-                        m_jumpPower -= ty;
-                    } else if (!m_isOnGround) {
-                        velocity = velocity + glm::vec3(0, -9.81, 0);// * Time::frameTime;
-                    }
+                    actor->setForceAndTorque(PxVec3(force.x, -50, force.z), PxVec3(0.0f));
 
-                    component.second->m_CCTController->move(Types::GLMtoPxVec3(velocity) * Time::frameTime, 0, Time::frameTime, filters);
+                    if (m_isOnGround && m_doJump) {
+                        PxVec3 jumpImpulse(0.0f, 1000, 0.0f);
+                        actor->addForce(jumpImpulse, PxForceMode::eFORCE);
+                    }
 
                     m_movementDirection = glm::vec3(0);
                     m_doMove = false;
-
-                    if (m_isOnGround) {
-                        m_doJump = false;
-                    }
+                    m_doJump = false;
                 }
+            }
 
-                transform->resetTransform();
-                transform->setTranslation(component.second->getPhysicsPosition());
 
-                auto *cameraComp = getComponent<CameraComponent>(component.first);
-                if (cameraComp && cameraComp->m_isActive) {
-                    cameraComp->m_Camera.setPosition(transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
+            if (cameraComp->m_isActive) {
+                cameraComp->m_Camera.setPosition(transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
 
-                    RayCastResult hit;
-                    if (m_PhysicsResource().characterRayCast(cameraComp->m_Camera.position, cameraComp->m_Camera.getViewDirection(), component.first, hit)) {
-                        auto *e = new CharacterPickingEvent();
-                        e->m_entityId = hit.m_entityId;
-                        e->m_distance = hit.m_distance;
-                        e->m_touchPoint = hit.m_touchPoint;
-                        e->m_doActivate = m_doInteract;
-                        m_EventManager->queueEvent(e);
-                    }
+                RayCastResult hit;
+                if (m_PhysicsResource().characterRayCast(cameraComp->m_Camera.position, cameraComp->m_Camera.getViewDirection(), component.first, hit)) {
+                    auto *e = new CharacterPickingEvent();
+                    e->m_entityId = hit.m_entityId;
+                    e->m_distance = hit.m_distance;
+                    e->m_touchPoint = hit.m_touchPoint;
+                    e->m_doActivate = m_doInteract;
+                    m_EventManager->queueEvent(e);
                 }
             }
         }
@@ -148,19 +137,19 @@ void CharacterControllerSystem::updateCCTs() {
 void CharacterControllerSystem::processCCTInput(CameraComponent *camera, CharacterControllerComponent *cct, InputEvent *event) {
     glm::vec3 viewDirection = camera->m_Camera.getViewDirection();
     viewDirection.y = 0;
-    viewDirection = glm::normalize(viewDirection);
+    m_direction = glm::normalize(viewDirection);
 
-    glm::vec3 rightDirection = glm::normalize(glm::cross(viewDirection, glm::vec3(0, 1, 0)));
+    glm::vec3 rightDirection = glm::normalize(glm::cross(m_direction, glm::vec3(0, 1, 0)));
 
     //W
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 26) {
         m_doMove = true;
-        m_movementDirection = m_movementDirection + viewDirection;
+        m_movementDirection = m_movementDirection + m_direction;
     }
     //S
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 22) {
         m_doMove = true;
-        m_movementDirection = m_movementDirection - viewDirection;
+        m_movementDirection = m_movementDirection - m_direction;
     }
     //A
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 4) {

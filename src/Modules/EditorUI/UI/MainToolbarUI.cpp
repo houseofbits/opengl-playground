@@ -1,10 +1,11 @@
+#include "MainToolbarUI.h"
 #include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
+#include "../../Physics/Components/CharacterControllerComponent.h"
 #include "../Systems/EditorUISystem.h"
-#include "MainToolbarUI.h"
 
 
 MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
@@ -13,13 +14,34 @@ MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
                                                        m_renderShaderType(0),
                                                        m_currentGizmoOperation(ImGuizmo::TRANSLATE),
                                                        m_currentGizmoMode(ImGuizmo::WORLD),
+                                                       m_previousSelectedCameraComponentId(0),
                                                        m_selectedCameraComponentId(0) {
 }
 
 void MainToolbarUI::process() {
 
     if (ImGui::BeginMainMenuBar()) {
-        if (ImGui::BeginMenu("Main")) {
+        ImGui::PushID(0);
+        if (!m_isSimulationEnabled) {
+            ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor(0, 200, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4) ImColor(0, 170, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4) ImColor(0, 150, 0));
+            if (ImGui::Button("Run")) {
+                runSimulation();
+            }
+            ImGui::PopStyleColor(3);
+        } else {
+            ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor(200, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4) ImColor(170, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4) ImColor(150, 0, 0));
+            if (ImGui::Button("Stop")) {
+                stopSimulation();
+            }
+            ImGui::PopStyleColor(3);
+        }
+        ImGui::PopID();
+
+        if (ImGui::BeginMenu("Edit")) {
             if (ImGui::MenuItem("Save")) {
                 sendSaveEvent();
             }
@@ -129,7 +151,7 @@ void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) {
 void MainToolbarUI::processViewMenu() {
     for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
         if (comp.second->m_isActive) {
-            m_selectedCameraComponentId = (int)comp.first;
+            m_selectedCameraComponentId = (int) comp.first;
         }
     }
 
@@ -158,6 +180,42 @@ void MainToolbarUI::processViewMenu() {
         ImGui::EndMenu();
     }
 
+    activateCameras();
+}
+
+void MainToolbarUI::runSimulation() {
+    m_isSimulationEnabled = true;
+    sendUIEvent(EditorUIEvent::TOGGLE_SIMULATION_ENABLED);
+    m_isEditWindowVisible = false;
+    sendEditorStateEvent();
+
+    m_previousSelectedCameraComponentId = m_selectedCameraComponentId;
+    auto cc = m_EditorUISystem->getComponentContainer<CharacterControllerComponent>();
+    if (!cc.empty()) {
+        auto* ccCam = m_EditorUISystem->getComponent<CameraComponent>(cc.begin()->first);
+        if (ccCam!= nullptr) {
+            m_selectedCameraComponentId = (int) ccCam->m_EntityId.id();
+        }
+    }
+
+    activateCameras();
+}
+
+void MainToolbarUI::stopSimulation() {
+    m_isSimulationEnabled = false;
+    sendUIEvent(EditorUIEvent::TOGGLE_SIMULATION_DISABLED);
+    sendUIEvent(EditorUIEvent::RESET_TO_INITIAL_TRANSFORM);
+    m_isEditWindowVisible = true;
+    sendEditorStateEvent();
+
+    if (m_previousSelectedCameraComponentId) {
+        m_selectedCameraComponentId = m_previousSelectedCameraComponentId;
+        m_previousSelectedCameraComponentId = 0;
+        activateCameras();
+    }
+}
+
+void MainToolbarUI::activateCameras() {
     for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
         comp.second->m_isActive = m_selectedCameraComponentId == comp.first;
     }

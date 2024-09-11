@@ -9,8 +9,6 @@
 #include "../../Renderer/Systems/MainRenderSystem.h"
 #include "../../Renderer/Systems/ShadowMapRenderSystem.h"
 #include "../../Renderer/Systems/StorageBufferUpdateSystem.h"
-#include "../../WorldMechanics/Components/DoorComponent.h"
-#include "../../WorldMechanics/Systems/DoorUpdateSystem.h"
 
 TransformComponent::TransformComponent() : m_transform(1.0),
                                            m_initialTransform(1.0),
@@ -27,7 +25,6 @@ void TransformComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);             //Multiple dependencies
     ctx.registerComponentWithEntitySystemHaving<PhysicsBodyProcessingSystem, PhysicsBodyComponent>(this);
     ctx.registerComponentWithEntitySystemHaving<CharacterControllerSystem, CharacterControllerComponent>(this);
-    ctx.registerComponentWithEntitySystemHaving<DoorUpdateSystem, DoorComponent>(this);
 
     //    ctx.getEntitySystem<DoorUpdateSystem>().entityHaving<DoorComponent>().registerComponent(this); ????
 }

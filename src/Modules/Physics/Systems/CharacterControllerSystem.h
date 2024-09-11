@@ -17,7 +17,6 @@ public:
     bool handleInputEvent(InputEvent *event);
 
 private:
-    void createCCTs();
     void updateCCTs();
     void resetToInitialTransform();
     void processCCTInput(CameraComponent* camera, CharacterControllerComponent* cct, InputEvent *event);
@@ -25,6 +24,7 @@ private:
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     bool m_isSimulationDisabled;
 
+    glm::vec3 m_direction;
     glm::vec3 m_movementDirection;
     bool m_isOnGround;
     bool m_doMove;

@@ -114,17 +114,17 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/PhysicsActorUserData.h
         src/Modules/Physics/Helpers/ExcludeEntityIdFilterCallback.h
         src/Modules/Physics/Helpers/RayCastResult.h
-        src/Modules/WorldMechanics/Components/DoorComponent.cpp
-        src/Modules/WorldMechanics/Components/DoorComponent.h
         src/Modules/Physics/Events/CharacterPickingEvent.h
-        src/Modules/WorldMechanics/Systems/DoorUpdateSystem.cpp
-        src/Modules/WorldMechanics/Systems/DoorUpdateSystem.h
         src/Modules/Physics/Components/PhysicsBodyComponent.cpp
         src/Modules/Physics/Components/PhysicsBodyComponent.h
         src/Modules/Physics/Components/PhysicsJointComponent.cpp
         src/Modules/Physics/Components/PhysicsJointComponent.h
         src/Modules/Physics/Systems/JointsProcessingSystem.cpp
         src/Modules/Physics/Systems/JointsProcessingSystem.h
+        src/Modules/Physics/Helpers/SimulationEventCallback.h
+        src/Modules/Physics/Helpers/SimulationEventCallback.cpp
+        src/Modules/Physics/Helpers/SceneFilterShader.h
+        src/Modules/Physics/Helpers/FilterGroups.h
 )
 
 

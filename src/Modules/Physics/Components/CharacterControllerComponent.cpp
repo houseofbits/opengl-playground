@@ -1,15 +1,16 @@
 #include "CharacterControllerComponent.h"
 #include "../../../Core/Helper/Types.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
-#include "../Helpers/PhysicsActorUserData.h"
 #include "../Systems/CharacterControllerSystem.h"
 #include "../Systems/PhysicsSystem.h"
+#include "../Helpers/FilterGroups.h"
+
+using namespace physx;
 
 CharacterControllerComponent::CharacterControllerComponent() : Component(),
                                                                m_height(1.75),
                                                                m_radius(0.25),
-                                                               m_CCTController(nullptr),
-                                                               m_initialPosition(),
+                                                               m_pxRigidActor(nullptr),
                                                                m_PhysicsResource() {
 }
 
@@ -30,39 +31,43 @@ void CharacterControllerComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
 }
 
-glm::vec3 CharacterControllerComponent::getPhysicsPosition() const {
-    if (m_CCTController != nullptr) {
-        auto p = m_CCTController->getPosition();
-        return {p.x, p.y - (m_height * 0.5), p.z};
-    }
-    return glm::vec3(0);
-}
-
-void CharacterControllerComponent::setPhysicsPosition(glm::vec3 position) {
-    if (m_CCTController != nullptr) {
-        m_initialPosition = position;
-        m_CCTController->setPosition(physx::PxExtendedVec3(position.x, position.y, position.z));
-    }
-}
-
 void CharacterControllerComponent::create(TransformComponent &transform) {
-    physx::PxCapsuleControllerDesc desc;
-    desc.scaleCoeff = 1;
-    desc.position = Types::GLMtoPxExtendedVec3(transform.getTranslation());
-    desc.contactOffset = 0.001;
-    desc.stepOffset = 0.001;
-    desc.slopeLimit = 0;
-    desc.radius = m_radius;
-    desc.height = m_height - (m_radius * 2.0f);
-    desc.upDirection = physx::PxVec3(0, 1, 0);
-    desc.material = m_PhysicsResource().m_pxPhysics->createMaterial(0.5, 0.5, 0.5);
-    desc.climbingMode = physx::PxCapsuleClimbingMode::eCONSTRAINED;
+    auto *rigidBody = m_PhysicsResource().m_pxPhysics->createRigidDynamic(Types::GLMtoPxTransform(transform.getModelMatrix()));
+    rigidBody->setSleepThreshold(0.005f);
 
-    m_CCTController = m_PhysicsResource().m_ControllerManager->createController(desc);
-    setPhysicsPosition(transform.getTranslation());
-    m_CCTController->getActor()->userData = new PhysicsActorUserData(m_EntityId.id()); //reinterpret_cast<void *>(m_EntityId.id());            ///!!!!Memory leak
+    m_pxRigidActor = rigidBody;
+
+    m_pxRigidActor->userData = new PhysicsActorUserData(m_EntityId.id());
+
+    PxCapsuleGeometry capsuleGeometry(m_radius, (m_height - m_radius * 2.0f) * 0.5f);
+    physx::PxMaterial *material = m_PhysicsResource().m_pxPhysics->createMaterial(1.0, 1.0, 0.0);
+    PxShape *capsuleShape = m_PhysicsResource().m_pxPhysics->createShape(capsuleGeometry, *material);
+
+    PxFilterData filterData;
+    filterData.word0 = FilterGroups::CHARACTER_CONTROLLER_CONTRACT_REPORTING;
+    capsuleShape->setSimulationFilterData(filterData);
+
+    PxTransform relativePose(PxVec3(0, m_height * 0.5f, 0), PxQuat(PxHalfPi, PxVec3(0, 0, 1)));
+    capsuleShape->setLocalPose(relativePose);
+    m_pxRigidActor->attachShape(*capsuleShape);
+
+    physx::PxRigidBodyExt::updateMassAndInertia(*rigidBody, 10);
+
+    m_pxRigidActor->setMass(1);
+    m_pxRigidActor->setLinearDamping(10.0f);
+    m_pxRigidActor->setAngularDamping(100.0f);
+    m_pxRigidActor->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);
+    m_pxRigidActor->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
 }
 
 bool CharacterControllerComponent::isReady() {
     return m_PhysicsResource.isReady();
+}
+
+void CharacterControllerComponent::update(TransformComponent &transform, bool isSimulationEnabled) const {
+    if (isSimulationEnabled) {
+        transform.setFromPxTransform(m_pxRigidActor->getGlobalPose());
+    } else {
+        m_pxRigidActor->setGlobalPose(Types::GLMtoPxTransform(transform.getModelMatrix()));
+    }
 }

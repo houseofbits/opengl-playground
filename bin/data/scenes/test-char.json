@@ -3,39 +3,42 @@
         "camera": {
             "isActive": true,
             "position": [
-                -15.546467781066895,
-                3.3445582389831543,
-                11.745850563049316
+                -5.4534149169921875,
+                1.0595945119857788,
+                -10.9454927444458
             ],
+            "type": "FREE",
             "upDirection": [
-                0.21524180471897125,
-                0.958807647228241,
-                -0.18536165356636047
+                0.01566026173532009,
+                0.9757879376411438,
+                0.21815721690654755
             ],
             "viewDirection": [
-                0.7265303730964661,
-                -0.28405630588531494,
-                -0.6256722807884216
+                0.06986648589372635,
+                -0.21871860325336456,
+                0.9732836484909058
             ]
         },
-        "name": "main-camera",
+        "name": "free-camera",
         "type": "Camera"
     },
     {
         "mesh": {
-            "material": "data/materials/grass1.json",
-            "model": "resources/scenes/scene1/floor2.gltf",
+            "material": "data/materials/solid-wall.json",
+            "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
         "name": "floor",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
-            "model": "resources/scenes/scene1/floor2.gltf",
+            "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -45,28 +48,28 @@
                 1.0
             ],
             "scale": [
-                1.0,
-                1.0,
-                1.0
+                22.818788528442383,
+                0.5,
+                20.442365646362305
             ],
             "translation": [
-                0.0,
-                0.0,
-                0.0
+                -5.045999526977539,
+                -0.25,
+                -5.0
             ]
         },
         "type": "StaticMesh"
     },
     {
         "light": {
-            "attenuation": 20.0,
+            "attenuation": 17.299989700317383,
             "castShadows": true,
             "color": [
                 1.0,
                 0.9752018451690674,
                 0.7892156839370728
             ],
-            "intensity": 1.6000001430511475,
+            "intensity": 0.49999991059303284,
             "isEnabled": true,
             "shadowBias": 9.999999747378752e-05,
             "shadowResolution": 1024,
@@ -75,9 +78,9 @@
         "name": "omni light",
         "transform": {
             "translation": [
-                -12.643105506896973,
-                6.273838043212891,
-                10.373584747314453
+                -5.201831817626953,
+                9.306157112121582,
+                -4.703933238983154
             ]
         },
         "type": "OmniLight"
@@ -98,7 +101,7 @@
                 0.7750865817070007,
                 1.0
             ],
-            "intensity": 1.8000001907348633,
+            "intensity": 0.49999991059303284,
             "isEnabled": true,
             "shadowBias": 9.999999747378752e-05,
             "shadowResolution": 512,
@@ -107,9 +110,9 @@
         "name": "omni-ambient",
         "transform": {
             "translation": [
-                -5.983063697814941,
-                5.459465026855469,
-                0.12854260206222534
+                -5.438762187957764,
+                3.723975658416748,
+                -8.688417434692383
             ]
         },
         "type": "OmniLight"
@@ -118,19 +121,20 @@
         "camera": {
             "isActive": false,
             "position": [
-                -11.139669418334961,
-                1.750999927520752,
-                10.221456527709961
+                -2.6860947608947754,
+                1.7509998083114624,
+                -9.086320877075195
             ],
+            "type": "FP",
             "upDirection": [
-                0.0878862664103508,
-                0.9871583580970764,
-                0.13339543342590332
+                -0.18782544136047363,
+                0.5738524198532104,
+                0.7971292734146118
             ],
             "viewDirection": [
-                0.543102502822876,
-                -0.15974460542201996,
-                0.8243308663368225
+                -0.13161112368106842,
+                -0.8189587593078613,
+                0.5585562586784363
             ]
         },
         "cct": {
@@ -142,31 +146,33 @@
             "model": "data/models/character-capsule.gltf",
             "renderer": "SOLID"
         },
-        "name": "Main-CCT",
+        "name": "main-CCT",
         "transform": {
             "translation": [
-                -11.139669418334961,
-                1.6399388313293457,
-                10.221456527709961
+                -6.168120861053467,
+                1.3744456768035889,
+                -8.272679328918457
             ]
         },
         "type": "CharacterController"
     },
     {
         "mesh": {
-            "material": "data/materials/concrete1.json",
-            "model": "resources/scenes/scene1/walls1.gltf",
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
-        "name": "walls 1",
-        "physicsMesh": {
+        "name": "wall 1",
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
-            "model": "resources/scenes/scene1/walls1.gltf",
+            "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -176,8 +182,76 @@
                 1.0
             ],
             "scale": [
+                0.1924819052219391,
+                3.5285356044769287,
+                6.798940181732178
+            ],
+            "translation": [
+                -0.9559178352355957,
+                1.8192121982574463,
+                -5.9057183265686035
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall 2",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                7.277060508728027,
+                3.4601707458496094,
+                0.1802596002817154
+            ],
+            "translation": [
+                -7.169008255004883,
+                1.60885488986969,
+                -1.8669625520706177
+            ]
+        },
+        "type": "StaticMesh"
+    },
+    {
+        "light": {
+            "attenuation": 1.0,
+            "beamAngle": 90.0,
+            "castShadows": false,
+            "color": [
                 1.0,
                 1.0,
+                1.0
+            ],
+            "intensity": 1.0,
+            "isEnabled": true,
+            "type": "SPOT"
+        },
+        "name": "NEW SpotLight",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
                 1.0
             ],
             "translation": [
@@ -186,186 +260,6 @@
                 0.0
             ]
         },
-        "type": "StaticMesh"
-    },
-    {
-        "mesh": {
-            "material": "data/materials/walls2.json",
-            "model": "resources/scenes/scene1/walls2.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "walls 2",
-        "physicsMesh": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "model": "resources/scenes/scene1/walls2.gltf",
-            "restitution": 0.5,
-            "type": "triangle"
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
-            ]
-        },
-        "type": "StaticMesh"
-    },
-    {
-        "mesh": {
-            "material": "data/materials/floor3.json",
-            "model": "resources/scenes/scene1/floor3.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "floor 2",
-        "physicsMesh": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "model": "resources/scenes/scene1/floor3.gltf",
-            "restitution": 0.5,
-            "type": "triangle"
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
-            ]
-        },
-        "type": "StaticMesh"
-    },
-    {
-        "mesh": {
-            "material": "data/materials/solid-blue.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "RigidBox1",
-        "rigidBody": {
-            "density": 100.0,
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                -10.925596237182617,
-                1.1271404027938843,
-                8.342142105102539
-            ]
-        },
-        "type": "RigidBody"
-    },
-    {
-        "mesh": {
-            "material": "data/materials/solid-green.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "RigidBox2",
-        "rigidBody": {
-            "density": 100.0,
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                -10.975396156311035,
-                2.5699167251586914,
-                8.44802188873291
-            ]
-        },
-        "type": "RigidBody"
-    },
-    {
-        "mesh": {
-            "material": "data/materials/solid-red.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "RigidBox3",
-        "rigidBody": {
-            "density": 100.0,
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                -11.049590110778809,
-                3.9526891708374023,
-                8.470512390136719
-            ]
-        },
-        "type": "RigidBody"
+        "type": "SpotLight"
     }
 ]

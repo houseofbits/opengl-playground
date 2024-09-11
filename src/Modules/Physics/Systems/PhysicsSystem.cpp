@@ -16,6 +16,7 @@ void PhysicsSystem::process() {
         return;
     }
 
+    m_PhysicsResource().clearEntityContacts();
     if (!m_isSimulationDisabled) {
         m_PhysicsResource().m_pxScene->simulate(1.0 / 60.0);
         while (!m_PhysicsResource().m_pxScene->fetchResults(true)) {
