@@ -21,7 +21,7 @@ void EntityContext::deserializeEntityMap(nlohmann::json &j) {
     m_EntityConfiguration.deserialize(j);
 }
 
-Entity::TEntityPtr EntityContext::  createEntityFromTemplate(const std::string &configurationName, ResourceManager &resourceManager) {
+Entity::TEntityPtr EntityContext::createEntityFromTemplate(const std::string &configurationName, ResourceManager &resourceManager) {
     Entity::TEntityPtr e = addEntity();
     m_EntityConfiguration.buildEntity(*e, configurationName, resourceManager);
 
@@ -31,7 +31,7 @@ Entity::TEntityPtr EntityContext::  createEntityFromTemplate(const std::string &
 std::shared_ptr<Entity> EntityContext::createEntityFromJson(nlohmann::json &entityJson, ResourceManager &resourceManager) {
     Entity::TEntityPtr e = addEntity();
 
-    for (auto& [key, value] : entityJson.items()) {
+    for (auto &[key, value]: entityJson.items()) {
         if (key == "type" || key == "name") {
             continue;
         }
@@ -76,12 +76,7 @@ void EntityContext::serializeEntities(nlohmann::json &j) {
 
 void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager &resourceManager) {
     for (const auto &entityJson: j.items()) {
-        if (!entityJson.value().contains("type")) {
-            Log::error("EntityContext::createEntities: Json does not contain entity type");
-            continue;
-        }
         Entity::TEntityPtr entity = createEntityFromJson(entityJson.value(), resourceManager);
-//        Entity::TEntityPtr entity = createEntityFromTemplate(entityJson.value().at("type"), resourceManager);
         EntitySerializer::deserialize(*entity, entityJson.value(), resourceManager);
     }
 }
@@ -127,11 +122,49 @@ Entity *EntityContext::getEntity(Identity::Type id) {
     return nullptr;
 }
 
-Entity *EntityContext::findEntity(const std::string& name) {
+Entity *EntityContext::findEntity(const std::string &name) {
     for (const auto &e: m_Entities) {
         if (e->m_Name == name) {
             return e.get();
         }
     }
     return nullptr;
+}
+
+void EntityContext::createComponentInplace(Identity::Type entityId, std::string componentName) {
+    Entity *e = getEntity(entityId);
+    if (e != nullptr) {
+        Component *c = m_ComponentFactory.createInstance(componentName);
+        if (c == nullptr) {
+            Log::error("Component class not found " + componentName);
+
+            return;
+        }
+
+        if (e->getComponent(componentName) != nullptr) {
+            delete c;
+            Log::error("Entity already has component " + componentName);
+
+            return;
+        }
+
+        c->m_Id = Identity::create(Identity::COMPONENT);
+        c->m_Name = componentName;
+        c->m_EntityId = e->m_Id;
+
+        e->addComponent(*c);
+        c->registerWithSystems(*this);
+    }
+}
+
+void EntityContext::removeComponent(Identity::Type entityId, std::string componentName) {
+    Entity *e = getEntity(entityId);
+    if (e != nullptr) {
+        auto* c = e->getComponent(componentName);
+        if (c != nullptr) {
+            unregisterComponentFromSystems(c);
+            e->removeComponent(*c);
+            delete c;
+        }
+    }
 }

@@ -25,8 +25,6 @@ public:
             return;
         }
 
-        ImGui::SeparatorText("Physics joint");
-
         if (ImGui::BeginCombo("Target##TARGET_ENTITY_NAME", body->m_targetEntityName.c_str())) {
             for (const auto &entity: m_EditorUISystem->m_EntityContext->getAllEntities()) {
                 auto* c = entity->getComponent<PhysicsBodyComponent>();

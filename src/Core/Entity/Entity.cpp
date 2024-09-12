@@ -22,3 +22,13 @@ bool Entity::isReadyToRegister() {
     return std::all_of(m_Components.begin(), m_Components.end(),
                        [](const auto &component) { return component->isReady(); });
 }
+
+void Entity::removeComponent(Component &c) {
+    for (std::list<Component::TComponentPtr>::iterator it = m_Components.begin(); it != m_Components.end(); ++it) {
+        if((*it)->m_Id == c.m_Id) {
+            m_Components.erase(it);
+
+            return;
+        }
+    }
+}

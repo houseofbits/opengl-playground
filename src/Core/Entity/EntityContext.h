@@ -135,4 +135,6 @@ public:
     void registerEntitiesWithSystems();
     void initializeSystems(ResourceManager *, EventManager *eventManager);
     void processSystems();
+    void createComponentInplace(Identity::Type entityId, std::string componentName);
+    void removeComponent(Identity::Type entityId, std::string componentName);
 };

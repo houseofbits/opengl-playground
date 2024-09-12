@@ -26,8 +26,6 @@ public:
             return;
         }
 
-        ImGui::SeparatorText("Camera");
-
         float fov = camera->m_Camera.fieldOfView;
         if (ImGui::InputFloat("FOV##CAMERA_FOV", &fov, 1.0f, 5.0f, "%.0f")) {
             camera->m_Camera.setFieldOfView(fov);

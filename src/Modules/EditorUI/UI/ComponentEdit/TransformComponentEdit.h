@@ -23,8 +23,6 @@ public:
             return;
         }
 
-        ImGui::SeparatorText("Transform");
-
         float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 
         ImGuizmo::DecomposeMatrixToComponents(&transform->m_transform[0][0], matrixTranslation, matrixRotation, matrixScale);

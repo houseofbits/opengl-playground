@@ -27,8 +27,6 @@ public:
             return;
         }
 
-        ImGui::SeparatorText("CCT");
-
         if (ImGui::InputFloat("Height##CTT-HEIGHT", &comp->m_height, 0.1f, 0.2f, "%.2f")) {
         }
         

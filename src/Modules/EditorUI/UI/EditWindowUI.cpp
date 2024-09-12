@@ -1,10 +1,6 @@
 #include "EditWindowUI.h"
-
 #include "../../../Core/Events/EntityCreationEvent.h"
 #include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
-//#include "../../../SourceLibs/imgui/imgui.h"
-//#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
-#include "../../../Core/Reflection/TypedClass.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
@@ -32,6 +28,17 @@ std::vector<std::string> ENTITY_CREATION_OPTIONS = {
         "CharacterController",
         "Door"};
 
+std::vector<std::pair<std::string, std::string>> COMPONENT_NAMES = {
+        {"light", "Light"},
+        {"camera", "Camera"},
+        {"mesh", "Render mesh"},
+        {"probe", "Environment probe"},
+        {"sky", "Skybox"},
+        {"cct", "Character"},
+        {"physicsBody", "Physics body"},
+        {"physicsJoint", "Physics joint"}
+};
+
 EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
                                                      m_EditorUISystem(editor),
                                                      m_lightProjectorPath(),
@@ -39,6 +46,7 @@ EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
                                                      m_meshModelPath(),
                                                      m_meshMaterialPath(),
                                                      m_selectedEntityCreationType(0),
+                                                     m_selectedComponentCreationType(0),
                                                      m_componentEditors(),
                                                      m_entityListFilter() {
 
@@ -75,6 +83,11 @@ void EditWindowUI::process() {
 
         if (m_selectedEntity >= 0) {
             ImGui::SameLine();
+            if (ImGui::Button("Clone")) {
+                sendEntityCloneEvent(m_selectedEntity);
+            }
+
+            ImGui::SameLine();
             if (ImGui::Button("Delete")) {
                 sendEntityRemovalEvent();
                 m_selectedEntity = -1;
@@ -83,7 +96,6 @@ void EditWindowUI::process() {
 
 
         if (ImGui::InputText("##FILTER_STRING", &m_filterString)) {
-
         }
 
         if (ImGui::BeginCombo("##ENTITY_FILTER", "Filter")) {
@@ -101,7 +113,32 @@ void EditWindowUI::process() {
             ImGui::InputText("Name", &e->m_Name);
 
             for (const auto &edit: m_componentEditors) {
-                edit.second->process(m_selectedEntity);
+                if (edit.second->isEntityEditable(m_selectedEntity) && ImGui::CollapsingHeader(edit.second->getName().c_str())) {
+                    edit.second->process(m_selectedEntity);
+                }
+            }
+
+            ImGui::SeparatorText("Add component");
+
+            ImGui::PushItemWidth(150);
+            if (ImGui::BeginCombo("##COMPONENT_TYPE", COMPONENT_NAMES[m_selectedComponentCreationType].second.c_str())) {
+                for (int i = 0; i < COMPONENT_NAMES.size(); i++) {
+                    if (ImGui::Selectable(COMPONENT_NAMES[i].second.c_str(), m_selectedComponentCreationType == i)) {
+                        m_selectedComponentCreationType = i;
+                    }
+                }
+                ImGui::EndCombo();
+            }
+            ImGui::PopItemWidth();
+
+            ImGui::SameLine();
+            if (ImGui::Button("Add")) {
+                sendComponentCreationEvent(COMPONENT_NAMES[m_selectedComponentCreationType].first);
+            }
+
+            ImGui::SameLine();
+            if (ImGui::Button("Delete")) {
+                sendComponentRemovalEvent(COMPONENT_NAMES[m_selectedComponentCreationType].first);
             }
         }
 
@@ -110,13 +147,13 @@ void EditWindowUI::process() {
 }
 
 void EditWindowUI::processEntitiesList() {
-    if(ImGui::BeginListBox("##ENTITY_LIST", ImVec2(ImGui::GetWindowWidth() - 15, 200))) {
+    if (ImGui::BeginListBox("##ENTITY_LIST", ImVec2(ImGui::GetWindowWidth() - 15, 200))) {
         for (const auto &entity: m_EditorUISystem->m_EntityContext->getAllEntities()) {
             std::string name = entity->m_Name;
 
             bool isEditable = false;
             if (!m_filterString.empty()) {
-                if (entity->m_Name.find(m_filterString) != std::string::npos) {
+                if (StringUtils::toLowerCase(entity->m_Name).find(StringUtils::toLowerCase(m_filterString)) != std::string::npos) {
                     isEditable = true;
                 }
             }
@@ -156,6 +193,28 @@ void EditWindowUI::sendEntityCreationEvent(std::string name, std::string entityN
 void EditWindowUI::sendEntityRemovalEvent() {
     auto evt = new EntityCreationEvent();
     evt->m_Type = EntityCreationEvent::REMOVE;
+    evt->m_entityId = m_selectedEntity;
+    m_EditorUISystem->m_EventManager->queueEvent(evt);
+}
+
+void EditWindowUI::sendEntityCloneEvent(Identity::Type entityId) {
+    auto evt = new EntityCreationEvent();
+    evt->m_Type = EntityCreationEvent::CLONE;
+    evt->m_entityId = entityId;
+    m_EditorUISystem->m_EventManager->queueEvent(evt);
+}
+
+void EditWindowUI::sendComponentCreationEvent(std::string name) {
+    auto evt = new EntityCreationEvent();
+    evt->m_Type = EntityCreationEvent::CREATE_COMPONENT;
+    evt->m_name = std::move(name);
+    evt->m_entityId = m_selectedEntity;
+    m_EditorUISystem->m_EventManager->queueEvent(evt);
+}
+void EditWindowUI::sendComponentRemovalEvent(std::string name) {
+    auto evt = new EntityCreationEvent();
+    evt->m_Type = EntityCreationEvent::REMOVE_COMPONENT;
+    evt->m_name = std::move(name);
     evt->m_entityId = m_selectedEntity;
     m_EditorUISystem->m_EventManager->queueEvent(evt);
 }

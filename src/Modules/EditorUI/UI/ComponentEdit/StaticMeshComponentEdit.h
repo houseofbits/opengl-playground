@@ -18,7 +18,7 @@ public:
     }
 
     std::string getName() override {
-        return "Static mesh";
+        return "Render mesh";
     }
 
     void process(Identity::Type entityId) override {
@@ -26,8 +26,6 @@ public:
         if (mesh == nullptr) {
             return;
         }
-
-        ImGui::SeparatorText("Render mesh");
 
         if (ImGui::BeginCombo("Render##RENDER_TYPE", mesh->m_TargetRenderNameMap[mesh->m_targetRenderer].c_str())) {
             for (const auto &renderType: mesh->m_TargetRenderNameMap) {

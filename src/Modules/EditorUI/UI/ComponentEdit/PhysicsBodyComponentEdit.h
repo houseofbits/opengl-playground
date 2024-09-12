@@ -35,8 +35,6 @@ public:
             return;
         }
 
-        ImGui::SeparatorText("Physics body");
-
         if (ImGui::BeginCombo("Body type##PHYSICS_BODY_TYPE", BodyTypeNameMap[body->m_BodyType].c_str())) {
             for (const auto &bodyType: BodyTypeNameMap) {
                 if (ImGui::Selectable(bodyType.second.c_str(), body->m_BodyType == bodyType.first)) {

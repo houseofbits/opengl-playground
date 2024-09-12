@@ -26,8 +26,6 @@ public:
             return;
         }
 
-        ImGui::SeparatorText("Environment probe");
-
         ImGui::ColorEdit3("Debug color##PROBE_COLOR", (float *) &probe->m_DebugColor);
     }
 };

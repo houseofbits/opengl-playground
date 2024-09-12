@@ -38,8 +38,6 @@ public:
             return;
         }
 
-        ImGui::SeparatorText("Light");
-
         ImGui::Checkbox("Is enabled", &light->m_isEnabled);
 
         if (ImGui::BeginCombo("Type##LIGHT_TYPE", LIGHT_TYPE_NAME_MAP.at(light->m_Type).c_str())) {

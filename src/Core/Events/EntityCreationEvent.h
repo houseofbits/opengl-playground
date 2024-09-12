@@ -8,7 +8,10 @@ class EntityCreationEvent : public BaseEvent {
 public:
     enum Type {
         CREATE,
-        REMOVE
+        CREATE_COMPONENT,
+        REMOVE_COMPONENT,
+        REMOVE,
+        CLONE
     };
 
     EntityCreationEvent() : BaseEvent(),
