@@ -32,8 +32,11 @@ public:
     }
 
     template<class T>
-    void registerComponent(std::string name) {
-        m_ComponentFactory.registerName<T>(name);
+    void registerComponent(std::string alias = "") {
+        m_ComponentFactory.registerName<T>(T::TypeName());
+        if (!alias.empty()) {
+            m_ComponentFactory.registerName<T>(alias);
+        }
     }
 
     template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value>>
@@ -124,7 +127,8 @@ public:
     Entity *findEntity(const std::string &name);
     void unregisterComponentFromSystems(Component *);
     void deserializeEntityMap(nlohmann::json &j);
-    std::shared_ptr<Entity> createEntity(const std::string &configurationName, ResourceManager &);
+    std::shared_ptr<Entity> createEntityFromJson(nlohmann::json &j, ResourceManager &);
+    std::shared_ptr<Entity> createEntityFromTemplate(const std::string &configurationName, ResourceManager &);
     void removeEntity(int entityId);
     void deserializeEntities(nlohmann::json &j, ResourceManager &);
     void serializeEntities(nlohmann::json &j);

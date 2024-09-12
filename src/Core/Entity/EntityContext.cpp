@@ -21,10 +21,33 @@ void EntityContext::deserializeEntityMap(nlohmann::json &j) {
     m_EntityConfiguration.deserialize(j);
 }
 
-Entity::TEntityPtr EntityContext::createEntity(const std::string &configurationName, ResourceManager &resourceManager) {
-
+Entity::TEntityPtr EntityContext::  createEntityFromTemplate(const std::string &configurationName, ResourceManager &resourceManager) {
     Entity::TEntityPtr e = addEntity();
     m_EntityConfiguration.buildEntity(*e, configurationName, resourceManager);
+
+    return e;
+}
+
+std::shared_ptr<Entity> EntityContext::createEntityFromJson(nlohmann::json &entityJson, ResourceManager &resourceManager) {
+    Entity::TEntityPtr e = addEntity();
+
+    for (auto& [key, value] : entityJson.items()) {
+        if (key == "type" || key == "name") {
+            continue;
+        }
+
+        Component *c = m_ComponentFactory.createInstance(key);
+        if (c == nullptr) {
+            Log::error("Component class not found " + key);
+            continue;
+        }
+
+        c->m_Id = Identity::create(Identity::COMPONENT);
+        c->m_Name = key;
+        c->m_EntityId = e->m_Id;
+
+        e->addComponent(*c);
+    }
 
     return e;
 }
@@ -57,7 +80,8 @@ void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager &reso
             Log::error("EntityContext::createEntities: Json does not contain entity type");
             continue;
         }
-        Entity::TEntityPtr entity = createEntity(entityJson.value().at("type"), resourceManager);
+        Entity::TEntityPtr entity = createEntityFromJson(entityJson.value(), resourceManager);
+//        Entity::TEntityPtr entity = createEntityFromTemplate(entityJson.value().at("type"), resourceManager);
         EntitySerializer::deserialize(*entity, entityJson.value(), resourceManager);
     }
 }

@@ -8,8 +8,8 @@
 class CommonModule : public EntityModule {
 public:
     void registerComponents(EntityContext &ctx) override {
-        ctx.registerComponent<TransformComponent>("TransformComponent");
-        ctx.registerComponent<CameraComponent>("CameraComponent");
+        ctx.registerComponent<TransformComponent>("transform");
+        ctx.registerComponent<CameraComponent>("camera");
     };
 
     void registerSystems(EntityContext &ctx) override {

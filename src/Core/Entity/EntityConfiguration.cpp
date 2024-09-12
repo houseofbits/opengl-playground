@@ -6,7 +6,6 @@ EntityConfiguration::EntityConfiguration(Factory<Component> &factory) : m_Entity
 }
 
 void EntityConfiguration::buildEntity(Entity &entity, const std::string &configurationName, ResourceManager &resourceManager) {
-    entity.m_TypeName = configurationName;
     auto it = m_EntityConfiguration.find(configurationName);
     if (it == m_EntityConfiguration.end()) {
         Log::error("EntityConfiguration::buildEntity: Entity configuration not found " + configurationName);

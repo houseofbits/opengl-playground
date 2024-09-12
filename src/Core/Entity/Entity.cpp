@@ -19,11 +19,6 @@ void Entity::unregisterFromSystems(EntityContext &ctx) {
     }
 }
 bool Entity::isReadyToRegister() {
-    for (const auto &component: m_Components) {
-        if (!component->isReady()) {
-            return false;
-        }
-    }
-
-    return true;
+    return std::all_of(m_Components.begin(), m_Components.end(),
+                       [](const auto &component) { return component->isReady(); });
 }

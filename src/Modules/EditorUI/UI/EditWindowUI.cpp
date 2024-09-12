@@ -54,7 +54,7 @@ EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
 
 void EditWindowUI::process() {
     ImGui::SetNextWindowPos(ImVec2(0, 25));
-    ImGui::SetNextWindowSize(ImVec2(300, 600));
+    ImGui::SetNextWindowSize(ImVec2(320, 1000));
     if (ImGui::Begin("Entities", nullptr, ImGuiWindowFlags_NoCollapse)) {
 
         ImGui::PushItemWidth(100);
@@ -79,6 +79,11 @@ void EditWindowUI::process() {
                 sendEntityRemovalEvent();
                 m_selectedEntity = -1;
             }
+        }
+
+
+        if (ImGui::InputText("##FILTER_STRING", &m_filterString)) {
+
         }
 
         if (ImGui::BeginCombo("##ENTITY_FILTER", "Filter")) {
@@ -107,9 +112,15 @@ void EditWindowUI::process() {
 void EditWindowUI::processEntitiesList() {
     if(ImGui::BeginListBox("##ENTITY_LIST", ImVec2(ImGui::GetWindowWidth() - 15, 200))) {
         for (const auto &entity: m_EditorUISystem->m_EntityContext->getAllEntities()) {
-            std::string name = entity->m_Name + " (" + entity->m_TypeName + ")";
+            std::string name = entity->m_Name;
 
             bool isEditable = false;
+            if (!m_filterString.empty()) {
+                if (entity->m_Name.find(m_filterString) != std::string::npos) {
+                    isEditable = true;
+                }
+            }
+
             for (const auto &edit: m_componentEditors) {
                 if (edit.second->isEntityEditable(entity->m_Id.id()) && m_entityListFilter[edit.first]) {
                     isEditable = true;

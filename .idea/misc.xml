@@ -5,13 +5,13 @@
   </component>
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
   <component name="CidrRootsConfiguration">
-    <libraryRoots>
-      <file path="$PROJECT_DIR$/libs" />
-    </libraryRoots>
     <excludeRoots>
+      <file path="$PROJECT_DIR$/.cmake" />
+      <file path="$PROJECT_DIR$/.vscode" />
       <file path="$PROJECT_DIR$/Testing" />
       <file path="$PROJECT_DIR$/bin/resources/test/textures" />
       <file path="$PROJECT_DIR$/bin/resources/textures" />
+      <file path="$PROJECT_DIR$/libs" />
       <file path="$PROJECT_DIR$/src/SourceLibs" />
     </excludeRoots>
   </component>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Helper/Log.h"
 #include <algorithm>
 #include <map>
 #include <string>
@@ -27,6 +28,8 @@ public:
     void registerName(std::string name) {
         if (m_Constructors.count(name) == 0) {
             m_Constructors[name] = new RObjectConstructor<T>();
+        } else {
+            Log::error("Name already registered " + name);
         }
     }
 

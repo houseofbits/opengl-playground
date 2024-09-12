@@ -19,7 +19,7 @@ public:
 
     Identity m_Id;
     std::string m_Name;
-    std::string m_TypeName;
+//    std::string m_TypeName;
     Status m_Status = CREATED;
     std::list<Component::TComponentPtr> m_Components;
     std::list<EntitySystem::TEntitySystemPtr> m_Systems;

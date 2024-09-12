@@ -25,7 +25,6 @@ void PhysicsBodyProcessingSystem::process() {
         auto *transform = getComponent<TransformComponent>(body.first);
         if (body.second->m_pxRigidActor == nullptr) {
             body.second->create(*transform);
-            m_PhysicsResource().m_pxScene->addActor(*body.second->m_pxRigidActor);
         } else {
             body.second->update(*transform, !m_isSimulationDisabled);
         }

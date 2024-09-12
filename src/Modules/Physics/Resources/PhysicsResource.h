@@ -18,13 +18,13 @@ public:
     [[nodiscard]] float rayCast(glm::vec3 origin, glm::vec3 direction, float maxDistance, physx::PxQueryFilterCallback* callback) const;
     [[nodiscard]] float characterRayCast(glm::vec3 origin, glm::vec3 direction, Identity::Type characterEntityId);
     [[nodiscard]] bool characterRayCast(glm::vec3 origin, glm::vec3 direction, Identity::Type characterEntityId, RayCastResult& result);
-    void addContactPoint(Identity::Type entityId, const physx::PxContactPairPoint& contact);
+    void addContactPoint(Identity::Type entityId, glm::vec3 point);
     void clearEntityContacts();
 
     physx::PxFoundation* m_pxFoundation;
     physx::PxPhysics* m_pxPhysics;
     physx::PxScene* m_pxScene;
-    std::map<Identity::Type, std::vector<physx::PxContactPairPoint>> m_entityContacts;
+    std::map<Identity::Type, std::vector<glm::vec3>> m_entityContacts;
 
 private:
     ExcludeEntityIdFilterCallback m_excludeEntityIdFilter;

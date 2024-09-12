@@ -28,4 +28,5 @@ private:
     int m_selectedEntityCreationType;
     std::map<std::string, BaseComponentEdit*> m_componentEditors;
     std::map<std::string, bool> m_entityListFilter;
+    std::string m_filterString;
 };

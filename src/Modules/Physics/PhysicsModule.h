@@ -12,9 +12,9 @@
 class PhysicsModule : public EntityModule {
 public:
     void registerComponents(EntityContext &ctx) override {
-        ctx.registerComponent<CharacterControllerComponent>("CharacterControllerComponent");
-        ctx.registerComponent<PhysicsBodyComponent>("PhysicsBodyComponent");
-        ctx.registerComponent<PhysicsJointComponent>("PhysicsJointComponent");
+        ctx.registerComponent<CharacterControllerComponent>("cct");
+        ctx.registerComponent<PhysicsBodyComponent>("physicsBody");
+        ctx.registerComponent<PhysicsJointComponent>("physicsJoint");
     };
 
     void registerSystems(EntityContext &ctx) override {

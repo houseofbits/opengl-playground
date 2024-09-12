@@ -55,9 +55,9 @@ bool CharacterControllerSystem::handleEditorUIEvent(EditorUIEvent *event) {
 bool CharacterControllerSystem::handleInputEvent(InputEvent *event) {
     for (const auto comp: getComponentContainer<CharacterControllerComponent>()) {
         auto *cameraComp = getComponent<CameraComponent>(comp.first);
-        if (cameraComp && cameraComp->m_isActive) {
+//        if (cameraComp && cameraComp->m_isActive) {
             processCCTInput(cameraComp, comp.second, event);
-        }
+//        }
     }
 
     return true;
@@ -75,6 +75,8 @@ void CharacterControllerSystem::resetToInitialTransform() {
 void CharacterControllerSystem::updateCCTs() {
     for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
         auto *transform = getComponent<TransformComponent>(component.first);
+        glm::vec3 position = transform->getTranslation();
+
         if (component.second->m_pxRigidActor == nullptr) {
             component.second->create(*transform);
             m_PhysicsResource().m_pxScene->addActor(*component.second->m_pxRigidActor);
@@ -87,26 +89,59 @@ void CharacterControllerSystem::updateCCTs() {
             }
 
             if (!m_isSimulationDisabled) {
+                float capsuleRadius = component.second->m_radius;
+                float adjustStep = 0;
+                if (!m_PhysicsResource().m_entityContacts[component.first].empty()) {
+                    float stepContactHeight = 0;
+                    for (const auto point: m_PhysicsResource().m_entityContacts[component.first]) {
+                        auto pos = point - position;
 
-                RayCastResult hit;
-                if (m_PhysicsResource().characterRayCast(transform->getTranslation(), glm::vec3(0. - 1.0), component.first, hit)) {
-                    m_isOnGround = hit.m_distance < 0.1;
+                        if (pos.y < 0.01) {
+                            m_isOnGround = true;
+                            continue;
+                        }
+
+                        //Contact above step height
+                        if (!m_doMove || pos.y > capsuleRadius) {
+                            stepContactHeight = 0;
+                            //!!!handle walls while climbing steps
+                            //if the dot between pos and movement dir < 0.1 (e.g. perpendicular) allow moving on stairs but ignore this contact
+                            break;
+                        }
+
+                        auto dir = glm::normalize(pos);
+                        float heading = glm::dot(dir, m_movementDirection);
+                        if (heading > 0 && pos.y > stepContactHeight) {
+                            stepContactHeight = pos.y;
+                        }
+                    }
+
+                    if (stepContactHeight > 0) {
+                        adjustStep = stepContactHeight;
+                        std::cout<<stepContactHeight<<std::endl;
+                    }
+                } else {
+                    m_isOnGround = false;
                 }
 
                 auto *actor = component.second->m_pxRigidActor;
                 if (m_doMove || m_doJump || !m_isOnGround) {
                     PxVec3 force(0);
                     if (m_doMove) {
-                        float f = m_isOnGround ? 150 : 50;
+                        float f = 150;//m_isOnGround ? 150 : 50;
                         force = Types::GLMtoPxVec3(glm::normalize(m_movementDirection) * f);
                     }
 
-                    actor->setForceAndTorque(PxVec3(force.x, -50, force.z), PxVec3(0.0f));
+                    float yF = -50;
+                    if (adjustStep > 0 && !m_doJump) {
+                        yF = adjustStep * 1000.0f;
+                    }
 
                     if (m_isOnGround && m_doJump) {
-                        PxVec3 jumpImpulse(0.0f, 1000, 0.0f);
-                        actor->addForce(jumpImpulse, PxForceMode::eFORCE);
+                        yF = 500;
                     }
+
+                    actor->setForceAndTorque(PxVec3(force.x, yF, force.z), PxVec3(0.0f));
 
                     m_movementDirection = glm::vec3(0);
                     m_doMove = false;
@@ -171,7 +206,7 @@ void CharacterControllerSystem::processCCTInput(CameraComponent *camera, Charact
 
     glm::vec3 position = camera->m_Camera.getPosition();
     auto tbn = camera->calculateTBN(camera->m_Camera.getViewDirection());
-    if (event->type == InputEvent::MOUSEMOVE && event->mouseButtonLeft) {
+    if (camera->m_isActive && event->type == InputEvent::MOUSEMOVE && event->mouseButtonLeft) {
         float moveSpeed = 4;
         float lookSpeed = 0.15;
 
@@ -191,5 +226,9 @@ void CharacterControllerSystem::processCCTInput(CameraComponent *camera, Charact
 
     if (event->type == InputEvent::MOUSEDOWN && event->mouseButtonRight) {
         m_doInteract = true;
+    }
+
+    if (m_doMove) {
+        m_movementDirection = glm::normalize(m_movementDirection);
     }
 }

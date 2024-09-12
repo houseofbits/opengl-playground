@@ -127,12 +127,12 @@ bool PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type 
     return false;
 }
 
-void PhysicsResource::addContactPoint(Identity::Type entityId, const physx::PxContactPairPoint& contact) {
+void PhysicsResource::addContactPoint(Identity::Type entityId, glm::vec3 point) {
     if (m_entityContacts.count(entityId) == 0) {
         m_entityContacts[entityId].reserve(16);
     }
 
-    m_entityContacts[entityId].push_back(contact);
+    m_entityContacts[entityId].push_back(point);
 }
 
 void PhysicsResource::clearEntityContacts() {

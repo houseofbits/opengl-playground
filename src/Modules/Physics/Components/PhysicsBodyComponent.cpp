@@ -32,14 +32,14 @@ void PhysicsBodyComponent::serialize(nlohmann::json &j) {
 }
 
 void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
+    resourceManager.request(m_PhysicsResource, "physics");
+
     m_restitution = j.value(RESTITUTION_KEY, m_restitution);
     m_friction = j.value(FRICTION_KEY, m_friction);
     m_density = j.value(DENSITY_KEY, m_density);
 
     std::string path = j.value(MODEL_KEY, m_meshResource().m_Path);
     resourceManager.request(m_meshResource, path);
-
-    resourceManager.request(m_PhysicsResource, "physics");
 
     m_BodyType = j.value(TYPE_KEY, m_BodyType);
     m_MeshType = j.value(SHAPE_KEY, m_MeshType);
@@ -55,6 +55,10 @@ bool PhysicsBodyComponent::isReady() {
 }
 
 void PhysicsBodyComponent::create(TransformComponent &transform) {
+    if (!m_meshResource().isReady()) {
+        return;
+    }
+
     if (m_pxRigidActor != nullptr) {
         m_PhysicsResource().m_pxScene->removeActor(*m_pxRigidActor);
         delete (PhysicsActorUserData *) m_pxRigidActor->userData;
@@ -80,6 +84,8 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
     m_pxRigidActor->userData = new PhysicsActorUserData(m_EntityId.id());
 
     createMeshShape(transform);
+
+    m_PhysicsResource().m_pxScene->addActor(*m_pxRigidActor);
 }
 
 void PhysicsBodyComponent::createMeshShape(TransformComponent &transform) {

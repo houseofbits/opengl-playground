@@ -54,3 +54,4 @@ src/source-libs/*
 .ninja_log
 DartConfiguration.tcl
 build.ninja
+cmake-build-default-coverage

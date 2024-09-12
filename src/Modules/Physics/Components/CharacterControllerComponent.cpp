@@ -58,6 +58,7 @@ void CharacterControllerComponent::create(TransformComponent &transform) {
     m_pxRigidActor->setAngularDamping(100.0f);
     m_pxRigidActor->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);
     m_pxRigidActor->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
+    m_pxRigidActor->setSleepThreshold(0);
 }
 
 bool CharacterControllerComponent::isReady() {

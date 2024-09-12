@@ -1,4 +1,5 @@
 #include "MainApplication.h"
+#include "../../Core/Entity/EntitySerializer.h"
 #include "../../Modules/Common/CommonModule.h"
 #include "../../Modules/EditorUI/EditorUIModule.h"
 #include "../../Modules/Physics/PhysicsModule.h"
@@ -59,8 +60,10 @@ bool MainApplication::handleEditorUIEvent(EditorUIEvent *event) {
 
 bool MainApplication::handleEntityCreationEvent(EntityCreationEvent *event) {
     if (event->m_Type == EntityCreationEvent::CREATE) {
-        auto e = m_EntityContext.createEntity(event->m_ConfigurationName, m_ResourceManager);
+        auto e = m_EntityContext.createEntityFromTemplate(event->m_ConfigurationName, m_ResourceManager);
         e->m_Name = event->m_name;
+        nlohmann::basic_json json;
+        EntitySerializer::deserialize(*e, json, m_ResourceManager);
     }
     if (event->m_Type == EntityCreationEvent::REMOVE) {
         m_EntityContext.removeEntity(event->m_entityId);
