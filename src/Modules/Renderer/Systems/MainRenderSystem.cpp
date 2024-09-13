@@ -1,5 +1,5 @@
 #include "MainRenderSystem.h"
-#include "../Components/CameraComponent.h"
+#include "../../Common/Components/CameraComponent.h"
 #include "../Components/SkyComponent.h"
 #include "../Components/StaticMeshComponent.h"
 #include <GL/glew.h>
@@ -64,7 +64,9 @@ void MainRenderSystem::process() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     Camera *camera = findActiveCamera();
-    assert(camera != nullptr);
+    if (camera == nullptr) {
+        return;
+    }
 
      auto sky = getComponentContainer<SkyComponent>().begin();
      if (doesComponentsExist<SkyComponent>() && sky->second->m_cubeMap().isReady()) {
@@ -79,6 +81,7 @@ void MainRenderSystem::process() {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     m_ShaderPrograms[m_shaderType]().use();
     camera->bind(m_ShaderPrograms[m_shaderType]());
@@ -92,6 +95,9 @@ void MainRenderSystem::process() {
     }
 
     for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
+        if (mesh.second->m_targetRenderer != StaticMeshComponent::SOLID) {
+            continue;
+        }
         auto *transform = getComponent<TransformComponent>(mesh.first);
         m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getModelMatrix());
         mesh.second->m_Material().bind(m_ShaderPrograms[m_shaderType]());

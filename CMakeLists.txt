@@ -9,16 +9,10 @@ file(GLOB_RECURSE sources src/*.cpp src/*.h)
 add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Texture/TextureCube.cpp
         src/Renderer/Texture/TextureCube.h
-        src/Helper/StringUtils.h
+        src/Core/Helper/StringUtils.h
         src/Renderer/Texture/TextureCubeRenderTarget.cpp
         src/Renderer/Texture/TextureCubeRenderTarget.h
-        src/Renderer/Common/ProjectionView.cpp
-        src/Renderer/Common/ProjectionView.h
-        src/Renderer/Camera/CameraController.cpp
-        src/Renderer/Camera/CameraController.h
         src/Renderer/Shader/ShaderStorageBuffer.h
-        src/Physics/TestPhysics.cpp
-        src/Physics/TestPhysics.h
         src/Core/Entity/Entity.h
         src/Core/Reflection/Factory.h
         src/Core/Entity/Component.cpp
@@ -44,8 +38,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Components/EnvironmentProbeComponent.h
         src/Core/Application/Application.cpp
         src/Core/Application/Application.h
-        src/Modules/Renderer/Components/CameraComponent.cpp
-        src/Modules/Renderer/Components/CameraComponent.h
+        src/Modules/Common/Components/CameraComponent.cpp
+        src/Modules/Common/Components/CameraComponent.h
         src/Core/Json/Json.cpp
         src/Core/Json/Json.h
         src/Core/Json/Json.cpp
@@ -63,17 +57,15 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Resources/TextureResource.h
         src/Modules/Renderer/Resources/StaticMeshResource.cpp
         src/Modules/Renderer/Resources/StaticMeshResource.h
-        src/Modules/Renderer/Systems/CameraControlSystem.cpp
-        src/Modules/Renderer/Systems/CameraControlSystem.h
+        src/Modules/Common/Systems/CameraControlSystem.cpp
+        src/Modules/Common/Systems/CameraControlSystem.h
         src/Modules/Renderer/Buffers/LightStorageBuffer.h
         src/Modules/Renderer/Buffers/LightStorageBuffer.cpp
         src/Modules/Renderer/Resources/ShaderResource.cpp
         src/Modules/Renderer/Resources/ShaderResource.h
         src/Modules/Renderer/Resources/ShaderProgramResource.cpp
         src/Modules/Renderer/Resources/ShaderProgramResource.h
-        src/Helper/StringUtils.cpp
-        src/Modules/Renderer/Buffers/ProjectionSamplerStorageBuffer.cpp
-        src/Modules/Renderer/Buffers/ProjectionSamplerStorageBuffer.h
+        src/Core/Helper/StringUtils.cpp
         src/Modules/EditorUI/EditorUIModule.h
         src/Modules/EditorUI/Systems/EditorUISystem.cpp
         src/Modules/EditorUI/Systems/EditorUISystem.h
@@ -104,6 +96,35 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/EditorUI/UI/MaterialEditWindowUI.h
         src/Modules/EditorUI/UI/TexturePreviewHelper.h
         src/Modules/EditorUI/UI/TextPromptHelper.h
+        src/Modules/Physics/Systems/PhysicsSystem.cpp
+        src/Modules/Physics/Systems/PhysicsSystem.h
+        src/Modules/EditorUI/UI/ComponentEdit/BaseComponentEdit.h
+        src/Modules/EditorUI/UI/ComponentEdit/TransformComponentEdit.h
+        src/Modules/Physics/Components/CharacterControllerComponent.cpp
+        src/Modules/Physics/Components/CharacterControllerComponent.h
+        src/Core/Helper/Types.h
+        src/Modules/Physics/Resources/PhysicsMeshResource.cpp
+        src/Modules/Physics/Resources/PhysicsMeshResource.h
+        src/Modules/Physics/Resources/PhysicsResource.cpp
+        src/Modules/Physics/Resources/PhysicsResource.h
+        src/Modules/Physics/Systems/PhysicsBodyProcessingSystem.cpp
+        src/Modules/Physics/Systems/PhysicsBodyProcessingSystem.h
+        src/Modules/Physics/Systems/CharacterControllerSystem.cpp
+        src/Modules/Physics/Systems/CharacterControllerSystem.h
+        src/Modules/Physics/Helpers/PhysicsActorUserData.h
+        src/Modules/Physics/Helpers/ExcludeEntityIdFilterCallback.h
+        src/Modules/Physics/Helpers/RayCastResult.h
+        src/Modules/Physics/Events/CharacterPickingEvent.h
+        src/Modules/Physics/Components/PhysicsBodyComponent.cpp
+        src/Modules/Physics/Components/PhysicsBodyComponent.h
+        src/Modules/Physics/Components/PhysicsJointComponent.cpp
+        src/Modules/Physics/Components/PhysicsJointComponent.h
+        src/Modules/Physics/Systems/JointsProcessingSystem.cpp
+        src/Modules/Physics/Systems/JointsProcessingSystem.h
+        src/Modules/Physics/Helpers/SimulationEventCallback.h
+        src/Modules/Physics/Helpers/SimulationEventCallback.cpp
+        src/Modules/Physics/Helpers/SceneFilterShader.h
+        src/Modules/Physics/Helpers/FilterGroups.h
 )
 
 
@@ -120,9 +141,14 @@ find_package(glm REQUIRED)
 target_link_libraries(SDLWindow glm::glm)
 
 target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)
-#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/src/SourceLibs/tinygltf/build/libtinygltf.a)
 
-#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
+include_directories(${CMAKE_SOURCE_DIR}/libs/PhysX/include)
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCooking_static_64.a)
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCharacterKinematic_static_64.a)
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCommon_static_64.a)
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXExtensions_static_64.a)
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXFoundation_static_64.a)
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 

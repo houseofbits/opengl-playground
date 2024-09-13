@@ -1,0 +1,11 @@
+{
+    "diffuseColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "diffuseTexture": "resources/textures/character-capsule.png",
+    "doesCastShadows": true,
+    "doesReceiveShadows": true,
+    "selfIllumination": 0.28600001335144043
+}

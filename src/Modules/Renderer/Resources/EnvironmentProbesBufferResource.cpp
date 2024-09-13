@@ -1,5 +1,5 @@
 #include "EnvironmentProbesBufferResource.h"
-#include "../../../Helper/ShaderSourceLoader.h"
+#include "../../../Core/Helper/ShaderSourceLoader.h"
 
 EnvironmentProbesBufferResource::EnvironmentProbesBufferResource() : Resource(), m_StorageBuffer() {
 }

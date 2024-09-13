@@ -1,6 +1,8 @@
 #include "MainApplication.h"
+#include "../../Core/Entity/EntitySerializer.h"
 #include "../../Modules/Common/CommonModule.h"
 #include "../../Modules/EditorUI/EditorUIModule.h"
+#include "../../Modules/Physics/PhysicsModule.h"
 #include "../../Modules/Renderer/RendererModule.h"
 #include <fstream>
 
@@ -22,6 +24,7 @@ void MainApplication::initialize(const std::string &entityDefinitionFileName) {
     m_EntityContext.registerModule<CommonModule>();
     m_EntityContext.registerModule<RendererModule>();
     m_EntityContext.registerModule<EditorUIModule>();
+    m_EntityContext.registerModule<PhysicsModule>();
 
     m_Window.create();
 
@@ -57,11 +60,29 @@ bool MainApplication::handleEditorUIEvent(EditorUIEvent *event) {
 
 bool MainApplication::handleEntityCreationEvent(EntityCreationEvent *event) {
     if (event->m_Type == EntityCreationEvent::CREATE) {
-        auto e = m_EntityContext.createEntity(event->m_ConfigurationName, m_ResourceManager);
+        auto e = m_EntityContext.createEntityFromTemplate(event->m_ConfigurationName, m_ResourceManager);
         e->m_Name = event->m_name;
+        nlohmann::basic_json json;
+        EntitySerializer::deserialize(*e, json, m_ResourceManager);
+    }
+    if (event->m_Type == EntityCreationEvent::CLONE) {
+        auto existingEntity = m_EntityContext.getEntity(event->m_entityId);
+        if (existingEntity != nullptr) {
+            nlohmann::basic_json json;
+            EntitySerializer::serialize(*existingEntity, json);
+            auto e = m_EntityContext.createEntityFromJson(json, m_ResourceManager);
+            EntitySerializer::deserialize(*e, json, m_ResourceManager);
+            e->m_Name = existingEntity->m_Name + "-COPY";
+        }
     }
     if (event->m_Type == EntityCreationEvent::REMOVE) {
         m_EntityContext.removeEntity(event->m_entityId);
+    }
+    if (event->m_Type == EntityCreationEvent::CREATE_COMPONENT) {
+        m_EntityContext.createComponentInplace(event->m_entityId, event->m_name);
+    }
+    if (event->m_Type == EntityCreationEvent::REMOVE_COMPONENT) {
+        m_EntityContext.removeComponent(event->m_entityId, event->m_name);
     }
     return true;
 }

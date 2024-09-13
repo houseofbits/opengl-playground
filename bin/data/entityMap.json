@@ -7,6 +7,23 @@
             },
             "mesh": {
                 "class": "StaticMeshComponent"
+            },
+            "physicsBody": {
+                "class": "PhysicsBodyComponent"
+            }
+        }
+    },
+    {
+        "name": "RigidBody",
+        "components": {
+            "transform": {
+                "class": "TransformComponent"
+            },
+            "mesh": {
+                "class": "StaticMeshComponent"
+            },
+            "physicsBody": {
+                "class": "PhysicsBodyComponent"
             }
         }
     },
@@ -89,6 +106,47 @@
         "components": {
             "sky": {
                 "class": "SkyComponent"
+            }
+        }
+    },
+    {
+        "name": "CharacterController",
+        "components": {
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowRotation": false,
+                    "allowScaling": false
+                }
+            },
+            "mesh": {
+                "class": "StaticMeshComponent"
+            },
+            "cct": {
+                "class": "CharacterControllerComponent"
+            },
+            "camera": {
+                "class": "CameraComponent"
+            }
+        }
+    },
+    {
+        "name": "Door",
+        "components": {
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "allowScaling": false
+                }
+            },
+            "mesh": {
+                "class": "StaticMeshComponent"
+            },
+            "physicsBody": {
+                "class": "PhysicsBodyComponent"
+            },
+            "physicsJoint": {
+                "class": "PhysicsJointComponent"
             }
         }
     }

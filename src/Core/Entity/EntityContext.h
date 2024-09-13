@@ -27,9 +27,16 @@ private:
 public:
     EntityContext();
 
+    std::list<std::shared_ptr<Entity>> &getAllEntities() {
+        return m_Entities;
+    }
+
     template<class T>
-    void registerComponent(std::string name) {
-        m_ComponentFactory.registerName<T>(name);
+    void registerComponent(std::string alias = "") {
+        m_ComponentFactory.registerName<T>(T::TypeName());
+        if (!alias.empty()) {
+            m_ComponentFactory.registerName<T>(alias);
+        }
     }
 
     template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value>>
@@ -71,14 +78,63 @@ public:
         }
     }
 
-    Entity* getEntity(Identity::Type id);
+    template<class T, class A>
+    void registerComponentWithEntitySystemHaving(Component *component) {
+        auto *system = getSystem<T>();
+        if (system == nullptr) {
+            return;
+        }
+        if (!doesEntityHaveComponent<A>(component->m_EntityId.id())) {
+            return;
+        }
+
+        system->registerComponent(component);
+    }
+
+    template<class T>
+    bool doesEntityHaveComponent(Identity::Type id) {
+        auto *e = getEntity(id);
+        if (e != nullptr) {
+            auto *c = e->getComponent<T>();
+
+            return c != nullptr;
+        }
+
+        return false;
+    }
+
+    template<class T>
+    T *getEntityComponent(Identity::Type id) {
+        auto *e = getEntity(id);
+        if (e) {
+            return e->getComponent<T>();
+        }
+
+        return nullptr;
+    }
+
+    template<class T>
+    T *findEntityComponent(const std::string &entityName) {
+        auto *e = findEntity(entityName);
+        if (e) {
+            return e->getComponent<T>();
+        }
+
+        return nullptr;
+    }
+
+    Entity *getEntity(Identity::Type id);
+    Entity *findEntity(const std::string &name);
     void unregisterComponentFromSystems(Component *);
     void deserializeEntityMap(nlohmann::json &j);
-    std::shared_ptr<Entity> createEntity(const std::string &configurationName, ResourceManager &);
+    std::shared_ptr<Entity> createEntityFromJson(nlohmann::json &j, ResourceManager &);
+    std::shared_ptr<Entity> createEntityFromTemplate(const std::string &configurationName, ResourceManager &);
     void removeEntity(int entityId);
     void deserializeEntities(nlohmann::json &j, ResourceManager &);
     void serializeEntities(nlohmann::json &j);
     void registerEntitiesWithSystems();
-    void initializeSystems(ResourceManager*, EventManager *eventManager);
+    void initializeSystems(ResourceManager *, EventManager *eventManager);
     void processSystems();
+    void createComponentInplace(Identity::Type entityId, std::string componentName);
+    void removeComponent(Identity::Type entityId, std::string componentName);
 };

@@ -1,5 +1,5 @@
 #include "EnvironmentProbeStorageBuffer.h"
-#include "../../../Helper/ShaderSourceLoader.h"
+#include "../../../Core/Helper/ShaderSourceLoader.h"
 
 EnvironmentProbeStorageBuffer::EnvironmentProbeStorageBuffer() : ShaderStorageBuffer<EnvironmentProbeStructure>() {
     uniformBindingIndex = ShaderSourceLoader::registerBindingIndex("EnvironmentProbeStorageBuffer");

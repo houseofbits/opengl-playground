@@ -11,8 +11,7 @@ public:
     };
 
     Identity() {
-        m_id = 0;
-        m_Subject = UNDEFINED;
+        reset();
     }
 
     Identity(Identity &id) {
@@ -23,6 +22,22 @@ public:
     Identity(const Identity &id) {
         m_id = id.m_id;
         m_Subject = id.m_Subject;
+    }
+
+    static Identity fromEntityId(Type id) {
+        Identity i;
+        i.m_id = id;
+        i.m_Subject = ENTITY;
+
+        return i;
+    }
+
+    static Identity fromComponentId(Type id) {
+        Identity i;
+        i.m_id = id;
+        i.m_Subject = COMPONENT;
+
+        return i;
     }
 
     static Identity create(Subject subject) {
@@ -44,6 +59,11 @@ public:
 
     bool isUndefined() {
         return m_Subject == UNDEFINED || m_id == 0;
+    }
+
+    void reset() {
+        m_id = 0;
+        m_Subject = UNDEFINED;
     }
 
 private:

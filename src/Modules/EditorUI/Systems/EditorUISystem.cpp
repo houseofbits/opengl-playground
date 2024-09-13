@@ -1,9 +1,12 @@
 #include "EditorUISystem.h"
-#include "../UI/TexturePreviewHelper.h"
+#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
-#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
+#include "../../Physics/Components/CharacterControllerComponent.h"
+#include "../../Physics/Components/PhysicsBodyComponent.h"
+#include "../../Physics/Components/PhysicsJointComponent.h"
+#include "../UI/TexturePreviewHelper.h"
 #include <glm/gtc/type_ptr.hpp>
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
@@ -18,6 +21,9 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
     usesComponent<TransformComponent>();
     usesComponent<CameraComponent>();
     usesComponent<EnvironmentProbeComponent>();
+    usesComponent<CharacterControllerComponent>();
+    usesComponent<PhysicsBodyComponent>();
+    usesComponent<PhysicsJointComponent>();
 }
 
 void EditorUISystem::process() {
@@ -51,15 +57,17 @@ void EditorUISystem::process() {
 
         static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
 
-        ImGuizmo::Manipulate(glm::value_ptr(camera->viewMatrix),
+        if(ImGuizmo::Manipulate(glm::value_ptr(camera->viewMatrix),
                              glm::value_ptr(camera->projectionMatrix),
                              (ImGuizmo::OPERATION) m_MainToolbarUI.m_currentGizmoOperation,
                              (ImGuizmo::MODE) m_MainToolbarUI.m_currentGizmoMode,
-                             glm::value_ptr(transform->m_ModelMatrix),
+                             glm::value_ptr(transform->m_transform),
                              nullptr,
                              nullptr,
                              m_EditWindowUI.m_isBoundsTransformAllowed ? bounds : nullptr
-                             );
+                             )) {
+            transform->m_initialTransform = transform->m_transform;
+        }
     }
 
     ImGui::Render();

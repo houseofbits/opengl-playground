@@ -1,5 +1,5 @@
 #include "LightStorageBuffer.h"
-#include "../../../Helper/ShaderSourceLoader.h"
+#include "../../../Core/Helper/ShaderSourceLoader.h"
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 

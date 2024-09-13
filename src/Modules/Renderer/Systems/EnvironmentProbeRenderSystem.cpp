@@ -1,5 +1,5 @@
 #include "EnvironmentProbeRenderSystem.h"
-#include "../Components/CameraComponent.h"
+#include "../../Common/Components/CameraComponent.h"
 #include "../Components/EnvironmentProbeComponent.h"
 #include "../Components/LightComponent.h"
 #include "../Components/StaticMeshComponent.h"
@@ -101,8 +101,9 @@ void EnvironmentProbeRenderSystem::renderGeometry() {
 
     for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
         auto *transform = getComponent<TransformComponent>(mesh.first);
-
-        assert(transform != nullptr);
+        if (transform == nullptr) {
+            continue;
+        }
 
         m_ShaderProgram().setUniform("modelMatrix", transform->getModelMatrix());
         mesh.second->m_Material().bind(m_ShaderProgram());

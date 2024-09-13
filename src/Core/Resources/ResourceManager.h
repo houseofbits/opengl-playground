@@ -1,9 +1,12 @@
 #pragma once
 
-#include "../../Helper/Log.h"
+#include "../../Core/Helper/Log.h"
+#include "../Reflection/Type.h"
 #include "Resource.h"
 #include <algorithm>
 #include <atomic>
+#include <cstdio>
+#include <ctime>
 #include <list>
 #include <thread>
 #include <utility>
@@ -37,6 +40,17 @@ public:
         return nullptr;
     }
 
+    template<class T>
+    [[nodiscard]] Resource *findResourceOfType(const std::string &path) const {
+        for (auto resource: m_Resources) {
+            if (resource->m_Path == path && isOfType<T>(resource)) {
+                return resource;
+            }
+        }
+
+        return nullptr;
+    }
+
     /**
      * @tparam T Instance of ResourceHandle
      * @param hand Resource handle
@@ -49,28 +63,27 @@ public:
             return;
         }
 
-        Resource *resource = findResource(path);
+        Resource *resource = findResourceOfType<typename T::TYPE>(path);
         if (resource == nullptr) {
-            //            Log::info("Fetch resource: " + path);
             resource = new typename T::TYPE();
             resource->m_Path = std::move(path);
             resource->m_Status = Resource::STATUS_DATA_FETCHING;
-            resource->m_Dependencies = std::move(dependencies);
-
+            if (!dependencies.empty()) {
+                resource->m_Dependencies.insert(resource->m_Dependencies.end(), dependencies.begin(), dependencies.end());
+            }
             m_Resources.push_back(resource);
         } else {
-            if (dependencies != resource->m_Dependencies) {
+            if (dependencies.size() > resource->m_Dependencies.size()) {
                 Log::warn("Mismatch in dependency list for: " + path);
                 return;
             }
-            //            Log::info("Get resource: " + path);
         }
 
         hand.makeValid(this, reinterpret_cast<typename T::TYPE *>(resource));
     }
 
     void remove(Resource *resource) {
-//        std::cout<<"remove "<<resource->m_Path<<std::endl;
+        //        std::cout<<"remove "<<resource->m_Path<<std::endl;
         //TODO: Add to list of removable entities and process at some other point
         m_Resources.remove(resource);
         resource->destroy();
@@ -94,11 +107,12 @@ public:
     }
 
     void fetchProcess() {
-        const auto wait_duration = std::chrono::milliseconds(100);
+        //        const auto timestep = std::chrono::milliseconds(100);
         while (true) {
             if (!m_FetchProcessRunning) {
                 return;
             }
+            auto start = std::chrono::steady_clock::now();
             for (const auto &resource: m_Resources) {
                 if (resource->m_Status == Resource::STATUS_DATA_FETCHING) {
                     if (areDependenciesReady(resource)) {
@@ -113,7 +127,12 @@ public:
                 }
             }
 
-            std::this_thread::sleep_for(wait_duration);
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
+
+            if (elapsed < 100) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100 - elapsed));
+            }
+            //            std::this_thread::sleep_for(timestep);
         }
     }
 

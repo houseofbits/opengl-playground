@@ -1,6 +1,6 @@
 #include "ShaderResource.h"
-#include "../../../Helper/Console.h"
-#include "../../../Helper/ShaderSourceLoader.h"
+#include "../../../Core/Helper/Console.h"
+#include "../../../Core/Helper/ShaderSourceLoader.h"
 #include <GL/glew.h>
 #include <vector>
 

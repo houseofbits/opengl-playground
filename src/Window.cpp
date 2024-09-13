@@ -1,16 +1,16 @@
 
 #include "Core/Events/InputEvent.h"
 #include "Core/Events/RawSDLEvent.h"
-#include "Helper/Time.h"
+#include "Core/Helper/Time.h"
 #include "Include.h"
-#include "Helper/GLDebugMessageCallback.h"
+#include "Core/Helper/GLDebugMessageCallback.h"
 #include <GL/glew.h>
 #include <iostream>
 
 Window::Window(EventManager *eventManager) : eventManager(eventManager),
                                              sdlWindow(nullptr),
-                                             viewportWidth(1024),
-                                             viewportHeight(768),
+                                             viewportWidth(1920),
+                                             viewportHeight(1080),
                                              isFullScreen(false),
                                              windowFlags()
 {
@@ -139,8 +139,8 @@ bool Window::pollEvents()
                 }
                 else
                 {
-                    viewportWidth = 1024;
-                    viewportHeight = 768;
+                    viewportWidth = 1920;
+                    viewportHeight = 1080;
                     SDL_SetWindowFullscreen(sdlWindow, windowFlags);
                 }
 

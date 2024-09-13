@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../../../Helper/Log.h"
+#include "../../../Core/Helper/Log.h"
 #include <cstdint>
 
 class CubeTextureResource : public Resource {
