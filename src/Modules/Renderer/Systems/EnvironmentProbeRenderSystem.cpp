@@ -101,8 +101,9 @@ void EnvironmentProbeRenderSystem::renderGeometry() {
 
     for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
         auto *transform = getComponent<TransformComponent>(mesh.first);
-
-        assert(transform != nullptr);
+        if (transform == nullptr) {
+            continue;
+        }
 
         m_ShaderProgram().setUniform("modelMatrix", transform->getModelMatrix());
         mesh.second->m_Material().bind(m_ShaderProgram());

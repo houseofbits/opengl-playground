@@ -7,10 +7,11 @@
                 5.166041851043701,
                 13.490117073059082
             ],
+            "type": "FP",
             "upDirection": [
-                0.2850685715675354,
+                0.2850686013698578,
                 0.9213823080062866,
-                -0.2641790211200714
+                -0.264178991317749
             ],
             "viewDirection": [
                 0.6758061647415161,
@@ -18,8 +19,7 @@
                 -0.6262838244438171
             ]
         },
-        "name": "main-camera",
-        "type": "Camera"
+        "name": "main-camera"
     },
     {
         "mesh": {
@@ -28,14 +28,16 @@
             "renderer": "SOLID"
         },
         "name": "walls1-mesh",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/scenes/scene1/walls1.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -54,8 +56,7 @@
                 0.0,
                 0.0
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "mesh": {
@@ -64,14 +65,16 @@
             "renderer": "SOLID"
         },
         "name": "floor1-mesh",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/scenes/scene1/floor1.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -90,8 +93,7 @@
                 0.0,
                 0.0
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "mesh": {
@@ -100,14 +102,16 @@
             "renderer": "SOLID"
         },
         "name": "floor2-mesh",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/scenes/scene1/floor2.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -126,8 +130,7 @@
                 0.0,
                 0.0
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "mesh": {
@@ -136,14 +139,16 @@
             "renderer": "SOLID"
         },
         "name": "columns1-mesh",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/scenes/scene1/columns1.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -162,8 +167,7 @@
                 0.0,
                 0.0
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "light": {
@@ -190,13 +194,17 @@
                 -0.12387675791978836,
                 -0.3543117344379425
             ],
+            "scale": [
+                1.0,
+                0.9999999403953552,
+                0.9999998807907104
+            ],
             "translation": [
                 -7.542536735534668,
                 9.044886589050293,
                 -4.291332244873047
             ]
-        },
-        "type": "SpotLight"
+        }
     },
     {
         "light": {
@@ -221,13 +229,17 @@
                 0.684270441532135,
                 0.12569718062877655
             ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0000001192092896
+            ],
             "translation": [
                 -4.424610137939453,
                 4.0966668128967285,
                 17.764089584350586
             ]
-        },
-        "type": "SpotLight"
+        }
     },
     {
         "light": {
@@ -247,18 +259,22 @@
         "name": "blue light",
         "transform": {
             "rotation": [
-                -0.0012726254062727094,
+                -0.0012726255226880312,
                 0.9821755886077881,
-                -0.006669885478913784,
+                -0.006669885944575071,
                 -0.1878431886434555
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
             ],
             "translation": [
                 -9.983325958251953,
                 2.123302936553955,
                 19.30268096923828
             ]
-        },
-        "type": "SpotLight"
+        }
     },
     {
         "light": {
@@ -283,13 +299,17 @@
                 0.0,
                 0.9818192720413208
             ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
             "translation": [
                 -13.09209156036377,
                 5.310904502868652,
                 33.922630310058594
             ]
-        },
-        "type": "SpotLight"
+        }
     },
     {
         "light": {
@@ -310,17 +330,21 @@
         "transform": {
             "rotation": [
                 0.7088420987129211,
-                -0.004339899867773056,
+                -0.004339905455708504,
                 0.08069344609975815,
                 -0.7007229924201965
+            ],
+            "scale": [
+                1.0,
+                1.0000001192092896,
+                1.0
             ],
             "translation": [
                 -6.254361629486084,
                 4.4917521476745605,
                 14.794235229492188
             ]
-        },
-        "type": "SpotLight"
+        }
     },
     {
         "name": "Probe1",
@@ -332,6 +356,12 @@
             ]
         },
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
             "scale": [
                 14.367939949035645,
                 9.38873291015625,
@@ -342,8 +372,7 @@
                 4.579742431640625,
                 11.3203125
             ]
-        },
-        "type": "EnvironmentProbe"
+        }
     },
     {
         "name": "Probe2",
@@ -355,6 +384,12 @@
             ]
         },
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
             "scale": [
                 4.685288906097412,
                 4.1868133544921875,
@@ -365,8 +400,7 @@
                 1.3236310482025146,
                 0.6450009346008301
             ]
-        },
-        "type": "EnvironmentProbe"
+        }
     },
     {
         "name": "Probe3",
@@ -378,6 +412,12 @@
             ]
         },
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
             "scale": [
                 2.8820197582244873,
                 3.5224077701568604,
@@ -388,8 +428,7 @@
                 1.3304481506347656,
                 4.850318431854248
             ]
-        },
-        "type": "EnvironmentProbe"
+        }
     },
     {
         "name": "probe",
@@ -401,6 +440,12 @@
             ]
         },
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
             "scale": [
                 7.472172737121582,
                 7.2311930656433105,
@@ -411,8 +456,7 @@
                 1.959407925605774,
                 3.3094944953918457
             ]
-        },
-        "type": "EnvironmentProbe"
+        }
     },
     {
         "light": {
@@ -431,13 +475,23 @@
         },
         "name": "front jard omni",
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
             "translation": [
                 -11.563852310180664,
                 1.8277146816253662,
                 10.230901718139648
             ]
-        },
-        "type": "OmniLight"
+        }
     },
     {
         "mesh": {
@@ -446,14 +500,16 @@
             "renderer": "SOLID"
         },
         "name": "Shadow mask",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -472,15 +528,13 @@
                 0.0,
                 0.0
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "name": "Sky box",
         "sky": {
             "cubeMap": "resources/textures/sky2/*.png"
-        },
-        "type": "Sky"
+        }
     },
     {
         "mesh": {
@@ -489,14 +543,16 @@
             "renderer": "SOLID"
         },
         "name": "walls2-mesh",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/scenes/scene1/walls2.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -515,8 +571,7 @@
                 0.0,
                 0.0
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "mesh": {
@@ -525,14 +580,16 @@
             "renderer": "SOLID"
         },
         "name": "walls3-mesh",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/scenes/scene1/walls3.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -551,8 +608,7 @@
                 0.0,
                 0.0
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "mesh": {
@@ -561,14 +617,16 @@
             "renderer": "SOLID"
         },
         "name": "columns2-mesh",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/scenes/scene1/columns2_fix.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -587,8 +645,7 @@
                 0.0,
                 0.0
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "light": {
@@ -607,13 +664,23 @@
         },
         "name": "red light",
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
             "translation": [
                 -9.889822959899902,
                 2.2082037925720215,
                 2.3219029903411865
             ]
-        },
-        "type": "OmniLight"
+        }
     },
     {
         "mesh": {
@@ -622,14 +689,16 @@
             "renderer": "SOLID"
         },
         "name": "box-column",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -648,8 +717,7 @@
                 0.0,
                 11.97381591796875
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "mesh": {
@@ -658,14 +726,16 @@
             "renderer": "SOLID"
         },
         "name": "columns3-mesh",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/scenes/scene1/columns3.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -684,8 +754,7 @@
                 0.0,
                 0.0
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "mesh": {
@@ -694,14 +763,16 @@
             "renderer": "SOLID"
         },
         "name": "floor3-mesh",
-        "physicsMesh": {
+        "physicsBody": {
+            "density": 1.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/scenes/scene1/floor3.gltf",
             "restitution": 0.5,
-            "type": "triangle"
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -720,8 +791,7 @@
                 0.0,
                 0.0
             ]
-        },
-        "type": "StaticMesh"
+        }
     },
     {
         "name": "Column probe",
@@ -733,6 +803,12 @@
             ]
         },
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
             "scale": [
                 3.3414528369903564,
                 4.763458728790283,
@@ -743,8 +819,7 @@
                 2.006850242614746,
                 10.885322570800781
             ]
-        },
-        "type": "EnvironmentProbe"
+        }
     },
     {
         "light": {
@@ -763,13 +838,23 @@
         },
         "name": "right room light 1",
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
             "translation": [
                 2.1224589347839355,
                 2.2220237255096436,
                 24.584806442260742
             ]
-        },
-        "type": "OmniLight"
+        }
     },
     {
         "light": {
@@ -796,13 +881,17 @@
                 0.004954136908054352,
                 0.7520953416824341
             ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
             "translation": [
                 1.092221975326538,
                 13.885767936706543,
                 11.494955062866211
             ]
-        },
-        "type": "SpotLight"
+        }
     },
     {
         "light": {
@@ -819,13 +908,23 @@
         },
         "name": "center hall omni",
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
             "translation": [
                 4.959404945373535,
                 6.784326076507568,
                 10.591165542602539
             ]
-        },
-        "type": "OmniLight"
+        }
     },
     {
         "light": {
@@ -842,13 +941,23 @@
         },
         "name": "NEW ENTITY",
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
             "translation": [
                 0.0,
                 2.395040273666382,
                 -2.4674956798553467
             ]
-        },
-        "type": "OmniLight"
+        }
     },
     {
         "light": {
@@ -867,13 +976,23 @@
         },
         "name": "NEW ENTITY",
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
             "translation": [
                 6.707377910614014,
                 1.513628602027893,
                 -1.8155949115753174
             ]
-        },
-        "type": "OmniLight"
+        }
     },
     {
         "name": "Left room probe",
@@ -885,6 +1004,12 @@
             ]
         },
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
             "scale": [
                 16.733154296875,
                 3.370819091796875,
@@ -895,8 +1020,7 @@
                 1.482956051826477,
                 -1.544281244277954
             ]
-        },
-        "type": "EnvironmentProbe"
+        }
     },
     {
         "light": {
@@ -915,31 +1039,42 @@
         },
         "name": "NEW ENTITY",
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
             "translation": [
                 -4.922957897186279,
                 2.1879842281341553,
                 -2.449687957763672
             ]
-        },
-        "type": "OmniLight"
+        }
     },
     {
         "camera": {
             "isActive": false,
             "position": [
-                -13.111737251281738,
-                1.750999927520752,
-                16.00450897216797
+                -15.713628768920898,
+                1.75,
+                14.700477600097656
             ],
+            "type": "FP",
             "upDirection": [
-                0.14735838770866394,
-                0.9836558699607849,
-                -0.10347266495227814
+                -0.009132400155067444,
+                0.99994295835495,
+                0.005548024550080299
             ],
             "viewDirection": [
-                0.8050156235694885,
-                -0.1800585687160492,
-                -0.5652688145637512
+                0.8545994758605957,
+                0.010685564950108528,
+                -0.5191777348518372
             ]
         },
         "cct": {
@@ -953,13 +1088,23 @@
         },
         "name": "NEW CharacterController",
         "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
             "translation": [
                 -13.057733535766602,
                 1.386629343032837,
                 11.07086181640625
             ]
-        },
-        "type": "CharacterController"
+        }
     },
     {
         "mesh": {
@@ -968,14 +1113,16 @@
             "renderer": "SOLID"
         },
         "name": "NEW RigidBody",
-        "rigidBody": {
+        "physicsBody": {
             "density": 100.0,
             "friction": [
                 0.5,
                 0.5
             ],
             "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
         },
         "transform": {
             "rotation": [
@@ -994,7 +1141,6 @@
                 3.036065101623535,
                 9.710917472839355
             ]
-        },
-        "type": "RigidBody"
+        }
     }
 ]

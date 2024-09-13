@@ -20,10 +20,14 @@ public:
         }
         auto emptyJson = nlohmann::json({});
         for (auto const &comp: e.m_Components) {
-            if (json.contains(comp->m_Name)) {
-                comp->deserialize(json[comp->m_Name], resourceManager);
-            } else {
-                comp->deserialize(emptyJson, resourceManager);
+            try {
+                if (json.contains(comp->m_Name)) {
+                    comp->deserialize(json[comp->m_Name], resourceManager);
+                } else {
+                    comp->deserialize(emptyJson, resourceManager);
+                }
+            } catch (nlohmann::detail::type_error &exception) {
+                std::cout << "JSON deserialization error " << e.m_Name << ": " << exception.what() << std::endl;
             }
         }
     }
