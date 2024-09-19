@@ -127,32 +127,56 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/FilterGroups.h
 )
 
+IF (WIN32)
+    #    include_directories(GL)
+    target_link_libraries(SDLWindow OPENGL32.LIB)
 
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR})
-target_link_libraries (SDLWindow ${SDL2_LIBRARIES})
+    list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/libs/SDL2/cmake)
+    list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/libs/glew)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/glm)
 
-target_link_libraries(SDLWindow GL)
+    find_package(SDL2 REQUIRED)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/SDL2/x86_64-w64-mingw32/include)
+    target_link_libraries(SDLWindow ${SDL2_LIBRARIES})
+
+    include_directories(${CMAKE_SOURCE_DIR}/libs/PhysX/PhysX)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/PhysX)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysX_64.lib)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysXCommon_64.lib)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysXCooking_64.lib)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysXCharacterKinematic_static_64.lib)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysXExtensions_static_64.lib)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysXFoundation_64.lib)
+
+    add_definitions(-DNDEBUG)
+#    add_definitions(-Wno-attributes)
+ELSE ()
+    target_link_libraries(SDLWindow GL)
+
+    find_package(glm REQUIRED)
+    target_link_libraries(SDLWindow glm::glm)
+
+    find_package(SDL2 REQUIRED)
+    include_directories(${SDL2_INCLUDE_DIR})
+    target_link_libraries(SDLWindow ${SDL2_LIBRARIES})
+
+    include_directories(${CMAKE_SOURCE_DIR}/libs/PhysX/include)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXFoundation_static_64.a)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXExtensions_static_64.a)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCooking_static_64.a)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCharacterKinematic_static_64.a)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCommon_static_64.a)
+ENDIF ()
 
 find_package(GLEW REQUIRED)
 target_link_libraries(SDLWindow GLEW::GLEW)
 
-find_package(glm REQUIRED)
-target_link_libraries(SDLWindow glm::glm)
-
 target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)
-
-include_directories(${CMAKE_SOURCE_DIR}/libs/PhysX/include)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCooking_static_64.a)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCharacterKinematic_static_64.a)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCommon_static_64.a)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXExtensions_static_64.a)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXFoundation_static_64.a)
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-set(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin/)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/)
 include(CPack)

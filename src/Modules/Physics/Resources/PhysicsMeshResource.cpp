@@ -1,7 +1,7 @@
 #include "PhysicsMeshResource.h"
 #include "../../../../libs/tinygltf/tiny_gltf.h"
-#include "foundation/PxSimpleTypes.h"
-#include "foundation/PxVec3.h"
+// #include "../foundation/PxSimpleTypes.h"
+// #include "../foundation/PxVec3.h"
 #include <PhysX/PxPhysics.h>
 
 PhysicsMeshResource::PhysicsMeshResource() : Resource(),

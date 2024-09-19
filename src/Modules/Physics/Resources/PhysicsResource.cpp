@@ -1,7 +1,16 @@
 #include "PhysicsResource.h"
 #include "../Helpers/SceneFilterShader.h"
 
-static physx::PxDefaultErrorCallback gDefaultErrorCallback;
+class ErrorCallback : public physx::PxErrorCallback
+{
+public:
+    void reportError(physx::PxErrorCode::Enum code, const char* message, const char* file, int line) override {
+
+    }
+};
+
+// static physx::PxDefaultErrorCallback gDefaultErrorCallback;
+static ErrorCallback gDefaultErrorCallback;
 static physx::PxDefaultAllocator gDefaultAllocatorCallback;
 physx::PxTolerancesScale toleranceScale;
 
