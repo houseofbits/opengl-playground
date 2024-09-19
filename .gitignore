@@ -49,7 +49,8 @@ libs/*
 !libs/readme.md
 src/source-libs/*
 .clang-format
-.cmake/
+.cmake
+.vscode
 .idea
 .ninja_deps
 .ninja_log
