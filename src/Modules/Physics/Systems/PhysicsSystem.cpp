@@ -1,6 +1,6 @@
 #include "PhysicsSystem.h"
 
-using namespace physx;
+//using namespace physx;
 
 PhysicsSystem::PhysicsSystem() : EntitySystem(),
                                  m_isSimulationDisabled(false),
@@ -18,9 +18,7 @@ void PhysicsSystem::process() {
 
     m_PhysicsResource().clearEntityContacts();
     if (!m_isSimulationDisabled) {
-        m_PhysicsResource().m_pxScene->simulate(1.0 / 60.0);
-        while (!m_PhysicsResource().m_pxScene->fetchResults(true)) {
-        }
+        m_PhysicsResource().simulate();
     }
 }
 

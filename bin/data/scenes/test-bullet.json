@@ -1,0 +1,285 @@
+[
+    {
+        "camera": {
+            "isActive": true,
+            "position": [
+                -6.326841354370117,
+                2.6101748943328857,
+                -15.37625789642334
+            ],
+            "type": "FREE",
+            "upDirection": [
+                0.001202328596264124,
+                0.9817487001419067,
+                0.19017936289310455
+            ],
+            "viewDirection": [
+                0.00620656693354249,
+                -0.1901831477880478,
+                0.9817290306091309
+            ]
+        },
+        "name": "camera-free"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-wall.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "floor",
+        "physicsBody": {
+            "friction": [
+                1.0,
+                1.0
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                22.818788528442383,
+                0.5,
+                20.442365646362305
+            ],
+            "translation": [
+                -5.045999526977539,
+                -0.25,
+                -5.0
+            ]
+        }
+    },
+    {
+        "light": {
+            "attenuation": 4.499958038330078,
+            "castShadows": true,
+            "color": [
+                0.9901960492134094,
+                0.9502227306365967,
+                0.6504228711128235
+            ],
+            "intensity": 1.9000002145767212,
+            "isEnabled": true,
+            "shadowBias": 2.9999999242136255e-05,
+            "shadowResolution": 1024,
+            "type": "OMNI"
+        },
+        "name": "light-omni-primary",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.5871214866638184,
+                3.2897939682006836,
+                -8.676735877990723
+            ]
+        }
+    },
+    {
+        "name": "Sky box",
+        "sky": {
+            "cubeMap": "resources/textures/sky2/*.png"
+        }
+    },
+    {
+        "light": {
+            "attenuation": 10.0,
+            "castShadows": true,
+            "color": [
+                0.6176470518112183,
+                0.7750865817070007,
+                1.0
+            ],
+            "intensity": 0.49999991059303284,
+            "isEnabled": true,
+            "shadowBias": 2.9999999242136255e-05,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "name": "light-omni-secondary",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -5.438762187957764,
+                3.723975658416748,
+                -8.688417434692383
+            ]
+        }
+    },
+    {
+        "light": {
+            "attenuation": 4.999976634979248,
+            "beamAngle": 133.5,
+            "castShadows": true,
+            "color": [
+                0.9938004612922668,
+                0.7892156839370728,
+                1.0
+            ],
+            "intensity": 0.3999999165534973,
+            "isEnabled": true,
+            "projectionTexture": "resources/textures/spot-proj-3.png",
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 1024,
+            "type": "SPOT"
+        },
+        "name": "light-omni-ambient",
+        "transform": {
+            "rotation": [
+                -0.4290640354156494,
+                0.0,
+                0.0,
+                0.9032740592956543
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.5871214866638184,
+                3.117919683456421,
+                -5.373377323150635
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-green.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -5.542103290557861,
+                1.636279582977295,
+                -8.100557327270508
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-2",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -5.542103290557861,
+                2.8146841526031494,
+                -8.100557327270508
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-blue.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-3",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -5.542103290557861,
+                3.9656529426574707,
+                -8.100557327270508
+            ]
+        }
+    }
+]

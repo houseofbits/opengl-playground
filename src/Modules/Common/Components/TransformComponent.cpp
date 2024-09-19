@@ -155,12 +155,12 @@ glm::vec3 TransformComponent::getDirection() const {
     return rotation * glm::vec3(0, 0, 1);
 }
 
-void TransformComponent::setFromPxTransform(const physx::PxTransform &transform) {
-    glm::vec3 scale = getScale();
-    m_transform = glm::mat4(1.0);
-    setTranslation(glm::vec3(transform.p.x, transform.p.y, transform.p.z));
-    setRotation(glm::quat(transform.q.w, transform.q.x, transform.q.y, transform.q.z));
-    setScale(scale);
+//void TransformComponent::setFromPxTransform(const physx::PxTransform &transform) {
+//    glm::vec3 scale = getScale();
+//    m_transform = glm::mat4(1.0);
+//    setTranslation(glm::vec3(transform.p.x, transform.p.y, transform.p.z));
+//    setRotation(glm::quat(transform.q.w, transform.q.x, transform.q.y, transform.q.z));
+//    setScale(scale);
 
     //    auto rotation = physx::PxMat33(transform.q);
     //    m_transform[0][0] = rotation.column0[0];
@@ -182,7 +182,7 @@ void TransformComponent::setFromPxTransform(const physx::PxTransform &transform)
     //    m_transform[3][1] = transform.p[1];
     //    m_transform[3][2] = transform.p[2];
     //    m_transform[3][3] = 1;
-}
+//}
 
 glm::vec3 TransformComponent::getInitialTranslation() {
     return m_initialTransform[3];

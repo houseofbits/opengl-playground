@@ -1,6 +1,6 @@
 #include "PhysicsBodyComponent.h"
-#include "../../../Core/Helper/Types.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../Helpers/TypeCast.h"
 #include "../Systems/PhysicsBodyProcessingSystem.h"
 
 PhysicsBodyComponent::PhysicsBodyComponent() : Component(),
@@ -8,18 +8,13 @@ PhysicsBodyComponent::PhysicsBodyComponent() : Component(),
                                                m_MeshType(MESH_TYPE_TRIANGLE),
                                                m_friction(0.5, 0.5),
                                                m_restitution(0.5),
-                                               m_density(1.0),
+                                               m_mass(0.0),
                                                m_meshResource(),
-                                               m_PhysicsResource(),
-                                               m_pxRigidActor(nullptr) {
+                                               m_rigidBody(nullptr),
+                                               m_PhysicsResource() {
 }
 
 PhysicsBodyComponent::~PhysicsBodyComponent() {
-    if (m_pxRigidActor != nullptr) {
-        delete (PhysicsActorUserData *) m_pxRigidActor->userData;
-        releaseShapes();
-        m_pxRigidActor->release();
-    }
 }
 
 void PhysicsBodyComponent::serialize(nlohmann::json &j) {
@@ -28,7 +23,7 @@ void PhysicsBodyComponent::serialize(nlohmann::json &j) {
     j[MODEL_KEY] = m_meshResource().m_Path;
     j[RESTITUTION_KEY] = m_restitution;
     j[FRICTION_KEY] = m_friction;
-    j[DENSITY_KEY] = m_density;
+    j[MASS_KEY] = m_mass;
 }
 
 void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -36,7 +31,7 @@ void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager 
 
     m_restitution = j.value(RESTITUTION_KEY, m_restitution);
     m_friction = j.value(FRICTION_KEY, m_friction);
-    m_density = j.value(DENSITY_KEY, m_density);
+    m_mass = j.value(MASS_KEY, m_mass);
 
     std::string path = j.value(MODEL_KEY, m_meshResource().m_Path);
     resourceManager.request(m_meshResource, path);
@@ -59,143 +54,76 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
         return;
     }
 
-    if (m_pxRigidActor != nullptr) {
-        m_PhysicsResource().m_pxScene->removeActor(*m_pxRigidActor);
-        delete (PhysicsActorUserData *) m_pxRigidActor->userData;
-        releaseShapes();
-        m_pxRigidActor->release();
+    releaseShapes();
+
+    btVector3 localInertia(0, 0, 0);
+    auto *motionState = new btDefaultMotionState(TypeCast::createBtTransformFromTransformComponent(transform));
+    if (m_MeshType == MESH_TYPE_TRIANGLE) {
+        btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, m_meshResource().createTriangleMeshShape(transform.getScale()), localInertia);
+        m_rigidBody = new btRigidBody(rbInfo);
+    } else {
+        btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, motionState, m_meshResource().createConvexMeshShape(transform.getScale()), localInertia);
+        m_rigidBody = new btRigidBody(rbInfo);
     }
+    updateMass();
 
-    if (m_BodyType == BODY_TYPE_STATIC) {
-        m_pxRigidActor = m_PhysicsResource().m_pxPhysics->createRigidStatic(Types::GLMtoPxTransform(transform.getModelMatrix()));
-    } else if (m_BodyType == BODY_TYPE_DYNAMIC) {
-        auto *rigidBody = m_PhysicsResource().m_pxPhysics->createRigidDynamic(Types::GLMtoPxTransform(transform.getModelMatrix()));
-
-//        rigidBody->setSolverIterationCounts(100,100);
-
-        rigidBody->setSleepThreshold(0.005f);
-        rigidBody->setAngularDamping(0.1f);
-
-        physx::PxRigidBodyExt::updateMassAndInertia(*rigidBody, m_density);
-
-        m_pxRigidActor = rigidBody;
-    }
-
-    m_pxRigidActor->userData = new PhysicsActorUserData(m_EntityId.id());
-
-    createMeshShape(transform);
-
-    m_PhysicsResource().m_pxScene->addActor(*m_pxRigidActor);
+    m_PhysicsResource().m_dynamicsWorld->addRigidBody(m_rigidBody);
 }
 
 void PhysicsBodyComponent::createMeshShape(TransformComponent &transform) {
-    physx::PxShape *shape = nullptr;
-    if (m_MeshType == MESH_TYPE_CONVEX) {
-        shape = createConvexMeshShape(transform.getScale());
-    } else if (m_MeshType == MESH_TYPE_TRIANGLE) {
-        shape = createTriangleMeshShape(transform.getScale());
-    }
-
-    if (shape == nullptr) {
-        return;
-    }
-
     releaseShapes();
-    m_pxRigidActor->attachShape(*shape);
 
-    shape->release();
-}
+    if (m_BodyType == BODY_TYPE_DYNAMIC && m_MeshType == MESH_TYPE_TRIANGLE) {
+        Log::warn("PhysicsBodyComponent: Dynamic body cannot have triangle mesh shape");
 
-physx::PxShape *PhysicsBodyComponent::createConvexMeshShape(glm::vec3 scale) {
-    physx::PxVec3 pxScale = Types::GLMtoPxVec3(scale);
-
-    auto *vertices = new physx::PxVec3[m_meshResource().m_numVertices];
-    for (int i = 0; i < m_meshResource().m_numVertices; ++i) {
-        vertices[i] = m_meshResource().m_vertices[i].multiply(pxScale);
-    }
-
-    physx::PxConvexMeshDesc meshDesc;
-    meshDesc.points.count = m_meshResource().m_numVertices;
-    meshDesc.points.stride = sizeof(physx::PxVec3);
-    meshDesc.points.data = vertices;
-    meshDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
-
-    physx::PxTolerancesScale toleranceScale;
-    physx::PxCookingParams params(toleranceScale);
-    physx::PxDefaultMemoryOutputStream writeBuffer;
-    physx::PxConvexMeshCookingResult::Enum result;
-
-    bool status = PxCookConvexMesh(params, meshDesc, writeBuffer, &result);
-
-    delete[] vertices;
-
-    if (!status) {
-        return nullptr;
-    }
-
-    physx::PxDefaultMemoryInputData input(writeBuffer.getData(), writeBuffer.getSize());
-    physx::PxConvexMesh *convexMesh = m_PhysicsResource().m_pxPhysics->createConvexMesh(input);
-    physx::PxMaterial *material = m_PhysicsResource().m_pxPhysics->createMaterial(m_friction.x, m_friction.y, m_restitution);
-
-    return m_PhysicsResource().m_pxPhysics->createShape(physx::PxConvexMeshGeometry(convexMesh), *material);
-}
-
-physx::PxShape *PhysicsBodyComponent::createTriangleMeshShape(glm::vec3 scale) {
-    physx::PxVec3 pxScale = Types::GLMtoPxVec3(scale);
-
-    auto *vertices = new physx::PxVec3[m_meshResource().m_numVertices];
-    for (int i = 0; i < m_meshResource().m_numVertices; ++i) {
-        vertices[i] = m_meshResource().m_vertices[i].multiply(pxScale);
-    }
-
-    physx::PxTriangleMeshDesc meshDesc;
-    meshDesc.points.count = m_meshResource().m_numVertices;
-    meshDesc.points.stride = sizeof(physx::PxVec3);
-    meshDesc.points.data = vertices;
-    meshDesc.triangles.count = m_meshResource().m_numIndices / 3;
-    meshDesc.triangles.stride = 3 * sizeof(physx::PxU32);
-    meshDesc.triangles.data = m_meshResource().m_indices;
-
-    physx::PxTolerancesScale toleranceScale;
-    physx::PxCookingParams params(toleranceScale);
-    physx::PxDefaultMemoryOutputStream writeBuffer;
-    physx::PxTriangleMeshCookingResult::Enum result;
-
-    bool status = PxCookTriangleMesh(params, meshDesc, writeBuffer, &result);
-
-    delete[] vertices;
-
-    if (!status) {
-        return nullptr;
-    }
-
-    physx::PxDefaultMemoryInputData input(writeBuffer.getData(), writeBuffer.getSize());
-    physx::PxTriangleMesh *triangleMesh = m_PhysicsResource().m_pxPhysics->createTriangleMesh(input);
-    physx::PxMaterial *material = m_PhysicsResource().m_pxPhysics->createMaterial(m_friction.x, m_friction.y, m_restitution);
-
-    return m_PhysicsResource().m_pxPhysics->createShape(physx::PxTriangleMeshGeometry(triangleMesh), *material);
-}
-
-void PhysicsBodyComponent::releaseShapes() const {
-    physx::PxU32 numShapes = m_pxRigidActor->getNbShapes();
-    if (numShapes == 0) {
         return;
     }
-    auto **shapes = new physx::PxShape *[numShapes];
-    for (auto i = 0; i < m_pxRigidActor->getShapes(shapes, numShapes); ++i) {
-        physx::PxShape *shape = shapes[i];
-        if (shape != nullptr) {
-            m_pxRigidActor->detachShape(*shape);
-        }
-    }
 
-    delete[] shapes;
+    if (m_MeshType == MESH_TYPE_TRIANGLE) {
+        m_rigidBody->setCollisionShape(m_meshResource().createTriangleMeshShape(transform.getScale()));
+    } else {
+        m_rigidBody->setCollisionShape(m_meshResource().createConvexMeshShape(transform.getScale()));
+    }
+    updateMass();
+
+    m_PhysicsResource().m_dynamicsWorld->addRigidBody(m_rigidBody);
+}
+
+void PhysicsBodyComponent::releaseShapes() {
+    if (m_rigidBody != nullptr) {
+        m_PhysicsResource().m_dynamicsWorld->removeRigidBody(m_rigidBody);
+        btCollisionShape *oldShape = m_rigidBody->getCollisionShape();
+        delete oldShape;
+    }
 }
 
 void PhysicsBodyComponent::update(TransformComponent &transform, bool isSimulationEnabled) const {
-    if (m_BodyType == BODY_TYPE_STATIC || !isSimulationEnabled) {
-        m_pxRigidActor->setGlobalPose(Types::GLMtoPxTransform(transform.getModelMatrix()));
-    } else if (m_BodyType == BODY_TYPE_DYNAMIC) {
-        transform.setFromPxTransform(m_pxRigidActor->getGlobalPose());
+    if (!isSimulationEnabled) {
+        m_rigidBody->setWorldTransform(TypeCast::createBtTransformFromTransformComponent(transform));
+        m_rigidBody->getMotionState()->setWorldTransform(TypeCast::createBtTransformFromTransformComponent(transform));
+        m_rigidBody->setLinearVelocity(btVector3(0, 0, 0));
+        m_rigidBody->setAngularVelocity(btVector3(0, 0, 0));
+        m_rigidBody->activate();
+    } else {
+        btTransform t;
+        m_rigidBody->getMotionState()->getWorldTransform(t);
+        TypeCast::applyBtTransformToTransformComponent(transform, t);
+    }
+}
+
+void PhysicsBodyComponent::updateMass() {
+    if (m_mass > 0) {
+        if (m_BodyType == BODY_TYPE_STATIC) {
+            Log::warn("PhysicsBodyComponent: Static body cannot have mass. Reset static body mass");
+            m_mass = 0;
+        }
+
+        btVector3 localInertia(0, 0, 0);
+        auto *shape = m_rigidBody->getCollisionShape();
+        int type = shape->getShapeType();
+        if (type == BroadphaseNativeTypes::CONVEX_HULL_SHAPE_PROXYTYPE && m_mass > 0) {
+            shape->calculateLocalInertia(m_mass, localInertia);
+        }
+        m_rigidBody->setMassProps(m_mass, localInertia);
     }
 }

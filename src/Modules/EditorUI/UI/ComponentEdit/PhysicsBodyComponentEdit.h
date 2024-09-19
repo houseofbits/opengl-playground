@@ -75,7 +75,7 @@ public:
             body->createMeshShape(*transform);
         }
 
-        ImGui::InputFloat("Density", &body->m_density);
+        ImGui::InputFloat("Mass", &body->m_mass);
         ImGui::InputFloat("Dynamic friction", &body->m_friction.x);
         ImGui::InputFloat("Static friction", &body->m_friction.y);
         ImGui::InputFloat("Restitution", &body->m_restitution);

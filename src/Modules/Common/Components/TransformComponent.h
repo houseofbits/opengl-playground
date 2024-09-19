@@ -3,7 +3,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "../../../Core/API.h"
-#include <PhysX/PxPhysics.h>
+//#include <PhysX/PxPhysics.h>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/mat4x4.hpp>
@@ -36,7 +36,7 @@ public:
     glm::quat getRotation();
     [[nodiscard]] glm::vec3 getDirection() const;
     void decomposeModelMatrix(glm::vec3 &, glm::quat &, glm::vec3 &);
-    void setFromPxTransform(const physx::PxTransform&);
+//    void setFromPxTransform(const physx::PxTransform&);
 
     glm::vec3 getInitialTranslation();
     glm::vec3 getInitialScale();

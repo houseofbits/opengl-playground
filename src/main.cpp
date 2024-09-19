@@ -1,14 +1,13 @@
 #include "Applications/Main/MainApplication.h"
-#include "Include.h"
 
 int main(int argc, char *argv[]) {
-    //        Entry entry;
-    //        entry.run();
 
-    MainApplication app;
-    app.initialize("data/entityMap.json");
-    app.loadEntitiesFromFile("data/scenes/test-px.json");
-    app.run();
+    std::cout<<"lol"<<std::endl;
+
+    // MainApplication app;
+    // app.initialize("data/entityMap.json");
+    // app.loadEntitiesFromFile("data/scenes/test-bullet.json");
+    // app.run();
 
     return 0;
 }

@@ -112,7 +112,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Systems/CharacterControllerSystem.cpp
         src/Modules/Physics/Systems/CharacterControllerSystem.h
         src/Modules/Physics/Helpers/PhysicsActorUserData.h
-        src/Modules/Physics/Helpers/ExcludeEntityIdFilterCallback.h
         src/Modules/Physics/Helpers/RayCastResult.h
         src/Modules/Physics/Events/CharacterPickingEvent.h
         src/Modules/Physics/Components/PhysicsBodyComponent.cpp
@@ -121,14 +120,15 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Components/PhysicsJointComponent.h
         src/Modules/Physics/Systems/JointsProcessingSystem.cpp
         src/Modules/Physics/Systems/JointsProcessingSystem.h
-        src/Modules/Physics/Helpers/SimulationEventCallback.h
-        src/Modules/Physics/Helpers/SimulationEventCallback.cpp
-        src/Modules/Physics/Helpers/SceneFilterShader.h
         src/Modules/Physics/Helpers/FilterGroups.h
+        src/Modules/Physics/Helpers/TypeCast.h
 )
 
 IF (WIN32)
-    #    include_directories(GL)
+    set(CMAKE_EXE_LINKER_FLAGS "-static")
+    target_link_libraries(SDLWindow -static)
+    add_link_options(-static -static-libgcc -static-libstdc++)
+
     target_link_libraries(SDLWindow OPENGL32.LIB)
 
     list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/libs/SDL2/cmake)
@@ -139,17 +139,13 @@ IF (WIN32)
     include_directories(${CMAKE_SOURCE_DIR}/libs/SDL2/x86_64-w64-mingw32/include)
     target_link_libraries(SDLWindow ${SDL2_LIBRARIES})
 
-    include_directories(${CMAKE_SOURCE_DIR}/libs/PhysX/PhysX)
-    include_directories(${CMAKE_SOURCE_DIR}/libs/PhysX)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysX_64.lib)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysXCommon_64.lib)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysXCooking_64.lib)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysXCharacterKinematic_static_64.lib)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysXExtensions_static_64.lib)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/lib/PhysXFoundation_64.lib)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics_Debug.a)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision_Debug.a)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath_Debug.a)
 
     add_definitions(-DNDEBUG)
-#    add_definitions(-Wno-attributes)
 ELSE ()
     target_link_libraries(SDLWindow GL)
 
@@ -160,13 +156,18 @@ ELSE ()
     include_directories(${SDL2_INCLUDE_DIR})
     target_link_libraries(SDLWindow ${SDL2_LIBRARIES})
 
-    include_directories(${CMAKE_SOURCE_DIR}/libs/PhysX/include)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXFoundation_static_64.a)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXExtensions_static_64.a)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCooking_static_64.a)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCharacterKinematic_static_64.a)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCommon_static_64.a)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics.a)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision.a)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath.a)
+    #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Common.a)
+    #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Collision.a)
+    #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Common.a)
+    #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics.a)
+    #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Dynamics.a)
+    #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Geometry.a)
+    #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet2FileLoader.a)
 ENDIF ()
 
 find_package(GLEW REQUIRED)
