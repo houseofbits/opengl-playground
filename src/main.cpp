@@ -5,4 +5,6 @@ int main(int argc, char *argv[]) {
     app.initialize("data/entityMap.json");
     app.loadEntitiesFromFile("data/scenes/test-bullet.json");
     app.run();
+
+    return 0;
 }

@@ -11,7 +11,7 @@
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
+# Compiled Dynamic libs
 *.so
 *.dylib
 *.dll
@@ -20,7 +20,7 @@
 *.mod
 *.smod
 
-# Compiled Static libraries
+# Compiled Static libs
 *.lai
 *.la
 *.a
@@ -46,12 +46,15 @@ CTestTestfile.cmake
 _deps
 build/
 libs/*
+!libs/readme.md
 src/source-libs/*
 .clang-format
-.cmake/
-.idea/
+.cmake
+.vscode
+.idea
 .ninja_deps
 .ninja_log
 DartConfiguration.tcl
 build.ninja
 cmake-build-default-coverage
+cmake-build-debug

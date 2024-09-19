@@ -40,6 +40,8 @@ SOFTWARE.
 #include <cstdio>
 #include <cerrno>
 
+#define USE_STD_FILESYSTEM
+
 // this option need c++17
 #ifdef USE_STD_FILESYSTEM
 #include <filesystem>
