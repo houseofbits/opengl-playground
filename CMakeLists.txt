@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.16.3)
 project(SDLWindow VERSION 0.1.0 LANGUAGES C CXX)
 
-include(CTest)
-enable_testing()
-
 file(GLOB_RECURSE sources src/*.cpp src/*.h)
 
 add_executable(${PROJECT_NAME} ${sources}
@@ -124,10 +121,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/TypeCast.h
 )
 
+target_compile_features(SDLWindow PRIVATE cxx_std_17)
+
 IF (WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "-static")
-    target_link_libraries(SDLWindow -static)
-    add_link_options(-static -static-libgcc -static-libstdc++)
 
     target_link_libraries(SDLWindow OPENGL32.LIB)
 
@@ -139,13 +136,15 @@ IF (WIN32)
     include_directories(${CMAKE_SOURCE_DIR}/libs/SDL2/x86_64-w64-mingw32/include)
     target_link_libraries(SDLWindow ${SDL2_LIBRARIES})
 
+    find_package(GLEW REQUIRED)
+    include_directories(${GLEW_INCLUDE_DIRS})
+    target_link_libraries(SDLWindow ${GLEW_LIBRARIES})
+
     include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
     include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics_Debug.a)
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision_Debug.a)
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath_Debug.a)
-
-    add_definitions(-DNDEBUG)
 ELSE ()
     target_link_libraries(SDLWindow GL)
 
@@ -156,11 +155,15 @@ ELSE ()
     include_directories(${SDL2_INCLUDE_DIR})
     target_link_libraries(SDLWindow ${SDL2_LIBRARIES})
 
+    find_package(GLEW REQUIRED)
+    target_link_libraries(SDLWindow GLEW::GLEW)
+
     include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
     include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics.a)
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision.a)
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath.a)
+
     #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Common.a)
     #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Collision.a)
     #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Common.a)
@@ -170,12 +173,7 @@ ELSE ()
     #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet2FileLoader.a)
 ENDIF ()
 
-find_package(GLEW REQUIRED)
-target_link_libraries(SDLWindow GLEW::GLEW)
-
 target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)
-
-target_compile_features(SDLWindow PRIVATE cxx_std_17)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
