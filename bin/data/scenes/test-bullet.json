@@ -3,20 +3,20 @@
         "camera": {
             "isActive": true,
             "position": [
-                -6.326841354370117,
-                2.6101748943328857,
-                -15.37625789642334
+                -4.976085186004639,
+                3.284334421157837,
+                -12.603777885437012
             ],
             "type": "FREE",
             "upDirection": [
-                0.001202328596264124,
-                0.9817487001419067,
-                0.19017936289310455
+                0.0017363245133310556,
+                0.9767389297485352,
+                0.2144252210855484
             ],
             "viewDirection": [
-                0.00620656693354249,
-                -0.1901831477880478,
-                0.9817290306091309
+                0.007908957079052925,
+                -0.2144322395324707,
+                0.976706862449646
             ]
         },
         "name": "camera-free"
@@ -68,7 +68,7 @@
                 0.6504228711128235
             ],
             "intensity": 1.9000002145767212,
-            "isEnabled": true,
+            "isEnabled": false,
             "shadowBias": 2.9999999242136255e-05,
             "shadowResolution": 1024,
             "type": "OMNI"
@@ -101,17 +101,15 @@
     },
     {
         "light": {
-            "attenuation": 10.0,
-            "castShadows": true,
+            "attenuation": 20.0,
+            "castShadows": false,
             "color": [
                 0.6176470518112183,
                 0.7750865817070007,
                 1.0
             ],
-            "intensity": 0.49999991059303284,
+            "intensity": 0.19999992847442627,
             "isEnabled": true,
-            "shadowBias": 2.9999999242136255e-05,
-            "shadowResolution": 512,
             "type": "OMNI"
         },
         "name": "light-omni-secondary",
@@ -129,45 +127,45 @@
             ],
             "translation": [
                 -5.438762187957764,
-                3.723975658416748,
-                -8.688417434692383
+                4.316547870635986,
+                -3.348815679550171
             ]
         }
     },
     {
         "light": {
-            "attenuation": 4.999976634979248,
-            "beamAngle": 133.5,
+            "attenuation": 16.900007247924805,
+            "beamAngle": 118.0,
             "castShadows": true,
             "color": [
-                0.9938004612922668,
-                0.7892156839370728,
-                1.0
+                0.9273356199264526,
+                1.0,
+                0.6470588445663452
             ],
-            "intensity": 0.3999999165534973,
+            "intensity": 0.6999999284744263,
             "isEnabled": true,
             "projectionTexture": "resources/textures/spot-proj-3.png",
             "shadowBias": 9.999999747378752e-05,
             "shadowResolution": 1024,
             "type": "SPOT"
         },
-        "name": "light-omni-ambient",
+        "name": "light-spot-1",
         "transform": {
             "rotation": [
-                -0.4290640354156494,
-                0.0,
-                0.0,
-                0.9032740592956543
+                0.9192657470703125,
+                -0.053051479160785675,
+                -0.07386458665132523,
+                -0.382988303899765
             ],
             "scale": [
-                1.0,
-                1.0,
-                1.0
+                1.0000003576278687,
+                1.0000004768371582,
+                1.0000001192092896
             ],
             "translation": [
-                0.5871214866638184,
-                3.117919683456421,
-                -5.373377323150635
+                -4.756770610809326,
+                6.068532943725586,
+                -13.114238739013672
             ]
         }
     },
@@ -202,8 +200,8 @@
                 1.0
             ],
             "translation": [
-                -5.542103290557861,
-                1.636279582977295,
+                -4.95244026184082,
+                1.9976038932800293,
                 -8.100557327270508
             ]
         }
@@ -239,8 +237,8 @@
                 1.0
             ],
             "translation": [
-                -5.542103290557861,
-                2.8146841526031494,
+                -6.076112747192383,
+                1.970952033996582,
                 -8.100557327270508
             ]
         }
@@ -276,9 +274,268 @@
                 1.0
             ],
             "translation": [
-                -5.542103290557861,
-                3.9656529426574707,
+                -5.5106096267700195,
+                0.8856027722358704,
+                -8.100494384765625
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data\\materials\\light-column.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-4",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -3.7282299995422363,
+                2.0006911754608154,
+                -8.100433349609375
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data\\materials\\light-column.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-5",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -6.730458736419678,
+                0.8856027722358704,
+                -8.100494384765625
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-green.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-6",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -3.065162420272827,
+                0.8633721470832825,
                 -8.100557327270508
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-7",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -4.336641788482666,
+                0.8453741073608398,
+                -8.100557327270508
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-blue.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-8",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -4.372289180755615,
+                3.0984625816345215,
+                -8.100555419921875
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data\\materials\\light-column.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-9",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -5.54854154586792,
+                3.115705728530884,
+                -8.100555419921875
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-10",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -4.923523902893066,
+                4.2265543937683105,
+                -8.10043716430664
             ]
         }
     }
