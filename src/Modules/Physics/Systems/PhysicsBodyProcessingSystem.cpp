@@ -1,5 +1,6 @@
 #include "PhysicsBodyProcessingSystem.h"
 #include "../Components/PhysicsBodyComponent.h"
+#include "../Helpers/TypeCast.h"
 
 PhysicsBodyProcessingSystem::PhysicsBodyProcessingSystem() : EntitySystem(),
                                                              m_PhysicsResource(),
@@ -23,7 +24,7 @@ void PhysicsBodyProcessingSystem::process() {
 
     for (const auto body: getComponentContainer<PhysicsBodyComponent>()) {
         auto *transform = getComponent<TransformComponent>(body.first);
-        if (body.second->m_pxRigidActor == nullptr) {
+        if (body.second->m_rigidBody == nullptr) {
             body.second->create(*transform);
         } else {
             body.second->update(*transform, !m_isSimulationDisabled);

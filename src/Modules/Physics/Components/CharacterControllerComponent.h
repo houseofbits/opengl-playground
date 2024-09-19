@@ -3,8 +3,6 @@
 #include "../../../Core/API.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../Resources/PhysicsResource.h"
-#include <PhysX/PxPhysics.h>
-#include <PhysX/PxPhysicsAPI.h>
 
 class CharacterControllerComponent : public Component {
     TYPE_DEFINITION(CharacterControllerComponent);
@@ -21,5 +19,5 @@ public:
     float m_height;
     float m_radius;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
-    physx::PxRigidDynamic *m_pxRigidActor;
+//    physx::PxRigidDynamic *m_pxRigidActor;
 };

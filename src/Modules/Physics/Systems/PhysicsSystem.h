@@ -5,8 +5,6 @@
 #include "../../EditorUI/Events/EditorUIEvent.h"
 #include "../Components/CharacterControllerComponent.h"
 #include "../Resources/PhysicsResource.h"
-#include <PhysX/PxPhysics.h>
-#include <PhysX/PxPhysicsAPI.h>
 
 class PhysicsSystem : public EntitySystem {
 public:

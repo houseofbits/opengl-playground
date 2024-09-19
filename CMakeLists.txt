@@ -112,7 +112,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Systems/CharacterControllerSystem.cpp
         src/Modules/Physics/Systems/CharacterControllerSystem.h
         src/Modules/Physics/Helpers/PhysicsActorUserData.h
-        src/Modules/Physics/Helpers/ExcludeEntityIdFilterCallback.h
         src/Modules/Physics/Helpers/RayCastResult.h
         src/Modules/Physics/Events/CharacterPickingEvent.h
         src/Modules/Physics/Components/PhysicsBodyComponent.cpp
@@ -121,12 +120,9 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Components/PhysicsJointComponent.h
         src/Modules/Physics/Systems/JointsProcessingSystem.cpp
         src/Modules/Physics/Systems/JointsProcessingSystem.h
-        src/Modules/Physics/Helpers/SimulationEventCallback.h
-        src/Modules/Physics/Helpers/SimulationEventCallback.cpp
-        src/Modules/Physics/Helpers/SceneFilterShader.h
         src/Modules/Physics/Helpers/FilterGroups.h
+        src/Modules/Physics/Helpers/TypeCast.h
 )
-
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
@@ -142,13 +138,18 @@ target_link_libraries(SDLWindow glm::glm)
 
 target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)
 
-include_directories(${CMAKE_SOURCE_DIR}/libs/PhysX/include)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysX_static_64.a)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCooking_static_64.a)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCharacterKinematic_static_64.a)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXCommon_static_64.a)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXExtensions_static_64.a)
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/PhysX/bin/linux.clang/release/libPhysXFoundation_static_64.a)
+include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
+include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics.a)
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision.a)
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Common.a)
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Collision.a)
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Common.a)
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics.a)
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Dynamics.a)
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Geometry.a)
+#target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet2FileLoader.a)
+target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath.a)
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 

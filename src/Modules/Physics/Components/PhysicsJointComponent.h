@@ -29,7 +29,7 @@ public:
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     std::string m_targetEntityName;
-    physx::PxRevoluteJoint* m_pxJoint;
+//    physx::PxRevoluteJoint* m_pxJoint;
     bool m_areLimitsEnabled;
     bool m_areDriveEnabled;
     glm::vec2 m_angularLimits;
@@ -48,6 +48,4 @@ public:
 
     MovementState m_moveState;
 
-private:
-    physx::PxQuat calculateAxisRotation() const;
 };

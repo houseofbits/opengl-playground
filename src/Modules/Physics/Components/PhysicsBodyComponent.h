@@ -4,16 +4,18 @@
 #include "../../Common/Components/TransformComponent.h"
 #include "../Resources/PhysicsMeshResource.h"
 #include "../Resources/PhysicsResource.h"
+#include <bullet/btBulletDynamicsCommon.h>
 
 class PhysicsBodyComponent : public Component {
     TYPE_DEFINITION(PhysicsBodyComponent);
+
 public:
     inline static const std::string MODEL_KEY = "model";
     inline static const std::string TYPE_KEY = "type";
     inline static const std::string SHAPE_KEY = "shape";
     inline static const std::string RESTITUTION_KEY = "restitution";
     inline static const std::string FRICTION_KEY = "friction";
-    inline static const std::string DENSITY_KEY = "density";
+    inline static const std::string MASS_KEY = "mass";
 
     enum BodyType {
         BODY_TYPE_STATIC,
@@ -32,21 +34,20 @@ public:
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
     void registerWithSystems(EntityContext &ctx) override;
     bool isReady() override;
-    void create(TransformComponent& transform);
-    void createMeshShape(TransformComponent& transform);
-    void update(TransformComponent& transform, bool isSimulationEnabled) const;
+    void create(TransformComponent &transform);
+    void createMeshShape(TransformComponent &transform);
+    void update(TransformComponent &transform, bool isSimulationEnabled) const;
 
     BodyType m_BodyType;
     MeshType m_MeshType;
     glm::vec2 m_friction;
     float m_restitution;
-    float m_density;
+    float m_mass;
     ResourceHandle<PhysicsMeshResource> m_meshResource;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
-    physx::PxRigidActor *m_pxRigidActor;
+    btRigidBody *m_rigidBody;
 
 private:
-    physx::PxShape* createConvexMeshShape(glm::vec3 scale);
-    physx::PxShape* createTriangleMeshShape(glm::vec3 scale);
-    void releaseShapes() const;
+    void releaseShapes();
+    void updateMass();
 };
