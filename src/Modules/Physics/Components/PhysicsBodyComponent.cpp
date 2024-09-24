@@ -1,6 +1,6 @@
 #include "PhysicsBodyComponent.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
-#include "../Helpers/TypeCast.h"
+#include "../Helpers/PhysicsTypeCast.h"
 #include "../Systems/PhysicsBodyProcessingSystem.h"
 
 PhysicsBodyComponent::PhysicsBodyComponent() : Component(),
@@ -57,7 +57,7 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
     releaseShapes();
 
     btVector3 localInertia(0, 0, 0);
-    auto *motionState = new btDefaultMotionState(TypeCast::createBtTransformFromTransformComponent(transform));
+    auto *motionState = new btDefaultMotionState(PhysicsTypeCast::createBtTransformFromTransformComponent(transform));
     if (m_MeshType == MESH_TYPE_TRIANGLE) {
         btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, m_meshResource().createTriangleMeshShape(transform.getScale()), localInertia);
         m_rigidBody = new btRigidBody(rbInfo);
@@ -66,6 +66,10 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
         m_rigidBody = new btRigidBody(rbInfo);
     }
     updateMass();
+
+    m_rigidBody->setDamping(0.4, 0.4);
+
+    m_rigidBody->setUserPointer(new PhysicsUserData(m_EntityId.id()));
 
     m_PhysicsResource().m_dynamicsWorld->addRigidBody(m_rigidBody);
 }
@@ -86,6 +90,10 @@ void PhysicsBodyComponent::createMeshShape(TransformComponent &transform) {
     }
     updateMass();
 
+    m_rigidBody->setFriction(m_friction.x);
+    m_rigidBody->setRollingFriction(m_friction.y);
+    m_rigidBody->setRestitution(m_restitution);
+
     m_PhysicsResource().m_dynamicsWorld->addRigidBody(m_rigidBody);
 }
 
@@ -99,15 +107,15 @@ void PhysicsBodyComponent::releaseShapes() {
 
 void PhysicsBodyComponent::update(TransformComponent &transform, bool isSimulationEnabled) const {
     if (!isSimulationEnabled) {
-        m_rigidBody->setWorldTransform(TypeCast::createBtTransformFromTransformComponent(transform));
-        m_rigidBody->getMotionState()->setWorldTransform(TypeCast::createBtTransformFromTransformComponent(transform));
+        m_rigidBody->setWorldTransform(PhysicsTypeCast::createBtTransformFromTransformComponent(transform));
+        m_rigidBody->getMotionState()->setWorldTransform(PhysicsTypeCast::createBtTransformFromTransformComponent(transform));
         m_rigidBody->setLinearVelocity(btVector3(0, 0, 0));
         m_rigidBody->setAngularVelocity(btVector3(0, 0, 0));
         m_rigidBody->activate();
     } else {
         btTransform t;
         m_rigidBody->getMotionState()->getWorldTransform(t);
-        TypeCast::applyBtTransformToTransformComponent(transform, t);
+        PhysicsTypeCast::applyBtTransformToTransformComponent(transform, t);
     }
 }
 

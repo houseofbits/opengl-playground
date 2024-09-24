@@ -108,7 +108,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Systems/PhysicsBodyProcessingSystem.h
         src/Modules/Physics/Systems/CharacterControllerSystem.cpp
         src/Modules/Physics/Systems/CharacterControllerSystem.h
-        src/Modules/Physics/Helpers/PhysicsActorUserData.h
+        src/Modules/Physics/Helpers/PhysicsUserData.h
         src/Modules/Physics/Helpers/RayCastResult.h
         src/Modules/Physics/Events/CharacterPickingEvent.h
         src/Modules/Physics/Components/PhysicsBodyComponent.cpp
@@ -117,8 +117,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Components/PhysicsJointComponent.h
         src/Modules/Physics/Systems/JointsProcessingSystem.cpp
         src/Modules/Physics/Systems/JointsProcessingSystem.h
-        src/Modules/Physics/Helpers/FilterGroups.h
-        src/Modules/Physics/Helpers/TypeCast.h
+        src/Modules/Physics/Helpers/PhysicsTypeCast.h
+        src/Modules/Physics/Helpers/PhysicsRayCastFilterCallback.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

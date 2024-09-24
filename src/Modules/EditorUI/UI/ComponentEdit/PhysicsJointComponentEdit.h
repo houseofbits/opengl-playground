@@ -37,9 +37,10 @@ public:
             ImGui::EndCombo();
         }
 
-        ImGui::InputFloat3("Axis", (float*)&body->m_axis);
         ImGui::InputFloat3("Attachment A", (float*)&body->m_localAttachmentA);
+        ImGui::InputFloat3("Axis A", (float*)&body->m_axisA);
         ImGui::InputFloat3("Attachment B", (float*)&body->m_localAttachmentB);
+        ImGui::InputFloat3("Axis B", (float*)&body->m_axisB);
 
         ImGui::Checkbox("Angular limits", &body->m_areLimitsEnabled);
         ImGui::Checkbox("Driven", &body->m_areDriveEnabled);

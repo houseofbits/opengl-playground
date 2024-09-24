@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../Helpers/PhysicsActorUserData.h"
+#include "../Helpers/PhysicsUserData.h"
 #include "../Helpers/RayCastResult.h"
 #include <bullet/btBulletDynamicsCommon.h>
 
@@ -12,7 +12,7 @@ public:
     Resource::Status fetchData(ResourceManager&) override;
     Resource::Status build() override;
     void destroy() override;
-    void simulate() const;
+    void simulate();
     [[nodiscard]] float characterRayCast(glm::vec3 origin, glm::vec3 direction, Identity::Type characterEntityId);
     [[nodiscard]] bool characterRayCast(glm::vec3 origin, glm::vec3 direction, Identity::Type characterEntityId, RayCastResult& result);
     void addContactPoint(Identity::Type entityId, glm::vec3 point);

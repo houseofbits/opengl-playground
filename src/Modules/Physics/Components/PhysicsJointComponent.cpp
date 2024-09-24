@@ -4,8 +4,8 @@
 #include "../../EditorUI/Systems/EditorUISystem.h"
 #include "../Systems/JointsProcessingSystem.h"
 #include <utility>
+#include "../Helpers/PhysicsTypeCast.h"
 
-//using namespace physx;
 
 //float normalizeAngle(float theta) {
 //    while (theta > PxPi) {
@@ -20,11 +20,12 @@
 PhysicsJointComponent::PhysicsJointComponent() : Component(),
                                                  m_PhysicsResource(),
                                                  m_targetEntityName(),
-//                                                 m_pxJoint(nullptr),
+                                                 m_Joint(nullptr),
                                                  m_areLimitsEnabled(true),
                                                  m_areDriveEnabled(true),
                                                  m_angularLimits(0, 1.0),
-                                                 m_axis(0, 1, 0),
+                                                 m_axisA(0, 1, 0),
+                                                 m_axisB(0, 1, 0),
                                                  m_localAttachmentA(0, 0, 0),
                                                  m_localAttachmentB(0, 0, 0),
                                                  m_moveState(UNKNOWN) {
@@ -34,7 +35,8 @@ void PhysicsJointComponent::serialize(nlohmann::json &j) {
     j[ENTITY_KEY] = m_targetEntityName;
     j[ARE_LIMITS_ENABLED_KEY] = m_areLimitsEnabled;
     j[ARE_DRIVE_ENABLED_KEY] = m_areDriveEnabled;
-    j[AXIS_KEY] = m_axis;
+    j[AXIS_A_KEY] = m_axisA;
+    j[AXIS_B_KEY] = m_axisB;
     j[ATTACHMENT_A_KEY] = m_localAttachmentA;
     j[ATTACHMENT_B_KEY] = m_localAttachmentB;
     j[LIMITS_KEY] = m_angularLimits;
@@ -45,7 +47,8 @@ void PhysicsJointComponent::deserialize(const nlohmann::json &j, ResourceManager
     m_targetEntityName = j.value(ENTITY_KEY, m_targetEntityName);
     m_areLimitsEnabled = j.value(ARE_LIMITS_ENABLED_KEY, m_areLimitsEnabled);
     m_areDriveEnabled = j.value(ARE_DRIVE_ENABLED_KEY, m_areDriveEnabled);
-    m_axis = j.value(AXIS_KEY, m_axis);
+    m_axisA = j.value(AXIS_A_KEY, m_axisA);
+    m_axisB = j.value(AXIS_B_KEY, m_axisB);
     m_localAttachmentA = j.value(ATTACHMENT_A_KEY, m_localAttachmentA);
     m_localAttachmentB = j.value(ATTACHMENT_B_KEY, m_localAttachmentB);
     m_angularLimits = j.value(LIMITS_KEY, m_angularLimits);
@@ -63,36 +66,31 @@ bool PhysicsJointComponent::isReady() {
 }
 
 void PhysicsJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
-//    if (bodyA.m_pxRigidActor == nullptr || bodyB.m_pxRigidActor == nullptr) {
-//        return;
-//    }
-//
-//    if (bodyA.m_BodyType == PhysicsBodyComponent::BODY_TYPE_STATIC && bodyB.m_BodyType == PhysicsBodyComponent::BODY_TYPE_STATIC) {
-//        Log::info("PhysicsJointComponent: both bodies are STATIC, joint will have no effect");
-//    }
-//
-//    physx::PxQuat axis = calculateAxisRotation();//PxQuat(physx::PxPi / 2, PxVec3(0.0f, 0.0f, 1.0f));//
-//    physx::PxTransform localFrame1 = physx::PxTransform(Types::GLMtoPxVec3(m_localAttachmentA), axis);
-//    physx::PxTransform localFrame2 = physx::PxTransform(Types::GLMtoPxVec3(m_localAttachmentB), axis);
-//
-//    m_pxJoint = physx::PxRevoluteJointCreate(*m_PhysicsResource().m_pxPhysics,
-//                                             bodyA.m_pxRigidActor, localFrame1,
-//                                             bodyB.m_pxRigidActor, localFrame2);
-//
-////    if (m_areLimitsEnabled) {
-//        physx::PxJointAngularLimitPair limits(m_angularLimits.x, m_angularLimits.y);
-//        //        physx::PxJointAngularLimitPair limits(-physx::PxPi / 2, physx::PxPi / 2);
-//
-//        limits.restitution = 0;
-//        limits.bounceThreshold = 0;
-////        limits.stiffness = 50;
-////        limits.damping = 5;
-//
-//        m_pxJoint->setDriveForceLimit(1000);
-//        m_pxJoint->setLimit(limits);
-//        m_pxJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eLIMIT_ENABLED, true);
-//
-////    }
+    if (bodyA.m_rigidBody == nullptr || bodyB.m_rigidBody == nullptr) {
+        return;
+    }
+
+    if (bodyA.m_BodyType == PhysicsBodyComponent::BODY_TYPE_STATIC &&
+        bodyB.m_BodyType == PhysicsBodyComponent::BODY_TYPE_STATIC) {
+        Log::info("PhysicsJointComponent: both bodies are STATIC, joint will have no effect");
+    }
+
+    m_Joint = new btHingeConstraint(*bodyA.m_rigidBody, *bodyB.m_rigidBody,
+                                    PhysicsTypeCast::glmToBullet(m_localAttachmentA),
+                                    PhysicsTypeCast::glmToBullet(m_localAttachmentB),
+                                    PhysicsTypeCast::glmToBullet(m_axisA),
+                                    PhysicsTypeCast::glmToBullet(m_axisB),
+                                    true);
+
+    if (m_areLimitsEnabled) {
+        m_Joint->setLimit(m_angularLimits.x, m_angularLimits.y);
+    }
+
+    if (m_areDriveEnabled) {
+        m_Joint->enableAngularMotor(true, 1.0, 10.0);
+    }
+
+    m_PhysicsResource().m_dynamicsWorld->addConstraint(m_Joint, true);
 }
 
 void PhysicsJointComponent::attach(std::string entityName) {
@@ -101,10 +99,10 @@ void PhysicsJointComponent::attach(std::string entityName) {
 }
 
 void PhysicsJointComponent::release() {
-//    if (m_pxJoint != nullptr) {
-//        m_pxJoint->release();
+//    if (m_Joint != nullptr) {
+//        m_PhysicsResource().m_dynamicsWorld->removeConstraint(m_Joint);
+//        delete m_Joint;
 //    }
-//    m_pxJoint = nullptr;
 }
 
 void PhysicsJointComponent::activate() {

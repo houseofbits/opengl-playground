@@ -1,4 +1,6 @@
 #include "PhysicsResource.h"
+#include "../Helpers/PhysicsTypeCast.h"
+#include "../Helpers/PhysicsRayCastFilterCallback.h"
 //#include "../Helpers/SceneFilterShader.h"
 
 
@@ -20,7 +22,8 @@ Resource::Status PhysicsResource::build() {
     m_collisionDispatcher = new btCollisionDispatcher(m_collisionConfiguration);
     m_overlappingPairCache = new btDbvtBroadphase();
     m_solver = new btSequentialImpulseConstraintSolver();
-    m_dynamicsWorld = new btDiscreteDynamicsWorld(m_collisionDispatcher, m_overlappingPairCache, m_solver, m_collisionConfiguration);
+    m_dynamicsWorld = new btDiscreteDynamicsWorld(m_collisionDispatcher, m_overlappingPairCache, m_solver,
+                                                  m_collisionConfiguration);
 
     m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
 
@@ -40,7 +43,25 @@ float PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type
     return 0;
 }
 
-bool PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type characterEntityId, RayCastResult &result) {
+bool
+PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type characterEntityId, RayCastResult &result) {
+    btVector3 rayStart = PhysicsTypeCast::glmToBullet(p);
+    btVector3 rayEnd = PhysicsTypeCast::glmToBullet(p + (d * 100.0f));
+
+//    PhysicsRayCastFilterCallback rayCallback(rayStart, rayEnd);
+//    rayCallback.m_excludedEntityId = characterEntityId;
+    btCollisionWorld::ClosestRayResultCallback rayCallback(rayStart, rayEnd);
+
+    m_dynamicsWorld->rayTest(rayStart, rayEnd, rayCallback);
+    if (rayCallback.hasHit()) {
+        const btCollisionObject* hitObject = rayCallback.m_collisionObject;
+        auto *userData = (PhysicsUserData *) hitObject->getUserPointer();
+        result.m_entityId = userData->m_entityId;
+        result.m_touchPoint = PhysicsTypeCast::bulletToGlm(rayCallback.m_hitPointWorld);
+        result.m_distance = rayCallback.m_closestHitFraction;
+
+        return true;
+    }
 
     return false;
 }
@@ -59,6 +80,34 @@ void PhysicsResource::clearEntityContacts() {
     }
 }
 
-void PhysicsResource::simulate() const {
+void PhysicsResource::simulate() {
     m_dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+
+    clearEntityContacts();
+    int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
+    for (int j = 0; j < numManifolds; j++) {
+        btPersistentManifold *contactManifold = m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(j);
+        const btCollisionObject *obA = contactManifold->getBody0();
+        const btCollisionObject *obB = contactManifold->getBody1();
+
+        auto *userDataA = (PhysicsUserData *) obA->getUserPointer();
+        auto *userDataB = (PhysicsUserData *) obB->getUserPointer();
+        if (userDataA->m_contactReporting || userDataB->m_contactReporting) {
+            int numContacts = contactManifold->getNumContacts();
+            for (int k = 0; k < numContacts; k++) {
+                btManifoldPoint &pt = contactManifold->getContactPoint(k);
+//                btVector3 ptA = pt.getPositionWorldOnA();
+//                btVector3 ptB = pt.getPositionWorldOnB();
+//                btVector3 normalOnB = pt.m_normalWorldOnB;
+//                btScalar appliedImpulse = pt.getAppliedImpulse();
+
+                if (userDataA->m_contactReporting) {
+                    addContactPoint(userDataA->m_entityId, PhysicsTypeCast::bulletToGlm(pt.getPositionWorldOnA()));
+                }
+                if (userDataB->m_contactReporting) {
+                    addContactPoint(userDataB->m_entityId, PhysicsTypeCast::bulletToGlm(pt.getPositionWorldOnB()));
+                }
+            }
+        }
+    }
 }

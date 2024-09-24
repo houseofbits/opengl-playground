@@ -3,20 +3,20 @@
         "camera": {
             "isActive": true,
             "position": [
-                -4.976085186004639,
-                3.284334421157837,
-                -12.603777885437012
+                -8.12568473815918,
+                1.6193487644195557,
+                -15.675910949707031
             ],
             "type": "FREE",
             "upDirection": [
-                0.0017363245133310556,
-                0.9767389297485352,
-                0.2144252210855484
+                0.011617286130785942,
+                0.9696820378303528,
+                0.24409383535385132
             ],
             "viewDirection": [
-                0.007908957079052925,
-                -0.2144322395324707,
-                0.976706862449646
+                0.04609832540154457,
+                -0.24437014758586884,
+                0.968585729598999
             ]
         },
         "name": "camera-free"
@@ -94,12 +94,6 @@
         }
     },
     {
-        "name": "Sky box",
-        "sky": {
-            "cubeMap": "resources/textures/sky2/*.png"
-        }
-    },
-    {
         "light": {
             "attenuation": 20.0,
             "castShadows": false,
@@ -145,8 +139,8 @@
             "intensity": 0.6999999284744263,
             "isEnabled": true,
             "projectionTexture": "resources/textures/spot-proj-3.png",
-            "shadowBias": 9.999999747378752e-05,
-            "shadowResolution": 1024,
+            "shadowBias": 4.999999873689376e-05,
+            "shadowResolution": 2048,
             "type": "SPOT"
         },
         "name": "light-spot-1",
@@ -215,7 +209,7 @@
         "name": "rigid-body-2",
         "physicsBody": {
             "friction": [
-                0.5,
+                10.0,
                 0.5
             ],
             "mass": 1.0,
@@ -255,7 +249,7 @@
                 0.5,
                 0.5
             ],
-            "mass": 1.0,
+            "mass": 5.0,
             "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
             "shape": 0,
@@ -400,7 +394,7 @@
         "name": "rigid-body-7",
         "physicsBody": {
             "friction": [
-                0.5,
+                10.0,
                 0.5
             ],
             "mass": 1.0,
@@ -440,7 +434,7 @@
                 0.5,
                 0.5
             ],
-            "mass": 1.0,
+            "mass": 5.0,
             "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
             "shape": 0,
@@ -536,6 +530,417 @@
                 -4.923523902893066,
                 4.2265543937683105,
                 -8.10043716430664
+            ]
+        }
+    },
+    {
+        "camera": {
+            "isActive": false,
+            "position": [
+                -4.853654384613037,
+                1.7450363636016846,
+                -11.80080509185791
+            ],
+            "type": "FP",
+            "upDirection": [
+                -0.13234727084636688,
+                0.9865732789039612,
+                -0.09569452702999115
+            ],
+            "viewDirection": [
+                -0.7994778752326965,
+                -0.1633194535970688,
+                -0.5780674815177917
+            ]
+        },
+        "cct": {
+            "height": 1.75,
+            "radius": 0.25
+        },
+        "mesh": {
+            "material": "data/materials/character.json",
+            "model": "data/models/character-capsule.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "character-main",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -4.935034275054932,
+                2.593580722808838,
+                -11.688255310058594
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/light-column.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-1",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                0.20000000298023224,
+                3.0
+            ],
+            "translation": [
+                -1.4065074920654297,
+                0.1000065878033638,
+                -11.299388885498047
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/light-column.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-2",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                0.20000000298023224,
+                3.0
+            ],
+            "translation": [
+                -0.6362689733505249,
+                0.30000001192092896,
+                -11.299388885498047
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/light-column.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-3",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                0.20000000298023224,
+                3.0
+            ],
+            "translation": [
+                0.09661698341369629,
+                0.5,
+                -11.299388885498047
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/light-column.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-4",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                0.20000000298023224,
+                3.0
+            ],
+            "translation": [
+                0.7792489528656006,
+                0.699999988079071,
+                -11.299388885498047
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/light-column.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-5",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                0.20000000298023224,
+                3.0
+            ],
+            "translation": [
+                1.5291259288787842,
+                0.8999999761581421,
+                -11.299388885498047
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/light-column.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-6",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                0.20000000298023224,
+                3.0
+            ],
+            "translation": [
+                2.267505645751953,
+                1.100000023841858,
+                -11.299388885498047
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/light-column.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall-1",
+        "physicsBody": {
+            "friction": [
+                0.10000000149011612,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.30000001192092896,
+                3.0,
+                3.0
+            ],
+            "translation": [
+                -9.931292533874512,
+                1.5,
+                -9.918749809265137
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-green.json",
+            "model": "data/models/door-frame.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "door-1-frame",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "data/models/door-frame.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -8.214276313781738,
+                1.0463817119598389,
+                -13.612393379211426
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-blue.json",
+            "model": "data/models/door.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "door-1",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "data/models/door.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "physicsJoint": {
+            "attachmentA": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "attachmentB": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "axisA": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "axisB": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "enableDrive": true,
+            "enableLimits": true,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntity": ""
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -8.21255874633789,
+                0.0317610502243042,
+                -13.612393379211426
             ]
         }
     }

@@ -1,6 +1,6 @@
 #include "PhysicsBodyProcessingSystem.h"
 #include "../Components/PhysicsBodyComponent.h"
-#include "../Helpers/TypeCast.h"
+#include "../Helpers/PhysicsTypeCast.h"
 
 PhysicsBodyProcessingSystem::PhysicsBodyProcessingSystem() : EntitySystem(),
                                                              m_PhysicsResource(),

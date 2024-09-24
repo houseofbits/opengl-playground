@@ -10,7 +10,8 @@ public:
     inline static const std::string ENTITY_KEY = "targetEntity";
     inline static const std::string ARE_LIMITS_ENABLED_KEY = "enableLimits";
     inline static const std::string ARE_DRIVE_ENABLED_KEY = "enableDrive";
-    inline static const std::string AXIS_KEY = "axis";
+    inline static const std::string AXIS_A_KEY = "axisA";
+    inline static const std::string AXIS_B_KEY = "axisB";
     inline static const std::string ATTACHMENT_A_KEY = "attachmentA";
     inline static const std::string ATTACHMENT_B_KEY = "attachmentB";
     inline static const std::string LIMITS_KEY = "limits";
@@ -29,14 +30,14 @@ public:
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     std::string m_targetEntityName;
-//    physx::PxRevoluteJoint* m_pxJoint;
+    btHingeConstraint* m_Joint;
     bool m_areLimitsEnabled;
     bool m_areDriveEnabled;
     glm::vec2 m_angularLimits;
-    glm::vec3 m_axis;
+    glm::vec3 m_axisA;
+    glm::vec3 m_axisB;
     glm::vec3 m_localAttachmentA;
     glm::vec3 m_localAttachmentB;
-
 
     enum MovementState {
         UNKNOWN,

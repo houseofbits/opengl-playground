@@ -20,4 +20,17 @@
 
   
 # Ubuntu
-## ...
+
+### Install
+
+`libglm-dev`
+`libsdl2-2.0-0`
+`libsdl2-dev`
+`libglew-dev`
+
+### Structure
+* bullet3 (build from source)
+  * lib
+  * bullet (include files)
+* tinygltf (include files, build from source)
+  * build (libs)

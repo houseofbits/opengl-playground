@@ -1,11 +1,5 @@
 ## Playing around with various OpenGL rendering techniques.
-
-Dependencies for Linux
-
-`libglm-dev`
-`libsdl2-2.0-0`
-`libsdl2-dev`
-`libglew-dev`
+### Not A Game Engine (altrought it is starting to look like one)
 
 History
 

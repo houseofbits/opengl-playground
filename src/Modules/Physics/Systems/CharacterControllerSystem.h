@@ -31,4 +31,7 @@ private:
     bool m_doJump;
     bool m_doInteract;
     float m_jumpPower;
+
+    glm::vec3 prevPos;
+    float prevDt;
 };

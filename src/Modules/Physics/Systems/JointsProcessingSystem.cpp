@@ -19,23 +19,23 @@ void JointsProcessingSystem::process() {
     }
 
     for (const auto body: getComponentContainer<PhysicsJointComponent>()) {
-//        if (body.second->m_pxJoint == nullptr) {
-//            auto *bodyA = m_EntityContext->getEntityComponent<PhysicsBodyComponent>(body.first);
-//            if (bodyA == nullptr) {
-//                continue;
-//            }
-//
-//            auto *bodyB = m_EntityContext->findEntityComponent<PhysicsBodyComponent>(body.second->m_targetEntityName);
-//            if (bodyB == nullptr) {
-//                continue;
-//            }
-//
-//            body.second->create(*bodyA, *bodyB);
-//        } else {
-//            body.second->update();
-////            body.second->m_pxJoint->setDriveVelocity(-10.0f);
-////            std::cout<<glm::degrees(body.second->m_pxJoint->getAngle())<<std::endl;
-//        }
+        if (body.second->m_Joint == nullptr) {
+            auto *bodyA = m_EntityContext->getEntityComponent<PhysicsBodyComponent>(body.first);
+            if (bodyA == nullptr) {
+                continue;
+            }
+
+            auto *bodyB = m_EntityContext->findEntityComponent<PhysicsBodyComponent>(body.second->m_targetEntityName);
+            if (bodyB == nullptr) {
+                continue;
+            }
+
+            body.second->create(*bodyA, *bodyB);
+        } else {
+            body.second->update();
+//            body.second->m_pxJoint->setDriveVelocity(-10.0f);
+//            std::cout<<glm::degrees(body.second->m_pxJoint->getAngle())<<std::endl;
+        }
     }
 }
 bool JointsProcessingSystem::handleCharacterPickingEvent(CharacterPickingEvent *event) {
