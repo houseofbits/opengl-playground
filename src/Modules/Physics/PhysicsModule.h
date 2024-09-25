@@ -19,8 +19,8 @@ public:
 
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<PhysicsSystem>(1);
-        ctx.registerEntitySystem<PhysicsBodyProcessingSystem>(2);
-        ctx.registerEntitySystem<JointsProcessingSystem>(3);
+        ctx.registerEntitySystem<JointsProcessingSystem>(2);
+        ctx.registerEntitySystem<PhysicsBodyProcessingSystem>(3);
         ctx.registerEntitySystem<CharacterControllerSystem>(4);
     };
 };

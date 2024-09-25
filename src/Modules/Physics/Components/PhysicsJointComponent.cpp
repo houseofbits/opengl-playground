@@ -70,21 +70,42 @@ void PhysicsJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyCompo
         return;
     }
 
+    if (bodyA.m_EntityId == bodyB.m_EntityId) {
+        Log::warn("PhysicsJointComponent: joint bodies cannot be the same");
+
+        return;
+    }
+
     if (bodyA.m_BodyType == PhysicsBodyComponent::BODY_TYPE_STATIC &&
         bodyB.m_BodyType == PhysicsBodyComponent::BODY_TYPE_STATIC) {
-        Log::info("PhysicsJointComponent: both bodies are STATIC, joint will have no effect");
+        Log::warn("PhysicsJointComponent: both bodies are STATIC, joint will have no effect");
+
+        return;
     }
 
-    m_Joint = new btHingeConstraint(*bodyA.m_rigidBody, *bodyB.m_rigidBody,
+    //Issue with bullet - should create joints before bodies or run simulation after bodies are created, before joint creation
+    m_PhysicsResource().simulate();
+
+//    m_Joint = new btHingeConstraint(*bodyA.m_rigidBody, *bodyB.m_rigidBody,
+//                                    PhysicsTypeCast::glmToBullet(m_localAttachmentA),
+//                                    PhysicsTypeCast::glmToBullet(m_localAttachmentB),
+//                                    PhysicsTypeCast::glmToBullet(m_axisA),
+//                                    PhysicsTypeCast::glmToBullet(m_axisB),
+//                                    true);
+
+    m_Joint = new btHingeConstraint(*bodyA.m_rigidBody,
                                     PhysicsTypeCast::glmToBullet(m_localAttachmentA),
-                                    PhysicsTypeCast::glmToBullet(m_localAttachmentB),
-                                    PhysicsTypeCast::glmToBullet(m_axisA),
-                                    PhysicsTypeCast::glmToBullet(m_axisB),
-                                    true);
+                                    PhysicsTypeCast::glmToBullet(m_axisA));
 
-    if (m_areLimitsEnabled) {
-        m_Joint->setLimit(m_angularLimits.x, m_angularLimits.y);
-    }
+//    m_Joint->setParam(BT_CONSTRAINT_ERP, 0.8, -1);  // ERP value to correct error quickly
+//    m_Joint->setParam(BT_CONSTRAINT_CFM, 0.01, -1); // Low CFM value for stiffness
+
+    // Enable hinge motor with high max impulse to act as damping
+//    m_Joint->enableAngularMotor(true, 0, 100.0f);  // Zero target velocity, high max impulse to act as damping
+
+//    if (m_areLimitsEnabled) {
+    m_Joint->setLimit(m_angularLimits.x, m_angularLimits.y, 0, 10, 0);
+//    }
 
     if (m_areDriveEnabled) {
         m_Joint->enableAngularMotor(true, 1.0, 10.0);

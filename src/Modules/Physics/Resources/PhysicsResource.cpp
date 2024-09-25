@@ -3,6 +3,9 @@
 #include "../Helpers/PhysicsRayCastFilterCallback.h"
 //#include "../Helpers/SceneFilterShader.h"
 
+#include <BulletDynamics/MLCPSolvers/btDantzigSolver.h>
+#include <BulletDynamics/MLCPSolvers/btSolveProjectedGaussSeidel.h>
+#include <BulletDynamics/MLCPSolvers/btMLCPSolver.h>
 
 PhysicsResource::PhysicsResource() : Resource(),
                                      m_collisionConfiguration(nullptr),
@@ -21,7 +24,12 @@ Resource::Status PhysicsResource::build() {
     m_collisionConfiguration = new btDefaultCollisionConfiguration();
     m_collisionDispatcher = new btCollisionDispatcher(m_collisionConfiguration);
     m_overlappingPairCache = new btDbvtBroadphase();
+
+//    auto* mlcp = new btDantzigSolver();
+//    auto* mlcp = new btSolveProjectedGaussSeidel();
+//    m_solver = new btMLCPSolver(mlcp);
     m_solver = new btSequentialImpulseConstraintSolver();
+
     m_dynamicsWorld = new btDiscreteDynamicsWorld(m_collisionDispatcher, m_overlappingPairCache, m_solver,
                                                   m_collisionConfiguration);
 
@@ -81,7 +89,7 @@ void PhysicsResource::clearEntityContacts() {
 }
 
 void PhysicsResource::simulate() {
-    m_dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+    m_dynamicsWorld->stepSimulation(1.f / 60.f, 1000);
 
     clearEntityContacts();
     int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
