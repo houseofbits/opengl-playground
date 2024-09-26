@@ -1,11 +1,13 @@
 #include "PhysicsJointComponent.h"
 
-#include "../../../Core/Helper/Types.h"
 #include "../../EditorUI/Systems/EditorUISystem.h"
 #include "../Systems/JointsProcessingSystem.h"
 #include <utility>
 #include "../Helpers/PhysicsTypeCast.h"
-
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/Constraints/HingeConstraint.h>
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Collision/GroupFilterTable.h>
 
 //float normalizeAngle(float theta) {
 //    while (theta > PxPi) {
@@ -66,7 +68,7 @@ bool PhysicsJointComponent::isReady() {
 }
 
 void PhysicsJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
-    if (bodyA.m_rigidBody == nullptr || bodyB.m_rigidBody == nullptr) {
+    if (!bodyA.isCreated() || !bodyB.isCreated()) {
         return;
     }
 
@@ -83,35 +85,62 @@ void PhysicsJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyCompo
         return;
     }
 
-    //Issue with bullet - should create joints before bodies or run simulation after bodies are created, before joint creation
-    m_PhysicsResource().simulate();
+    JPH::HingeConstraintSettings settings;
+    settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
+    settings.mPoint1 = PhysicsTypeCast::glmToJPH(m_localAttachmentA);
+    settings.mPoint2 = PhysicsTypeCast::glmToJPH(m_localAttachmentB);
+    settings.mHingeAxis1 = PhysicsTypeCast::glmToJPH(m_axisA);
+    settings.mHingeAxis2 = PhysicsTypeCast::glmToJPH(m_axisB);
+    settings.mNormalAxis1 = JPH::Vec3::sAxisX();
+    settings.mNormalAxis2 = JPH::Vec3::sAxisX();
 
-//    m_Joint = new btHingeConstraint(*bodyA.m_rigidBody, *bodyB.m_rigidBody,
-//                                    PhysicsTypeCast::glmToBullet(m_localAttachmentA),
-//                                    PhysicsTypeCast::glmToBullet(m_localAttachmentB),
-//                                    PhysicsTypeCast::glmToBullet(m_axisA),
-//                                    PhysicsTypeCast::glmToBullet(m_axisB),
-//                                    true);
-
-    m_Joint = new btHingeConstraint(*bodyA.m_rigidBody,
-                                    PhysicsTypeCast::glmToBullet(m_localAttachmentA),
-                                    PhysicsTypeCast::glmToBullet(m_axisA));
-
-//    m_Joint->setParam(BT_CONSTRAINT_ERP, 0.8, -1);  // ERP value to correct error quickly
-//    m_Joint->setParam(BT_CONSTRAINT_CFM, 0.01, -1); // Low CFM value for stiffness
-
-    // Enable hinge motor with high max impulse to act as damping
-//    m_Joint->enableAngularMotor(true, 0, 100.0f);  // Zero target velocity, high max impulse to act as damping
-
-//    if (m_areLimitsEnabled) {
-    m_Joint->setLimit(m_angularLimits.x, m_angularLimits.y, 0, 10, 0);
+//    if(m_areLimitsEnabled) {
+//        settings.mLimitsMin = m_angularLimits.x;
+//        settings.mLimitsMax = m_angularLimits.y;
 //    }
 
-    if (m_areDriveEnabled) {
-        m_Joint->enableAngularMotor(true, 1.0, 10.0);
-    }
+    auto *groupFilter = new JPH::GroupFilterTable(2);
+    groupFilter->DisableCollision(0, 1);
+    bodyA.m_physicsBody->SetCollisionGroup(JPH::CollisionGroup(groupFilter, 0, 0));
+    bodyB.m_physicsBody->SetCollisionGroup(JPH::CollisionGroup(groupFilter, 0, 1));
 
-    m_PhysicsResource().m_dynamicsWorld->addConstraint(m_Joint, true);
+    m_Joint = (JPH::HingeConstraint *) settings.Create(*bodyA.m_physicsBody, *bodyB.m_physicsBody);
+
+    m_PhysicsResource().getSystem().AddConstraint(m_Joint);
+
+    bodyA.wakeUp();
+    bodyB.wakeUp();
+
+//
+//    //Issue with bullet - should create joints before bodies or run simulation after bodies are created, before joint creation
+//    m_PhysicsResource().simulate();
+//
+////    m_Joint = new btHingeConstraint(*bodyA.m_rigidBody, *bodyB.m_rigidBody,
+////                                    PhysicsTypeCast::glmToBullet(m_localAttachmentA),
+////                                    PhysicsTypeCast::glmToBullet(m_localAttachmentB),
+////                                    PhysicsTypeCast::glmToBullet(m_axisA),
+////                                    PhysicsTypeCast::glmToBullet(m_axisB),
+////                                    true);
+//
+//    m_Joint = new btHingeConstraint(*bodyA.m_rigidBody,
+//                                    PhysicsTypeCast::glmToBullet(m_localAttachmentA),
+//                                    PhysicsTypeCast::glmToBullet(m_axisA));
+//
+////    m_Joint->setParam(BT_CONSTRAINT_ERP, 0.8, -1);  // ERP value to correct error quickly
+////    m_Joint->setParam(BT_CONSTRAINT_CFM, 0.01, -1); // Low CFM value for stiffness
+//
+//    // Enable hinge motor with high max impulse to act as damping
+////    m_Joint->enableAngularMotor(true, 0, 100.0f);  // Zero target velocity, high max impulse to act as damping
+//
+////    if (m_areLimitsEnabled) {
+//    m_Joint->setLimit(m_angularLimits.x, m_angularLimits.y, 0, 10, 0);
+////    }
+//
+//    if (m_areDriveEnabled) {
+//        m_Joint->enableAngularMotor(true, 1.0, 10.0);
+//    }
+//
+//    m_PhysicsResource().m_dynamicsWorld->addConstraint(m_Joint, true);
 }
 
 void PhysicsJointComponent::attach(std::string entityName) {
@@ -178,4 +207,8 @@ void PhysicsJointComponent::update() {
 //
 //        std::cout << "IS OPEN" << std::endl;
 //    }
+}
+
+bool PhysicsJointComponent::isCreated() const {
+    return m_Joint != nullptr;
 }

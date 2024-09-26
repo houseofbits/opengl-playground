@@ -1,49 +1,85 @@
 #include "PhysicsResource.h"
 #include "../Helpers/PhysicsTypeCast.h"
-#include "../Helpers/PhysicsRayCastFilterCallback.h"
-//#include "../Helpers/SceneFilterShader.h"
+#include <Jolt/Jolt.h>
+#include <Jolt/RegisterTypes.h>
+#include <Jolt/Core/Factory.h>
+#include <Jolt/Core/TempAllocator.h>
+#include <Jolt/Core/JobSystemThreadPool.h>
+#include <Jolt/Physics/PhysicsSettings.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
 
-#include <BulletDynamics/MLCPSolvers/btDantzigSolver.h>
-#include <BulletDynamics/MLCPSolvers/btSolveProjectedGaussSeidel.h>
-#include <BulletDynamics/MLCPSolvers/btMLCPSolver.h>
+JPH_SUPPRESS_WARNINGS
+using namespace JPH;
+using namespace JPH::literals;
+
+static void TraceImpl(const char *inFMT, ...) {
+    // Format the message
+    va_list list;
+    va_start(list, inFMT);
+    char buffer[1024];
+    vsnprintf(buffer, sizeof(buffer), inFMT, list);
+    va_end(list);
+
+    Log::write(buffer);
+}
+
+static bool AssertFailedImpl(const char *inExpression, const char *inMessage, const char *inFile, uint inLine) {
+    Log::error(inFile, ":", inLine, ": (", inExpression, ") ", (inMessage != nullptr ? inMessage : ""));
+
+    return true;
+};
 
 PhysicsResource::PhysicsResource() : Resource(),
-                                     m_collisionConfiguration(nullptr),
-                                     m_collisionDispatcher(nullptr),
-                                     m_overlappingPairCache(nullptr),
-                                     m_solver(nullptr),
-                                     m_dynamicsWorld(nullptr) {
+                                     m_PhysicsSystem(),
+                                     m_objectPairFilter(),
+                                     m_broadPhaseFilter(),
+                                     m_broadPhaseLayerMapper(),
+                                     m_contactListener(),
+                                     m_jobPool(nullptr),
+                                     m_tempAllocator(nullptr) {
 }
 
 Resource::Status PhysicsResource::fetchData(ResourceManager &) {
     return Resource::STATUS_DATA_READY;
 }
 
+/**
+ * Note: Physics simulation configuration and details can be loaded from the json config file. So that each scene could
+ * have its own physics settings applied.
+ */
 Resource::Status PhysicsResource::build() {
+    RegisterDefaultAllocator();
+    Trace = TraceImpl;
+    AssertFailed = AssertFailedImpl;
+    JPH::Factory::sInstance = new JPH::Factory();
+    RegisterTypes();
 
-    m_collisionConfiguration = new btDefaultCollisionConfiguration();
-    m_collisionDispatcher = new btCollisionDispatcher(m_collisionConfiguration);
-    m_overlappingPairCache = new btDbvtBroadphase();
+    m_jobPool = new JobSystemThreadPool(cMaxPhysicsJobs, cMaxPhysicsBarriers, (int) thread::hardware_concurrency() - 1);
+    m_tempAllocator = new TempAllocatorImpl(10 * 1024 * 1024);
 
-//    auto* mlcp = new btDantzigSolver();
-//    auto* mlcp = new btSolveProjectedGaussSeidel();
-//    m_solver = new btMLCPSolver(mlcp);
-    m_solver = new btSequentialImpulseConstraintSolver();
+    const uint cMaxBodies = 1024;
+    const uint cNumBodyMutexes = 0;
+    const uint cMaxBodyPairs = 1024;
+    const uint cMaxContactConstraints = 1024;
 
-    m_dynamicsWorld = new btDiscreteDynamicsWorld(m_collisionDispatcher, m_overlappingPairCache, m_solver,
-                                                  m_collisionConfiguration);
+    m_PhysicsSystem.Init(cMaxBodies,
+                         cNumBodyMutexes,
+                         cMaxBodyPairs,
+                         cMaxContactConstraints,
+                         m_broadPhaseLayerMapper,
+                         m_broadPhaseFilter,
+                         m_objectPairFilter);
 
-    m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
+    m_PhysicsSystem.SetGravity({0, -9.8, 0});
+    m_PhysicsSystem.SetContactListener(&m_contactListener);
 
     return Resource::STATUS_READY;
 }
 
 void PhysicsResource::destroy() {
-    delete m_dynamicsWorld;
-    delete m_solver;
-    delete m_overlappingPairCache;
-    delete m_collisionDispatcher;
-    delete m_collisionConfiguration;
+    UnregisterTypes();
+    delete JPH::Factory::sInstance;
+    JPH::Factory::sInstance = nullptr;
 }
 
 float PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type characterEntityId) {
@@ -51,28 +87,28 @@ float PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type
     return 0;
 }
 
-bool
-PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type characterEntityId, RayCastResult &result) {
-    btVector3 rayStart = PhysicsTypeCast::glmToBullet(p);
-    btVector3 rayEnd = PhysicsTypeCast::glmToBullet(p + (d * 100.0f));
-
-//    PhysicsRayCastFilterCallback rayCallback(rayStart, rayEnd);
-//    rayCallback.m_excludedEntityId = characterEntityId;
-    btCollisionWorld::ClosestRayResultCallback rayCallback(rayStart, rayEnd);
-
-    m_dynamicsWorld->rayTest(rayStart, rayEnd, rayCallback);
-    if (rayCallback.hasHit()) {
-        const btCollisionObject* hitObject = rayCallback.m_collisionObject;
-        auto *userData = (PhysicsUserData *) hitObject->getUserPointer();
-        result.m_entityId = userData->m_entityId;
-        result.m_touchPoint = PhysicsTypeCast::bulletToGlm(rayCallback.m_hitPointWorld);
-        result.m_distance = rayCallback.m_closestHitFraction;
-
-        return true;
-    }
-
-    return false;
-}
+//bool
+//PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type characterEntityId, RayCastResult &result) {
+////    btVector3 rayStart = PhysicsTypeCast::glmToBullet(p);
+////    btVector3 rayEnd = PhysicsTypeCast::glmToBullet(p + (d * 100.0f));
+////
+//////    PhysicsRayCastFilterCallback rayCallback(rayStart, rayEnd);
+//////    rayCallback.m_excludedEntityId = characterEntityId;
+////    btCollisionWorld::ClosestRayResultCallback rayCallback(rayStart, rayEnd);
+////
+////    m_dynamicsWorld->rayTest(rayStart, rayEnd, rayCallback);
+////    if (rayCallback.hasHit()) {
+////        const btCollisionObject* hitObject = rayCallback.m_collisionObject;
+////        auto *userData = (PhysicsUserData *) hitObject->getUserPointer();
+////        result.m_entityId = userData->m_entityId;
+////        result.m_touchPoint = PhysicsTypeCast::bulletToGlm(rayCallback.m_hitPointWorld);
+////        result.m_distance = rayCallback.m_closestHitFraction;
+////
+////        return true;
+////    }
+//
+//    return false;
+//}
 
 void PhysicsResource::addContactPoint(Identity::Type entityId, glm::vec3 point) {
     if (m_entityContacts.count(entityId) == 0) {
@@ -89,33 +125,13 @@ void PhysicsResource::clearEntityContacts() {
 }
 
 void PhysicsResource::simulate() {
-    m_dynamicsWorld->stepSimulation(1.f / 60.f, 1000);
+    m_PhysicsSystem.Update(1.f / 60.f, 1, m_tempAllocator, m_jobPool);
+}
 
-    clearEntityContacts();
-    int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
-    for (int j = 0; j < numManifolds; j++) {
-        btPersistentManifold *contactManifold = m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(j);
-        const btCollisionObject *obA = contactManifold->getBody0();
-        const btCollisionObject *obB = contactManifold->getBody1();
+JPH::BodyInterface &PhysicsResource::getInterface() {
+    return m_PhysicsSystem.GetBodyInterface();
+}
 
-        auto *userDataA = (PhysicsUserData *) obA->getUserPointer();
-        auto *userDataB = (PhysicsUserData *) obB->getUserPointer();
-        if (userDataA->m_contactReporting || userDataB->m_contactReporting) {
-            int numContacts = contactManifold->getNumContacts();
-            for (int k = 0; k < numContacts; k++) {
-                btManifoldPoint &pt = contactManifold->getContactPoint(k);
-//                btVector3 ptA = pt.getPositionWorldOnA();
-//                btVector3 ptB = pt.getPositionWorldOnB();
-//                btVector3 normalOnB = pt.m_normalWorldOnB;
-//                btScalar appliedImpulse = pt.getAppliedImpulse();
-
-                if (userDataA->m_contactReporting) {
-                    addContactPoint(userDataA->m_entityId, PhysicsTypeCast::bulletToGlm(pt.getPositionWorldOnA()));
-                }
-                if (userDataB->m_contactReporting) {
-                    addContactPoint(userDataB->m_entityId, PhysicsTypeCast::bulletToGlm(pt.getPositionWorldOnB()));
-                }
-            }
-        }
-    }
+JPH::PhysicsSystem &PhysicsResource::getSystem() {
+    return m_PhysicsSystem;
 }

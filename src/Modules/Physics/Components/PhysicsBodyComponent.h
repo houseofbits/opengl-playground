@@ -4,7 +4,6 @@
 #include "../../Common/Components/TransformComponent.h"
 #include "../Resources/PhysicsMeshResource.h"
 #include "../Resources/PhysicsResource.h"
-#include <bullet/btBulletDynamicsCommon.h>
 
 class PhysicsBodyComponent : public Component {
     TYPE_DEFINITION(PhysicsBodyComponent);
@@ -36,7 +35,9 @@ public:
     bool isReady() override;
     void create(TransformComponent &transform);
     void createMeshShape(TransformComponent &transform);
-    void update(TransformComponent &transform, bool isSimulationEnabled) const;
+    void update(TransformComponent &transform, bool isSimulationEnabled);
+    [[nodiscard]] bool isCreated() const;
+    void wakeUp();
 
     BodyType m_BodyType;
     MeshType m_MeshType;
@@ -45,7 +46,7 @@ public:
     float m_mass;
     ResourceHandle<PhysicsMeshResource> m_meshResource;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
-    btRigidBody *m_rigidBody;
+    JPH::Body*  m_physicsBody;
 
 private:
     void releaseShapes();

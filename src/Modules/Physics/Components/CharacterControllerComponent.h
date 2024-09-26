@@ -3,6 +3,8 @@
 #include "../../../Core/API.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../Resources/PhysicsResource.h"
+#include <Jolt/Physics/Character/Character.h>
+#include <Jolt/Physics/Character/CharacterVirtual.h>
 
 class CharacterControllerComponent : public Component {
     TYPE_DEFINITION(CharacterControllerComponent);
@@ -16,16 +18,20 @@ public:
     bool isReady() override;
     void update(TransformComponent &transform, bool isSimulationEnabled);
     void move(glm::vec3) const;
+    [[nodiscard]] bool isCreated() const;
 
     float m_height;
     float m_radius;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
-    btRigidBody *m_rigidBody;
+//    btRigidBody *m_rigidBody;
     bool m_isOnGround;
     RayCastResult m_groundRayCast;
     float m_stepTolerance;      //aka. knee-height
 
+    JPH::Character* m_character;
+
+
 private:
-    bool castRayForGroundReference(const glm::vec3 &point);
+//    bool castRayForGroundReference(const glm::vec3 &point);
     void updateGroundSpring(const glm::vec3& kneePoint);
 };

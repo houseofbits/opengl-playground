@@ -19,7 +19,7 @@ void JointsProcessingSystem::process() {
     }
 
     for (const auto body: getComponentContainer<PhysicsJointComponent>()) {
-        if (body.second->m_Joint == nullptr) {
+        if (!body.second->isCreated()) {
             auto *bodyA = m_EntityContext->getEntityComponent<PhysicsBodyComponent>(body.first);
             if (bodyA == nullptr) {
                 continue;
@@ -38,6 +38,7 @@ void JointsProcessingSystem::process() {
         }
     }
 }
+
 bool JointsProcessingSystem::handleCharacterPickingEvent(CharacterPickingEvent *event) {
     auto *hinge = getComponent<PhysicsJointComponent>(event->m_entityId);
     if (hinge != nullptr && event->m_doActivate) {

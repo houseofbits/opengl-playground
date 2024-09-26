@@ -77,7 +77,7 @@ void CharacterControllerSystem::updateCCTs() {
         auto *transform = getComponent<TransformComponent>(component.first);
         glm::vec3 position = transform->getTranslation();
 
-        if (component.second->m_rigidBody == nullptr) {
+        if (!component.second->isCreated()) {
             component.second->create(*transform);
         } else {
             component.second->update(*transform, !m_isSimulationDisabled);
@@ -93,33 +93,33 @@ void CharacterControllerSystem::updateCCTs() {
                     m_movementDirection = glm::vec3(0);
                     m_doMove = false;
                 }
-
-//                float dst = glm::length(transform->getTranslation() - prevPos);
-//                Log::write("Speed: ", dst / (Time::timestamp - prevDt));
-//                prevPos = transform->getTranslation();
-//                prevDt = Time::timestamp;
+//
+////                float dst = glm::length(transform->getTranslation() - prevPos);
+////                Log::write("Speed: ", dst / (Time::timestamp - prevDt));
+////                prevPos = transform->getTranslation();
+////                prevDt = Time::timestamp;
             }
-
-            if (cameraComp->m_isActive) {
-                cameraComp->m_Camera.setPosition(
-                        transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
-
-                RayCastResult hit;
-                if (m_PhysicsResource().characterRayCast(cameraComp->m_Camera.position,
-                                                         cameraComp->m_Camera.getViewDirection(), component.first,
-                                                         hit)) {
-                    auto *e = new CharacterPickingEvent();
-                    e->m_entityId = hit.m_entityId;
-                    e->m_distance = hit.m_distance;
-                    e->m_touchPoint = hit.m_touchPoint;
-                    e->m_doActivate = m_doInteract;
-                    m_EventManager->queueEvent(e);
-                }
-            }
+//
+//            if (cameraComp->m_isActive) {
+//                cameraComp->m_Camera.setPosition(
+//                        transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
+//
+//                RayCastResult hit;
+//                if (m_PhysicsResource().characterRayCast(cameraComp->m_Camera.position,
+//                                                         cameraComp->m_Camera.getViewDirection(), component.first,
+//                                                         hit)) {
+//                    auto *e = new CharacterPickingEvent();
+//                    e->m_entityId = hit.m_entityId;
+//                    e->m_distance = hit.m_distance;
+//                    e->m_touchPoint = hit.m_touchPoint;
+//                    e->m_doActivate = m_doInteract;
+//                    m_EventManager->queueEvent(e);
+//                }
+//            }
         }
     }
 
-    m_doInteract = false;
+//    m_doInteract = false;
 }
 
 void CharacterControllerSystem::processCCTInput(CameraComponent *camera, CharacterControllerComponent *cct,

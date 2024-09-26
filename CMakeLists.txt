@@ -118,7 +118,11 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Systems/JointsProcessingSystem.cpp
         src/Modules/Physics/Systems/JointsProcessingSystem.h
         src/Modules/Physics/Helpers/PhysicsTypeCast.h
-        src/Modules/Physics/Helpers/PhysicsRayCastFilterCallback.h
+        src/Modules/Physics/Helpers/ObjectLayerPairFilterImpl.h
+        src/Modules/Physics/Helpers/Layers.h
+        src/Modules/Physics/Helpers/BroadPhaseLayerMapper.h
+        src/Modules/Physics/Helpers/ObjectVsBroadPhaseLayerFilterImpl.h
+        src/Modules/Physics/Helpers/ContactListenerImpl.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
@@ -140,11 +144,12 @@ IF (WIN32)
     include_directories(${GLEW_INCLUDE_DIRS})
     target_link_libraries(SDLWindow ${GLEW_LIBRARIES})
 
-    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
-    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics_Debug.a)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision_Debug.a)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath_Debug.a)
+#    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
+#    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
+#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics_Debug.a)
+#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision_Debug.a)
+#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath_Debug.a)
+
 ELSE ()
     target_link_libraries(SDLWindow GL)
 
@@ -158,11 +163,18 @@ ELSE ()
     find_package(GLEW REQUIRED)
     target_link_libraries(SDLWindow GLEW::GLEW)
 
-    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
-    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics.a)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision.a)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath.a)
+#    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
+#    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
+#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics.a)
+#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision.a)
+#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath.a)
+
+    add_compile_definitions(JPH_PROFILE_ENABLED)
+    add_compile_definitions(JPH_DEBUG_RENDERER)
+    add_compile_definitions(JPH_OBJECT_STREAM)
+
+    include_directories(${CMAKE_SOURCE_DIR}/libs/Jolt)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/Jolt/libJolt.a)
 
     #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Common.a)
     #target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBullet3Collision.a)

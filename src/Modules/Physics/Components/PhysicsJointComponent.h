@@ -3,6 +3,7 @@
 #include "../../../Core/API.h"
 #include "../Resources/PhysicsResource.h"
 #include "PhysicsBodyComponent.h"
+#include "Jolt/Physics/Constraints/HingeConstraint.h"
 
 class PhysicsJointComponent : public Component  {
     TYPE_DEFINITION(PhysicsJointComponent);
@@ -27,10 +28,11 @@ public:
     void attach(std::string entityName);
     void activate();
     void update();
+    [[nodiscard]] bool isCreated() const;
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     std::string m_targetEntityName;
-    btHingeConstraint* m_Joint;
+    JPH::HingeConstraint* m_Joint;
     bool m_areLimitsEnabled;
     bool m_areDriveEnabled;
     glm::vec2 m_angularLimits;

@@ -1,6 +1,6 @@
 #include "PhysicsMeshResource.h"
 #include "../../../../libs/tinygltf/tiny_gltf.h"
-#include "BulletCollision/CollisionShapes/btShapeHull.h"
+//#include "BulletCollision/CollisionShapes/btShapeHull.h"
 
 PhysicsMeshResource::PhysicsMeshResource() : Resource(),
                                              m_vertices(nullptr),
@@ -61,7 +61,8 @@ Resource::Status PhysicsMeshResource::fetchData(ResourceManager &resourceManager
                         m_vertices = new glm::vec3[m_numVertices];
 
                         const tinygltf::BufferView &vertexBufferView = model.bufferViews[vertexAccessor.bufferView];
-                        auto vts = (glm::vec3 *) (&model.buffers[vertexBufferView.buffer].data.at(0) + vertexAccessor.byteOffset + vertexBufferView.byteOffset);
+                        auto vts = (glm::vec3 *) (&model.buffers[vertexBufferView.buffer].data.at(0) +
+                                                  vertexAccessor.byteOffset + vertexBufferView.byteOffset);
 
                         for (int i = 0; i < m_numVertices; ++i) {
                             m_vertices[i] = vts[i];
@@ -88,10 +89,10 @@ Resource::Status PhysicsMeshResource::build() {
 void PhysicsMeshResource::destroy() {
 }
 
-btBvhTriangleMeshShape *PhysicsMeshResource::createTriangleMeshShape(glm::vec3 scale) const {
-    auto *triangleMesh = new btTriangleMesh();
+JPH::TriangleList PhysicsMeshResource::createTriangleMeshShape(glm::vec3 scale) const {
+    JPH::TriangleList triangles;
     for (int i = 0; i < m_numIndices; i += 3) {
-        btVector3 pv[3];
+        JPH::Vec3 pv[3];
         for (int p = 0; p < 3; p++) {
             int index = m_indices[i + p];
             pv[p] = {
@@ -100,47 +101,20 @@ btBvhTriangleMeshShape *PhysicsMeshResource::createTriangleMeshShape(glm::vec3 s
                     m_vertices[index].z * scale.z};
         }
 
-        triangleMesh->addTriangle(pv[0], pv[1], pv[2]);
+        triangles.push_back(JPH::Triangle(pv[0], pv[1], pv[2]));
     }
 
-    return new btBvhTriangleMeshShape(triangleMesh, true);
+    return triangles;
 }
 
-btCollisionShape *PhysicsMeshResource::createConvexMeshShape(glm::vec3 scale) const {
-    auto* convexHullShape = new btConvexHullShape();
+JPH::Array<JPH::Vec3> PhysicsMeshResource::createConvexMeshShape(glm::vec3 scale) const {
+    JPH::Array<JPH::Vec3> points;
     for (int i = 0; i < m_numVertices; i++) {
-        btVector3 pv = {
-                m_vertices[i].x * scale.x,
-                m_vertices[i].y * scale.y,
-                m_vertices[i].z * scale.z};
-
-        convexHullShape->addPoint(pv);
+        points.push_back({
+                                 m_vertices[i].x * scale.x,
+                                 m_vertices[i].y * scale.y,
+                                 m_vertices[i].z * scale.z});
     }
-    convexHullShape->setMargin(0);
 
-    return convexHullShape;
-
-//    btConvexHullShape convexHullShape;
-//
-//    for (int i = 0; i < m_numVertices; i++) {
-//        btVector3 pv = {
-//                m_vertices[i].x * scale.x,
-//                m_vertices[i].y * scale.y,
-//                m_vertices[i].z * scale.z};
-//
-//        convexHullShape.addPoint(pv);
-//    }
-//    convexHullShape.setMargin(0);
-//
-//    auto *hull = new btShapeHull(&convexHullShape);
-//    hull->buildHull(0);
-//
-//    auto *pConvexHullShape = new btConvexHullShape(
-//            (const btScalar *) hull->getVertexPointer(), hull->numVertices(), sizeof(btVector3));
-//
-//    pConvexHullShape->setMargin(0);
-//
-//    delete hull;
-//
-//    return pConvexHullShape;
+    return points;
 }
