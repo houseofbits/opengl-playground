@@ -31,9 +31,7 @@ void EditorUISystem::process() {
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    if (m_isDemoWindowVisible) {
-        ImGui::ShowDemoWindow(&m_isDemoWindowVisible);
-    }
+    processDockSpaceWindow();
 
     m_MainToolbarUI.process();
     if (m_MainToolbarUI.m_isEditWindowVisible) {
@@ -82,7 +80,12 @@ void EditorUISystem::initialize(ResourceManager *manager) {
     ImGuiIO &io = ImGui::GetIO();
     (void) io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     ImGui::StyleColorsLight();
+
+//    ImGuiStyle& style = ImGui::GetStyle();
+//    style.WindowPadding.x = 0;
+//    style.WindowPadding.y = 0;
 }
 
 void EditorUISystem::registerEventHandlers(EventManager *eventManager) {
@@ -130,4 +133,21 @@ void EditorUISystem::openMaterialEditor(ResourceHandle<MaterialResource>& handle
     if (handle.isValid()) {
         m_MaterialEditWindowUI.open(handle);
     }
+}
+
+void EditorUISystem::processDockSpaceWindow() {
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->Pos);
+    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowViewport(viewport->ID);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
+    ImGui::Begin("Dockspace Window", nullptr, windowFlags);
+    ImGui::PopStyleVar(2);
+    ImGuiID dockspaceID = ImGui::GetID("MainDockspace");
+    ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+    ImGui::End();
 }

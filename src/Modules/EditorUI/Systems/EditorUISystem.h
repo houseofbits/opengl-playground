@@ -32,4 +32,8 @@ public:
     MainToolbarUI m_MainToolbarUI;
     EditWindowUI m_EditWindowUI;
     MaterialEditWindowUI m_MaterialEditWindowUI;
+
+private:
+    void processDockSpaceWindow();
+
 };

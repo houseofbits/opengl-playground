@@ -9,14 +9,14 @@
             ],
             "type": "FREE",
             "upDirection": [
-                0.026846569031476974,
-                0.9576758146286011,
-                0.2865944504737854
+                -0.02672201208770275,
+                0.9150111079216003,
+                0.4025428593158722
             ],
             "viewDirection": [
-                0.08931870758533478,
-                -0.2878491282463074,
-                0.9535015821456909
+                -0.06060782074928284,
+                -0.4034287929534912,
+                0.9130015969276428
             ]
         },
         "name": "camera-free"
@@ -276,7 +276,7 @@
     },
     {
         "mesh": {
-            "material": "data\\materials\\light-column.json",
+            "material": "data/materials/light-column.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
@@ -313,7 +313,7 @@
     },
     {
         "mesh": {
-            "material": "data\\materials\\light-column.json",
+            "material": "data/materials/light-column.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
@@ -461,7 +461,7 @@
     },
     {
         "mesh": {
-            "material": "data\\materials\\light-column.json",
+            "material": "data/materials/light-column.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
@@ -543,7 +543,7 @@
             ],
             "type": "FP",
             "upDirection": [
-                -0.00478365970775485,
+                -0.004783660639077425,
                 0.9996139407157898,
                 0.02737036906182766
             ],
@@ -934,7 +934,7 @@
             ],
             "scale": [
                 0.9999999403953552,
-                0.9999870657920837,
+                0.9999869465827942,
                 0.9999982714653015
             ],
             "translation": [
