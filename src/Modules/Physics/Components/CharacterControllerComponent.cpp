@@ -4,12 +4,13 @@
 #include "../Helpers/PhysicsTypeCast.h"
 #include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
 #include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
+#include "Jolt/Physics/Collision/RayCast.h"
+#include "Jolt/Physics/Collision/CastResult.h"
 
 CharacterControllerComponent::CharacterControllerComponent() : Component(),
                                                                m_height(1.75),
                                                                m_radius(0.25),
-//                                                               m_rigidBody(nullptr),
-                                                               m_character(nullptr),
+                                                               m_physicsBody(nullptr),
                                                                m_groundRayCast(),
                                                                m_stepTolerance(0.3),
                                                                m_isOnGround(false),
@@ -42,46 +43,28 @@ void CharacterControllerComponent::create(TransformComponent &transform) {
             .Create()
             .Get();
 
-    auto *settings = new JPH::CharacterSettings();
-    settings->mMaxSlopeAngle = JPH::DegreesToRadians(45.0f);
-    settings->mLayer = Layers::MOVING;
-    settings->mShape = mStandingShape;
-    settings->mFriction = 50.f;
-    settings->mSupportingVolume = JPH::Plane(JPH::Vec3::sAxisY(), -m_radius);
-    settings->mMass = 80;
+    auto characterSettings = JPH::BodyCreationSettings(
+            mStandingShape,
+            PhysicsTypeCast::glmToJPH(transform.getTranslation()),
+            PhysicsTypeCast::glmToJPH(transform.getRotation()),
+            JPH::EMotionType::Dynamic,
+            Layers::MOVING);
 
-    m_character = new JPH::Character(settings,
-                                     PhysicsTypeCast::glmToJPH(transform.getTranslation()),
-                                     PhysicsTypeCast::glmToJPH(transform.getRotation()),
-                                     0,
-                                     &m_PhysicsResource().getSystem());
+    characterSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+    characterSettings.mMassPropertiesOverride.mMass = 80;
+    characterSettings.mAllowedDOFs =
+            JPH::EAllowedDOFs::TranslationX | JPH::EAllowedDOFs::TranslationY | JPH::EAllowedDOFs::TranslationZ;
+    characterSettings.mLinearDamping = 10;
+    characterSettings.mAngularDamping = 10;
+//    characterSettings.mNumPositionStepsOverride = 255;
+//    characterSettings.mNumVelocityStepsOverride = 255;
 
-    m_character->AddToPhysicsSystem(JPH::EActivation::Activate);
-//
-//    float mass = 1.0;
-//    auto *compoundShape = new btCompoundShape();
-//    auto *capsuleShape = new btCapsuleShape(m_radius, m_height - (m_radius * 2) - m_stepTolerance);
-//    btTransform localTransform;
-//    localTransform.setIdentity();
-//    localTransform.setOrigin(btVector3(0.0, (m_height * 0.5f), 0.0));
-//    compoundShape->addChildShape(localTransform, capsuleShape);
-//
-//    btVector3 localInertia(0, 0, 0);
-//    auto *motionState = new btDefaultMotionState(PhysicsTypeCast::createBtTransformFromTransformComponent(transform));
-//
-//    capsuleShape->calculateLocalInertia(mass, localInertia);
-//    btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, compoundShape, localInertia);
-//    m_rigidBody = new btRigidBody(rbInfo);
-//    m_rigidBody->setAngularFactor(btVector3(0, 0, 0));
-//    m_rigidBody->setFriction(0.5f);
-//
-//    auto *userData = new PhysicsUserData(m_EntityId.id());
-//    userData->m_contactReporting = true;
-//    m_rigidBody->setUserPointer(userData);
-//
-//    m_rigidBody->setDamping(1, 1);
-//
-//    m_PhysicsResource().m_dynamicsWorld->addRigidBody(m_rigidBody);
+    m_physicsBody = m_PhysicsResource().getInterface().CreateBody(characterSettings);
+
+    m_PhysicsResource().getInterface().AddBody(m_physicsBody->GetID(), JPH::EActivation::Activate);
+
+    m_physicsBody->SetFriction(0.5);
+    m_physicsBody->SetRestitution(0);
 }
 
 bool CharacterControllerComponent::isReady() {
@@ -90,20 +73,25 @@ bool CharacterControllerComponent::isReady() {
 
 void CharacterControllerComponent::update(TransformComponent &transform, bool isSimulationEnabled) {
     if (isSimulationEnabled) {
-        auto t = m_character->GetWorldTransform();
+        auto t = m_physicsBody->GetWorldTransform();
         PhysicsTypeCast::applyJPHMat44ToTransformComponent(transform, t);
+
+        castRayForGroundReference(transform.getTranslation());
+        updateGroundSpring(transform.getTranslation());// + glm::vec3(0,m_stepTolerance,0));
     } else {
-        m_character->SetPosition(PhysicsTypeCast::glmToJPH(transform.getTranslation()));
+        m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBody->GetID(),
+                                                                  PhysicsTypeCast::glmToJPH(transform.getTranslation()),
+                                                                  PhysicsTypeCast::glmToJPH(transform.getRotation()),
+                                                                  JPH::EActivation::DontActivate);
     }
 }
 
-void CharacterControllerComponent::move(glm::vec3 direction) const {
-
+void CharacterControllerComponent::move(glm::vec3 direction) {
     float speed = 10.0f;
 
     JPH::Vec3 movementDirection = PhysicsTypeCast::glmToJPH(direction);
 
-    JPH::Vec3 currentVelocity = m_character->GetLinearVelocity();
+    JPH::Vec3 currentVelocity = m_physicsBody->GetLinearVelocity();
     JPH::Vec3 desiredVelocity = speed * movementDirection;
     if (!desiredVelocity.IsNearZero() || currentVelocity.GetY() < 0.0f) {
         desiredVelocity.SetY(currentVelocity.GetY());
@@ -111,34 +99,61 @@ void CharacterControllerComponent::move(glm::vec3 direction) const {
 
     JPH::Vec3 newVelocity = 0.75f * currentVelocity + 0.25f * desiredVelocity;
 
-    m_character->SetLinearVelocity(newVelocity);
+    m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());
+    m_physicsBody->SetLinearVelocity(newVelocity);
 }
 
-void CharacterControllerComponent::updateGroundSpring(const glm::vec3 &kneePoint) {
-//    m_rigidBody->activate();
-//    auto vel = m_rigidBody->getLinearVelocity();
-//
-//    float velAlongSpring = vel.dot({0, 1, 0});
-//
-//    glm::vec3 diff = kneePoint - m_groundRayCast.m_touchPoint;
-//
-//    float positionDifference = m_stepTolerance - diff.y;
-//    m_isOnGround = std::abs(positionDifference) < 0.1;
-//
-//    btScalar springForce = 2000.0f * positionDifference;
-//    btScalar dampingForce = -5.0f * velAlongSpring;
-//    btVector3 totalForce = btVector3(0, 1, 0) * (springForce + dampingForce);
-//
-//    m_rigidBody->applyCentralForce(totalForce);
+void CharacterControllerComponent::updateGroundSpring(const glm::vec3 &kneePosition) {
+    m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());
+    JPH::Vec3 currentVelocity = m_physicsBody->GetLinearVelocity();
+    float velAlongSpring = currentVelocity.Dot({0, 1, 0});
+
+    glm::vec3 diff = kneePosition - m_groundRayCast.m_touchPoint;
+    float positionDifference = m_stepTolerance - diff.y;
+    float springForce = 10000.0f * positionDifference;
+    float dampingForce = -50.0f * velAlongSpring;
+    JPH::Vec3 totalForce = JPH::Vec3(0, 1, 0) * (springForce + dampingForce);
+
+    m_physicsBody->AddForce(totalForce);
 }
 
 bool CharacterControllerComponent::isCreated() const {
-    return m_character != nullptr;
+    return m_physicsBody != nullptr;
 }
 
-//bool CharacterControllerComponent::castRayForGroundReference(const glm::vec3 &point) {
-//    return m_PhysicsResource().characterRayCast(point,
-//                                                glm::vec3(0, -1, 0),
-//                                                m_EntityId.id(),
-//                                                m_groundRayCast);
-//}
+//Refactor into public method
+void CharacterControllerComponent::castRayForGroundReference(const glm::vec3 &point) {
+    m_isOnGround = false;
+
+    JPH::RayCastResult hit;
+    JPH::Vec3 rayDirection(0, -10, 0);
+    JPH::RRayCast ray{PhysicsTypeCast::glmToJPH(point + glm::vec3(0, m_stepTolerance * 2, 0)), rayDirection};
+    JPH::IgnoreSingleBodyFilter bodyFilter(m_physicsBody->GetID());
+    if (m_PhysicsResource().getSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, {}, bodyFilter)) {
+        m_groundRayCast.m_touchPoint = PhysicsTypeCast::JPHToGlm(ray.GetPointOnRay(hit.mFraction));
+        m_groundRayCast.m_distance = glm::length(point - m_groundRayCast.m_touchPoint);
+
+        if (m_groundRayCast.m_distance < 0.1) {
+            m_isOnGround = true;
+        }
+    }
+}
+
+bool CharacterControllerComponent::rayCast(glm::vec3 position, glm::vec3 direction, PhysicsRayCastResult &result) {
+    JPH::RayCastResult hit;
+    JPH::RRayCast ray{PhysicsTypeCast::glmToJPH(position), PhysicsTypeCast::glmToJPH(direction)};
+    JPH::IgnoreSingleBodyFilter bodyFilter(m_physicsBody->GetID());
+    if (m_PhysicsResource().getSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, {}, bodyFilter)) {
+        result.m_touchPoint = PhysicsTypeCast::JPHToGlm(ray.GetPointOnRay(hit.mFraction));
+        result.m_distance = ray.mDirection.Length() * hit.mFraction;
+        //TODO Get user data
+
+        return true;
+    }
+
+    return false;
+}
+
+glm::vec3 CharacterControllerComponent::getVelocity() const {
+    return PhysicsTypeCast::JPHToGlm(m_physicsBody->GetLinearVelocity());
+}

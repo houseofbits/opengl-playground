@@ -109,7 +109,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Systems/CharacterControllerSystem.cpp
         src/Modules/Physics/Systems/CharacterControllerSystem.h
         src/Modules/Physics/Helpers/PhysicsUserData.h
-        src/Modules/Physics/Helpers/RayCastResult.h
+        src/Modules/Physics/Helpers/PhysicsRayCastResult.h
         src/Modules/Physics/Events/CharacterPickingEvent.h
         src/Modules/Physics/Components/PhysicsBodyComponent.cpp
         src/Modules/Physics/Components/PhysicsBodyComponent.h

@@ -17,21 +17,20 @@ public:
     void create(TransformComponent& transform);
     bool isReady() override;
     void update(TransformComponent &transform, bool isSimulationEnabled);
-    void move(glm::vec3) const;
+    void move(glm::vec3);
     [[nodiscard]] bool isCreated() const;
+    bool rayCast(glm::vec3 position, glm::vec3 direction, PhysicsRayCastResult& result);
+    [[nodiscard]] glm::vec3 getVelocity() const;
 
     float m_height;
     float m_radius;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
-//    btRigidBody *m_rigidBody;
     bool m_isOnGround;
-    RayCastResult m_groundRayCast;
+    PhysicsRayCastResult m_groundRayCast;
     float m_stepTolerance;      //aka. knee-height
-
-    JPH::Character* m_character;
-
+    JPH::Body*  m_physicsBody;
 
 private:
-//    bool castRayForGroundReference(const glm::vec3 &point);
-    void updateGroundSpring(const glm::vec3& kneePoint);
+    void castRayForGroundReference(const glm::vec3 &point);
+    void updateGroundSpring(const glm::vec3 &kneePosition);
 };

@@ -1,8 +1,8 @@
 #include "EditorUISystem.h"
-#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
+#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../../Physics/Components/CharacterControllerComponent.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
 #include "../../Physics/Components/PhysicsJointComponent.h"

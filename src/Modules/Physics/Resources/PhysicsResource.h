@@ -2,7 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../Helpers/PhysicsUserData.h"
-#include "../Helpers/RayCastResult.h"
+#include "../Helpers/PhysicsRayCastResult.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>
@@ -27,8 +27,6 @@ public:
     Resource::Status build() override;
     void destroy() override;
     void simulate();
-    [[nodiscard]] float characterRayCast(glm::vec3 origin, glm::vec3 direction, Identity::Type characterEntityId);
-//    [[nodiscard]] bool characterRayCast(glm::vec3 origin, glm::vec3 direction, Identity::Type characterEntityId, RayCastResult& result);
     void addContactPoint(Identity::Type entityId, glm::vec3 point);
     void clearEntityContacts();
     JPH::PhysicsSystem& getSystem();

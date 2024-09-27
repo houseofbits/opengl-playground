@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../../../../SourceLibs/imgui/imgui.h"
+#include "../../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../../../Renderer//Components/StaticMeshComponent.h"
 #include "../FileDialogHelper.h"
 #include "../TextPromptHelper.h"

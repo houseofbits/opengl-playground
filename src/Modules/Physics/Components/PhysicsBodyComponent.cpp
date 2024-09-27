@@ -104,6 +104,8 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
 
     settings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
     settings.mMassPropertiesOverride.mMass = m_mass;
+    settings.mLinearDamping = 0.7;
+    settings.mAngularDamping = 0.7;
 
     m_physicsBody = m_PhysicsResource().getInterface().CreateBody(settings);
 

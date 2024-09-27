@@ -1,5 +1,7 @@
 #include "PhysicsResource.h"
 #include "../Helpers/PhysicsTypeCast.h"
+#include "Jolt/Physics/Collision/CastResult.h"
+#include "Jolt/Physics/Collision/RayCast.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>
@@ -81,34 +83,6 @@ void PhysicsResource::destroy() {
     delete JPH::Factory::sInstance;
     JPH::Factory::sInstance = nullptr;
 }
-
-float PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type characterEntityId) {
-
-    return 0;
-}
-
-//bool
-//PhysicsResource::characterRayCast(glm::vec3 p, glm::vec3 d, Identity::Type characterEntityId, RayCastResult &result) {
-////    btVector3 rayStart = PhysicsTypeCast::glmToBullet(p);
-////    btVector3 rayEnd = PhysicsTypeCast::glmToBullet(p + (d * 100.0f));
-////
-//////    PhysicsRayCastFilterCallback rayCallback(rayStart, rayEnd);
-//////    rayCallback.m_excludedEntityId = characterEntityId;
-////    btCollisionWorld::ClosestRayResultCallback rayCallback(rayStart, rayEnd);
-////
-////    m_dynamicsWorld->rayTest(rayStart, rayEnd, rayCallback);
-////    if (rayCallback.hasHit()) {
-////        const btCollisionObject* hitObject = rayCallback.m_collisionObject;
-////        auto *userData = (PhysicsUserData *) hitObject->getUserPointer();
-////        result.m_entityId = userData->m_entityId;
-////        result.m_touchPoint = PhysicsTypeCast::bulletToGlm(rayCallback.m_hitPointWorld);
-////        result.m_distance = rayCallback.m_closestHitFraction;
-////
-////        return true;
-////    }
-//
-//    return false;
-//}
 
 void PhysicsResource::addContactPoint(Identity::Type entityId, glm::vec3 point) {
     if (m_entityContacts.count(entityId) == 0) {

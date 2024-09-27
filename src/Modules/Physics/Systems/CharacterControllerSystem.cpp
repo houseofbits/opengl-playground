@@ -98,13 +98,15 @@ void CharacterControllerSystem::updateCCTs() {
 ////                Log::write("Speed: ", dst / (Time::timestamp - prevDt));
 ////                prevPos = transform->getTranslation();
 ////                prevDt = Time::timestamp;
+
+//                Log::write(component.second->getVelocity());
             }
-//
-//            if (cameraComp->m_isActive) {
-//                cameraComp->m_Camera.setPosition(
-//                        transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
-//
-//                RayCastResult hit;
+
+            if (cameraComp->m_isActive) {
+                cameraComp->m_Camera.setPosition(
+                        transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
+
+//                PhysicsRayCastResult hit;
 //                if (m_PhysicsResource().characterRayCast(cameraComp->m_Camera.position,
 //                                                         cameraComp->m_Camera.getViewDirection(), component.first,
 //                                                         hit)) {
@@ -115,7 +117,7 @@ void CharacterControllerSystem::updateCCTs() {
 //                    e->m_doActivate = m_doInteract;
 //                    m_EventManager->queueEvent(e);
 //                }
-//            }
+            }
         }
     }
 

@@ -1,9 +1,9 @@
 #include "MainToolbarUI.h"
-#include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
+//#include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
 #include "../Systems/EditorUISystem.h"
 

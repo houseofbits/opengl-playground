@@ -1,8 +1,8 @@
 #include "EditWindowUI.h"
 #include "../../../Core/Events/EntityCreationEvent.h"
-#include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
+//#include "../../../SourceLibs/imgui/ImGuiFileDialog.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
 #include "../../Physics/Components/PhysicsJointComponent.h"
@@ -16,6 +16,7 @@
 #include "ComponentEdit/StaticMeshComponentEdit.h"
 #include "ComponentEdit/TransformComponentEdit.h"
 #include "FileDialogHelper.h"
+#include "../../../Core/Helper/StringUtils.h"
 #include <utility>
 
 std::vector<std::string> ENTITY_CREATION_OPTIONS = {
