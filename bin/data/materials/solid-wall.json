@@ -5,5 +5,7 @@
         1.0
     ],
     "doesCastShadows": true,
-    "doesReceiveShadows": true
+    "doesReceiveShadows": true,
+    "selfIllumination": 0.0,
+    "wrappingType": 1
 }

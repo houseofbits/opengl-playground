@@ -8,7 +8,8 @@ MaterialResource::MaterialResource() : Resource(),
                                        m_Roughness(),
                                        m_doesCastShadows(true),
                                        m_doesReceiveShadows(true),
-                                       m_selfIllumination(0.0) {
+                                       m_selfIllumination(0.0),
+                                       m_textureWrappingType(WRAPPING_UV1) {
 }
 
 Resource::Status MaterialResource::fetchData(ResourceManager &manager) {
@@ -37,6 +38,7 @@ Resource::Status MaterialResource::fetchData(ResourceManager &manager) {
     m_doesCastShadows = json.value(CAST_SHADOWS_KEY, true);
     m_DiffuseColor = json.value(DIFFUSE_COLOR_KEY, glm::vec3(1.0));
     m_selfIllumination = json.value(SELF_ILLUMINATION_KEY, 0.0f);
+    m_textureWrappingType = json.value(WRAPPING_TYPE_KEY, m_textureWrappingType);
 
     return STATUS_DATA_READY;
 }
@@ -70,6 +72,7 @@ void MaterialResource::bind(ShaderProgramResource &shader) {
     shader.setUniform("hasNormalSampler", (int) m_Normal().isReady());
     shader.setUniform("hasRoughnessSampler", (int) m_Roughness().isReady());
     shader.setUniform("doesReceiveShadows", (int) m_doesReceiveShadows);
+    shader.setUniform("wrappingType", (int) m_textureWrappingType);
 }
 
 void MaterialResource::write() {
@@ -89,6 +92,7 @@ void MaterialResource::write() {
     json[RECEIVE_SHADOWS_KEY] = m_doesReceiveShadows;
     json[DIFFUSE_COLOR_KEY] = m_DiffuseColor;
     json[SELF_ILLUMINATION_KEY] = m_selfIllumination;
+    json[WRAPPING_TYPE_KEY] = m_textureWrappingType;
 
     std::ofstream file;
     file.open(m_Path);

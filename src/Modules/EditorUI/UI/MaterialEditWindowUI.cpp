@@ -13,6 +13,11 @@ MaterialEditWindowUI::MaterialEditWindowUI(EditorUISystem *editor) : m_EditorUIS
     m_texturePaths["DiffuseTexturePicker"] = "";
     m_texturePaths["NormalsTexturePicker"] = "";
     m_texturePaths["RoughnessTexturePicker"] = "";
+
+    m_textureWrappingNames = {
+            {MaterialResource::WRAPPING_UV1, "UV1"},
+            {MaterialResource::WRAPPING_TRIPLANAR, "Triplanar"}
+    };
 }
 
 void MaterialEditWindowUI::process() {
@@ -42,6 +47,15 @@ void MaterialEditWindowUI::process() {
             ImGui::Checkbox("Does cast shadows", &m_material().m_doesCastShadows);
             ImGui::Checkbox("Does receive shadows", &m_material().m_doesReceiveShadows);
 
+            if (ImGui::BeginCombo("Texture wrapping##WRAPPING_TYPE", m_textureWrappingNames[m_material().m_textureWrappingType].c_str())) {
+                for (const auto &wrappingType: m_textureWrappingNames) {
+                    if (ImGui::Selectable(wrappingType.second.c_str(), m_material().m_textureWrappingType == wrappingType.first)) {
+                        m_material().m_textureWrappingType = wrappingType.first;
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
             ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
             ImGui::Separator();
@@ -60,7 +74,7 @@ void MaterialEditWindowUI::process() {
     }
 }
 
-void MaterialEditWindowUI::processTexture(const std::string& name, ResourceHandle<TextureResource> &handle) const {
+void MaterialEditWindowUI::processTexture(const std::string &name, ResourceHandle<TextureResource> &handle) const {
     if (handle.isValid()) {
         ImGui::Image((void *) (intptr_t) handle().m_textureId, ImVec2(200, 200));
 

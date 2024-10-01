@@ -13,8 +13,14 @@ public:
     inline static const std::string ROUGHNESS_TEXTURE_KEY = "roughnessTexture";
     inline static const std::string CAST_SHADOWS_KEY = "doesCastShadows";
     inline static const std::string RECEIVE_SHADOWS_KEY = "doesReceiveShadows";
+    inline static const std::string WRAPPING_TYPE_KEY = "wrappingType";
 
     MaterialResource();
+
+    enum TextureWrappingType {
+        WRAPPING_UV1 = 0,
+        WRAPPING_TRIPLANAR = 1,
+    };
 
     Resource::Status fetchData(ResourceManager &) override;
     Resource::Status build() override;
@@ -30,4 +36,5 @@ public:
     ResourceHandle<TextureResource> m_Roughness;
     bool m_doesCastShadows;
     bool m_doesReceiveShadows;
+    TextureWrappingType m_textureWrappingType;
 };

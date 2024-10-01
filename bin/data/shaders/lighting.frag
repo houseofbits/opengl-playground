@@ -33,6 +33,7 @@ uniform int hasDiffuseSampler;
 uniform int hasNormalSampler;
 uniform int hasRoughnessSampler;
 uniform int doesReceiveShadows;
+uniform int wrappingType;
 
 layout(bindless_sampler) uniform sampler2D diffuseSampler;
 layout(bindless_sampler) uniform sampler2D normalSampler;
@@ -101,6 +102,19 @@ float pcfShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndot
     return shadow;
 }
 
+vec3 triplanarDiffuseTexture(in sampler2D diffuseSampler, vec3 surfaceNormal)
+{
+    vec3 blendWeights = abs(surfaceNormal);
+    blendWeights /= (blendWeights.x + blendWeights.y + blendWeights.z);
+
+    vec3 xaxis = texture2D( diffuseSampler, gsPosition.yz).rgb;
+    vec3 yaxis = texture2D( diffuseSampler, gsPosition.xz).rgb;
+    vec3 zaxis = texture2D( diffuseSampler, gsPosition.xy).rgb;
+
+    return xaxis * blendWeights.x + yaxis * blendWeights.y + zaxis * blendWeights.z;
+}
+
+
 void main()
 {
     float specularPower = 1.0;
@@ -108,7 +122,11 @@ void main()
 
     vec3 diffuse = diffuseColor;
     if (hasDiffuseSampler == 1) {
-        diffuse = texture(diffuseSampler, gsTexcoord).xyz;
+        if (wrappingType == 0) {
+            diffuse = texture(diffuseSampler, gsTexcoord).xyz;
+        } else {
+            diffuse = triplanarDiffuseTexture(diffuseSampler, gsNormal);
+        }
     }
 
     if (selfIllumination > 0.95) {

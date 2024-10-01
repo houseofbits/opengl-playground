@@ -3,27 +3,27 @@
         "camera": {
             "isActive": true,
             "position": [
-                -9.232294082641602,
-                1.1837334632873535,
-                -14.857762336730957
+                -4.643454551696777,
+                3.003342390060425,
+                -15.87553596496582
             ],
             "type": "FREE",
             "upDirection": [
-                0.0018787411972880363,
-                0.9986226558685303,
-                0.05243508890271187
+                -0.008959303610026836,
+                0.9918701648712158,
+                0.12693831324577332
             ],
             "viewDirection": [
-                0.03575756400823593,
-                -0.052468735724687576,
-                0.9979822635650635
+                -0.0698324590921402,
+                -0.12725409865379333,
+                0.9894088506698608
             ]
         },
         "name": "camera-free"
     },
     {
         "mesh": {
-            "material": "data/materials/solid-wall.json",
+            "material": "data/materials/grid-gray.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
@@ -543,9 +543,9 @@
             ],
             "type": "FP",
             "upDirection": [
-                -0.34557902812957764,
-                0.93724125623703,
-                -0.04641129449009895
+                -0.34557899832725525,
+                0.9372411966323853,
+                -0.04641128331422806
             ],
             "viewDirection": [
                 -0.9289016723632813,
@@ -576,15 +576,15 @@
                 1.0
             ],
             "translation": [
-                -8.201245307922363,
-                0.6113594770431519,
-                -12.64559268951416
+                -4.277315139770508,
+                1.2243340015411377,
+                -11.353038787841797
             ]
         }
     },
     {
         "mesh": {
-            "material": "data/materials/solid-blue.json",
+            "material": "data/materials/grid-gray.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
@@ -621,7 +621,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/light-column.json",
+            "material": "data/materials/grid-gray.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
@@ -658,7 +658,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/solid-green.json",
+            "material": "data/materials/grid-gray.json",
             "model": "data/models/door-frame.gltf",
             "renderer": "SOLID"
         },
@@ -687,9 +687,9 @@
                 1.0
             ],
             "translation": [
-                -8.214276313781738,
-                1.049242377281189,
-                -13.612393379211426
+                -0.897104024887085,
+                1.0491505861282349,
+                -11.168414115905762
             ]
         }
     },
@@ -749,19 +749,19 @@
             ],
             "scale": [
                 0.9999999403953552,
-                0.9999464750289917,
+                0.9999461770057678,
                 0.9999982714653015
             ],
             "translation": [
-                -8.216818809509277,
-                -0.027851685881614685,
-                -13.649200439453125
+                -0.8871876001358032,
+                -0.027859114110469818,
+                -11.193510055541992
             ]
         }
     },
     {
         "mesh": {
-            "material": "data/materials/solid-red.json",
+            "material": "data/materials/grid-gray.json",
             "model": "data/models/stair-5.gltf",
             "renderer": "SOLID"
         },
@@ -782,12 +782,12 @@
                 0.0,
                 0.9999999403953552,
                 0.0,
-                0.0002736237656790763
+                0.0002736239111982286
             ],
             "scale": [
-                6.422647953033447,
+                6.422645568847656,
                 2.1647439002990723,
-                14.2355375289917
+                14.235527992248535
             ],
             "translation": [
                 2.9336347579956055,
@@ -798,7 +798,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/solid-red.json",
+            "material": "data/materials/grid-gray.json",
             "model": "data/models/stair-5.gltf",
             "renderer": "SOLID"
         },
@@ -819,12 +819,12 @@
                 0.0,
                 0.9999999403953552,
                 0.0,
-                0.00027362379478290677
+                0.00027362394030205905
             ],
             "scale": [
-                6.422647476196289,
+                6.422645092010498,
                 2.1647439002990723,
-                14.2355375289917
+                14.235527992248535
             ],
             "translation": [
                 -0.23978161811828613,
@@ -835,7 +835,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/solid-red.json",
+            "material": "data/materials/grid-gray.json",
             "model": "data/models/stair-5.gltf",
             "renderer": "SOLID"
         },
@@ -859,9 +859,9 @@
                 0.7097495794296265
             ],
             "scale": [
-                6.4226508140563965,
+                6.422649383544922,
                 2.1647439002990723,
-                14.235574722290039
+                14.235575675964355
             ],
             "translation": [
                 5.733274936676025,
@@ -872,7 +872,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/solid-blue.json",
+            "material": "data/materials/grid-gray.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
@@ -909,7 +909,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/light-column.json",
+            "material": "data/materials/grid-gray.json",
             "model": "data/models/slope.gltf",
             "renderer": "SOLID"
         },
@@ -946,7 +946,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/solid-red.json",
+            "material": "data/materials/grid-gray.json",
             "model": "data/models/stair-5.gltf",
             "renderer": "SOLID"
         },
@@ -970,9 +970,9 @@
                 0.7097495198249817
             ],
             "scale": [
-                6.4226508140563965,
+                6.422649383544922,
                 2.1647439002990723,
-                14.235575675964355
+                14.235577583312988
             ],
             "translation": [
                 5.726588726043701,
@@ -983,7 +983,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/solid-red.json",
+            "material": "data/materials/grid-gray.json",
             "model": "data/models/stair-5.gltf",
             "renderer": "SOLID"
         },
@@ -1020,7 +1020,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/solid-blue.json",
+            "material": "data/materials/grid-gray.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
@@ -1057,7 +1057,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/solid-red.json",
+            "material": "data/materials/grid-gray.json",
             "model": "data/models/stair-5.gltf",
             "renderer": "SOLID"
         },
@@ -1081,9 +1081,9 @@
                 -0.6984891295433044
             ],
             "scale": [
-                6.422658443450928,
+                6.422660827636719,
                 2.1647439002990723,
-                14.235584259033203
+                14.235589027404785
             ],
             "translation": [
                 2.7740838527679443,
@@ -1094,7 +1094,7 @@
     },
     {
         "mesh": {
-            "material": "data/materials/solid-blue.json",
+            "material": "data/materials/grid-gray.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
