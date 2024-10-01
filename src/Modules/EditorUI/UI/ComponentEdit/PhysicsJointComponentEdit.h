@@ -42,10 +42,10 @@ public:
         ImGui::InputFloat3("Attachment B", (float*)&body->m_localAttachmentB);
         ImGui::InputFloat3("Axis B", (float*)&body->m_axisB);
 
-        ImGui::Checkbox("Angular limits", &body->m_areLimitsEnabled);
-        ImGui::Checkbox("Driven", &body->m_areDriveEnabled);
+        ImGui::Checkbox("Angular limits", &body->m_isLimitsEnabled);
+        ImGui::Checkbox("Lock on limits", &body->m_isLockingToLimitsEnabled);
 
-        if (body->m_areLimitsEnabled) {
+        if (body->m_isLimitsEnabled) {
             if(ImGui::InputFloat2("Angular limits", (float*)&angularLimits)) {
                 body->m_angularLimits.x = glm::radians(angularLimits.x);
                 body->m_angularLimits.y = glm::radians(angularLimits.y);

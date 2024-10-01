@@ -14,6 +14,7 @@ public:
 
 private:
     void resetToInitialTransform();
+    void wakeUpAll();
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     bool m_isSimulationDisabled;

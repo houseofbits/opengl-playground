@@ -34,6 +34,7 @@ void PhysicsBodyProcessingSystem::process() {
 bool PhysicsBodyProcessingSystem::handleEditorUIEvent(EditorUIEvent *event) {
     if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
         m_isSimulationDisabled = false;
+        wakeUpAll();
     } else if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
         m_isSimulationDisabled = true;
     } else if (event->m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
@@ -48,5 +49,11 @@ void PhysicsBodyProcessingSystem::resetToInitialTransform() {
     for (const auto body: getComponentContainer<PhysicsBodyComponent>()) {
         auto *transform = getComponent<TransformComponent>(body.first);
         transform->m_transform = transform->m_initialTransform;
+    }
+}
+
+void PhysicsBodyProcessingSystem::wakeUpAll() {
+    for (const auto body: getComponentContainer<PhysicsBodyComponent>()) {
+        body.second->wakeUp();
     }
 }

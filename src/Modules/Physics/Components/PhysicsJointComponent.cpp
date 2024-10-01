@@ -9,22 +9,12 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/GroupFilterTable.h>
 
-//float normalizeAngle(float theta) {
-//    while (theta > PxPi) {
-//        theta -= 2.0f * PxPi;
-//    }
-//    while (theta < -PxPi) {
-//        theta += 2.0f * PxPi;
-//    }
-//    return theta;
-//}
-
 PhysicsJointComponent::PhysicsJointComponent() : Component(),
                                                  m_PhysicsResource(),
                                                  m_targetEntityName(),
                                                  m_Joint(nullptr),
-                                                 m_areLimitsEnabled(true),
-                                                 m_areDriveEnabled(true),
+                                                 m_isLimitsEnabled(true),
+                                                 m_isLockingToLimitsEnabled(true),
                                                  m_angularLimits(0, 1.0),
                                                  m_axisA(0, 1, 0),
                                                  m_axisB(0, 1, 0),
@@ -35,8 +25,8 @@ PhysicsJointComponent::PhysicsJointComponent() : Component(),
 
 void PhysicsJointComponent::serialize(nlohmann::json &j) {
     j[ENTITY_KEY] = m_targetEntityName;
-    j[ARE_LIMITS_ENABLED_KEY] = m_areLimitsEnabled;
-    j[ARE_DRIVE_ENABLED_KEY] = m_areDriveEnabled;
+    j[ARE_LIMITS_ENABLED_KEY] = m_isLimitsEnabled;
+    j[ARE_LOCKING_LIMITS_ENABLED_KEY] = m_isLockingToLimitsEnabled;
     j[AXIS_A_KEY] = m_axisA;
     j[AXIS_B_KEY] = m_axisB;
     j[ATTACHMENT_A_KEY] = m_localAttachmentA;
@@ -47,8 +37,8 @@ void PhysicsJointComponent::serialize(nlohmann::json &j) {
 void PhysicsJointComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
 
     m_targetEntityName = j.value(ENTITY_KEY, m_targetEntityName);
-    m_areLimitsEnabled = j.value(ARE_LIMITS_ENABLED_KEY, m_areLimitsEnabled);
-    m_areDriveEnabled = j.value(ARE_DRIVE_ENABLED_KEY, m_areDriveEnabled);
+    m_isLimitsEnabled = j.value(ARE_LIMITS_ENABLED_KEY, m_isLimitsEnabled);
+    m_isLockingToLimitsEnabled = j.value(ARE_LOCKING_LIMITS_ENABLED_KEY, m_isLockingToLimitsEnabled);
     m_axisA = j.value(AXIS_A_KEY, m_axisA);
     m_axisB = j.value(AXIS_B_KEY, m_axisB);
     m_localAttachmentA = j.value(ATTACHMENT_A_KEY, m_localAttachmentA);
@@ -94,10 +84,10 @@ void PhysicsJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyCompo
     settings.mNormalAxis1 = JPH::Vec3::sAxisX();
     settings.mNormalAxis2 = JPH::Vec3::sAxisX();
 
-//    if(m_areLimitsEnabled) {
-//        settings.mLimitsMin = m_angularLimits.x;
-//        settings.mLimitsMax = m_angularLimits.y;
-//    }
+    if (m_isLimitsEnabled) {
+        settings.mLimitsMin = m_angularLimits.x;
+        settings.mLimitsMax = m_angularLimits.y;
+    }
 
     auto *groupFilter = new JPH::GroupFilterTable(2);
     groupFilter->DisableCollision(0, 1);
@@ -110,37 +100,6 @@ void PhysicsJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyCompo
 
     bodyA.wakeUp();
     bodyB.wakeUp();
-
-//
-//    //Issue with bullet - should create joints before bodies or run simulation after bodies are created, before joint creation
-//    m_PhysicsResource().simulate();
-//
-////    m_Joint = new btHingeConstraint(*bodyA.m_rigidBody, *bodyB.m_rigidBody,
-////                                    PhysicsTypeCast::glmToBullet(m_localAttachmentA),
-////                                    PhysicsTypeCast::glmToBullet(m_localAttachmentB),
-////                                    PhysicsTypeCast::glmToBullet(m_axisA),
-////                                    PhysicsTypeCast::glmToBullet(m_axisB),
-////                                    true);
-//
-//    m_Joint = new btHingeConstraint(*bodyA.m_rigidBody,
-//                                    PhysicsTypeCast::glmToBullet(m_localAttachmentA),
-//                                    PhysicsTypeCast::glmToBullet(m_axisA));
-//
-////    m_Joint->setParam(BT_CONSTRAINT_ERP, 0.8, -1);  // ERP value to correct error quickly
-////    m_Joint->setParam(BT_CONSTRAINT_CFM, 0.01, -1); // Low CFM value for stiffness
-//
-//    // Enable hinge motor with high max impulse to act as damping
-////    m_Joint->enableAngularMotor(true, 0, 100.0f);  // Zero target velocity, high max impulse to act as damping
-//
-////    if (m_areLimitsEnabled) {
-//    m_Joint->setLimit(m_angularLimits.x, m_angularLimits.y, 0, 10, 0);
-////    }
-//
-//    if (m_areDriveEnabled) {
-//        m_Joint->enableAngularMotor(true, 1.0, 10.0);
-//    }
-//
-//    m_PhysicsResource().m_dynamicsWorld->addConstraint(m_Joint, true);
 }
 
 void PhysicsJointComponent::attach(std::string entityName) {
@@ -149,66 +108,70 @@ void PhysicsJointComponent::attach(std::string entityName) {
 }
 
 void PhysicsJointComponent::release() {
-//    if (m_Joint != nullptr) {
-//        m_PhysicsResource().m_dynamicsWorld->removeConstraint(m_Joint);
-//        delete m_Joint;
-//    }
+    if (m_Joint != nullptr) {
+        m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
+        delete m_Joint;
+        m_Joint = nullptr;
+    }
 }
 
 void PhysicsJointComponent::activate() {
-    if (!m_areDriveEnabled) {
-        return;
+    if (m_moveState == CLOSED) {
+        open();
     }
-
-//    if (m_moveState == CLOSED) {
-//        m_pxJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
-//        m_pxJoint->setDriveVelocity(10.0f);
-//        m_moveState = OPENING;
-//        std::cout << "OPEN" << std::endl;
-//    }
-//    if (m_moveState == OPEN) {
-//        m_pxJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
-//        m_pxJoint->setDriveVelocity(-10.0f);
-//        m_moveState = CLOSING;
-//        std::cout << "CLOSE" << std::endl;
-//    }
+    if (m_moveState == OPEN) {
+        close();
+    }
 }
 
 void PhysicsJointComponent::update() {
-    if (!m_areDriveEnabled) {
-        return;
+    float angle = m_Joint->GetCurrentAngle();
+
+    if (m_moveState != CLOSED && angle <= (m_angularLimits.x + 0.01)) {
+        m_moveState = CLOSED;
+        m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, 0, 0});
+        if (m_isLockingToLimitsEnabled) {
+            m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Static,
+                                                             JPH::EActivation::DontActivate);
+        }
     }
 
-//    float angle = normalizeAngle(m_pxJoint->getAngle());
-//    auto limit = m_pxJoint->getLimit();
-//
-////    std::cout << (angle) << "|" << normalizeAngle(angle) << " " << (limit.lower) << ", " << (limit.upper) << std::endl;
-//    //        std::cout << glm::degrees(angle) << " " << glm::degrees(limit.lower) << ", " << glm::degrees(limit.upper) << std::endl;
-//
-//    if (m_moveState == UNKNOWN) {
-//        m_pxJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
-//        m_pxJoint->setDriveVelocity(10.0f);
-//        m_moveState = OPENING;
-//
-//        std::cout << "INITIAL CLOSE" << std::endl;
-//    }
-//
-//    if (m_moveState == CLOSING && angle <= (limit.lower + 0.01)) {
-//        m_moveState = CLOSED;
-//        m_pxJoint->setDriveVelocity(0);
-//        m_pxJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, false);
-//
-//        std::cout << "IS CLOSED" << std::endl;
-//    }
-//    if (m_moveState == OPENING && angle >= (limit.upper - 0.01)) {
-//        m_moveState = OPEN;
-//        m_pxJoint->setDriveVelocity(0);
-//        m_pxJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, false);
-//
-//        std::cout << "IS OPEN" << std::endl;
-//    }
+    if (m_moveState != OPEN && angle >= (m_angularLimits.y - 0.01)) {
+        m_moveState = OPEN;
+        m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, 0, 0});
+        if (m_isLockingToLimitsEnabled) {
+            m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Static,
+                                                             JPH::EActivation::DontActivate);
+        }
+    }
 }
 
 bool PhysicsJointComponent::isCreated() const {
     return m_Joint != nullptr;
+}
+
+void PhysicsJointComponent::open() {
+    m_moveState = OPENING;
+    if (m_isLockingToLimitsEnabled) {
+        m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Dynamic,
+                                                         JPH::EActivation::Activate);
+    }
+
+    m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, -10, 0});
+
+    m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody1()->GetID());
+    m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody2()->GetID());
+}
+
+void PhysicsJointComponent::close() {
+    m_moveState = CLOSING;
+    if (m_isLockingToLimitsEnabled) {
+        m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Dynamic,
+                                                         JPH::EActivation::Activate);
+    }
+
+    m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, 10, 0});
+
+    m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody1()->GetID());
+    m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody2()->GetID());
 }

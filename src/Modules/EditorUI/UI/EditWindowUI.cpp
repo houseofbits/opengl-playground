@@ -162,17 +162,19 @@ void EditWindowUI::processEntitiesList() {
             std::string name = entity->m_Name;
 
             bool isEditable = false;
-            if (!m_filterString.empty()) {
-                if (StringUtils::toLowerCase(entity->m_Name).find(StringUtils::toLowerCase(m_filterString)) !=
-                    std::string::npos) {
-                    isEditable = true;
-                }
-            }
-
             for (const auto &edit: m_componentEditors) {
                 if (edit.second->isEntityEditable(entity->m_Id.id()) && m_entityListFilter[edit.first]) {
                     isEditable = true;
                     break;
+                }
+            }
+
+            if (!m_filterString.empty()) {
+                if (StringUtils::toLowerCase(entity->m_Name).find(StringUtils::toLowerCase(m_filterString)) !=
+                    std::string::npos) {
+                    isEditable = true;
+                } else {
+                    isEditable = false;
                 }
             }
 

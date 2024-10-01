@@ -80,12 +80,13 @@ void CharacterControllerSystem::updateCCTs() {
         if (!component.second->isCreated()) {
             component.second->create(*transform);
         } else {
-            component.second->update(*transform, !m_isSimulationDisabled);
-
             auto *cameraComp = getComponent<CameraComponent>(component.first);
             if (cameraComp == nullptr) {
                 return;
             }
+
+            component.second->setLookingDirection(cameraComp->m_Camera.getViewDirection());
+            component.second->update(*transform, !m_isSimulationDisabled);
 
             if (!m_isSimulationDisabled) {
                 if (m_doMove) {
@@ -106,22 +107,21 @@ void CharacterControllerSystem::updateCCTs() {
                 cameraComp->m_Camera.setPosition(
                         transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
 
-//                PhysicsRayCastResult hit;
-//                if (m_PhysicsResource().characterRayCast(cameraComp->m_Camera.position,
-//                                                         cameraComp->m_Camera.getViewDirection(), component.first,
-//                                                         hit)) {
-//                    auto *e = new CharacterPickingEvent();
-//                    e->m_entityId = hit.m_entityId;
-//                    e->m_distance = hit.m_distance;
-//                    e->m_touchPoint = hit.m_touchPoint;
-//                    e->m_doActivate = m_doInteract;
-//                    m_EventManager->queueEvent(e);
-//                }
+                PhysicsRayCastResult hit;
+                if (component.second->rayCast(cameraComp->m_Camera.position,
+                                              cameraComp->m_Camera.getViewDirection() * 10.f, hit)) {
+                    auto *e = new CharacterPickingEvent();
+                    e->m_entityId = hit.m_entityId;
+                    e->m_distance = hit.m_distance;
+                    e->m_touchPoint = hit.m_touchPoint;
+                    e->m_doActivate = m_doInteract;
+                    m_EventManager->queueEvent(e);
+                }
             }
         }
     }
 
-//    m_doInteract = false;
+    m_doInteract = false;
 }
 
 void CharacterControllerSystem::processCCTInput(CameraComponent *camera, CharacterControllerComponent *cct,

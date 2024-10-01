@@ -112,6 +112,9 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
     m_physicsBody->SetFriction(m_friction.x);
     m_physicsBody->SetRestitution(m_restitution);
 
+    auto *userData = new PhysicsUserData(m_EntityId.id());
+    m_physicsBody->SetUserData(reinterpret_cast<unsigned long>(userData));
+
     m_PhysicsResource().getInterface().AddBody(m_physicsBody->GetID(), JPH::EActivation::Activate);
 }
 
@@ -180,5 +183,7 @@ bool PhysicsBodyComponent::isCreated() const {
 }
 
 void PhysicsBodyComponent::wakeUp() {
-    m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());
+    if (m_BodyType == BODY_TYPE_DYNAMIC) {
+        m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());
+    }
 }

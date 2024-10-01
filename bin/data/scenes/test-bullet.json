@@ -3,20 +3,20 @@
         "camera": {
             "isActive": true,
             "position": [
-                -5.386366367340088,
-                3.392719268798828,
-                -16.554994583129883
+                -9.232294082641602,
+                1.1837334632873535,
+                -14.857762336730957
             ],
             "type": "FREE",
             "upDirection": [
-                -0.02672201208770275,
-                0.9150111079216003,
-                0.4025428593158722
+                0.0018787411972880363,
+                0.9986226558685303,
+                0.05243508890271187
             ],
             "viewDirection": [
-                -0.06060782074928284,
-                -0.4034287929534912,
-                0.9130015969276428
+                0.03575756400823593,
+                -0.052468735724687576,
+                0.9979822635650635
             ]
         },
         "name": "camera-free"
@@ -60,15 +60,15 @@
     },
     {
         "light": {
-            "attenuation": 4.499958038330078,
+            "attenuation": 9.299959182739258,
             "castShadows": true,
             "color": [
                 0.9901960492134094,
                 0.9502227306365967,
                 0.6504228711128235
             ],
-            "intensity": 1.9000002145767212,
-            "isEnabled": false,
+            "intensity": 1.5000001192092896,
+            "isEnabled": true,
             "shadowBias": 2.9999999242136255e-05,
             "shadowResolution": 1024,
             "type": "OMNI"
@@ -87,22 +87,22 @@
                 1.0
             ],
             "translation": [
-                0.5871214866638184,
-                3.2897939682006836,
-                -8.676735877990723
+                2.9683737754821777,
+                5.04416561126709,
+                -7.23122501373291
             ]
         }
     },
     {
         "light": {
-            "attenuation": 20.0,
+            "attenuation": 21.300004959106445,
             "castShadows": false,
             "color": [
                 0.6176470518112183,
                 0.7750865817070007,
                 1.0
             ],
-            "intensity": 0.19999992847442627,
+            "intensity": 0.2999999225139618,
             "isEnabled": true,
             "type": "OMNI"
         },
@@ -120,8 +120,8 @@
                 1.0
             ],
             "translation": [
-                -5.438762187957764,
-                4.316547870635986,
+                0.7593792676925659,
+                7.45015287399292,
                 -3.348815679550171
             ]
         }
@@ -537,20 +537,20 @@
         "camera": {
             "isActive": false,
             "position": [
-                -5.131242275238037,
-                1.9716001749038696,
-                -11.72110366821289
+                -6.846668243408203,
+                1.7421599626541138,
+                -12.6394624710083
             ],
             "type": "FP",
             "upDirection": [
-                -0.004783660639077425,
-                0.9996139407157898,
-                0.02737036906182766
+                -0.34557902812957764,
+                0.93724125623703,
+                -0.04641129449009895
             ],
             "viewDirection": [
-                -0.17209891974925995,
-                -0.02778525836765766,
-                0.9846878051757813
+                -0.9289016723632813,
+                -0.34868162870407104,
+                -0.12475156784057617
             ]
         },
         "cct": {
@@ -576,19 +576,19 @@
                 1.0
             ],
             "translation": [
-                -4.935034275054932,
-                2.593580722808838,
-                -11.688255310058594
+                -8.201245307922363,
+                0.6113594770431519,
+                -12.64559268951416
             ]
         }
     },
     {
         "mesh": {
-            "material": "data/materials/light-column.json",
+            "material": "data/materials/solid-blue.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
-        "name": "stair-1",
+        "name": "stair-model-3",
         "physicsBody": {
             "friction": [
                 0.5,
@@ -608,199 +608,14 @@
                 1.0
             ],
             "scale": [
-                1.0,
+                1.3321698904037476,
                 0.20000000298023224,
-                3.0
+                1.7450933456420898
             ],
             "translation": [
-                -1.4065074920654297,
-                0.1000065878033638,
-                -11.299388885498047
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/light-column.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "stair-2",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5,
-            "shape": 0,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                0.20000000298023224,
-                3.0
-            ],
-            "translation": [
-                -0.6362689733505249,
-                0.30000001192092896,
-                -11.299388885498047
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/light-column.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "stair-3",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5,
-            "shape": 0,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                0.20000000298023224,
-                3.0
-            ],
-            "translation": [
-                0.09661698341369629,
-                0.5,
-                -11.299388885498047
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/light-column.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "stair-4",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5,
-            "shape": 0,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                0.20000000298023224,
-                3.0
-            ],
-            "translation": [
-                0.7792489528656006,
-                0.699999988079071,
-                -11.299388885498047
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/light-column.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "stair-5",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5,
-            "shape": 0,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                0.20000000298023224,
-                3.0
-            ],
-            "translation": [
-                1.5291259288787842,
-                0.8999999761581421,
-                -11.299388885498047
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/light-column.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "stair-6",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5,
-            "shape": 0,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                0.20000000298023224,
-                3.0
-            ],
-            "translation": [
-                2.267505645751953,
-                1.100000023841858,
-                -11.299388885498047
+                6.482570171356201,
+                2.018681049346924,
+                -7.605947494506836
             ]
         }
     },
@@ -873,7 +688,7 @@
             ],
             "translation": [
                 -8.214276313781738,
-                1.0463817119598389,
+                1.049242377281189,
                 -13.612393379211426
             ]
         }
@@ -890,7 +705,7 @@
                 0.5,
                 0.5
             ],
-            "mass": 20.0,
+            "mass": 100.0,
             "model": "data/models/door.gltf",
             "restitution": 0.5,
             "shape": 0,
@@ -899,7 +714,7 @@
         "physicsJoint": {
             "attachmentA": [
                 0.5,
-                0.0,
+                0.10000000149011612,
                 0.0
             ],
             "attachmentB": [
@@ -917,30 +732,437 @@
                 1.0,
                 0.0
             ],
-            "enableDrive": false,
             "enableLimits": true,
+            "enableLockingLimits": false,
             "limits": [
-                -1.5707963705062866,
+                0.0,
                 1.5707963705062866
             ],
             "targetEntity": "door-1-frame"
         },
         "transform": {
             "rotation": [
-                0.0006599760963581502,
-                9.355164365842938e-05,
+                0.0006599745829589665,
+                9.355163638247177e-05,
                 2.4558148652431555e-05,
                 0.9999997615814209
             ],
             "scale": [
                 0.9999999403953552,
-                0.9999869465827942,
+                0.9999464750289917,
                 0.9999982714653015
             ],
             "translation": [
-                -6.852670669555664,
-                -0.0006172868888825178,
-                -13.612441062927246
+                -8.216818809509277,
+                -0.027851685881614685,
+                -13.649200439453125
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "data/models/stair-5.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-model",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "data/models/stair-5.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.9999999403953552,
+                0.0,
+                0.0002736237656790763
+            ],
+            "scale": [
+                6.422647953033447,
+                2.1647439002990723,
+                14.2355375289917
+            ],
+            "translation": [
+                2.9336347579956055,
+                1.1570370197296143,
+                -6.961994647979736
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "data/models/stair-5.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-model-1",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "data/models/stair-5.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.9999999403953552,
+                0.0,
+                0.00027362379478290677
+            ],
+            "scale": [
+                6.422647476196289,
+                2.1647439002990723,
+                14.2355375289917
+            ],
+            "translation": [
+                -0.23978161811828613,
+                0.09956082701683044,
+                -6.961996555328369
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "data/models/stair-5.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-model-2",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "data/models/stair-5.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.7044541239738464,
+                0.0,
+                0.7097495794296265
+            ],
+            "scale": [
+                6.4226508140563965,
+                2.1647439002990723,
+                14.235574722290039
+            ],
+            "translation": [
+                5.733274936676025,
+                2.2131640911102295,
+                -6.594662666320801
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-blue.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-model-4",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.3321698904037476,
+                0.20000000298023224,
+                1.7450933456420898
+            ],
+            "translation": [
+                6.482570171356201,
+                4.205975532531738,
+                0.27293986082077026
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/light-column.json",
+            "model": "data/models/slope.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "slope-1",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "data/models/slope.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                6.420323848724365,
+                4.405958652496338,
+                1.0
+            ],
+            "translation": [
+                -6.649853706359863,
+                0.0,
+                -10.627395629882813
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "data/models/stair-5.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-model-5",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "data/models/stair-5.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.7044541239738464,
+                0.0,
+                0.7097495198249817
+            ],
+            "scale": [
+                6.4226508140563965,
+                2.1647439002990723,
+                14.235575675964355
+            ],
+            "translation": [
+                5.726588726043701,
+                3.2577900886535645,
+                -3.4046449661254883
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "data/models/stair-5.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-model-6",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "data/models/stair-5.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                -0.004501163959503174,
+                0.0,
+                0.9999898672103882
+            ],
+            "scale": [
+                6.42265510559082,
+                2.1647439002990723,
+                14.235577583312988
+            ],
+            "translation": [
+                5.544090270996094,
+                4.400288105010986,
+                -0.39775794744491577
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-blue.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-model-7",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.3321698904037476,
+                0.20000000298023224,
+                1.7450933456420898
+            ],
+            "translation": [
+                2.0224432945251465,
+                5.3239312171936035,
+                0.27293986082077026
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "data/models/stair-5.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-model-8",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "data/models/stair-5.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.7156206965446472,
+                0.0,
+                -0.6984891295433044
+            ],
+            "scale": [
+                6.422658443450928,
+                2.1647439002990723,
+                14.235584259033203
+            ],
+            "translation": [
+                2.7740838527679443,
+                5.494771957397461,
+                -0.839381754398346
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-blue.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stair-model-9",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.3321698904037476,
+                0.20000000298023224,
+                1.7450933456420898
+            ],
+            "translation": [
+                2.1632659435272217,
+                6.545494556427002,
+                -4.585099697113037
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-green.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-11",
+        "physicsBody": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                2.2576675415039063,
+                7.357822418212891,
+                -4.507418155670166
             ]
         }
     }
