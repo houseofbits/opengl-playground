@@ -33,8 +33,6 @@ void JointsProcessingSystem::process() {
             body.second->create(*bodyA, *bodyB);
         } else {
             body.second->update();
-//            body.second->m_pxJoint->setDriveVelocity(-10.0f);
-//            std::cout<<glm::degrees(body.second->m_pxJoint->getAngle())<<std::endl;
         }
     }
 }

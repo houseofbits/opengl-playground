@@ -63,15 +63,15 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Resources/ShaderProgramResource.cpp
         src/Modules/Renderer/Resources/ShaderProgramResource.h
         src/Core/Helper/StringUtils.cpp
-        src/Modules/EditorUI/EditorUIModule.h
-        src/Modules/EditorUI/Systems/EditorUISystem.cpp
-        src/Modules/EditorUI/Systems/EditorUISystem.h
+        src/Modules/Editor/EditorUIModule.h
+        src/Modules/Editor/Systems/EditorUISystem.cpp
+        src/Modules/Editor/Systems/EditorUISystem.h
         src/Core/Events/Event.cpp
         src/Core/Events/EntityCreationEvent.h
-        src/Modules/EditorUI/UI/MainToolbarUI.cpp
-        src/Modules/EditorUI/UI/MainToolbarUI.h
-        src/Modules/EditorUI/UI/EditWindowUI.cpp
-        src/Modules/EditorUI/UI/EditWindowUI.h
+        src/Modules/Editor/UI/MainToolbarUI.cpp
+        src/Modules/Editor/UI/MainToolbarUI.h
+        src/Modules/Editor/UI/EditWindowUI.cpp
+        src/Modules/Editor/UI/EditWindowUI.h
         src/Modules/Renderer/Resources/MaterialResource.cpp
         src/Modules/Renderer/Resources/MaterialResource.h
         src/Modules/Renderer/Buffers/EnvironmentProbeStorageBuffer.cpp
@@ -88,15 +88,15 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Systems/ShadowMapRenderSystem.h
         src/Modules/Renderer/Resources/ShadowMapResource.cpp
         src/Modules/Renderer/Resources/ShadowMapResource.h
-        src/Modules/EditorUI/UI/FileDialogHelper.h
-        src/Modules/EditorUI/UI/MaterialEditWindowUI.cpp
-        src/Modules/EditorUI/UI/MaterialEditWindowUI.h
-        src/Modules/EditorUI/UI/TexturePreviewHelper.h
-        src/Modules/EditorUI/UI/TextPromptHelper.h
+        src/Modules/Editor/UI/FileDialogHelper.h
+        src/Modules/Editor/UI/MaterialEditWindowUI.cpp
+        src/Modules/Editor/UI/MaterialEditWindowUI.h
+        src/Modules/Editor/UI/TexturePreviewHelper.h
+        src/Modules/Editor/UI/TextPromptHelper.h
         src/Modules/Physics/Systems/PhysicsSystem.cpp
         src/Modules/Physics/Systems/PhysicsSystem.h
-        src/Modules/EditorUI/UI/ComponentEdit/BaseComponentEdit.h
-        src/Modules/EditorUI/UI/ComponentEdit/TransformComponentEdit.h
+        src/Modules/Editor/UI/ComponentEdit/BaseComponentEdit.h
+        src/Modules/Editor/UI/ComponentEdit/TransformComponentEdit.h
         src/Modules/Physics/Components/CharacterControllerComponent.cpp
         src/Modules/Physics/Components/CharacterControllerComponent.h
         src/Core/Helper/Types.h
@@ -125,6 +125,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/ContactListenerImpl.h
         src/Modules/Physics/Helpers/DebugRendererImpl.cpp
         src/Modules/Physics/Helpers/DebugRendererImpl.h
+        src/Modules/Behaviour/Components/EntityBehaviourComponent.cpp
+        src/Modules/Behaviour/Components/EntityBehaviourComponent.h
+        src/Modules/Behaviour/Systems/CameraMouseLookBehaviourSystem.cpp
+        src/Modules/Behaviour/Systems/CameraMouseLookBehaviourSystem.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

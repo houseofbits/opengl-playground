@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../Core/API.h"
-#include "../../Modules/EditorUI/Events/EditorUIEvent.h"
+#include "../../Modules/Editor/Events/EditorUIEvent.h"
 #include "../../Window.h"
 
 class MainApplication : public Application {

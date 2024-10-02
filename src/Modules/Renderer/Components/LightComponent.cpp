@@ -1,5 +1,5 @@
 #include "LightComponent.h"
-#include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../../Editor/Systems/EditorUISystem.h"
 #include "../Systems/MainRenderSystem.h"
 #include "../Systems/ShadowMapRenderSystem.h"
 #include "../Systems/StorageBufferUpdateSystem.h"

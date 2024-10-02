@@ -1,5 +1,5 @@
 #include "SkyComponent.h"
-#include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../../Editor/Systems/EditorUISystem.h"
 #include "../Systems/EnvironmentProbeRenderSystem.h"
 #include "../Systems/MainRenderSystem.h"
 

@@ -1,5 +1,5 @@
 #include "PhysicsBodyComponent.h"
-#include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../../Editor/Systems/EditorUISystem.h"
 #include "../Helpers/PhysicsTypeCast.h"
 #include "../Systems/PhysicsBodyProcessingSystem.h"
 #include "Jolt/Physics/Collision/Shape/MeshShape.h"

@@ -3,7 +3,7 @@
 #include "../../../Core/API.h"
 #include "../../../Renderer/Camera/Camera.h"
 #include "../../Common/Components/TransformComponent.h"
-#include "../../EditorUI/Events/EditorUIEvent.h"
+#include "../../Editor/Events/EditorUIEvent.h"
 #include "../Resources/EnvironmentProbesBufferResource.h"
 #include "../Resources/EnvironmentProbesCubeMapArrayResource.h"
 #include "../Resources/LightsBufferResource.h"

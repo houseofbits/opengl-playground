@@ -159,23 +159,9 @@ void CharacterControllerSystem::processCCTInput(CameraComponent *camera, Charact
     }
 
     glm::vec3 position = camera->m_Camera.getPosition();
-    auto tbn = camera->calculateTBN(camera->m_Camera.getViewDirection());
     if (camera->m_isActive && event->type == InputEvent::MOUSEMOVE && event->mouseButtonLeft) {
-        float moveSpeed = 4;
         float lookSpeed = 0.15;
-
-        glm::vec3 rightHorizontal = glm::normalize(glm::cross(tbn.view, glm::vec3(0, 1, 0)));
-        glm::vec3 upVertical = glm::normalize(glm::cross(tbn.view, rightHorizontal));
-
-        float rate = lookSpeed * Time::frameTime * -event->mouseMotion.x;
-        glm::vec3 viewChange = rightHorizontal * rate;
-        tbn = camera->calculateTBN(tbn.view + viewChange);
-
-        rate = lookSpeed * Time::frameTime * -event->mouseMotion.y;
-        viewChange = upVertical * rate;
-        tbn = camera->calculateTBN(tbn.view + viewChange);
-
-        camera->m_Camera.setView(tbn.view, tbn.up);
+        camera->rotateView(-event->mouseMotion * lookSpeed * Time::frameTime);
     }
 
     if (event->type == InputEvent::MOUSEDOWN && event->mouseButtonRight) {

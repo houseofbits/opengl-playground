@@ -1,5 +1,5 @@
 #include "CharacterControllerComponent.h"
-#include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../../Editor/Systems/EditorUISystem.h"
 #include "../Systems/CharacterControllerSystem.h"
 #include "../Helpers/PhysicsTypeCast.h"
 #include "Jolt/Physics/Collision/Shape/CapsuleShape.h"

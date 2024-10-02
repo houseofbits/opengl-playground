@@ -1,6 +1,6 @@
 #include "PhysicsJointComponent.h"
 
-#include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../../Editor/Systems/EditorUISystem.h"
 #include "../Systems/JointsProcessingSystem.h"
 #include <utility>
 #include "../Helpers/PhysicsTypeCast.h"

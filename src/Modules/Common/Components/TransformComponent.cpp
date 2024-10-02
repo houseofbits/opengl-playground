@@ -1,6 +1,6 @@
 #include "TransformComponent.h"
 #include "../../../Core/Helper/Types.h"
-#include "../../EditorUI/Systems/EditorUISystem.h"
+#include "../../Editor/Systems/EditorUISystem.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
 #include "../../Physics/Systems/CharacterControllerSystem.h"
 #include "../../Physics/Systems/PhysicsBodyProcessingSystem.h"

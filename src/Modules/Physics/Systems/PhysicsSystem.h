@@ -2,7 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../../Common/Components/CameraComponent.h"
-#include "../../EditorUI/Events/EditorUIEvent.h"
+#include "../../Editor/Events/EditorUIEvent.h"
 #include "../Components/CharacterControllerComponent.h"
 #include "../Resources/PhysicsResource.h"
 #include "../Helpers/DebugRendererImpl.h"

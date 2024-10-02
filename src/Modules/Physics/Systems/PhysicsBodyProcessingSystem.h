@@ -1,6 +1,6 @@
 #pragma once
 #include "../../../Core/API.h"
-#include "../../EditorUI/Events/EditorUIEvent.h"
+#include "../../Editor/Events/EditorUIEvent.h"
 #include "../Resources/PhysicsResource.h"
 
 class PhysicsBodyProcessingSystem : public EntitySystem {

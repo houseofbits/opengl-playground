@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../../EditorUI/Events/EditorUIEvent.h"
+#include "../../Editor/Events/EditorUIEvent.h"
 #include "../Components/CameraComponent.h"
 
 class CameraControlSystem : public EntitySystem {

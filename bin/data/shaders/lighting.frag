@@ -134,7 +134,7 @@ void main()
         return;
     }
 
-    vec3 normal = gsNormal;
+    vec3 normal = normalize(gsNormal);
     if (hasNormalSampler == 1) {
         normal = texture(normalSampler, gsTexcoord).xyz;
         normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
