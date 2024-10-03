@@ -129,6 +129,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Behaviour/Components/EntityBehaviourComponent.h
         src/Modules/Behaviour/Systems/CameraMouseLookBehaviourSystem.cpp
         src/Modules/Behaviour/Systems/CameraMouseLookBehaviourSystem.h
+        src/Modules/Behaviour/Systems/CameraMovementBehaviourSystem.cpp
+        src/Modules/Behaviour/Systems/CameraMovementBehaviourSystem.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

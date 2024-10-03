@@ -1,5 +1,7 @@
 #include "EntityBehaviourComponent.h"
 #include "../../Editor/Systems/EditorUISystem.h"
+#include "../Systems/CameraMouseLookBehaviourSystem.h"
+#include "../Systems/CameraMovementBehaviourSystem.h"
 
 EntityBehaviourComponent::EntityBehaviourComponent() : Component(), m_behaviours() {
 
@@ -24,16 +26,18 @@ void EntityBehaviourComponent::deserialize(const nlohmann::json &j, ResourceMana
 
 void EntityBehaviourComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+    ctx.registerComponentWithEntitySystem<CameraMouseLookBehaviourSystem>(this);
+    ctx.registerComponentWithEntitySystem<CameraMovementBehaviourSystem>(this);
 }
 
 void EntityBehaviourComponent::addBehaviour(EntityBehaviourComponent::BehaviourType type) {
-    if (!doesBehaviourExist(type)) {
+    if (!hasBehaviour(type)) {
         m_behaviours.emplace_back(true, type);
     }
 }
 
 void EntityBehaviourComponent::addBehaviour(bool isEnabled, EntityBehaviourComponent::BehaviourType type) {
-    if (!doesBehaviourExist(type)) {
+    if (!hasBehaviour(type)) {
         m_behaviours.emplace_back(isEnabled, type);
     }
 }
@@ -44,10 +48,19 @@ void EntityBehaviourComponent::removeBehaviour(EntityBehaviourComponent::Behavio
     });
 }
 
-bool EntityBehaviourComponent::doesBehaviourExist(EntityBehaviourComponent::BehaviourType type) {
+bool EntityBehaviourComponent::hasBehaviour(BehaviourType type) {
     auto result = std::find_if(m_behaviours.begin(), m_behaviours.end(),
                                [&type](std::pair<bool, BehaviourType> &value) {
                                    return value.second == type;
+                               });
+
+    return result != m_behaviours.end();
+}
+
+bool EntityBehaviourComponent::hasActiveBehaviour(EntityBehaviourComponent::BehaviourType type) {
+    auto result = std::find_if(m_behaviours.begin(), m_behaviours.end(),
+                               [&type](std::pair<bool, BehaviourType> &value) {
+                                   return value.second == type && value.first;
                                });
 
     return result != m_behaviours.end();

@@ -18,7 +18,7 @@ void JointsProcessingSystem::process() {
         return;
     }
 
-    for (const auto body: getComponentContainer<PhysicsJointComponent>()) {
+    for (const auto& body: getComponentContainer<PhysicsJointComponent>()) {
         if (!body.second->isCreated()) {
             auto *bodyA = m_EntityContext->getEntityComponent<PhysicsBodyComponent>(body.first);
             if (bodyA == nullptr) {

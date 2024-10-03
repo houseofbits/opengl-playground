@@ -158,12 +158,6 @@ void CharacterControllerSystem::processCCTInput(CameraComponent *camera, Charact
         m_jumpPower = 30;
     }
 
-    glm::vec3 position = camera->m_Camera.getPosition();
-    if (camera->m_isActive && event->type == InputEvent::MOUSEMOVE && event->mouseButtonLeft) {
-        float lookSpeed = 0.15;
-        camera->rotateView(-event->mouseMotion * lookSpeed * Time::frameTime);
-    }
-
     if (event->type == InputEvent::MOUSEDOWN && event->mouseButtonRight) {
         m_doInteract = true;
     }

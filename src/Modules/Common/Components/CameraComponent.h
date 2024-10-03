@@ -37,9 +37,9 @@ public:
     bool m_isActive;
     Type m_type;
 
-private:
-
     TBN calculateTBN(glm::vec3 viewDirection);
+
+private:
 
     Type getTypeFromName(const std::string &name);
 };
