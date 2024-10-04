@@ -3,6 +3,12 @@
 
 History
 
+-   Jolt physics integration. Rigid bodies, joints, custom character controller, doors, stairs. Editor improvements. Windows & Linux build.
+
+    <p float="left">
+      <img src="./docs/images/upd5/jolt-physics.png" width="500" />
+    </p>
+
 -   ECS System, ImGUI editor, bindless textures and serialization/deserialization.
 
     <p float="left">
