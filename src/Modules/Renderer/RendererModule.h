@@ -11,6 +11,7 @@
 #include "Systems/MainRenderSystem.h"
 #include "Systems/ShadowMapRenderSystem.h"
 #include "Systems/StorageBufferUpdateSystem.h"
+#include "Systems/OverlayRenderSystem.h"
 
 class RendererModule : public EntityModule {
 public:
@@ -23,8 +24,9 @@ public:
 
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<StorageBufferUpdateSystem>(1);
-        ctx.registerEntitySystem<ShadowMapRenderSystem>(6); //2
+        ctx.registerEntitySystem<ShadowMapRenderSystem>(2);
         ctx.registerEntitySystem<EnvironmentProbeRenderSystem>(3);
         ctx.registerEntitySystem<MainRenderSystem>(5);
+        ctx.registerEntitySystem<OverlayRenderSystem>(10);
     };
 };

@@ -1,7 +1,7 @@
 #include "EntityBehaviourComponent.h"
 #include "../../Editor/Systems/EditorUISystem.h"
-#include "../Systems/CameraMouseLookBehaviourSystem.h"
-#include "../Systems/CameraMovementBehaviourSystem.h"
+#include "../Systems/CameraInputBehaviourSystem.h"
+#include "../Systems/CharacterInputBehaviourSystem.h"
 
 EntityBehaviourComponent::EntityBehaviourComponent() : Component(), m_behaviours() {
 
@@ -26,8 +26,8 @@ void EntityBehaviourComponent::deserialize(const nlohmann::json &j, ResourceMana
 
 void EntityBehaviourComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<CameraMouseLookBehaviourSystem>(this);
-    ctx.registerComponentWithEntitySystem<CameraMovementBehaviourSystem>(this);
+    ctx.registerComponentWithEntitySystem<CameraInputBehaviourSystem>(this);
+    ctx.registerComponentWithEntitySystem<CharacterInputBehaviourSystem>(this);
 }
 
 void EntityBehaviourComponent::addBehaviour(EntityBehaviourComponent::BehaviourType type) {

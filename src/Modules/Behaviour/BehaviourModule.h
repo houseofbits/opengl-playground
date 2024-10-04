@@ -2,8 +2,8 @@
 
 #include "../../Core/API.h"
 #include "Components/EntityBehaviourComponent.h"
-#include "Systems/CameraMouseLookBehaviourSystem.h"
-#include "Systems/CameraMovementBehaviourSystem.h"
+#include "Systems/CameraInputBehaviourSystem.h"
+#include "Systems/CharacterInputBehaviourSystem.h"
 
 class BehaviourModule : public EntityModule {
 public:
@@ -12,7 +12,7 @@ public:
     };
 
     void registerSystems(EntityContext &ctx) override {
-        ctx.registerEntitySystem<CameraMouseLookBehaviourSystem>();
-        ctx.registerEntitySystem<CameraMovementBehaviourSystem>();
+        ctx.registerEntitySystem<CameraInputBehaviourSystem>();
+        ctx.registerEntitySystem<CharacterInputBehaviourSystem>();
     };
 };

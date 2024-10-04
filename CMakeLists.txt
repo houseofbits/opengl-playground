@@ -110,7 +110,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Systems/CharacterControllerSystem.h
         src/Modules/Physics/Helpers/PhysicsUserData.h
         src/Modules/Physics/Helpers/PhysicsRayCastResult.h
-        src/Modules/Physics/Events/CharacterPickingEvent.h
+        src/Modules/Physics/Events/PhysicsPickingEvent.h
         src/Modules/Physics/Components/PhysicsBodyComponent.cpp
         src/Modules/Physics/Components/PhysicsBodyComponent.h
         src/Modules/Physics/Components/PhysicsJointComponent.cpp
@@ -127,10 +127,14 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/DebugRendererImpl.h
         src/Modules/Behaviour/Components/EntityBehaviourComponent.cpp
         src/Modules/Behaviour/Components/EntityBehaviourComponent.h
-        src/Modules/Behaviour/Systems/CameraMouseLookBehaviourSystem.cpp
-        src/Modules/Behaviour/Systems/CameraMouseLookBehaviourSystem.h
-        src/Modules/Behaviour/Systems/CameraMovementBehaviourSystem.cpp
-        src/Modules/Behaviour/Systems/CameraMovementBehaviourSystem.h
+        src/Modules/Behaviour/Systems/CameraInputBehaviourSystem.cpp
+        src/Modules/Behaviour/Systems/CameraInputBehaviourSystem.h
+        src/Modules/Renderer/Systems/OverlayRenderSystem.cpp
+        src/Modules/Renderer/Systems/OverlayRenderSystem.h
+        src/Modules/Behaviour/Systems/CharacterInputBehaviourSystem.cpp
+        src/Modules/Behaviour/Systems/CharacterInputBehaviourSystem.h
+        src/Modules/Common/Behaviours/CameraMouseLookBehaviour.cpp
+        src/Modules/Common/Behaviours/CameraMouseLookBehaviour.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
@@ -152,15 +156,15 @@ IF (WIN32)
     include_directories(${GLEW_INCLUDE_DIRS})
     target_link_libraries(SDLWindow ${GLEW_LIBRARIES})
 
-#    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
-#    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
-#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics_Debug.a)
-#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision_Debug.a)
-#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath_Debug.a)
+    #    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
+    #    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
+    #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics_Debug.a)
+    #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision_Debug.a)
+    #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath_Debug.a)
 
 ELSE ()
-#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -frtti")
-#    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -frtti")
+    #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -frtti")
+    #    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -frtti")
 
     target_link_libraries(SDLWindow GL)
 

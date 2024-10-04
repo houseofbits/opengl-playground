@@ -3,7 +3,7 @@
 #include "../../../Core/Helper/StringUtils.h"
 #include "../../../Core/Helper/Time.h"
 #include "../../../Core/Helper/Types.h"
-#include "../Events/CharacterPickingEvent.h"
+#include "../Events/PhysicsPickingEvent.h"
 #include "../Helpers/PhysicsTypeCast.h"
 
 //using namespace physx;
@@ -110,7 +110,7 @@ void CharacterControllerSystem::updateCCTs() {
                 PhysicsRayCastResult hit;
                 if (component.second->rayCast(cameraComp->m_Camera.position,
                                               cameraComp->m_Camera.getViewDirection() * 10.f, hit)) {
-                    auto *e = new CharacterPickingEvent();
+                    auto *e = new PhysicsPickingEvent();
                     e->m_entityId = hit.m_entityId;
                     e->m_distance = hit.m_distance;
                     e->m_touchPoint = hit.m_touchPoint;

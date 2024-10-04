@@ -11,6 +11,7 @@ in vec2 vsTexcoord[];
 
 out vec3 gsNormal;
 out vec4 gsPosition;
+out vec3 gsScreenPosition;
 out vec2 gsTexcoord;
 out mat3 gsInvTBN;
 
@@ -37,6 +38,7 @@ void main()
         gsTexcoord = vsTexcoord[i];
         gsPosition = vsPosition[i];
         gl_Position = viewProjectionMatrix * vsPosition[i];
+        gsScreenPosition = (gl_Position.xyz / gl_Position.w) * 0.5 + 0.5;;
 
         EmitVertex();
     }

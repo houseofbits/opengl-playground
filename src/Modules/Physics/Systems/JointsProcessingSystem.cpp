@@ -37,7 +37,7 @@ void JointsProcessingSystem::process() {
     }
 }
 
-bool JointsProcessingSystem::handleCharacterPickingEvent(CharacterPickingEvent *event) {
+bool JointsProcessingSystem::handleCharacterPickingEvent(PhysicsPickingEvent *event) {
     auto *hinge = getComponent<PhysicsJointComponent>(event->m_entityId);
     if (hinge != nullptr && event->m_doActivate) {
         hinge->activate();

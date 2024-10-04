@@ -42,6 +42,7 @@ layout(bindless_sampler) uniform samplerCube environmentSampler;
 
 in vec3 gsNormal;
 in vec4 gsPosition;
+in vec3 gsScreenPosition;
 in vec2 gsTexcoord;
 in mat3 gsInvTBN;
 
@@ -207,4 +208,9 @@ void main()
     }
 
     fragColor = vec4(mix(lightColor, diffuse, selfIllumination), 1.0);
+
+//    if (gl_FragCoord.y > 0.49 && gl_FragCoord.y < 0.51) {
+//        fragColor = gl_FragCoord;
+//    }
+
 }
