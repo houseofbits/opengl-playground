@@ -133,6 +133,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Behaviours/CharacterControlBehaviour.h
         src/Modules/Common/Behaviours/CameraViewportBehaviour.cpp
         src/Modules/Common/Behaviours/CameraViewportBehaviour.h
+        src/Modules/Physics/Behaviours/CharacterMouseLookBehaviour.cpp
+        src/Modules/Physics/Behaviours/CharacterMouseLookBehaviour.h
+        src/Modules/Physics/Behaviours/CharacterPickingBehaviour.cpp
+        src/Modules/Physics/Behaviours/CharacterPickingBehaviour.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

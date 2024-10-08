@@ -18,7 +18,10 @@ CharacterControllerComponent::CharacterControllerComponent() : Component(),
                                                                m_PhysicsResource(),
                                                                m_groundSpringForce(100000.f),
                                                                m_groundSpringDamping(2000.f),
-                                                               m_freeFallForce(50000.f) {
+                                                               m_freeFallForce(50000.f),
+                                                               m_lookingDirection(0,0,1),
+                                                               m_movementDirection(0),
+                                                               m_doMove(false) {
 }
 
 void CharacterControllerComponent::serialize(nlohmann::json &j) {
@@ -90,6 +93,8 @@ void CharacterControllerComponent::update(TransformComponent &transform, bool is
         updateGroundSpring(transform.getTranslation());
 
         transform.setTranslation(glm::vec3(0, -m_stepTolerance, 0));
+
+        updateMove();
     } else {
         m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBody->GetID(),
                                                                   PhysicsTypeCast::glmToJPH(transform.getTranslation() +
@@ -102,20 +107,8 @@ void CharacterControllerComponent::update(TransformComponent &transform, bool is
 }
 
 void CharacterControllerComponent::move(glm::vec3 direction) {
-    float speed = 10.0f;
-
-    JPH::Vec3 movementDirection = PhysicsTypeCast::glmToJPH(direction);
-
-    JPH::Vec3 currentVelocity = m_physicsBody->GetLinearVelocity();
-    JPH::Vec3 desiredVelocity = speed * movementDirection;
-    if (!desiredVelocity.IsNearZero() || currentVelocity.GetY() < 0.0f) {
-        desiredVelocity.SetY(currentVelocity.GetY());
-    }
-
-    JPH::Vec3 newVelocity = 0.75f * currentVelocity + 0.25f * desiredVelocity;
-
-    m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());
-    m_physicsBody->SetLinearVelocity(newVelocity);
+    m_movementDirection = direction;
+    m_doMove = true;
 }
 
 void CharacterControllerComponent::updateGroundSpring(const glm::vec3 &kneePosition) {
@@ -220,4 +213,27 @@ glm::vec3 CharacterControllerComponent::getVelocity() const {
 
 void CharacterControllerComponent::setLookingDirection(glm::vec3 &direction) {
     m_lookingDirection = direction;
+}
+
+void CharacterControllerComponent::updateMove() {
+    if (!m_doMove) {
+        return;
+    }
+
+    float speed = 10.0f;
+
+    JPH::Vec3 movementDirection = PhysicsTypeCast::glmToJPH(m_movementDirection);
+
+    JPH::Vec3 currentVelocity = m_physicsBody->GetLinearVelocity();
+    JPH::Vec3 desiredVelocity = speed * movementDirection;
+    if (!desiredVelocity.IsNearZero() || currentVelocity.GetY() < 0.0f) {
+        desiredVelocity.SetY(currentVelocity.GetY());
+    }
+
+    JPH::Vec3 newVelocity = 0.75f * currentVelocity + 0.25f * desiredVelocity;
+
+    m_physicsBody->SetLinearVelocity(newVelocity);
+    m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());
+
+    m_doMove = false;
 }

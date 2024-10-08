@@ -1,5 +1,6 @@
 #include "CharacterControlBehaviour.h"
 #include "../../Common/Components/CameraComponent.h"
+#include "../Components/CharacterControllerComponent.h"
 
 CharacterControlBehaviour::CharacterControlBehaviour() : EntityBehaviour() {
 
@@ -14,10 +15,19 @@ void CharacterControlBehaviour::registerEventHandlers(EventManager &eventManager
 }
 
 std::string CharacterControlBehaviour::getDescription() {
-    return EntityBehaviour::getDescription();
+    return "Controls movement of the character (WASD)";
 }
 
 void CharacterControlBehaviour::handleInputEvent(const InputEvent *const event) {
+    if (event->type != InputEvent::KEYPRESS) {
+        return;
+    }
+
+    auto* characterComponent = m_Entity->getComponent<CharacterControllerComponent>();
+    if (characterComponent == nullptr) {
+        return;
+    }
+
     auto *cameraComponent = m_Entity->getComponent<CameraComponent>();
     if (cameraComponent == nullptr || !cameraComponent->m_isActive) {
         return;
@@ -31,22 +41,22 @@ void CharacterControlBehaviour::handleInputEvent(const InputEvent *const event) 
     glm::vec3 movementDirection(0, 0, 0);
 
     //W
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 26) {
+    if (event->keyCode == 26) {
         doMove = true;
         movementDirection = movementDirection + forwardDirection;
     }
     //S
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 22) {
+    if (event->keyCode == 22) {
         doMove = true;
         movementDirection = movementDirection - forwardDirection;
     }
     //A
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 4) {
+    if (event->keyCode == 4) {
         doMove = true;
         movementDirection = movementDirection - rightDirection;
     }
     //D
-    if (event->type == InputEvent::KEYPRESS && event->keyCode == 7) {
+    if (event->keyCode == 7) {
         doMove = true;
         movementDirection = movementDirection + rightDirection;
     }
@@ -55,11 +65,7 @@ void CharacterControlBehaviour::handleInputEvent(const InputEvent *const event) 
 //        doMove = true;
 //    }
 
-    if (event->type == InputEvent::MOUSEDOWN && event->mouseButtonRight) {
-//        m_doInteract = true;
-    }
-
     if (doMove) {
-        movementDirection = glm::normalize(movementDirection);
+        characterComponent->move(glm::normalize(movementDirection));
     }
 }
