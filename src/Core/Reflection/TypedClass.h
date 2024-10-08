@@ -3,6 +3,7 @@
 
 class BaseClass {
 public:
+    virtual ~BaseClass() = default;
     virtual std::string getTypeName() { return "BaseClass"; }
     virtual unsigned int getTypeId() { return 0; }
     static std::string TypeName() { return "BaseClass"; }

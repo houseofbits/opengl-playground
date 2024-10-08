@@ -14,6 +14,8 @@ public:
 
     std::string getDescription() override;
 
+    void handleInputEvent(const InputEvent *);
+
     std::string getDisplayName() override {
         return "Character picking";
     }
