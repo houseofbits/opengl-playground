@@ -15,6 +15,6 @@ public:
     std::string getDescription() override;
 
     std::string getDisplayName() override {
-        return "Character controller";
+        return "Character picking";
     }
 };

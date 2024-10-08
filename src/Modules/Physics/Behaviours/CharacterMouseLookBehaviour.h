@@ -17,6 +17,6 @@ public:
     void handleInputEvent(const InputEvent *);
 
     std::string getDisplayName() override {
-        return "Character controller";
+        return "Character mouse-look";
     }
 };
