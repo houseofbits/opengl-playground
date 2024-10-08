@@ -17,14 +17,21 @@ class EditorUISystem : public EntitySystem {
 public:
     EditorUISystem();
 
-    void process() override;
-    void initialize(ResourceManager *) override;
-    void registerEventHandlers(EventManager *eventManager) override;
-    bool handleWindowEvent(WindowEvent *event);
-    bool handleRawSDLEvent(RawSDLEvent *event);
+    void process(EventManager &) override;
+
+    void initialize(ResourceManager &) override;
+
+    void registerEventHandlers(EventManager &) override;
+
+    void handleWindowEvent(const WindowEvent *);
+
+    void handleRawSDLEvent(const RawSDLEvent *);
+
     Camera *findActiveCamera();
+
     TransformComponent *getSelectedTransformComponent();
-    void openMaterialEditor(ResourceHandle<MaterialResource>& handle);
+
+    void openMaterialEditor(ResourceHandle<MaterialResource> &handle);
 
     ResourceManager *m_ResourceManager;
     bool m_isImUIInitialized;

@@ -2,7 +2,6 @@
 
 #include "../../Core/API.h"
 #include "../Common/Components/CameraComponent.h"
-#include "../Common/Systems/CameraControlSystem.h"
 #include "Components/EnvironmentProbeComponent.h"
 #include "Components/LightComponent.h"
 #include "Components/SkyComponent.h"

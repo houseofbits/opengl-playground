@@ -7,11 +7,11 @@ PhysicsSystem::PhysicsSystem() : EntitySystem(),
                                  m_PhysicsResource() {
 }
 
-void PhysicsSystem::initialize(ResourceManager *resourceManager) {
-    resourceManager->request(m_PhysicsResource, "physics");
+void PhysicsSystem::initialize(ResourceManager &resourceManager) {
+    resourceManager.request(m_PhysicsResource, "physics");
 }
 
-void PhysicsSystem::process() {
+void PhysicsSystem::process(EventManager &eventManager) {
     if (!m_PhysicsResource.isReady()) {
         return;
     }
@@ -22,11 +22,11 @@ void PhysicsSystem::process() {
     }
 }
 
-void PhysicsSystem::registerEventHandlers(EventManager *eventManager) {
-    eventManager->registerEventReceiver(this, &PhysicsSystem::handleEditorUIEvent);
+void PhysicsSystem::registerEventHandlers(EventManager &eventManager) {
+    eventManager.registerEventReceiver(this, &PhysicsSystem::handleEditorUIEvent);
 }
 
-bool PhysicsSystem::handleEditorUIEvent(EditorUIEvent *event) {
+void PhysicsSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
     if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
         m_isSimulationDisabled = false;
     } else if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
@@ -34,6 +34,4 @@ bool PhysicsSystem::handleEditorUIEvent(EditorUIEvent *event) {
     } else if (event->m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
         m_isSimulationDisabled = true;
     }
-
-    return true;
 }

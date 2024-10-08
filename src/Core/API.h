@@ -13,4 +13,5 @@
 #include "Reflection/TypedClass.h"
 #include "Resources/ResourceHandle.h"
 #include "Resources/ResourceManager.h"
+#include "Behaviour/EntityBehaviour.h"
 #include "Json/Json.h"

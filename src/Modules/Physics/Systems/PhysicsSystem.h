@@ -11,10 +11,13 @@ class PhysicsSystem : public EntitySystem {
 public:
     PhysicsSystem();
 
-    void initialize(ResourceManager *) override;
-    void process() override;
-    void registerEventHandlers(EventManager *eventManager) override;
-    bool handleEditorUIEvent(EditorUIEvent *event);
+    void initialize(ResourceManager &) override;
+
+    void process(EventManager &) override;
+
+    void registerEventHandlers(EventManager &) override;
+
+    void handleEditorUIEvent(const EditorUIEvent *);
 
 private:
     ResourceHandle<PhysicsResource> m_PhysicsResource;

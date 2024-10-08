@@ -6,10 +6,6 @@
 #include "../Events/PhysicsPickingEvent.h"
 #include "../Helpers/PhysicsTypeCast.h"
 
-//using namespace physx;
-
-//static physx::PxControllerFilters filters;
-
 CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
                                                          m_isSimulationDisabled(false),
                                                          m_movementDirection(),
@@ -24,11 +20,11 @@ CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
     usesComponent<CharacterControllerComponent>();
 }
 
-void CharacterControllerSystem::initialize(ResourceManager *resourceManager) {
-    resourceManager->request(m_PhysicsResource, "physics");
+void CharacterControllerSystem::initialize(ResourceManager &resourceManager) {
+    resourceManager.request(m_PhysicsResource, "physics");
 }
 
-void CharacterControllerSystem::process() {
+void CharacterControllerSystem::process(EventManager &eventManager) {
     if (!m_PhysicsResource.isReady()) {
         return;
     }
@@ -36,12 +32,12 @@ void CharacterControllerSystem::process() {
     updateCCTs();
 }
 
-void CharacterControllerSystem::registerEventHandlers(EventManager *eventManager) {
-    eventManager->registerEventReceiver(this, &CharacterControllerSystem::handleEditorUIEvent);
-    eventManager->registerEventReceiver(this, &CharacterControllerSystem::handleInputEvent);
+void CharacterControllerSystem::registerEventHandlers(EventManager &eventManager) {
+    eventManager.registerEventReceiver(this, &CharacterControllerSystem::handleEditorUIEvent);
+    eventManager.registerEventReceiver(this, &CharacterControllerSystem::handleInputEvent);
 }
 
-bool CharacterControllerSystem::handleEditorUIEvent(EditorUIEvent *event) {
+void CharacterControllerSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
     if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
         m_isSimulationDisabled = false;
     } else if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
@@ -50,19 +46,15 @@ bool CharacterControllerSystem::handleEditorUIEvent(EditorUIEvent *event) {
         resetToInitialTransform();
         m_isSimulationDisabled = true;
     }
-
-    return true;
 }
 
-bool CharacterControllerSystem::handleInputEvent(InputEvent *event) {
+void CharacterControllerSystem::handleInputEvent(const InputEvent *const event) {
     for (const auto comp: getComponentContainer<CharacterControllerComponent>()) {
         auto *cameraComp = getComponent<CameraComponent>(comp.first);
 //        if (cameraComp && cameraComp->m_isActive) {
         processCCTInput(cameraComp, comp.second, event);
 //        }
     }
-
-    return true;
 }
 
 void CharacterControllerSystem::resetToInitialTransform() {
@@ -125,7 +117,7 @@ void CharacterControllerSystem::updateCCTs() {
 }
 
 void CharacterControllerSystem::processCCTInput(CameraComponent *camera, CharacterControllerComponent *cct,
-                                                InputEvent *event) {
+                                                const InputEvent *const event) {
     glm::vec3 viewDirection = camera->m_Camera.getViewDirection();
     viewDirection.y = 0;
     m_direction = glm::normalize(viewDirection);

@@ -17,6 +17,10 @@ public:
         ctx.registerComponent<PhysicsJointComponent>("physicsJoint");
     };
 
+    void registerBehaviours(EntityContext & ctx) override {
+        ctx.registerBehaviour<CameraControlInputBehaviour>();
+    }
+
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<PhysicsSystem>(1);
         ctx.registerEntitySystem<JointsProcessingSystem>(2);

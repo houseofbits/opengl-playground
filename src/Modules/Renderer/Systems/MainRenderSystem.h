@@ -13,11 +13,15 @@ class MainRenderSystem : public EntitySystem {
 public:
     MainRenderSystem();
 
-    void process() override;
-    void initialize(ResourceManager *) override;
-    void registerEventHandlers(EventManager *eventManager) override;
-    bool handleWindowEvent(WindowEvent *event);
-    bool handleEditorUIEvent(EditorUIEvent *event);
+    void process(EventManager &) override;
+
+    void initialize(ResourceManager &) override;
+
+    void registerEventHandlers(EventManager &) override;
+
+    void handleWindowEvent(const WindowEvent *);
+
+    void handleEditorUIEvent(const EditorUIEvent *);
 
 private:
     enum ShaderType {
@@ -27,6 +31,7 @@ private:
         SHADER_SKY,
         NUM_SHADERS
     };
+
     Camera *findActiveCamera();
 
     ShaderType m_shaderType;

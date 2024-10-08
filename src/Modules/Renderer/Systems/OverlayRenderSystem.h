@@ -7,9 +7,13 @@ class OverlayRenderSystem : public EntitySystem {
 public:
     OverlayRenderSystem();
 
-    void process() override;
-    void initialize(ResourceManager *) override;
-    void registerEventHandlers(EventManager *eventManager) override;
-    bool handleWindowEvent(WindowEvent *event);
-    bool handleEditorUIEvent(EditorUIEvent *event);
+    void process(EventManager &) override;
+
+    void initialize(ResourceManager &) override;
+
+    void registerEventHandlers(EventManager &) override;
+
+    void handleWindowEvent(const WindowEvent *);
+
+    void handleEditorUIEvent(const EditorUIEvent *);
 };

@@ -8,10 +8,13 @@ class JointsProcessingSystem : public EntitySystem {
 public:
     JointsProcessingSystem();
 
-    void initialize(ResourceManager *) override;
-    void registerEventHandlers(EventManager *eventManager) override;
-    void process() override;
-    bool handleCharacterPickingEvent(PhysicsPickingEvent* event);
+    void initialize(ResourceManager &) override;
+
+    void registerEventHandlers(EventManager &) override;
+
+    void process(EventManager &) override;
+
+    void handleCharacterPickingEvent(const PhysicsPickingEvent *);
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 };

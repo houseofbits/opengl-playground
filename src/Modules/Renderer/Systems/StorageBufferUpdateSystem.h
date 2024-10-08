@@ -8,8 +8,9 @@ class StorageBufferUpdateSystem : public EntitySystem {
 public:
     StorageBufferUpdateSystem();
 
-    void process() override;
-    void initialize(ResourceManager*) override;
+    void process(EventManager &) override;
+
+    void initialize(ResourceManager &) override;
 
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
     ResourceHandle<EnvironmentProbesBufferResource> m_ProbesBuffer;
