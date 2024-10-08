@@ -57,18 +57,6 @@ void CharacterControllerSystem::updateCCTs() {
                 cameraComp->m_Camera.setPosition(
                         transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
             }
-
-//                PhysicsRayCastResult hit;
-//                if (component.second->rayCast(cameraComp->m_Camera.position,
-//                                              cameraComp->m_Camera.getViewDirection() * 10.f, hit)) {
-//                    auto *e = new PhysicsPickingEvent();
-//                    e->m_entityId = hit.m_entityId;
-//                    e->m_distance = hit.m_distance;
-//                    e->m_touchPoint = hit.m_touchPoint;
-//                    e->m_doActivate = m_doInteract;
-//                    m_EventManager->queueEvent(e);
-//                }
-//            }
         }
     }
 }
