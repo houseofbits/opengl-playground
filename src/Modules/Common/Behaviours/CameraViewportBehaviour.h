@@ -3,6 +3,8 @@
 #include "../../../Core/API.h"
 
 class CameraViewportBehaviour : public EntityBehaviour {
+TYPE_DEFINITION(CameraViewportBehaviour);
+
 public:
     CameraViewportBehaviour();
 
