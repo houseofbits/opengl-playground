@@ -3,7 +3,9 @@
 #include "../../Core/API.h"
 #include "Components/CameraComponent.h"
 #include "Components/TransformComponent.h"
-#include "Systems/CameraControlSystem.h"
+#include "Behaviours/CameraControlInputBehaviour.h"
+#include "../Physics/Behaviours/CharacterControlBehaviour.h"
+#include "Behaviours/CameraViewportBehaviour.h"
 
 class CommonModule : public EntityModule {
 public:
@@ -12,7 +14,8 @@ public:
         ctx.registerComponent<CameraComponent>("camera");
     };
 
-    void registerSystems(EntityContext &ctx) override {
-        ctx.registerEntitySystem<CameraControlSystem>(1);
-    };
+    void registerBehaviours(EntityContext & ctx) override {
+        ctx.registerBehaviour<CharacterControlBehaviour>();
+        ctx.registerBehaviour<CameraViewportBehaviour>();
+    }
 };

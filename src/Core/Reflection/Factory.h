@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <utility>
+#include <vector>
 
 template<class G>
 class Factory {
@@ -29,7 +30,7 @@ public:
         if (m_Constructors.count(name) == 0) {
             m_Constructors[name] = new RObjectConstructor<T>();
         } else {
-            Log::error("Name already registered " + name);
+            Log::error("Name is already registered " + name);
         }
     }
 
@@ -41,6 +42,14 @@ public:
         }
 
         return nullptr;
+    }
+
+    std::vector<std::string> getNames() {
+        std::vector<std::string> keys;
+        for(auto const& values: m_Constructors)
+            keys.push_back(values.first);
+
+        return keys;
     }
 
 private:

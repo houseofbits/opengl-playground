@@ -10,16 +10,22 @@ class CharacterControllerSystem : public EntitySystem {
 public:
     CharacterControllerSystem();
 
-    void initialize(ResourceManager*) override;
-    void process() override;
-    void registerEventHandlers(EventManager *eventManager) override;
-    bool handleEditorUIEvent(EditorUIEvent *event);
-    bool handleInputEvent(InputEvent *event);
+    void initialize(ResourceManager &) override;
+
+    void process(EventManager &) override;
+
+    void registerEventHandlers(EventManager &) override;
+
+    void handleEditorUIEvent(const EditorUIEvent *);
+
+    void handleInputEvent(const InputEvent *);
 
 private:
     void updateCCTs();
+
     void resetToInitialTransform();
-    void processCCTInput(CameraComponent* camera, CharacterControllerComponent* cct, InputEvent *event);
+
+    void processCCTInput(CameraComponent *camera, CharacterControllerComponent *cct, const InputEvent *event);
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     bool m_isSimulationDisabled;

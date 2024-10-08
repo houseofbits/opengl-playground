@@ -7,7 +7,6 @@
 #include "../../Physics/Components/PhysicsBodyComponent.h"
 #include "../../Physics/Components/PhysicsJointComponent.h"
 #include "../UI/TexturePreviewHelper.h"
-#include "../../Behaviour/Components/EntityBehaviourComponent.h"
 #include <glm/gtc/type_ptr.hpp>
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
@@ -25,10 +24,9 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
     usesComponent<CharacterControllerComponent>();
     usesComponent<PhysicsBodyComponent>();
     usesComponent<PhysicsJointComponent>();
-    usesComponent<EntityBehaviourComponent>();
 }
 
-void EditorUISystem::process() {
+void EditorUISystem::process(EventManager &eventManager) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
@@ -74,8 +72,8 @@ void EditorUISystem::process() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void EditorUISystem::initialize(ResourceManager *manager) {
-    m_ResourceManager = manager;
+void EditorUISystem::initialize(ResourceManager &manager) {
+    m_ResourceManager = &manager;
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -83,33 +81,30 @@ void EditorUISystem::initialize(ResourceManager *manager) {
     (void) io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    ImGui::StyleColorsLight();
+//    ImGui::StyleColorsLight();
 
 //    ImGuiStyle& style = ImGui::GetStyle();
 //    style.WindowPadding.x = 0;
 //    style.WindowPadding.y = 0;
 }
 
-void EditorUISystem::registerEventHandlers(EventManager *eventManager) {
-    eventManager->registerEventReceiver(this, &EditorUISystem::handleWindowEvent);
-    eventManager->registerEventReceiver(this, &EditorUISystem::handleRawSDLEvent);
+void EditorUISystem::registerEventHandlers(EventManager &eventManager) {
+    eventManager.registerEventReceiver(this, &EditorUISystem::handleWindowEvent);
+    eventManager.registerEventReceiver(this, &EditorUISystem::handleRawSDLEvent);
 }
 
-bool EditorUISystem::handleWindowEvent(WindowEvent *event) {
+void EditorUISystem::handleWindowEvent(const WindowEvent *const event) {
     if (event->eventType == WindowEvent::OPENGL_CONTEXT_CREATED) {
         ImGui_ImplSDL2_InitForOpenGL(event->window->getSDLWindow(), event->window->getSDLContext());
         ImGui_ImplOpenGL3_Init("#version 410");
         m_isImUIInitialized = true;
     }
-    return true;
 }
 
-bool EditorUISystem::handleRawSDLEvent(RawSDLEvent *event) {
+void EditorUISystem::handleRawSDLEvent(const RawSDLEvent *const event) {
     if (m_isImUIInitialized) {
         ImGui_ImplSDL2_ProcessEvent(&event->sdlEvent);
     }
-
-    return true;
 }
 
 Camera *EditorUISystem::findActiveCamera() {

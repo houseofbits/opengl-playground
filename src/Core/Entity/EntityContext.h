@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "Entity.h"
 #include "EntityConfiguration.h"
+#include "../Behaviour/EntityBehaviour.h"
 #include <memory>
 
 //0. add empty entity
@@ -16,11 +17,14 @@
 class EntityContext {
 private:
     Factory<Component> m_ComponentFactory;
+    Factory<EntityBehaviour> m_EntityBehaviourFactory;
     EntityConfiguration m_EntityConfiguration;
 
     std::list<std::shared_ptr<Entity>> m_Entities;
     std::list<EntitySystem *> m_Systems;
     std::list<EntityModule *> m_Modules;
+    std::list<EntityBehaviour *> m_entityBehavioursReadyToInitialize;
+    std::list<EntityBehaviour *> m_entityBehavioursForRemoval;
 
     std::shared_ptr<Entity> addEntity();
 
@@ -39,6 +43,11 @@ public:
         }
     }
 
+    template<class T>
+    void registerBehaviour() {
+        m_EntityBehaviourFactory.registerName<T>(T::TypeName());
+    }
+
     template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value>>
     T *registerEntitySystem(unsigned int processPriority = 0) {
         auto *p = new T();
@@ -54,6 +63,7 @@ public:
         auto *p = new T();
         m_Modules.push_back(p);
         m_Modules.back()->registerComponents(*this);
+        m_Modules.back()->registerBehaviours(*this);
         m_Modules.back()->registerSystems(*this);
 
         return p;
@@ -124,17 +134,38 @@ public:
     }
 
     Entity *getEntity(Identity::Type id);
+
     Entity *findEntity(const std::string &name);
+
     void unregisterComponentFromSystems(Component *);
+
     void deserializeEntityMap(nlohmann::json &j);
-    std::shared_ptr<Entity> createEntityFromJson(nlohmann::json &j, ResourceManager &);
+
+    std::shared_ptr<Entity> createEntityFromJson(nlohmann::json &j);
+
     std::shared_ptr<Entity> createEntityFromTemplate(const std::string &configurationName, ResourceManager &);
+
     void removeEntity(int entityId);
+
     void deserializeEntities(nlohmann::json &j, ResourceManager &);
+
     void serializeEntities(nlohmann::json &j);
-    void registerEntitiesWithSystems();
-    void initializeSystems(ResourceManager *, EventManager *eventManager);
-    void processSystems();
-    void createComponentInplace(Identity::Type entityId, std::string componentName);
-    void removeComponent(Identity::Type entityId, std::string componentName);
+
+    void registerEntitiesWithSystems(EventManager &eventManager);
+
+    void initializeSystems(ResourceManager &, EventManager &);
+
+    void processSystems(EventManager &eventManager);
+
+    void createComponentInplace(Identity::Type entityId, const std::string &componentName);
+
+    void removeComponent(Identity::Type entityId, const std::string &componentName);
+
+    void addBehaviour(Identity::Type entityId, const std::string &type);
+
+    void removeBehaviour(Identity::Type entityId, const std::string &type);
+
+    void processBehaviours(ResourceManager &, EventManager &);
+
+    std::vector<std::string> getBehaviourTypes();
 };

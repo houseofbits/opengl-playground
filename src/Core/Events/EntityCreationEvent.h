@@ -11,7 +11,9 @@ public:
         CREATE_COMPONENT,
         REMOVE_COMPONENT,
         REMOVE,
-        CLONE
+        CLONE,
+        ADD_BEHAVIOUR,
+        REMOVE_BEHAVIOUR
     };
 
     EntityCreationEvent() : BaseEvent(),

@@ -11,16 +11,16 @@ StorageBufferUpdateSystem::StorageBufferUpdateSystem() : EntitySystem(),
     usesComponent<EnvironmentProbeComponent>();
 }
 
-void StorageBufferUpdateSystem::initialize(ResourceManager *resourceManager) {
-    resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
-    resourceManager->request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
+void StorageBufferUpdateSystem::initialize(ResourceManager &resourceManager) {
+    resourceManager.request(m_LightsBuffer, "SpotLightStorageBuffer");
+    resourceManager.request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
 //
 //    std::cout<<sizeof(std::uint64_t)<<std::endl;
 //    std::cout<<sizeof(glm::mat4)<<std::endl;
 //    std::cout<<sizeof(LightsBufferResource::LightStructure)<<std::endl;
 }
 
-void StorageBufferUpdateSystem::process() {
+void StorageBufferUpdateSystem::process(EventManager &eventManager) {
     m_LightsBuffer().m_StorageBuffer.reset();
     for (const auto &light: getComponentContainer<LightComponent>()) {
         auto *transform = getComponent<TransformComponent>(light.second->m_EntityId.id());

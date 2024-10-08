@@ -15,7 +15,6 @@
 #include "ComponentEdit/PhysicsJointComponentEdit.h"
 #include "ComponentEdit/StaticMeshComponentEdit.h"
 #include "ComponentEdit/TransformComponentEdit.h"
-#include "ComponentEdit/EntityBehaviourComponentEdit.h"
 #include "FileDialogHelper.h"
 #include "../../../Core/Helper/StringUtils.h"
 #include <utility>
@@ -51,6 +50,7 @@ EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
                                                      m_meshMaterialPath(),
                                                      m_selectedEntityCreationType(0),
                                                      m_selectedComponentCreationType(0),
+                                                     m_selectedBehaviour(0),
                                                      m_componentEditors(),
                                                      m_entityListFilter() {
 
@@ -62,7 +62,6 @@ EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntity(-1),
     m_componentEditors[PhysicsBodyComponent::TypeName()] = new PhysicsBodyComponentEdit(editor);
     m_componentEditors[CharacterControllerComponent::TypeName()] = new CharacterControllerComponentEdit(editor);
     m_componentEditors[PhysicsJointComponent::TypeName()] = new PhysicsJointComponentEdit(editor);
-    m_componentEditors[EntityBehaviourComponent::TypeName()] = new EntityBehaviourComponentEdit(editor);
 
     for (const auto &edit: m_componentEditors) {
         m_entityListFilter[edit.first] = true;
@@ -130,6 +129,10 @@ void EditWindowUI::process() {
                 ImGui::CollapsingHeader(edit.second->getName().c_str())) {
                 edit.second->process(m_selectedEntity);
             }
+        }
+
+        if (ImGui::CollapsingHeader("Behaviours")) {
+            processBehavioursEdit(e);
         }
 
         ImGui::SeparatorText("Add component");
@@ -235,4 +238,61 @@ void EditWindowUI::sendComponentRemovalEvent(std::string name) {
     evt->m_name = std::move(name);
     evt->m_entityId = m_selectedEntity;
     m_EditorUISystem->m_EventManager->queueEvent(evt);
+}
+
+void EditWindowUI::processBehavioursEdit(Entity *e) {
+    if (ImGui::BeginCombo("##BEHAVIOUR", "Add")) {
+        for (const auto &behaviourType: m_EditorUISystem->m_EntityContext->getBehaviourTypes()) {
+            if (ImGui::Selectable(behaviourType.c_str(), false)) {
+//                Log::write("Add ", behaviourType);
+
+                auto evt = new EntityCreationEvent();
+                evt->m_Type = EntityCreationEvent::ADD_BEHAVIOUR;
+                evt->m_name = behaviourType;
+                evt->m_entityId = m_selectedEntity;
+                m_EditorUISystem->m_EventManager->queueEvent(evt);
+            }
+        }
+        ImGui::EndCombo();
+    }
+    if (ImGui::BeginListBox("##BEHAVIOUR_LIST", ImVec2(-1, 100))) {
+        for (const auto &behaviour: e->m_Behaviours) {
+            std::string name = behaviour->getDisplayName();
+
+            if (ImGui::Selectable(name.c_str(), m_selectedBehaviour == behaviour->getTypeId())) {
+                m_selectedBehaviour = (int) behaviour->getTypeId();
+            }
+        }
+
+        ImGui::EndListBox();
+    }
+    if (m_selectedBehaviour > 0 && ImGui::Button("Remove##REMOVE_BEHAVIOUR")) {
+        auto it = std::find_if(
+                e->m_Behaviours.begin(),
+                e->m_Behaviours.end(),
+                [&](EntityBehaviour *p) {
+                    return p->getTypeId() == m_selectedBehaviour;
+                });
+
+        if (it != e->m_Behaviours.end()) {
+            auto evt = new EntityCreationEvent();
+            evt->m_Type = EntityCreationEvent::REMOVE_BEHAVIOUR;
+            evt->m_name = (*it)->getTypeName();
+            evt->m_entityId = m_selectedEntity;
+            m_EditorUISystem->m_EventManager->queueEvent(evt);
+        }
+    }
+
+    if (m_selectedBehaviour > 0) {
+        auto it = std::find_if(
+                e->m_Behaviours.begin(),
+                e->m_Behaviours.end(),
+                [&](EntityBehaviour *p) {
+                    return p->getTypeId() == m_selectedBehaviour;
+                });
+        if (it != e->m_Behaviours.end()) {
+            ImGui::Text("Type: %s", (*it)->getTypeName().c_str());
+            ImGui::TextWrapped("Description: %s", (*it)->getDescription().c_str());
+        }
+    }
 }

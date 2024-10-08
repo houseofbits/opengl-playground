@@ -5,20 +5,20 @@ JointsProcessingSystem::JointsProcessingSystem() : EntitySystem() {
     usesComponent<PhysicsJointComponent>();
 }
 
-void JointsProcessingSystem::initialize(ResourceManager *resourceManager) {
-    resourceManager->request(m_PhysicsResource, "physics");
+void JointsProcessingSystem::initialize(ResourceManager &resourceManager) {
+    resourceManager.request(m_PhysicsResource, "physics");
 }
 
-void JointsProcessingSystem::registerEventHandlers(EventManager *eventManager) {
-    eventManager->registerEventReceiver(this, &JointsProcessingSystem::handleCharacterPickingEvent);
+void JointsProcessingSystem::registerEventHandlers(EventManager &eventManager) {
+    eventManager.registerEventReceiver(this, &JointsProcessingSystem::handleCharacterPickingEvent);
 }
 
-void JointsProcessingSystem::process() {
+void JointsProcessingSystem::process(EventManager &eventManager) {
     if (!m_PhysicsResource.isReady()) {
         return;
     }
 
-    for (const auto& body: getComponentContainer<PhysicsJointComponent>()) {
+    for (const auto &body: getComponentContainer<PhysicsJointComponent>()) {
         if (!body.second->isCreated()) {
             auto *bodyA = m_EntityContext->getEntityComponent<PhysicsBodyComponent>(body.first);
             if (bodyA == nullptr) {
@@ -37,11 +37,9 @@ void JointsProcessingSystem::process() {
     }
 }
 
-bool JointsProcessingSystem::handleCharacterPickingEvent(PhysicsPickingEvent *event) {
+void JointsProcessingSystem::handleCharacterPickingEvent(const PhysicsPickingEvent *const event) {
     auto *hinge = getComponent<PhysicsJointComponent>(event->m_entityId);
     if (hinge != nullptr && event->m_doActivate) {
         hinge->activate();
     }
-
-    return true;
 }

@@ -54,8 +54,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Resources/TextureResource.h
         src/Modules/Renderer/Resources/StaticMeshResource.cpp
         src/Modules/Renderer/Resources/StaticMeshResource.h
-        src/Modules/Common/Systems/CameraControlSystem.cpp
-        src/Modules/Common/Systems/CameraControlSystem.h
         src/Modules/Renderer/Buffers/LightStorageBuffer.h
         src/Modules/Renderer/Buffers/LightStorageBuffer.cpp
         src/Modules/Renderer/Resources/ShaderResource.cpp
@@ -125,16 +123,16 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/ContactListenerImpl.h
         src/Modules/Physics/Helpers/DebugRendererImpl.cpp
         src/Modules/Physics/Helpers/DebugRendererImpl.h
-        src/Modules/Behaviour/Components/EntityBehaviourComponent.cpp
-        src/Modules/Behaviour/Components/EntityBehaviourComponent.h
-        src/Modules/Behaviour/Systems/CameraInputBehaviourSystem.cpp
-        src/Modules/Behaviour/Systems/CameraInputBehaviourSystem.h
         src/Modules/Renderer/Systems/OverlayRenderSystem.cpp
         src/Modules/Renderer/Systems/OverlayRenderSystem.h
-        src/Modules/Behaviour/Systems/CharacterInputBehaviourSystem.cpp
-        src/Modules/Behaviour/Systems/CharacterInputBehaviourSystem.h
-        src/Modules/Common/Behaviours/CameraMouseLookBehaviour.cpp
-        src/Modules/Common/Behaviours/CameraMouseLookBehaviour.h
+        src/Modules/Common/Behaviours/CameraControlInputBehaviour.cpp
+        src/Modules/Common/Behaviours/CameraControlInputBehaviour.h
+        src/Core/Behaviour/EntityBehaviour.cpp
+        src/Core/Behaviour/EntityBehaviour.h
+        src/Modules/Physics/Behaviours/CharacterControlBehaviour.cpp
+        src/Modules/Physics/Behaviours/CharacterControlBehaviour.h
+        src/Modules/Common/Behaviours/CameraViewportBehaviour.cpp
+        src/Modules/Common/Behaviours/CameraViewportBehaviour.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

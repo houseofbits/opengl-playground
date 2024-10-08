@@ -6,18 +6,18 @@
 #include <GL/glew.h>
 
 glm::vec3 EnvironmentProbeRenderSystem::m_cubeMapViewDirection[6] = {
-        {1, 0, 0},
-        {-1, 0, 0},
-        {0, 1, 0},
-        {0, -1, 0},
-        {0, 0, 1},
-        {0, 0, -1},
+        {1,  0,  0},
+        {-1, 0,  0},
+        {0,  1,  0},
+        {0,  -1, 0},
+        {0,  0,  1},
+        {0,  0,  -1},
 };
 glm::vec3 EnvironmentProbeRenderSystem::m_cubeMapUpDirection[6] = {
         {0, -1, 0},
         {0, -1, 0},
-        {0, 0, 1},
-        {0, 0, -1},
+        {0, 0,  1},
+        {0, 0,  -1},
         {0, -1, 0},
         {0, -1, 0},
 };
@@ -33,22 +33,22 @@ EnvironmentProbeRenderSystem::EnvironmentProbeRenderSystem() : EntitySystem(),
     usesComponent<EnvironmentProbeComponent>();
 }
 
-void EnvironmentProbeRenderSystem::registerEventHandlers(EventManager *eventManager) {
-    eventManager->registerEventReceiver(this, &EnvironmentProbeRenderSystem::handleEditorUIEvent);
+void EnvironmentProbeRenderSystem::registerEventHandlers(EventManager &eventManager) {
+    eventManager.registerEventReceiver(this, &EnvironmentProbeRenderSystem::handleEditorUIEvent);
 }
 
-void EnvironmentProbeRenderSystem::initialize(ResourceManager *resourceManager) {
-    resourceManager->request(m_LightsBuffer, "SpotLightStorageBuffer");
-    resourceManager->request(m_cubeMapArray, "EnvironmentProbesCubeMapArray");
+void EnvironmentProbeRenderSystem::initialize(ResourceManager &resourceManager) {
+    resourceManager.request(m_LightsBuffer, "SpotLightStorageBuffer");
+    resourceManager.request(m_cubeMapArray, "EnvironmentProbesCubeMapArray");
 
-    resourceManager->request(m_ShaderProgram,
-                             "data/shaders/|lighting.vert|lighting.geom|lightingEnvProbe.frag",
-                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer"});
+    resourceManager.request(m_ShaderProgram,
+                            "data/shaders/|lighting.vert|lighting.geom|lightingEnvProbe.frag",
+                            {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer"});
 
     m_Camera.setFieldOfView(90.0);
 }
 
-void EnvironmentProbeRenderSystem::process() {
+void EnvironmentProbeRenderSystem::process(EventManager &eventManager) {
     if (!m_isRenderEnabled || !m_cubeMapArray().isReady()) {
         return;
     }
@@ -111,15 +111,14 @@ void EnvironmentProbeRenderSystem::renderGeometry() {
     }
 }
 
-bool EnvironmentProbeRenderSystem::handleEditorUIEvent(EditorUIEvent *event) {
+void EnvironmentProbeRenderSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
     if (event->m_Type == EditorUIEvent::TRIGGER_PROBE_RENDER) {
         m_isRenderEnabled = true;
     }
-
-    return true;
 }
 
-float EnvironmentProbeRenderSystem::calculateZFar(glm::vec3 position, glm::vec3 direction, glm::vec3 min, glm::vec3 max) {
+float
+EnvironmentProbeRenderSystem::calculateZFar(glm::vec3 position, glm::vec3 direction, glm::vec3 min, glm::vec3 max) {
     glm::vec3 planeIntersect1 = (max - position) / direction;
     glm::vec3 planeIntersect2 = (min - position) / direction;
 

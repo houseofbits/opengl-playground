@@ -2,26 +2,29 @@
 
 #include "../Entity/Component.h"
 #include "../Reflection/Type.h"
+#include "../Events/EventManager.h"
 #include <memory>
 
 class EventManager;
 class EntityContext;
 class ResourceManager;
 
-class EntitySystem {
+class EntitySystem : public EventHandler {
 public:
+    EntitySystem() : EventHandler() {}
+
     typedef std::shared_ptr<EntitySystem> TEntitySystemPtr;
 
     /**
      * Initialize is run for all systems once on startup. After the render context
      * is created and before entities are deserialized
      */
-    virtual void initialize(ResourceManager *) = 0;
+    virtual void initialize(ResourceManager &) {};
     /**
      * Process runs each frame for each system
      */
-    virtual void process() = 0;
-    virtual void registerEventHandlers(EventManager *eventManager) {}
+    virtual void process(EventManager &) {};
+    virtual void registerEventHandlers(EventManager &) {}
 
     class VComponentContainer {
     public:
@@ -113,10 +116,15 @@ public:
         return !getContainer<T>()->isEmpty();
     }
 
+    //Used for event manager to identify target handlers
+    Identity::Type getId() override {
+        return 0;
+    }
+
     EntityContext *m_EntityContext{nullptr};
     EventManager *m_EventManager{nullptr};
     std::unordered_map<unsigned int, VComponentContainer *> m_components{};
-    unsigned int m_processPriority;
+    unsigned int m_processPriority{};
 
 protected:
     template<class T>

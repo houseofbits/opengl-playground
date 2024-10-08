@@ -8,15 +8,15 @@ PhysicsBodyProcessingSystem::PhysicsBodyProcessingSystem() : EntitySystem(),
     usesComponent<TransformComponent>();
 }
 
-void PhysicsBodyProcessingSystem::initialize(ResourceManager *resourceManager) {
-    resourceManager->request(m_PhysicsResource, "physics");
+void PhysicsBodyProcessingSystem::initialize(ResourceManager &resourceManager) {
+    resourceManager.request(m_PhysicsResource, "physics");
 }
 
-void PhysicsBodyProcessingSystem::registerEventHandlers(EventManager *eventManager) {
-    eventManager->registerEventReceiver(this, &PhysicsBodyProcessingSystem::handleEditorUIEvent);
+void PhysicsBodyProcessingSystem::registerEventHandlers(EventManager &eventManager) {
+    eventManager.registerEventReceiver(this, &PhysicsBodyProcessingSystem::handleEditorUIEvent);
 }
 
-void PhysicsBodyProcessingSystem::process() {
+void PhysicsBodyProcessingSystem::process(EventManager &eventManager) {
     if (!m_PhysicsResource.isReady()) {
         return;
     }
@@ -31,7 +31,7 @@ void PhysicsBodyProcessingSystem::process() {
     }
 }
 
-bool PhysicsBodyProcessingSystem::handleEditorUIEvent(EditorUIEvent *event) {
+void PhysicsBodyProcessingSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
     if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
         m_isSimulationDisabled = false;
         wakeUpAll();
@@ -41,8 +41,6 @@ bool PhysicsBodyProcessingSystem::handleEditorUIEvent(EditorUIEvent *event) {
         resetToInitialTransform();
         m_isSimulationDisabled = true;
     }
-
-    return true;
 }
 
 void PhysicsBodyProcessingSystem::resetToInitialTransform() {

@@ -4,15 +4,22 @@
 #include "../../Modules/Editor/Events/EditorUIEvent.h"
 #include "../../Window.h"
 
-class MainApplication : public Application {
+class MainApplication : public Application, public EventHandler {
 public:
     MainApplication();
 
     void run() override;
+
     void initialize(const std::string &entityDefinitionFileName);
-    bool handleInputEvent(InputEvent *event);
-    bool handleEditorUIEvent(EditorUIEvent *event);
-    bool handleEntityCreationEvent(EntityCreationEvent *event);
+
+    void handleInputEvent(const InputEvent *);
+
+    void handleEditorUIEvent(const EditorUIEvent *);
+
+    void handleEntityCreationEvent(const EntityCreationEvent *);
+
+    //Used for event manager to identify target handlers
+    Identity::Type getId() override { return 0; }
 
     Window m_Window;
 };
