@@ -50,18 +50,14 @@ void CharacterControllerSystem::updateCCTs() {
         if (!component.second->isCreated()) {
             component.second->create(*transform);
         } else {
-            auto *cameraComp = getComponent<CameraComponent>(component.first);
-            if (cameraComp == nullptr) {
-                return;
-            }
-
-            component.second->setLookingDirection(cameraComp->m_Camera.getViewDirection());
             component.second->update(*transform, !m_isSimulationDisabled);
 
-            if (cameraComp->m_isActive) {
+            auto *cameraComp = getComponent<CameraComponent>(component.first);
+            if (cameraComp != nullptr && cameraComp->m_isActive) {
                 cameraComp->m_Camera.setPosition(
                         transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
             }
+
 //                PhysicsRayCastResult hit;
 //                if (component.second->rayCast(cameraComp->m_Camera.position,
 //                                              cameraComp->m_Camera.getViewDirection() * 10.f, hit)) {

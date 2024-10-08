@@ -1,6 +1,7 @@
 #include "CharacterMouseLookBehaviour.h"
 #include "../../../Core/Helper/Time.h"
 #include "../../Common/Components/CameraComponent.h"
+#include "../Components/CharacterControllerComponent.h"
 
 CharacterMouseLookBehaviour::CharacterMouseLookBehaviour() : EntityBehaviour() {
 
@@ -15,14 +16,20 @@ void CharacterMouseLookBehaviour::registerEventHandlers(EventManager &eventManag
 }
 
 void CharacterMouseLookBehaviour::handleInputEvent(const InputEvent *const event) {
-    auto *cameraComponent = m_Entity->getComponent<CameraComponent>();
-    if (cameraComponent == nullptr || !cameraComponent->m_isActive) {
-        return;
-    }
-
     if (event->type == InputEvent::MOUSEMOVE && event->mouseButtonLeft) {
+        auto *cameraComponent = m_Entity->getComponent<CameraComponent>();
+        if (cameraComponent == nullptr || !cameraComponent->m_isActive) {
+            return;
+        }
+
         float lookSpeed = 0.15;
         cameraComponent->rotateView(-event->mouseMotion * lookSpeed * Time::frameTime);
+
+        auto *characterComponent = m_Entity->getComponent<CharacterControllerComponent>();
+        if (characterComponent == nullptr) {
+            return;
+        }
+        characterComponent->setLookingDirection(cameraComponent->m_Camera.getViewDirection());
     }
 }
 

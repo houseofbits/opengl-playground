@@ -2,6 +2,7 @@
 
 #include "Event.h"
 #include "../Reflection/Identity.h"
+#include "../Helper/Log.h"
 #include <iostream>
 #include <list>
 #include <map>
