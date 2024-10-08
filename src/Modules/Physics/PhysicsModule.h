@@ -8,6 +8,8 @@
 #include "Systems/JointsProcessingSystem.h"
 #include "Systems/PhysicsBodyProcessingSystem.h"
 #include "Systems/PhysicsSystem.h"
+#include "Behaviours/CharacterMouseLookBehaviour.h"
+#include "Behaviours/CharacterPickingBehaviour.h"
 
 class PhysicsModule : public EntityModule {
 public:
@@ -19,6 +21,8 @@ public:
 
     void registerBehaviours(EntityContext & ctx) override {
         ctx.registerBehaviour<CameraControlInputBehaviour>();
+        ctx.registerBehaviour<CharacterMouseLookBehaviour>();
+        ctx.registerBehaviour<CharacterPickingBehaviour>();
     }
 
     void registerSystems(EntityContext &ctx) override {

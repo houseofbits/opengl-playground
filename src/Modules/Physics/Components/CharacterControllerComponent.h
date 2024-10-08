@@ -34,10 +34,14 @@ public:
     glm::vec3 m_lookingDirection;
 
 private:
+    void updateMove();
     void castRayForGroundReference(const glm::vec3 &point);
     void updateGroundSpring(const glm::vec3 &kneePosition);
 
     float m_groundSpringForce;
     float m_groundSpringDamping;
     float m_freeFallForce;
+
+    bool m_doMove;
+    glm::vec3 m_movementDirection;
 };
