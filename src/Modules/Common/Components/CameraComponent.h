@@ -2,8 +2,9 @@
 
 #include "../../../Core/API.h"
 #include "../../../Renderer/Camera/Camera.h"
+#include "../../../Core/Helper/ComponentTransformEdit.h"
 
-class CameraComponent : public Component {
+class CameraComponent : public Component, public ComponentTransformEdit {
 TYPE_DEFINITION(CameraComponent);
 
 public:
@@ -32,6 +33,10 @@ public:
     void registerWithSystems(EntityContext &ctx) override;
 
     void rotateView(glm::vec2 viewChangeAlongScreenAxis);
+
+    glm::mat4 getEditorTransform() override;
+
+    void setFromEditorTransform(const glm::mat4 &) override;
 
     Camera m_Camera;
     bool m_isActive;

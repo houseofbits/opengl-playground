@@ -46,5 +46,5 @@ void CharacterPickingBehaviour::handleInputEvent(const InputEvent *const event) 
 }
 
 std::string CharacterPickingBehaviour::getDescription() {
-    return "";
+    return "Casts a ray from character viewpoint and emits picking event";
 }

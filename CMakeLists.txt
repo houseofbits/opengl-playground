@@ -137,6 +137,9 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Behaviours/CharacterMouseLookBehaviour.h
         src/Modules/Physics/Behaviours/CharacterPickingBehaviour.cpp
         src/Modules/Physics/Behaviours/CharacterPickingBehaviour.h
+        src/Modules/Editor/UI/TransformGizmoHelper.cpp
+        src/Modules/Editor/UI/TransformGizmoHelper.h
+        src/Core/Helper/ComponentTransformEdit.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

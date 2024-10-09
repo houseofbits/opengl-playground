@@ -5,8 +5,8 @@
 #include "PhysicsBodyComponent.h"
 #include "Jolt/Physics/Constraints/HingeConstraint.h"
 
-class PhysicsJointComponent : public Component  {
-    TYPE_DEFINITION(PhysicsJointComponent);
+class PhysicsJointComponent : public Component, public ComponentTransformEdit {
+TYPE_DEFINITION(PhysicsJointComponent);
 public:
     inline static const std::string ENTITY_KEY = "targetEntity";
     inline static const std::string ARE_LIMITS_ENABLED_KEY = "enableLimits";
@@ -20,19 +20,32 @@ public:
     PhysicsJointComponent();
 
     void serialize(nlohmann::json &j) override;
+
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
+
     void registerWithSystems(EntityContext &ctx) override;
+
     bool isReady() override;
-    void create(PhysicsBodyComponent& bodyA, PhysicsBodyComponent& bodyB);
+
+    void create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB);
+
     void release();
+
     void attach(std::string entityName);
+
     void activate();
+
     void update();
+
     [[nodiscard]] bool isCreated() const;
+
+    glm::mat4 getEditorTransform() override;
+
+    void setFromEditorTransform(const glm::mat4 &) override;
 
     bool m_isLimitsEnabled;
     bool m_isLockingToLimitsEnabled;
-    JPH::HingeConstraint* m_Joint;
+    JPH::HingeConstraint *m_Joint;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     std::string m_targetEntityName;
     glm::vec2 m_angularLimits;
@@ -51,6 +64,7 @@ private:
     };
 
     void open();
+
     void close();
 
     MovementState m_moveState;

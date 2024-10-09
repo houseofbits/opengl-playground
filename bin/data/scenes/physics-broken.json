@@ -1,0 +1,876 @@
+[
+    {
+        "camera": {
+            "isActive": true,
+            "position": [
+                0.5646616220474243,
+                1.7328788042068481,
+                -4.128302574157715
+            ],
+            "type": "FREE",
+            "upDirection": [
+                -5.558956672757631e-06,
+                0.9957959651947021,
+                -0.09159883856773376
+            ],
+            "viewDirection": [
+                -6.043293615221046e-05,
+                -0.09159883856773376,
+                -0.9957959651947021
+            ]
+        },
+        "name": "camera-free"
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-wall.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "floor",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                1.0,
+                1.0
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                22.818788528442383,
+                0.5,
+                20.442365646362305
+            ],
+            "translation": [
+                -5.045999526977539,
+                -0.25,
+                -5.0
+            ]
+        }
+    },
+    {
+        "light": {
+            "attenuation": 4.499958038330078,
+            "castShadows": true,
+            "color": [
+                0.9901960492134094,
+                0.9502227306365967,
+                0.6504228711128235
+            ],
+            "intensity": 1.9000002145767212,
+            "isEnabled": true,
+            "shadowBias": 2.9999999242136255e-05,
+            "shadowResolution": 1024,
+            "type": "OMNI"
+        },
+        "name": "light-omni-primary",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.5871214866638184,
+                3.2897939682006836,
+                -8.676735877990723
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-red",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                -0.00785795133560896,
+                -0.7070426344871521,
+                0.7070807814598083,
+                -0.008105067536234856
+            ],
+            "scale": [
+                0.2000129222869873,
+                1.000012993812561,
+                0.9999966025352478
+            ],
+            "translation": [
+                -2.6940255165100098,
+                3.0669937133789063,
+                -6.778642177581787
+            ]
+        }
+    },
+    {
+        "name": "Sky box",
+        "sky": {
+            "cubeMap": "resources/textures/sky2/*.png"
+        }
+    },
+    {
+        "light": {
+            "attenuation": 10.0,
+            "castShadows": true,
+            "color": [
+                0.6176470518112183,
+                0.7750865817070007,
+                1.0
+            ],
+            "intensity": 0.49999991059303284,
+            "isEnabled": true,
+            "shadowBias": 2.9999999242136255e-05,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "name": "light-omni-secondary",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -5.438762187957764,
+                3.723975658416748,
+                -8.688417434692383
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-blue.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-blue",
+        "physicsBody": {
+            "density": 100.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                -0.19942106306552887,
+                0.6784056425094604,
+                -0.6784039735794067,
+                -0.1994118094444275
+            ],
+            "scale": [
+                0.9999286532402039,
+                3.5892670154571533,
+                1.0000646114349365
+            ],
+            "translation": [
+                -7.9138665199279785,
+                4.536063194274902,
+                -4.814107418060303
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/solid-green.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "rigid-body-green",
+        "physicsBody": {
+            "density": 100.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 1.0,
+            "shape": 0,
+            "type": 1
+        },
+        "transform": {
+            "rotation": [
+                0.9687539339065552,
+                -0.0003209268325008452,
+                -0.00026025992701761425,
+                -0.24802348017692566
+            ],
+            "scale": [
+                1.0058999061584473,
+                1.0310485363006592,
+                1.027855634689331
+            ],
+            "translation": [
+                -5.704329967498779,
+                3.9166347980499268,
+                -2.655552864074707
+            ]
+        }
+    },
+    {
+        "camera": {
+            "isActive": false,
+            "position": [
+                -0.11911696195602417,
+                1.75,
+                -13.233821868896484
+            ],
+            "type": "FP",
+            "upDirection": [
+                -0.16445493698120117,
+                0.9402214288711548,
+                0.2982252538204193
+            ],
+            "viewDirection": [
+                -0.45402368903160095,
+                -0.3405638337135315,
+                0.8233339786529541
+            ]
+        },
+        "cct": {
+            "height": 1.75,
+            "radius": 0.30000001192092896
+        },
+        "mesh": {
+            "material": "data/materials/character.json",
+            "model": "data/models/character-capsule.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "character-cct",
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -2.6860947608947754,
+                0.4623616337776184,
+                -9.086320877075195
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/floor3.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stairs1",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.8469394445419312,
+                0.26137062907218933,
+                0.8050637245178223
+            ],
+            "translation": [
+                0.5734661817550659,
+                0.0,
+                -9.863386154174805
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall1",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.1924819052219391,
+                3.5285356044769287,
+                6.798940181732178
+            ],
+            "translation": [
+                -0.7313599586486816,
+                1.8192121982574463,
+                -5.9057183265686035
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall2",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                7.277060508728027,
+                3.4601707458496094,
+                0.1802596002817154
+            ],
+            "translation": [
+                -7.169008255004883,
+                1.60885488986969,
+                -1.8669625520706177
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall3",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                3.243476390838623,
+                0.21577556431293488,
+                7.0
+            ],
+            "translation": [
+                0.63981693983078,
+                3.572441816329956,
+                -6.0
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/walls3.json",
+            "model": "data/models/door.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "door1",
+        "physicsBody": {
+            "density": 2.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "data/models/door.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "physicsJoint": {
+            "attachmentA": [
+                0.5,
+                1.100000023841858,
+                0.009999999776482582
+            ],
+            "attachmentB": [
+                0.5,
+                0.0,
+                0.009999999776482582
+            ],
+            "axis": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "enableDrive": true,
+            "enableLimits": true,
+            "limits": [
+                -1.5707963705062866,
+                0.0
+            ],
+            "targetEntity": "door1-frame"
+        },
+        "transform": {
+            "rotation": [
+                0.000450685532996431,
+                -0.0012305483687669039,
+                -0.003115331754088402,
+                0.9999942779541016
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                0.999999463558197
+            ],
+            "translation": [
+                0.6233828663825989,
+                0.0024700965732336044,
+                -7.19118595123291
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/columns3.json",
+            "model": "data/models/door-frame.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "door1-frame",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "data/models/door-frame.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.6428524255752563,
+                1.0564916133880615,
+                -7.187489986419678
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall4",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.15000000596046448,
+                3.5,
+                6.0
+            ],
+            "translation": [
+                2.0154619216918945,
+                1.75,
+                -6.2716522216796875
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall5",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.15000000596046448,
+                3.5,
+                6.0
+            ],
+            "translation": [
+                -10.987034797668457,
+                1.75,
+                -6.2716522216796875
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall6",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                -1.6015745814002003e-06,
+                0.7071071267127991,
+                -1.6015851542761084e-06,
+                -0.7071064114570618
+            ],
+            "scale": [
+                0.14999979734420776,
+                3.5000007152557373,
+                0.677750289440155
+            ],
+            "translation": [
+                1.6078323125839233,
+                1.75,
+                -7.129083156585693
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall7",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                -1.6015745814002003e-06,
+                0.7071071267127991,
+                -1.6015851542761084e-06,
+                -0.7071064114570618
+            ],
+            "scale": [
+                0.14999978244304657,
+                3.5000007152557373,
+                0.6777502298355103
+            ],
+            "translation": [
+                -0.3304397463798523,
+                1.75,
+                -7.129083156585693
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/tiles1.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "wall8",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                -1.6015745814002003e-06,
+                0.7071071267127991,
+                -1.6015851542761084e-06,
+                -0.7071064114570618
+            ],
+            "scale": [
+                0.14999976754188538,
+                1.3539621829986572,
+                1.32245671749115
+            ],
+            "translation": [
+                0.6466310024261475,
+                2.7931206226348877,
+                -7.129083156585693
+            ]
+        }
+    },
+    {
+        "light": {
+            "attenuation": 4.999976634979248,
+            "beamAngle": 133.5,
+            "castShadows": true,
+            "color": [
+                0.9938004612922668,
+                0.7892156839370728,
+                1.0
+            ],
+            "intensity": 0.3999999165534973,
+            "isEnabled": true,
+            "projectionTexture": "resources/textures/spot-proj-3.png",
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 1024,
+            "type": "SPOT"
+        },
+        "name": "light-omni-ambient",
+        "transform": {
+            "rotation": [
+                -0.4290640354156494,
+                0.0,
+                0.0,
+                0.9032740592956543
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.5871214866638184,
+                3.117919683456421,
+                -5.373377323150635
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/floor3.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stairs2",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.8469394445419312,
+                0.10000000149011612,
+                0.8050637245178223
+            ],
+            "translation": [
+                0.5734661817550659,
+                0.15000000596046448,
+                -10.3239107131958
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/floor3.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stairs3",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.8469394445419312,
+                0.10000000149011612,
+                0.8050637245178223
+            ],
+            "translation": [
+                0.5734661817550659,
+                0.25,
+                -10.75281810760498
+            ]
+        }
+    },
+    {
+        "mesh": {
+            "material": "data/materials/floor3.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "stairs4",
+        "physicsBody": {
+            "density": 1.0,
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "transform": {
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.8469394445419312,
+                0.10000000149011612,
+                0.8050637245178223
+            ],
+            "translation": [
+                0.5734661817550659,
+                0.3499999940395355,
+                -11.243119239807129
+            ]
+        }
+    }
+]

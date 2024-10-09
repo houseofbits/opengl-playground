@@ -14,7 +14,7 @@ public:
     void process();
     bool isTransformComponentSelected();
 
-    int m_selectedEntity;
+    Identity::Type m_selectedEntityId;
     bool m_isBoundsTransformAllowed;
 private:
 

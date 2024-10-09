@@ -5,6 +5,7 @@
 #include "../../Renderer/Systems/MainRenderSystem.h"
 
 CameraComponent::CameraComponent() : Component(),
+                                     ComponentTransformEdit(),
                                      m_Camera(),
                                      m_isActive(true),
                                      m_type(TYPE_FREE) {
@@ -72,4 +73,12 @@ void CameraComponent::rotateView(glm::vec2 viewChangeAlongScreenAxis) {
     tbn = calculateTBN(tbn.view + viewChange);
 
     m_Camera.setView(tbn.view, tbn.up);
+}
+
+glm::mat4 CameraComponent::getEditorTransform() {
+    return glm::mat4(1.0);
+}
+
+void CameraComponent::setFromEditorTransform(const glm::mat4 &) {
+
 }
