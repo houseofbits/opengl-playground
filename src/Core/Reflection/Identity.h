@@ -73,6 +73,6 @@ private:
         m_Subject = subject;
     }
 
-    Type m_id;
-    Subject m_Subject;
+    Type m_id{};
+    Subject m_Subject{};
 };

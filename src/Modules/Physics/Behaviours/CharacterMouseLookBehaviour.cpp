@@ -34,5 +34,5 @@ void CharacterMouseLookBehaviour::handleInputEvent(const InputEvent *const event
 }
 
 std::string CharacterMouseLookBehaviour::getDescription() {
-    return "";
+    return "Character mouse-look input";
 }

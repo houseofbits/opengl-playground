@@ -3,12 +3,13 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "../../../Core/API.h"
+#include "../../../Core/Helper/ComponentTransformEdit.h"
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
-class TransformComponent : public Component {
+class TransformComponent : public Component, public ComponentTransformEdit {
 TYPE_DEFINITION(TransformComponent);
 
 public:
@@ -54,6 +55,10 @@ public:
     glm::vec3 getInitialScale();
 
     glm::quat getInitialRotation();
+
+    glm::mat4 getEditorTransform() override;
+
+    void setFromEditorTransform(const glm::mat4 &) override;
 
     bool m_isTranslationEnabled;
     bool m_isRotationEnabled;

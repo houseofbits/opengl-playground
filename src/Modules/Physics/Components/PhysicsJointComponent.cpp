@@ -10,6 +10,7 @@
 #include <Jolt/Physics/Collision/GroupFilterTable.h>
 
 PhysicsJointComponent::PhysicsJointComponent() : Component(),
+                                                 ComponentTransformEdit(),
                                                  m_PhysicsResource(),
                                                  m_targetEntityName(),
                                                  m_Joint(nullptr),
@@ -174,4 +175,12 @@ void PhysicsJointComponent::close() {
 
     m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody1()->GetID());
     m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody2()->GetID());
+}
+
+glm::mat4 PhysicsJointComponent::getEditorTransform() {
+    return glm::mat4(1.0);
+}
+
+void PhysicsJointComponent::setFromEditorTransform(const glm::mat4 &) {
+
 }

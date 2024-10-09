@@ -42,6 +42,17 @@ public:
     }
 
     template<class T>
+    bool hasComponent() {
+        for (const auto &c: m_Components) {
+            if (dynamic_cast<T *>(c.get())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    template<class T>
     T *getComponent() {
         for (const auto &c: m_Components) {
             if (dynamic_cast<T *>(c.get())) {

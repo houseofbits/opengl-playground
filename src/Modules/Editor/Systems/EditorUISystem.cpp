@@ -2,14 +2,13 @@
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
-#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../../Physics/Components/CharacterControllerComponent.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
 #include "../../Physics/Components/PhysicsJointComponent.h"
 #include "../UI/TexturePreviewHelper.h"
-#include <glm/gtc/type_ptr.hpp>
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
+                                   m_transformGizmo(),
                                    m_ResourceManager(nullptr),
                                    m_isImUIInitialized(false),
                                    m_isDemoWindowVisible(false),
@@ -42,30 +41,10 @@ void EditorUISystem::process(EventManager &eventManager) {
 
     TexturePreviewHelper::process();
 
-    if (m_EditWindowUI.isTransformComponentSelected()) {
-        ImGuizmo::BeginFrame();
-        ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetDrawlist(ImGui::GetBackgroundDrawList());
-        ImGuiViewport *viewport = ImGui::GetMainViewport();
-        ImGuizmo::SetRect(viewport->Pos.x, viewport->Pos.y, viewport->Size.x, viewport->Size.y);
-
+    if (!m_MainToolbarUI.m_isSimulationEnabled) {
         Camera *camera = findActiveCamera();
-        auto *transform = getComponent<TransformComponent>(m_EditWindowUI.m_selectedEntity);
-        assert(transform != nullptr);
-
-        static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
-
-        if(ImGuizmo::Manipulate(glm::value_ptr(camera->viewMatrix),
-                             glm::value_ptr(camera->projectionMatrix),
-                             (ImGuizmo::OPERATION) m_MainToolbarUI.m_currentGizmoOperation,
-                             (ImGuizmo::MODE) m_MainToolbarUI.m_currentGizmoMode,
-                             glm::value_ptr(transform->m_transform),
-                             nullptr,
-                             nullptr,
-                             m_EditWindowUI.m_isBoundsTransformAllowed ? bounds : nullptr
-                             )) {
-            transform->m_initialTransform = transform->m_transform;
-        }
+        assert(camera != nullptr);
+        m_transformGizmo.processGizmo(*m_EntityContext, m_EditWindowUI.m_selectedEntityId, *camera);
     }
 
     ImGui::Render();
@@ -121,7 +100,7 @@ Camera *EditorUISystem::findActiveCamera() {
 
 TransformComponent *EditorUISystem::getSelectedTransformComponent() {
     if (m_EditWindowUI.isTransformComponentSelected()) {
-        return getComponent<TransformComponent>(m_EditWindowUI.m_selectedEntity);
+        return getComponent<TransformComponent>(m_EditWindowUI.m_selectedEntityId);
     }
     return nullptr;
 }

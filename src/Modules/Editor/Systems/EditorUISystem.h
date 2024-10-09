@@ -12,6 +12,7 @@
 #include "../UI/EditWindowUI.h"
 #include "../UI/MainToolbarUI.h"
 #include "../UI/MaterialEditWindowUI.h"
+#include "../UI/TransformGizmoHelper.h"
 
 class EditorUISystem : public EntitySystem {
 public:
@@ -36,6 +37,7 @@ public:
     ResourceManager *m_ResourceManager;
     bool m_isImUIInitialized;
     bool m_isDemoWindowVisible;
+    TransformGizmoHelper m_transformGizmo;
     MainToolbarUI m_MainToolbarUI;
     EditWindowUI m_EditWindowUI;
     MaterialEditWindowUI m_MaterialEditWindowUI;

@@ -15,10 +15,14 @@ void CameraControlInputBehaviour::registerEventHandlers(EventManager &eventManag
 }
 
 std::string CameraControlInputBehaviour::getDescription() {
-    return "Camera controller for editor use (mouse-look and move)";
+    return "Camera controller for editor use (Ctrl + mouse-look and move)";
 }
 
 void CameraControlInputBehaviour::handleInputEvent(const InputEvent *const event) {
+    if (!event->modKeyCtrl) {
+        return;
+    }
+
     auto *cameraComponent = m_Entity->getComponent<CameraComponent>();
     if (cameraComponent == nullptr || !cameraComponent->m_isActive) {
         return;
