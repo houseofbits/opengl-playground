@@ -33,39 +33,38 @@ void CameraControlInputBehaviour::handleInputEvent(const InputEvent *const event
         cameraComponent->rotateView(-event->mouseMotion * lookSpeed * Time::frameTime);
     }
 
-    Camera *camera = &cameraComponent->m_Camera;
-    glm::vec3 position = camera->getPosition();
-    auto tbn = cameraComponent->calculateTBN(camera->getViewDirection());
     float moveSpeed = 3;
+    glm::vec3 direction(0.0);
+    bool doMove = false;
 
     if (event->type == InputEvent::MOUSEMOVE && event->mouseButtonRight) {
-        position += tbn.up * (moveSpeed * event->mouseMotion.y * Time::frameTime);
-        position -= tbn.right * (moveSpeed * event->mouseMotion.x * Time::frameTime);
-        camera->setPosition(position);
-        camera->setView(tbn.view, tbn.up);
+        direction.x -= event->mouseMotion.x;
+        direction.y += event->mouseMotion.y;
+        doMove = true;
     }
 
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 26) {
-        position += tbn.view * (moveSpeed * Time::frameTime);
-        camera->setPosition(position);
-        camera->setView(tbn.view, tbn.up);
+        direction.z += 1;
+        doMove = true;
     }
 
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 22) {
-        position -= tbn.view * (moveSpeed * Time::frameTime);
-        camera->setPosition(position);
-        camera->setView(tbn.view, tbn.up);
+        direction.z -= 1;
+        doMove = true;
     }
 
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 4) {
-        position -= tbn.right * (moveSpeed * Time::frameTime);
-        camera->setPosition(position);
-        camera->setView(tbn.view, tbn.up);
+        direction.x -= 1;
+        doMove = true;
     }
 
     if (event->type == InputEvent::KEYPRESS && event->keyCode == 7) {
-        position += tbn.right * (moveSpeed * Time::frameTime);
-        camera->setPosition(position);
-        camera->setView(tbn.view, tbn.up);
+        direction.x += 1;
+        doMove = true;
     }
+
+    if (doMove) {
+        cameraComponent->moveView(glm::normalize(direction) * moveSpeed * Time::frameTime);
+    }
+
 }

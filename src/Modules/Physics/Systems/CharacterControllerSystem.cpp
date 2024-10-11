@@ -51,12 +51,6 @@ void CharacterControllerSystem::updateCCTs() {
             component.second->create(*transform);
         } else {
             component.second->update(*transform, !m_isSimulationDisabled);
-
-            auto *cameraComp = getComponent<CameraComponent>(component.first);
-            if (cameraComp != nullptr && cameraComp->m_isActive) {
-                cameraComp->m_Camera.setPosition(
-                        transform->getTranslation() + glm::vec3(0, component.second->m_height, 0));
-            }
         }
     }
 }

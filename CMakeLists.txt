@@ -140,6 +140,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Editor/UI/TransformGizmoHelper.cpp
         src/Modules/Editor/UI/TransformGizmoHelper.h
         src/Core/Helper/ComponentTransformEdit.h
+        src/Modules/Common/Systems/TransformHierarchyProcessingSystem.cpp
+        src/Modules/Common/Systems/TransformHierarchyProcessingSystem.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
