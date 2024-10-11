@@ -110,3 +110,28 @@ void Camera::calculateProjection()
     projectionViewMatrix = projectionMatrix * viewMatrix;
 }
 
+Camera &Camera::setViewMatrix(glm::mat4 m) {
+    viewMatrix = m;
+
+    projectionViewMatrix = projectionMatrix * viewMatrix;
+
+    return *this;
+}
+
+Camera &Camera::setFromTransformMatrix(const glm::mat4& m) {
+    setPosition(m[3]);
+    setView(glm::vec3(m[2]), glm::vec3(m[1]));
+
+    return *this;
+}
+
+glm::mat4 Camera::getTransformMatrix() const {
+    glm::mat4 m = glm::mat4(1.0f);
+    m[0] = glm::vec4(glm::normalize(glm::cross(direction, up)), 0.0f);
+    m[1] = glm::vec4(glm::normalize(up), 0.0f);
+    m[2] = glm::vec4(glm::normalize(direction), 0.0f);
+    m[3] = glm::vec4(position, 1.0);
+
+    return m;
+}
+

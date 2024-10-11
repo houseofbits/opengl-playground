@@ -13,12 +13,6 @@ public:
         TYPE_FREE,
     };
 
-    struct TBN {
-        glm::vec3 view;
-        glm::vec3 up;
-        glm::vec3 right;
-    };
-
     inline static std::map<Type, std::string> m_TypeNameMap = {
             {Type::TYPE_FP,   "FP"},
             {Type::TYPE_FREE, "FREE"},
@@ -34,17 +28,25 @@ public:
 
     void rotateView(glm::vec2 viewChangeAlongScreenAxis);
 
+    void moveView(glm::vec3 direction);
+
     glm::mat4 getEditorTransform() override;
 
     void setFromEditorTransform(const glm::mat4 &) override;
+
+    void updateTransformFromParent(const glm::mat4 &parent);
+
+    void updateTransformWorld();
 
     Camera m_Camera;
     bool m_isActive;
     Type m_type;
 
-    TBN calculateTBN(glm::vec3 viewDirection);
-
 private:
 
-    Type getTypeFromName(const std::string &name);
+    static Type getTypeFromName(const std::string &name);
+
+    glm::mat4 m_initialTransformLocal;
+    glm::mat4 m_currentTransformWorld;
+    bool m_shouldSyncWorldTransformToLocal;
 };

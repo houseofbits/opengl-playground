@@ -6,6 +6,7 @@
 #include "Behaviours/CameraControlInputBehaviour.h"
 #include "../Physics/Behaviours/CharacterControlBehaviour.h"
 #include "Behaviours/CameraViewportBehaviour.h"
+#include "Systems/TransformHierarchyProcessingSystem.h"
 
 class CommonModule : public EntityModule {
 public:
@@ -18,4 +19,8 @@ public:
         ctx.registerBehaviour<CharacterControlBehaviour>();
         ctx.registerBehaviour<CameraViewportBehaviour>();
     }
+
+    void registerSystems(EntityContext &ctx) override {
+        ctx.registerEntitySystem<TransformHierarchyProcessingSystem>(10);
+    };
 };

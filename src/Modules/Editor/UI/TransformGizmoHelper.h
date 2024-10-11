@@ -9,7 +9,7 @@ class TransformGizmoHelper {
 public:
     TransformGizmoHelper();
 
-    void processGizmo(EntityContext &ctx, Identity::Type &selectedEntityId, Camera& camera);
+    void processGizmo(EntityContext &ctx, Identity::Type &selectedEntityId, Camera &camera);
 
     void processToolbar(EntityContext &ctx);
 
@@ -37,11 +37,13 @@ private:
 
     void populateTransformOptions(Entity &entity);
 
-    void updateComponentTransform(EntityContext &ctx);
+    void getTransformFromSelectedComponent(EntityContext &ctx);
+
+    void setSelectedComponentTransform(EntityContext &ctx);
 
     template<class T>
     void setTransformToEditorComponent(EntityContext &ctx) {
-        auto edit = (ComponentTransformEdit*)ctx.getEntityComponent<T>(m_selectedEntityId);
+        auto edit = (ComponentTransformEdit *) ctx.getEntityComponent<T>(m_selectedEntityId);
         if (edit != nullptr) {
             edit->setFromEditorTransform(m_transform);
         }
@@ -49,7 +51,7 @@ private:
 
     template<class T>
     void getTransformFromEditorComponent(EntityContext &ctx) {
-        auto edit = (ComponentTransformEdit*)ctx.getEntityComponent<T>(m_selectedEntityId);
+        auto edit = (ComponentTransformEdit *) ctx.getEntityComponent<T>(m_selectedEntityId);
         if (edit != nullptr) {
             m_transform = edit->getEditorTransform();
         }

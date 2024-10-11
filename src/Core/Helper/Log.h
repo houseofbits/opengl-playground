@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 #include <iostream>
 #include <string>
+#include <glm/vec4.hpp>
 
 class Log {
 public:
@@ -46,6 +47,10 @@ private:
 
     static void print(const glm::vec3 &t) {
         std::cout << t.x << "," << t.y << "," << t.z;
+    }
+
+    static void print(const glm::vec4 &t) {
+        std::cout << t.x << "," << t.y << "," << t.z<<","<<t.w;
     }
 
     template<typename First, typename... Rest>

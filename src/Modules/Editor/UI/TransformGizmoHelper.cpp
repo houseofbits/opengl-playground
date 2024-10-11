@@ -54,7 +54,9 @@ void TransformGizmoHelper::processGizmo(EntityContext &ctx, Identity::Type &sele
                              nullptr,
                              nullptr //m_EditWindowUI.m_isBoundsTransformAllowed ? bounds : nullptr
     )) {
-        updateComponentTransform(ctx);
+        setSelectedComponentTransform(ctx);
+    } else {
+        getTransformFromSelectedComponent(ctx);
     }
 }
 
@@ -185,21 +187,10 @@ TransformGizmoHelper::handleOptionSelection(EntityContext &ctx, TransformGizmoHe
     m_selectedTransformOption = optionType;
     m_selectedGizmoOperation = m_transformOptions[optionType].defaultOperation;
     m_selectedGizmoMode = ImGuizmo::WORLD;
-
-    switch (m_selectedTransformOption) {
-        case TRANSFORM_PRIMARY:
-            getTransformFromEditorComponent<TransformComponent>(ctx);
-            break;
-        case TRANSFORM_HINGE_JOINT:
-            getTransformFromEditorComponent<PhysicsJointComponent>(ctx);
-            break;
-        case TRANSFORM_CAMERA:
-            getTransformFromEditorComponent<CameraComponent>(ctx);
-            break;
-    }
+    getTransformFromSelectedComponent(ctx);
 }
 
-void TransformGizmoHelper::updateComponentTransform(EntityContext &ctx) {
+void TransformGizmoHelper::setSelectedComponentTransform(EntityContext &ctx) {
     switch (m_selectedTransformOption) {
         case TRANSFORM_PRIMARY:
             setTransformToEditorComponent<TransformComponent>(ctx);
@@ -209,6 +200,20 @@ void TransformGizmoHelper::updateComponentTransform(EntityContext &ctx) {
             break;
         case TRANSFORM_CAMERA:
             setTransformToEditorComponent<CameraComponent>(ctx);
+            break;
+    }
+}
+
+void TransformGizmoHelper::getTransformFromSelectedComponent(EntityContext &ctx) {
+    switch (m_selectedTransformOption) {
+        case TRANSFORM_PRIMARY:
+            getTransformFromEditorComponent<TransformComponent>(ctx);
+            break;
+        case TRANSFORM_HINGE_JOINT:
+            getTransformFromEditorComponent<PhysicsJointComponent>(ctx);
+            break;
+        case TRANSFORM_CAMERA:
+            getTransformFromEditorComponent<CameraComponent>(ctx);
             break;
     }
 }

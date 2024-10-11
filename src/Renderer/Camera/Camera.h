@@ -34,6 +34,8 @@ public:
     Camera &setFromAngles(float horizontal, float vertical);
     Camera &setPosition(glm::vec3 position);
     Camera &setZFar(float);
+    Camera &setViewMatrix(glm::mat4);
+    Camera &setFromTransformMatrix(const glm::mat4&);
 
     glm::mat4 &getProjectionViewMatrix();
     glm::mat4 &getViewMatrix() { return viewMatrix; }
@@ -41,6 +43,7 @@ public:
     glm::vec3 &getViewDirection();
     glm::vec3 &getUpDirection();
     glm::vec3 &getPosition() { return position; };
+    [[nodiscard]] glm::mat4 getTransformMatrix() const;
 
 private:
     void calculateView();
