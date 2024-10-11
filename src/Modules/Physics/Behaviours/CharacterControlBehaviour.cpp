@@ -38,7 +38,7 @@ void CharacterControlBehaviour::handleInputEvent(const InputEvent *const event) 
     forwardDirection = glm::normalize(forwardDirection);
     glm::vec3 rightDirection = glm::normalize(glm::cross(forwardDirection, glm::vec3(0, 1, 0)));
     bool doMove = false;
-    glm::vec3 movementDirection(0, 0, 0);
+    glm::vec3 movementDirection(0);
 
     //W
     if (event->keyCode == 26) {

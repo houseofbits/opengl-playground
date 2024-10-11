@@ -36,5 +36,23 @@ public:
             ImGui::InputFloat3("Scaling", matrixScale);
         }
         ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, &transform->m_transform[0][0]);
+
+
+        if (ImGui::BeginCombo("Parent##PARENT_ENTITY_NAME", transform->m_parentEntityName.c_str())) {
+            for (const auto &entity: m_EditorUISystem->m_EntityContext->getAllEntities()) {
+                auto* c = entity->getComponent<TransformComponent>();
+                if(c != nullptr && c->m_EntityId.id() != transform->m_EntityId.id()) {
+                    if (ImGui::Selectable(entity->m_Name.c_str(), entity->m_Name == transform->m_parentEntityName)) {
+                        transform->m_parentEntityName = entity->m_Name;
+                        transform->m_shouldUpdateParentEntityId = true;
+                    }
+                }
+            }
+            if (ImGui::Selectable("No parent", transform->m_parentEntityName.empty())) {
+                transform->m_parentEntityName.clear();
+                transform->m_shouldUpdateParentEntityId = true;
+            }
+            ImGui::EndCombo();
+        }
     }
 };

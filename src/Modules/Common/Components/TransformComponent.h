@@ -19,6 +19,7 @@ public:
     inline static const std::string ALLOW_TRANSLATION_KEY = "allowTranslation";
     inline static const std::string ALLOW_ROTATION_KEY = "allowRotation";
     inline static const std::string ALLOW_SCALING_KEY = "allowScaling";
+    inline static const std::string PARENT_ENTITY_KEY = "parent";
 
     TransformComponent();
 
@@ -65,4 +66,8 @@ public:
     bool m_isScalingEnabled;
     glm::mat4 m_transform;
     glm::mat4 m_initialTransform;
+
+    bool m_shouldUpdateParentEntityId;
+    std::string m_parentEntityName;
+    Identity::Type m_parentEntityId;
 };

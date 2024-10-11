@@ -107,7 +107,7 @@ void CharacterControllerComponent::update(TransformComponent &transform, bool is
 }
 
 void CharacterControllerComponent::move(glm::vec3 direction) {
-    m_movementDirection = direction;
+    m_movementDirection = glm::normalize(m_movementDirection + direction);
     m_doMove = true;
 }
 
@@ -236,4 +236,5 @@ void CharacterControllerComponent::updateMove() {
     m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());
 
     m_doMove = false;
+    m_movementDirection = glm::vec3(0.0f);
 }

@@ -23,11 +23,11 @@ Character should have a basic gun that shoots tennis balls. I should be able to 
 ### Editor
 - [ ] Transform gizmo having selectable targets (Transform, Joint pivot, Joint axis)
   - [ ] Transform getter/setter for the Joint component
-  - [ ] Transform getter/setter for camera component
+  - [x] Transform getter/setter for camera component
   - [x] UI Transform gizmo helper class
 
 ### General
-- [ ] Relative transform for camera 
+- [x] Relative transform for camera 
 - [ ] Relative transforms (assign parent transform component)
 - [ ] Basic animation component (animates transform, position and rotation)
 

@@ -17,7 +17,10 @@ TransformComponent::TransformComponent() : Component(),
                                            m_initialTransform(1.0),
                                            m_isTranslationEnabled(true),
                                            m_isRotationEnabled(true),
-                                           m_isScalingEnabled(true) {
+                                           m_isScalingEnabled(true),
+                                           m_parentEntityId(0),
+                                           m_parentEntityName(),
+                                           m_shouldUpdateParentEntityId(false) {
 }
 
 void TransformComponent::registerWithSystems(EntityContext &ctx) {
@@ -71,6 +74,9 @@ void TransformComponent::serialize(nlohmann::json &j) {
     if (m_isScalingEnabled) {
         j[SCALE_KEY] = scale;
     }
+    if (m_parentEntityId > 0) {
+        j[PARENT_ENTITY_KEY] = m_parentEntityName;
+    }
 }
 
 void TransformComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -93,6 +99,11 @@ void TransformComponent::deserialize(const nlohmann::json &j, ResourceManager &r
     }
 
     m_initialTransform = m_transform;
+
+    m_parentEntityName = j.value(PARENT_ENTITY_KEY, m_parentEntityName);
+    if (!m_parentEntityName.empty()) {
+        m_shouldUpdateParentEntityId = true;
+    }
 }
 
 void TransformComponent::setTranslation(glm::vec3 pos) {
