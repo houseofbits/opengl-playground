@@ -31,13 +31,13 @@ void PhysicsBodyProcessingSystem::process(EventManager &eventManager) {
     }
 }
 
-void PhysicsBodyProcessingSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
-    if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
+void PhysicsBodyProcessingSystem::handleEditorUIEvent(const EditorUIEvent & event) {
+    if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
         m_isSimulationDisabled = false;
         wakeUpAll();
-    } else if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
+    } else if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
         m_isSimulationDisabled = true;
-    } else if (event->m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
+    } else if (event.m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
         resetToInitialTransform();
         m_isSimulationDisabled = true;
     }

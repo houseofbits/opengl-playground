@@ -3,9 +3,10 @@
 #include "../../../Core/API.h"
 
 class EditorUIEvent : public BaseEvent {
-    TYPE_DEFINITION(EditorUIEvent);
+TYPE_DEFINITION(EditorUIEvent);
 
 public:
+
     typedef enum Type {
         UNDEFINED,
         EDITOR_ENABLED,
@@ -19,6 +20,11 @@ public:
         TOGGLE_SIMULATION_ENABLED,
         RESET_TO_INITIAL_TRANSFORM,
     } Type;
+
+    EditorUIEvent() : BaseEvent() {
+    }
+
+    explicit EditorUIEvent(EditorUIEvent::Type type) : BaseEvent(), m_Type(type) {}
 
     Type m_Type{UNDEFINED};
 };

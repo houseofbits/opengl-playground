@@ -14,7 +14,6 @@
 #include "ComponentEdit/PhysicsJointComponentEdit.h"
 #include "ComponentEdit/StaticMeshComponentEdit.h"
 #include "ComponentEdit/TransformComponentEdit.h"
-#include "FileDialogHelper.h"
 #include "../../../Core/Helper/StringUtils.h"
 #include <utility>
 
@@ -201,55 +200,37 @@ bool EditWindowUI::isTransformComponentSelected() {
     return true;
 }
 
-void EditWindowUI::sendEntityCreationEvent(std::string name, std::string entityName) {
-    auto evt = new EntityCreationEvent();
-    evt->m_Type = EntityCreationEvent::CREATE;
-    evt->m_ConfigurationName = std::move(name);
-    evt->m_name = std::move(entityName);
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+void EditWindowUI::sendEntityCreationEvent(std::string configName, std::string entityName) {
+    m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::CREATE,
+                                                                      std::move(entityName), std::move(configName));
 }
 
 void EditWindowUI::sendEntityRemovalEvent() {
-    auto evt = new EntityCreationEvent();
-    evt->m_Type = EntityCreationEvent::REMOVE;
-    evt->m_entityId = (int) m_selectedEntityId;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+    m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE,
+                                                                      m_selectedEntityId);
 }
 
 void EditWindowUI::sendEntityCloneEvent(Identity::Type entityId) {
-    auto evt = new EntityCreationEvent();
-    evt->m_Type = EntityCreationEvent::CLONE;
-    evt->m_entityId = (int) entityId;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+    m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::CLONE, entityId);
 }
 
 void EditWindowUI::sendComponentCreationEvent(std::string name) {
-    auto evt = new EntityCreationEvent();
-    evt->m_Type = EntityCreationEvent::CREATE_COMPONENT;
-    evt->m_name = std::move(name);
-    evt->m_entityId = (int) m_selectedEntityId;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+    m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::CREATE_COMPONENT,
+                                                                      m_selectedEntityId, std::move(name));
 }
 
 void EditWindowUI::sendComponentRemovalEvent(std::string name) {
-    auto evt = new EntityCreationEvent();
-    evt->m_Type = EntityCreationEvent::REMOVE_COMPONENT;
-    evt->m_name = std::move(name);
-    evt->m_entityId = (int) m_selectedEntityId;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+    m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE_COMPONENT,
+                                                                      m_selectedEntityId, std::move(name));
 }
 
 void EditWindowUI::processBehavioursEdit(Entity *e) {
     if (ImGui::BeginCombo("##BEHAVIOUR", "Add")) {
         for (const auto &behaviourType: m_EditorUISystem->m_EntityContext->getBehaviourTypes()) {
             if (ImGui::Selectable(behaviourType.c_str(), false)) {
-//                Log::write("Add ", behaviourType);
+                m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::ADD_BEHAVIOUR,
+                                                                                  m_selectedEntityId, behaviourType);
 
-                auto evt = new EntityCreationEvent();
-                evt->m_Type = EntityCreationEvent::ADD_BEHAVIOUR;
-                evt->m_name = behaviourType;
-                evt->m_entityId = (int) m_selectedEntityId;
-                m_EditorUISystem->m_EventManager->queueEvent(evt);
             }
         }
         ImGui::EndCombo();
@@ -274,11 +255,9 @@ void EditWindowUI::processBehavioursEdit(Entity *e) {
                 });
 
         if (it != e->m_Behaviours.end()) {
-            auto evt = new EntityCreationEvent();
-            evt->m_Type = EntityCreationEvent::REMOVE_BEHAVIOUR;
-            evt->m_name = (*it)->getTypeName();
-            evt->m_entityId = (int) m_selectedEntityId;
-            m_EditorUISystem->m_EventManager->queueEvent(evt);
+            m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE_BEHAVIOUR,
+                                                                              m_selectedEntityId,
+                                                                              (*it)->getTypeName());
         }
     }
 

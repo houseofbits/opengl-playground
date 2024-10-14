@@ -14,7 +14,7 @@ public:
 
     void registerEventHandlers(EventManager &) override;
 
-    void handleEditorUIEvent(const EditorUIEvent *);
+    void handleEditorUIEvent(const EditorUIEvent &);
 
 private:
     void renderGeometry(int lightIndex);

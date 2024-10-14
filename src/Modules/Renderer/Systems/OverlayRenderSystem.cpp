@@ -18,10 +18,10 @@ void OverlayRenderSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &OverlayRenderSystem::handleEditorUIEvent);
 }
 
-void OverlayRenderSystem::handleWindowEvent(const WindowEvent *const event) {
+void OverlayRenderSystem::handleWindowEvent(const WindowEvent & event) {
 
 }
 
-void OverlayRenderSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
+void OverlayRenderSystem::handleEditorUIEvent(const EditorUIEvent & event) {
 
 }

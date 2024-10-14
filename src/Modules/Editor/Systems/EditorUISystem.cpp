@@ -54,12 +54,17 @@ void EditorUISystem::process(EventManager &eventManager) {
 void EditorUISystem::initialize(ResourceManager &manager) {
     m_ResourceManager = &manager;
 
+
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     (void) io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+//    ImGui_ImplSDL2_Init();
+//    ImGui_ImplOpenGL3_Init();
+//
+
 //    ImGui::StyleColorsLight();
 
 //    ImGuiStyle& style = ImGui::GetStyle();
@@ -72,17 +77,17 @@ void EditorUISystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &EditorUISystem::handleRawSDLEvent);
 }
 
-void EditorUISystem::handleWindowEvent(const WindowEvent *const event) {
-    if (event->eventType == WindowEvent::OPENGL_CONTEXT_CREATED) {
-        ImGui_ImplSDL2_InitForOpenGL(event->window->getSDLWindow(), event->window->getSDLContext());
+void EditorUISystem::handleWindowEvent(const WindowEvent &event) {
+    if (event.eventType == WindowEvent::OPENGL_CONTEXT_CREATED) {
+        ImGui_ImplSDL2_InitForOpenGL(event.window->getSDLWindow(), event.window->getSDLContext());
         ImGui_ImplOpenGL3_Init("#version 410");
         m_isImUIInitialized = true;
     }
 }
 
-void EditorUISystem::handleRawSDLEvent(const RawSDLEvent *const event) {
+void EditorUISystem::handleRawSDLEvent(const RawSDLEvent &event) {
     if (m_isImUIInitialized) {
-        ImGui_ImplSDL2_ProcessEvent(&event->sdlEvent);
+        ImGui_ImplSDL2_ProcessEvent(&event.sdlEvent);
     }
 }
 
@@ -105,7 +110,7 @@ TransformComponent *EditorUISystem::getSelectedTransformComponent() {
     return nullptr;
 }
 
-void EditorUISystem::openMaterialEditor(ResourceHandle<MaterialResource>& handle) {
+void EditorUISystem::openMaterialEditor(ResourceHandle<MaterialResource> &handle) {
     if (handle.isValid()) {
         m_MaterialEditWindowUI.open(handle);
     }
@@ -113,13 +118,14 @@ void EditorUISystem::openMaterialEditor(ResourceHandle<MaterialResource>& handle
 
 void EditorUISystem::processDockSpaceWindow() {
     ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGuiViewport *viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->Pos);
     ImGui::SetNextWindowSize(viewport->Size);
     ImGui::SetNextWindowViewport(viewport->ID);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+                   ImGuiWindowFlags_NoMove;
     windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
     ImGui::Begin("Dockspace Window", nullptr, windowFlags);
     ImGui::PopStyleVar(2);

@@ -19,9 +19,9 @@ public:
 
     void registerEventHandlers(EventManager &) override;
 
-    void handleWindowEvent(const WindowEvent *);
+    void handleWindowEvent(const WindowEvent &);
 
-    void handleEditorUIEvent(const EditorUIEvent *);
+    void handleEditorUIEvent(const EditorUIEvent &);
 
 private:
     enum ShaderType {

@@ -24,9 +24,9 @@ public:
 
     void registerEventHandlers(EventManager &) override;
 
-    void handleWindowEvent(const WindowEvent *);
+    void handleWindowEvent(const WindowEvent &);
 
-    void handleRawSDLEvent(const RawSDLEvent *);
+    void handleRawSDLEvent(const RawSDLEvent &);
 
     Camera *findActiveCamera();
 

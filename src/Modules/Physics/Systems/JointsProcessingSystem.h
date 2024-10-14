@@ -14,7 +14,7 @@ public:
 
     void process(EventManager &) override;
 
-    void handleCharacterPickingEvent(const PhysicsPickingEvent *);
+    void handleCharacterPickingEvent(const PhysicsPickingEvent &);
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 };

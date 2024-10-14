@@ -18,8 +18,8 @@ std::string CharacterControlBehaviour::getDescription() {
     return "Controls movement of the character (WASD)";
 }
 
-void CharacterControlBehaviour::handleInputEvent(const InputEvent *const event) {
-    if (event->type != InputEvent::KEYPRESS) {
+void CharacterControlBehaviour::handleInputEvent(const InputEvent & event) {
+    if (event.type != InputEvent::KEYPRESS) {
         return;
     }
 
@@ -41,22 +41,22 @@ void CharacterControlBehaviour::handleInputEvent(const InputEvent *const event) 
     glm::vec3 movementDirection(0);
 
     //W
-    if (event->keyCode == 26) {
+    if (event.keyCode == 26) {
         doMove = true;
         movementDirection = movementDirection + forwardDirection;
     }
     //S
-    if (event->keyCode == 22) {
+    if (event.keyCode == 22) {
         doMove = true;
         movementDirection = movementDirection - forwardDirection;
     }
     //A
-    if (event->keyCode == 4) {
+    if (event.keyCode == 4) {
         doMove = true;
         movementDirection = movementDirection - rightDirection;
     }
     //D
-    if (event->keyCode == 7) {
+    if (event.keyCode == 7) {
         doMove = true;
         movementDirection = movementDirection + rightDirection;
     }

@@ -1,7 +1,5 @@
 #include "PhysicsSystem.h"
 
-//using namespace physx;
-
 PhysicsSystem::PhysicsSystem() : EntitySystem(),
                                  m_isSimulationDisabled(false),
                                  m_PhysicsResource() {
@@ -26,12 +24,12 @@ void PhysicsSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &PhysicsSystem::handleEditorUIEvent);
 }
 
-void PhysicsSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
-    if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
+void PhysicsSystem::handleEditorUIEvent(const EditorUIEvent & event) {
+    if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
         m_isSimulationDisabled = false;
-    } else if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
+    } else if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
         m_isSimulationDisabled = true;
-    } else if (event->m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
+    } else if (event.m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
         m_isSimulationDisabled = true;
     }
 }

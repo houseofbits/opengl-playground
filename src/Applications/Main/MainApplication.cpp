@@ -49,25 +49,25 @@ void MainApplication::run() {
     m_Window.destroy();
 }
 
-void MainApplication::handleInputEvent(const InputEvent *const event) {
+void MainApplication::handleInputEvent(const InputEvent &) {
 
 }
 
-void MainApplication::handleEditorUIEvent(const EditorUIEvent *const event) {
-    if (event->m_Type == EditorUIEvent::SAVE) {
+void MainApplication::handleEditorUIEvent(const EditorUIEvent &event) {
+    if (event.m_Type == EditorUIEvent::SAVE) {
         saveEntitiesToFile();
     }
 }
 
-void MainApplication::handleEntityCreationEvent(const EntityCreationEvent *const event) {
-    if (event->m_Type == EntityCreationEvent::CREATE) {
-        auto e = m_EntityContext.createEntityFromTemplate(event->m_ConfigurationName, m_ResourceManager);
-        e->m_Name = event->m_name;
+void MainApplication::handleEntityCreationEvent(const EntityCreationEvent &event) {
+    if (event.m_Type == EntityCreationEvent::CREATE) {
+        auto e = m_EntityContext.createEntityFromTemplate(event.m_ConfigurationName, m_ResourceManager);
+        e->m_Name = event.m_name;
         nlohmann::basic_json json;
         EntitySerializer::deserialize(*e, json, m_ResourceManager);
     }
-    if (event->m_Type == EntityCreationEvent::CLONE) {
-        auto existingEntity = m_EntityContext.getEntity(event->m_entityId);
+    if (event.m_Type == EntityCreationEvent::CLONE) {
+        auto existingEntity = m_EntityContext.getEntity(event.m_entityId);
         if (existingEntity != nullptr) {
             nlohmann::basic_json json;
             EntitySerializer::serialize(*existingEntity, json);
@@ -76,19 +76,19 @@ void MainApplication::handleEntityCreationEvent(const EntityCreationEvent *const
             e->m_Name = existingEntity->m_Name + "-COPY";
         }
     }
-    if (event->m_Type == EntityCreationEvent::REMOVE) {
-        m_EntityContext.removeEntity(event->m_entityId);
+    if (event.m_Type == EntityCreationEvent::REMOVE) {
+        m_EntityContext.removeEntity(event.m_entityId);
     }
-    if (event->m_Type == EntityCreationEvent::CREATE_COMPONENT) {
-        m_EntityContext.createComponentInplace(event->m_entityId, event->m_name);
+    if (event.m_Type == EntityCreationEvent::CREATE_COMPONENT) {
+        m_EntityContext.createComponentInplace(event.m_entityId, event.m_name);
     }
-    if (event->m_Type == EntityCreationEvent::REMOVE_COMPONENT) {
-        m_EntityContext.removeComponent(event->m_entityId, event->m_name);
+    if (event.m_Type == EntityCreationEvent::REMOVE_COMPONENT) {
+        m_EntityContext.removeComponent(event.m_entityId, event.m_name);
     }
-    if (event->m_Type == EntityCreationEvent::ADD_BEHAVIOUR) {
-        m_EntityContext.addBehaviour(event->m_entityId, event->m_name);
+    if (event.m_Type == EntityCreationEvent::ADD_BEHAVIOUR) {
+        m_EntityContext.addBehaviour(event.m_entityId, event.m_name);
     }
-    if (event->m_Type == EntityCreationEvent::REMOVE_BEHAVIOUR) {
-        m_EntityContext.removeBehaviour(event->m_entityId, event->m_name);
+    if (event.m_Type == EntityCreationEvent::REMOVE_BEHAVIOUR) {
+        m_EntityContext.removeBehaviour(event.m_entityId, event.m_name);
     }
 }

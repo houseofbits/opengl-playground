@@ -2,8 +2,10 @@
 
 #include "Event.h"
 
+#include <utility>
+
 class EntityCreationEvent : public BaseEvent {
-    TYPE_DEFINITION(EntityCreationEvent);
+TYPE_DEFINITION(EntityCreationEvent);
 
 public:
     enum Type {
@@ -22,6 +24,22 @@ public:
                             m_name(),
                             m_Type(CREATE) {
     }
+
+    EntityCreationEvent(Type type, int entityId) : BaseEvent(),
+                                                   m_Type(type),
+                                                   m_entityId(entityId) {}
+
+    EntityCreationEvent(Type type, int entityId, std::string name) : BaseEvent(),
+                                                                     m_Type(type),
+                                                                     m_entityId(entityId),
+                                                                     m_name(std::move(name)) {}
+
+    EntityCreationEvent(Type type, std::string name, std::string className) : BaseEvent(),
+                                                                              m_Type(type),
+                                                                              m_name(std::move(name)),
+                                                                              m_ConfigurationName(
+                                                                                      std::move(className)),
+                                                                              m_entityId(0) {}
 
     Type m_Type;
     std::string m_ConfigurationName;

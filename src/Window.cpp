@@ -38,7 +38,7 @@ void Window::create()
         viewportHeight,
         windowFlags);
 
-    eventManager->queueEvent(new WindowEvent(WindowEvent::Type::CREATE, this));
+    eventManager->queueEvent<WindowEvent>(WindowEvent::Type::CREATE, this);
 
     if (sdlWindow == nullptr)
     {
@@ -89,7 +89,7 @@ void Window::create()
 //    glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES, &maxVertices);
 //    std::cout << "GS maximum number of vertices: " << maxVertices << std::endl;
 
-    eventManager->queueEvent(new WindowEvent(WindowEvent::Type::OPENGL_CONTEXT_CREATED, this));
+    eventManager->queueEvent<WindowEvent>(WindowEvent::Type::OPENGL_CONTEXT_CREATED, this);
 
     // std::cout<<"Window created"<<std::endl;
 }
@@ -115,8 +115,7 @@ bool Window::pollEvents()
 
     while (SDL_PollEvent(&sdl_event) != 0)
     {
-        auto evt = RawSDLEvent(sdl_event);
-        eventManager->triggerEvent(&evt);
+        eventManager->triggerEvent<RawSDLEvent>(sdl_event);
 
         if (sdl_event.type == SDL_QUIT)
         {
@@ -144,7 +143,7 @@ bool Window::pollEvents()
                     SDL_SetWindowFullscreen(sdlWindow, windowFlags);
                 }
 
-                eventManager->queueEvent(new WindowEvent(WindowEvent::Type::RESIZE, this));
+                    eventManager->queueEvent<WindowEvent>(WindowEvent::Type::RESIZE, this);
                 break;
             }
         }
@@ -229,24 +228,24 @@ void Window::doubleBuffer()
 
 void Window::onKeyEvent(InputEvent::EventType type, int keysym, bool isAlt, bool isCtrl, bool isShift)
 {
-    auto *event = new InputEvent(type);
-    event->keyCode = keysym;
-    event->modKeyAlt = isAlt;
-    event->modKeyShift = isShift;
-    event->modKeyCtrl = isCtrl;
+    auto& event = eventManager->createEvent<InputEvent>(type);
+    event.keyCode = keysym;
+    event.modKeyAlt = isAlt;
+    event.modKeyShift = isShift;
+    event.modKeyCtrl = isCtrl;
     eventManager->queueEvent(event);
 }
 
 void Window::onMouseEvent(InputEvent::EventType type, glm::vec2 position, glm::vec2 motion, bool mouseLeft, bool mouseRight, bool isAlt, bool isCtrl, bool isShift)
 {
-    auto *event = new InputEvent(type);
-    event->mousePosition = position;
-    event->mouseMotion = motion;
-    event->mouseButtonLeft = mouseLeft;
-    event->mouseButtonRight = mouseRight;
-    event->modKeyAlt = isAlt;
-    event->modKeyShift = isShift;
-    event->modKeyCtrl = isCtrl;
+    auto& event = eventManager->createEvent<InputEvent>(type);
+    event.mousePosition = position;
+    event.mouseMotion = motion;
+    event.mouseButtonLeft = mouseLeft;
+    event.mouseButtonRight = mouseRight;
+    event.modKeyAlt = isAlt;
+    event.modKeyShift = isShift;
+    event.modKeyCtrl = isCtrl;
     eventManager->queueEvent(event);
 }
 

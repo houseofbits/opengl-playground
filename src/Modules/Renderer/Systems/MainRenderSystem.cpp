@@ -22,10 +22,10 @@ void MainRenderSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &MainRenderSystem::handleEditorUIEvent);
 }
 
-void MainRenderSystem::handleWindowEvent(const WindowEvent *const event) {
-    if (event->eventType == WindowEvent::RESIZE || event->eventType == WindowEvent::CREATE) {
-        m_viewportWidth = event->window->viewportWidth;
-        m_viewportHeight = event->window->viewportHeight;
+void MainRenderSystem::handleWindowEvent(const WindowEvent & event) {
+    if (event.eventType == WindowEvent::RESIZE || event.eventType == WindowEvent::CREATE) {
+        m_viewportWidth = event.window->viewportWidth;
+        m_viewportHeight = event.window->viewportHeight;
     }
 }
 
@@ -118,14 +118,14 @@ Camera *MainRenderSystem::findActiveCamera() {
     return nullptr;
 }
 
-void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
-    if (event->m_Type == EditorUIEvent::TOGGLE_RENDER_SHADED) {
+void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent & event) {
+    if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_SHADED) {
         m_shaderType = SHADER_SHADED;
     }
-    if (event->m_Type == EditorUIEvent::TOGGLE_RENDER_PROBES) {
+    if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_PROBES) {
         m_shaderType = SHADER_PROBES;
     }
-    if (event->m_Type == EditorUIEvent::TOGGLE_RENDER_REFLECTIONS) {
+    if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_REFLECTIONS) {
         m_shaderType = SHADER_REFLECTION;
     }
 }

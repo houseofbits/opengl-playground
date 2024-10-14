@@ -21,7 +21,7 @@ void ShadowMapRenderSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &ShadowMapRenderSystem::handleEditorUIEvent);
 }
 
-void ShadowMapRenderSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
+void ShadowMapRenderSystem::handleEditorUIEvent(const EditorUIEvent & event) {
 }
 
 void ShadowMapRenderSystem::process(EventManager &eventManager) {

@@ -111,8 +111,8 @@ void EnvironmentProbeRenderSystem::renderGeometry() {
     }
 }
 
-void EnvironmentProbeRenderSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
-    if (event->m_Type == EditorUIEvent::TRIGGER_PROBE_RENDER) {
+void EnvironmentProbeRenderSystem::handleEditorUIEvent(const EditorUIEvent & event) {
+    if (event.m_Type == EditorUIEvent::TRIGGER_PROBE_RENDER) {
         m_isRenderEnabled = true;
     }
 }

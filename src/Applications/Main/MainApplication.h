@@ -12,11 +12,11 @@ public:
 
     void initialize(const std::string &entityDefinitionFileName);
 
-    void handleInputEvent(const InputEvent *);
+    void handleInputEvent(const InputEvent&);
 
-    void handleEditorUIEvent(const EditorUIEvent *);
+    void handleEditorUIEvent(const EditorUIEvent&);
 
-    void handleEntityCreationEvent(const EntityCreationEvent *);
+    void handleEntityCreationEvent(const EntityCreationEvent&);
 
     //Used for event manager to identify target handlers
     Identity::Type getId() override { return 0; }

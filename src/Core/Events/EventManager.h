@@ -3,6 +3,7 @@
 #include "Event.h"
 #include "../Reflection/Identity.h"
 #include "../Helper/Log.h"
+#include "WindowEvent.h"
 #include <iostream>
 #include <list>
 #include <map>
@@ -30,7 +31,7 @@ public:
 template<class T, class EventT>
 class HandlerFunctionInstance : public BaseHandlerFunction {
 public:
-    typedef void (T::*EventHandlerFunction)(const EventT *const);
+    typedef void (T::*EventHandlerFunction)(const EventT &);
 
     HandlerFunctionInstance() : handlerFunction(), instance(nullptr) {}
 
@@ -40,7 +41,7 @@ public:
     }
 
     void call(BaseEvent *event) override {
-        (instance->*handlerFunction)((EventT *) event);
+        (instance->*handlerFunction)((const EventT &) *event);
     }
 
     Identity::Type getId() override {
@@ -67,7 +68,7 @@ public:
     typedef std::list<BaseEvent *> TEventList;
 
     template<class T, class EventT>
-    void registerEventReceiver(T *const instance, void (T::*function)(const EventT *const)) {
+    void registerEventReceiver(T *const instance, void (T::*function)(const EventT &)) {
         if (eventReceivers.find(EventT::TypeId()) == eventReceivers.end()) {
             eventReceivers[EventT::TypeId()] = new THandlerFunctionsList();
         }
@@ -75,17 +76,17 @@ public:
         eventReceivers[EventT::TypeId()]->push_back(new HandlerFunctionInstance<T, EventT>(instance, function));
     }
 
-    template<class EventT>
-    EventT *createEvent() {
-        auto evt = new EventT();
+    template<class EventT, class... Ts>
+    EventT &createEvent(Ts... args) {
+        auto evt = new EventT(args...);
         evt->m_EventManager = this;
 
-        return evt;
+        return *evt;
     }
 
     template<typename EventT>
-    void triggerEvent(EventT *const event) {
-        THandlerFunctionsList *handlers = eventReceivers[event->getTypeId()];
+    void triggerEvent(EventT &event) {
+        THandlerFunctionsList *handlers = eventReceivers[event.getTypeId()];
 
         if (!handlers) {
             return;
@@ -93,14 +94,24 @@ public:
 
         for (auto &handler: *handlers) {
             if (handler) {
-                handler->call(event);
+                handler->call(&event);
             }
         }
     }
 
+    template<class EventT, class... Ts>
+    void triggerEvent(Ts... args) {
+        triggerEvent(createEvent<EventT>(args...));
+    }
+
     template<typename EventT>
-    void queueEvent(EventT *const event) {
-        next->push_back(event);
+    void queueEvent(EventT &event) {
+        next->push_back(&event);
+    }
+
+    template<class EventT, class... Ts>
+    void queueEvent(Ts... args) {
+        queueEvent(createEvent<EventT>(args...));
     }
 
     void processEvents() {
@@ -124,7 +135,6 @@ public:
             }
 
             for (auto const &handler: *handlers) {
-
                 handler->call(event);
             }
 

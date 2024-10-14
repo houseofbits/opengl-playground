@@ -15,15 +15,15 @@ void CharacterMouseLookBehaviour::registerEventHandlers(EventManager &eventManag
     eventManager.registerEventReceiver(this, &CharacterMouseLookBehaviour::handleInputEvent);
 }
 
-void CharacterMouseLookBehaviour::handleInputEvent(const InputEvent *const event) {
-    if (event->type == InputEvent::MOUSEMOVE && event->mouseButtonLeft) {
+void CharacterMouseLookBehaviour::handleInputEvent(const InputEvent & event) {
+    if (event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) {
         auto *cameraComponent = m_Entity->getComponent<CameraComponent>();
         if (cameraComponent == nullptr || !cameraComponent->m_isActive) {
             return;
         }
 
         float lookSpeed = 0.15;
-        cameraComponent->rotateView(-event->mouseMotion * lookSpeed * Time::frameTime);
+        cameraComponent->rotateView(-event.mouseMotion * lookSpeed * Time::frameTime);
 
         auto *characterComponent = m_Entity->getComponent<CharacterControllerComponent>();
         if (characterComponent == nullptr) {

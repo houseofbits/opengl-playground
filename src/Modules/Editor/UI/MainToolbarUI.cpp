@@ -72,21 +72,16 @@ void MainToolbarUI::process() {
 }
 
 void MainToolbarUI::sendSaveEvent() {
-    auto evt = new EditorUIEvent();
-    evt->m_Type = EditorUIEvent::SAVE;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+    m_EditorUISystem->m_EventManager->queueEvent<EditorUIEvent>(EditorUIEvent::SAVE);
 }
 
 void MainToolbarUI::sendEditorStateEvent() {
-    auto evt = new EditorUIEvent();
-    evt->m_Type = m_isEditWindowVisible ? EditorUIEvent::EDITOR_ENABLED : EditorUIEvent::EDITOR_DISABLED;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+    m_EditorUISystem->m_EventManager->queueEvent<EditorUIEvent>(
+            m_isEditWindowVisible ? EditorUIEvent::EDITOR_ENABLED : EditorUIEvent::EDITOR_DISABLED);
 }
 
 void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) {
-    auto evt = new EditorUIEvent();
-    evt->m_Type = type;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+    m_EditorUISystem->m_EventManager->queueEvent<EditorUIEvent>(type);
 }
 
 void MainToolbarUI::processViewMenu() {
