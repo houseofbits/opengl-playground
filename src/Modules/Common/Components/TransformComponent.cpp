@@ -20,7 +20,8 @@ TransformComponent::TransformComponent() : Component(),
                                            m_isScalingEnabled(true),
                                            m_parentEntityId(0),
                                            m_parentEntityName(),
-                                           m_shouldUpdateParentEntityId(false) {
+                                           m_shouldUpdateParentEntityId(false),
+                                           m_shouldSyncWorldTransformToLocal(false) {
 }
 
 void TransformComponent::registerWithSystems(EntityContext &ctx) {
@@ -194,9 +195,24 @@ glm::quat TransformComponent::getInitialRotation() {
 }
 
 glm::mat4 TransformComponent::getEditorTransform() {
-    return m_initialTransform;
+    return m_transform;
 }
 
 void TransformComponent::setFromEditorTransform(const glm::mat4 &m) {
-    m_transform = m_initialTransform = m;
+    m_transform = m;
+
+    if (m_parentEntityId > 0) {
+        m_shouldSyncWorldTransformToLocal = true;
+    } else {
+        m_initialTransform = m;
+    }
+}
+
+void TransformComponent::updateTransformFromParent(const glm::mat4 &parentWorldSpaceTransform) {
+    if (m_shouldSyncWorldTransformToLocal) {
+        m_initialTransform = glm::inverse(parentWorldSpaceTransform) * m_transform;
+        m_shouldSyncWorldTransformToLocal = false;
+    } else {
+        m_transform = parentWorldSpaceTransform * m_initialTransform;
+    }
 }

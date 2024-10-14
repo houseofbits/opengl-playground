@@ -1,15 +1,12 @@
 [
     {
-        "name": "StaticMesh",
+        "name": "RenderMesh",
         "components": {
             "transform": {
                 "class": "TransformComponent"
             },
             "mesh": {
                 "class": "StaticMeshComponent"
-            },
-            "physicsBody": {
-                "class": "PhysicsBodyComponent"
             }
         }
     },

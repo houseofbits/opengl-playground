@@ -18,12 +18,12 @@
 #include <utility>
 
 std::vector<std::string> ENTITY_CREATION_OPTIONS = {
+        "RenderMesh",
+        "RigidBody",
         "SpotLight",
         "OmniLight",
         "DirectLight",
-        "StaticMesh",
         "EnvironmentProbe",
-        "RigidBody",
         "CharacterController",
         "Door"
 };
@@ -120,7 +120,9 @@ void EditWindowUI::process() {
 
     Entity *e = m_EditorUISystem->m_EntityContext->getEntity(m_selectedEntityId);
     if (e != nullptr && ImGui::Begin("Edit entity")) {
-        ImGui::InputText("Name", &e->m_Name);
+        if (ImGui::InputText("Name", &e->m_Name)) {
+            updateEntityNameReferences(e->m_Id.id(),  e->m_Name);
+        }
 
         for (const auto &edit: m_componentEditors) {
             if (edit.second->isEntityEditable(m_selectedEntityId) &&
@@ -271,6 +273,20 @@ void EditWindowUI::processBehavioursEdit(Entity *e) {
         if (it != e->m_Behaviours.end()) {
             ImGui::Text("Type: %s", (*it)->getTypeName().c_str());
             ImGui::TextWrapped("Description: %s", (*it)->getDescription().c_str());
+        }
+    }
+}
+
+void EditWindowUI::updateEntityNameReferences(Identity::Type entityId, const std::string &newName) {
+    for (const auto &transformComponent : m_EditorUISystem->getComponentContainer<TransformComponent>()) {
+        if (transformComponent.second->m_parentEntityId == entityId) {
+            transformComponent.second->m_parentEntityName = newName;
+        }
+    }
+
+    for (const auto &jointComponent : m_EditorUISystem->getComponentContainer<PhysicsJointComponent>()) {
+        if (jointComponent.second->m_targetEntityId == entityId) {
+            jointComponent.second->m_targetEntityName = newName;
         }
     }
 }

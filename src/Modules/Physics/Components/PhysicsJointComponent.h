@@ -48,6 +48,7 @@ public:
     JPH::HingeConstraint *m_Joint;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     std::string m_targetEntityName;
+    Identity::Type m_targetEntityId;
     glm::vec2 m_angularLimits;
     glm::vec3 m_axisA;
     glm::vec3 m_axisB;

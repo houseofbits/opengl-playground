@@ -25,6 +25,7 @@ private:
     void sendComponentRemovalEvent(std::string);
     void sendEntityCloneEvent(Identity::Type entityId);
     void sendEntityRemovalEvent();
+    void updateEntityNameReferences(Identity::Type, const std::string&);
 
     EditorUISystem *m_EditorUISystem;
     std::string m_lightProjectorPath;

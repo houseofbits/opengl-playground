@@ -39,8 +39,7 @@ public:
             for (const auto &bodyType: BodyTypeNameMap) {
                 if (ImGui::Selectable(bodyType.second.c_str(), body->m_BodyType == bodyType.first)) {
                     body->m_BodyType = bodyType.first;
-                    auto *transform = m_EditorUISystem->getComponent<TransformComponent>(entityId);
-                    body->create(*transform);
+                    body->release();
                 }
             }
             ImGui::EndCombo();
@@ -50,8 +49,7 @@ public:
             for (const auto &meshType: MeshTypeNameMap) {
                 if (ImGui::Selectable(meshType.second.c_str(), body->m_MeshType == meshType.first)) {
                     body->m_MeshType = meshType.first;
-                    auto *transform = m_EditorUISystem->getComponent<TransformComponent>(entityId);
-                    body->createMeshShape(*transform);
+                    body->release();
                 }
             }
             ImGui::EndCombo();
@@ -67,12 +65,8 @@ public:
             if(mesh && mesh->m_Mesh.isReady()) {
                 body->m_meshResource.invalidate();
                 m_EditorUISystem->m_ResourceManager->request(body->m_meshResource, mesh->m_Mesh.get().m_Path);
+                body->release();
             }
-        }
-
-        if (ImGui::Button("Rebuild shape")) {
-            auto *transform = m_EditorUISystem->getComponent<TransformComponent>(entityId);
-            body->createMeshShape(*transform);
         }
 
         ImGui::InputFloat("Mass", &body->m_mass);

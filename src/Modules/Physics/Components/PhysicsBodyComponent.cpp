@@ -75,7 +75,13 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
         return;
     }
 
-    releaseShapes();
+    if (m_BodyType == BODY_TYPE_DYNAMIC && m_mass < 0.0001) {
+        Log::warn("PhysicsBodyComponent::create: Dynamic body should have mass");
+
+        return;
+    }
+
+    release();
 
     JPH::PhysicsMaterialList materials;
 
@@ -119,7 +125,7 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
 }
 
 void PhysicsBodyComponent::createMeshShape(TransformComponent &transform) {
-    releaseShapes();
+    release();
 
     if (m_BodyType == BODY_TYPE_DYNAMIC && m_MeshType == MESH_TYPE_TRIANGLE) {
         Log::warn("PhysicsBodyComponent: Dynamic body cannot have triangle mesh shape");
@@ -141,12 +147,13 @@ void PhysicsBodyComponent::createMeshShape(TransformComponent &transform) {
 //    m_PhysicsResource().m_dynamicsWorld->addRigidBody(m_rigidBody);
 }
 
-void PhysicsBodyComponent::releaseShapes() {
-//    if (m_rigidBody != nullptr) {
-//        m_PhysicsResource().m_dynamicsWorld->removeRigidBody(m_rigidBody);
-//        btCollisionShape *oldShape = m_rigidBody->getCollisionShape();
-//        delete oldShape;
-//    }
+void PhysicsBodyComponent::release() {
+    if (m_physicsBody != nullptr) {
+        m_PhysicsResource().getInterface().RemoveBody(m_physicsBody->GetID());
+        m_PhysicsResource().getInterface().DestroyBody(m_physicsBody->GetID());
+
+        m_physicsBody = nullptr;
+    }
 }
 
 void PhysicsBodyComponent::update(TransformComponent &transform, bool isSimulationEnabled) {

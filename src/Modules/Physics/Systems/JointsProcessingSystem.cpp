@@ -30,6 +30,7 @@ void JointsProcessingSystem::process(EventManager &eventManager) {
                 continue;
             }
 
+            body.second->m_targetEntityId = bodyB->m_EntityId.id();
             body.second->create(*bodyA, *bodyB);
         } else {
             body.second->update();

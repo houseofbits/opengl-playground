@@ -9,4 +9,8 @@ public:
     void initialize(ResourceManager &) override;
 
     void process(EventManager &) override;
+
+private:
+    int calculateDepth(Identity::Type entityId);
+
 };

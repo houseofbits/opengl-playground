@@ -37,7 +37,11 @@ public:
         }
         ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, &transform->m_transform[0][0]);
 
-
+//        std::string selectedName;
+//        if (transform->m_parentEntityId > 0) {
+//            auto *e = m_EditorUISystem->m_EntityContext->getEntity(transform->m_parentEntityId);
+//            selectedName = e->m_Name;
+//        }
         if (ImGui::BeginCombo("Parent##PARENT_ENTITY_NAME", transform->m_parentEntityName.c_str())) {
             for (const auto &entity: m_EditorUISystem->m_EntityContext->getAllEntities()) {
                 auto* c = entity->getComponent<TransformComponent>();

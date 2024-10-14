@@ -61,6 +61,8 @@ public:
 
     void setFromEditorTransform(const glm::mat4 &) override;
 
+    void updateTransformFromParent(const glm::mat4 &);
+
     bool m_isTranslationEnabled;
     bool m_isRotationEnabled;
     bool m_isScalingEnabled;
@@ -70,4 +72,5 @@ public:
     bool m_shouldUpdateParentEntityId;
     std::string m_parentEntityName;
     Identity::Type m_parentEntityId;
+    bool m_shouldSyncWorldTransformToLocal;
 };

@@ -6,7 +6,7 @@
 #include "../Resources/PhysicsResource.h"
 
 class PhysicsBodyComponent : public Component {
-    TYPE_DEFINITION(PhysicsBodyComponent);
+TYPE_DEFINITION(PhysicsBodyComponent);
 
 public:
     inline static const std::string MODEL_KEY = "model";
@@ -27,16 +27,27 @@ public:
     };
 
     PhysicsBodyComponent();
+
     ~PhysicsBodyComponent() override;
 
     void serialize(nlohmann::json &j) override;
+
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
+
     void registerWithSystems(EntityContext &ctx) override;
+
     bool isReady() override;
+
     void create(TransformComponent &transform);
+
     void createMeshShape(TransformComponent &transform);
+
     void update(TransformComponent &transform, bool isSimulationEnabled);
+
     [[nodiscard]] bool isCreated() const;
+
+    void release();
+
     void wakeUp();
 
     BodyType m_BodyType;
@@ -46,9 +57,9 @@ public:
     float m_mass;
     ResourceHandle<PhysicsMeshResource> m_meshResource;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
-    JPH::Body*  m_physicsBody;
+
+    JPH::Body *m_physicsBody;
 
 private:
-    void releaseShapes();
     void updateMass();
 };
