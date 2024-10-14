@@ -6,7 +6,9 @@ Character should have a basic gun that shoots tennis balls. I should be able to 
 ### Priorities
 1. Transform hierarchies, and transform editing
 2. Joints 
-3. Etc.
+3. Behaviours
+4. Physics
+5. Etc.
 
 ### Physics
 - [x] Basic, parametric, character controller
