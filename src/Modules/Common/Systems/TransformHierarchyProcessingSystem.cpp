@@ -54,7 +54,9 @@ void TransformHierarchyProcessingSystem::process(EventManager &) {
         auto *transformComponent = getComponent<TransformComponent>(ts.first);
         auto *parentTransformComponent = getComponent<TransformComponent>(transformComponent->m_parentEntityId);
 
-        transformComponent->updateTransformFromParent(parentTransformComponent->getModelMatrix());
+        if (parentTransformComponent != nullptr) {
+            transformComponent->updateTransformFromParent(parentTransformComponent->getModelMatrix());
+        }
     }
 
     for (const auto &cameraComponent: getComponentContainer<CameraComponent>()) {
