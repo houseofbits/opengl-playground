@@ -3,6 +3,7 @@
 #include "../../../Core/API.h"
 #include "../Events/PhysicsPickingEvent.h"
 #include "../Resources/PhysicsResource.h"
+#include "../Helpers/BasePhysicsJoint.h"
 
 class JointsProcessingSystem : public EntitySystem {
 public:
@@ -17,4 +18,7 @@ public:
     void handleCharacterPickingEvent(const PhysicsPickingEvent &);
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
+
+private:
+    void processJoint(Identity::Type entityId, BasePhysicsJoint* joint);
 };

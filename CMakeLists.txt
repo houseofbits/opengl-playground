@@ -111,8 +111,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Events/PhysicsPickingEvent.h
         src/Modules/Physics/Components/PhysicsBodyComponent.cpp
         src/Modules/Physics/Components/PhysicsBodyComponent.h
-        src/Modules/Physics/Components/PhysicsJointComponent.cpp
-        src/Modules/Physics/Components/PhysicsJointComponent.h
+        src/Modules/Physics/Components/PhysicsHingeJointComponent.cpp
+        src/Modules/Physics/Components/PhysicsHingeJointComponent.h
         src/Modules/Physics/Systems/JointsProcessingSystem.cpp
         src/Modules/Physics/Systems/JointsProcessingSystem.h
         src/Modules/Physics/Helpers/PhysicsTypeCast.h
@@ -142,6 +142,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/Helper/ComponentTransformEdit.h
         src/Modules/Common/Systems/TransformHierarchyProcessingSystem.cpp
         src/Modules/Common/Systems/TransformHierarchyProcessingSystem.h
+        src/Modules/Physics/Components/PhysicsFixedJointComponent.cpp
+        src/Modules/Physics/Components/PhysicsFixedJointComponent.h
+        src/Modules/Physics/Helpers/BasePhysicsJoint.h
+        src/Modules/Editor/UI/TargetEntityHelper.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

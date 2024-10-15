@@ -1,7 +1,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "TransformGizmoHelper.h"
 #include "../../Common/Components/TransformComponent.h"
-#include "../../Physics/Components/PhysicsJointComponent.h"
+#include "../../Physics/Components/PhysicsHingeJointComponent.h"
 #include "../../Common/Components/CameraComponent.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
@@ -94,7 +94,7 @@ void TransformGizmoHelper::populateTransformOptions(Entity &entity) {
         m_transformOptions[TRANSFORM_PRIMARY] = option;
     }
 
-    if (entity.hasComponent<PhysicsJointComponent>()) {
+    if (entity.hasComponent<PhysicsHingeJointComponent>()) {
         TransformOption option;
         option.name = "Hinge joint";
         option.isTranslationEnabled = true;
@@ -196,7 +196,7 @@ void TransformGizmoHelper::setSelectedComponentTransform(EntityContext &ctx) {
             setTransformToEditorComponent<TransformComponent>(ctx);
             break;
         case TRANSFORM_HINGE_JOINT:
-            setTransformToEditorComponent<PhysicsJointComponent>(ctx);
+            setTransformToEditorComponent<PhysicsHingeJointComponent>(ctx);
             break;
         case TRANSFORM_CAMERA:
             setTransformToEditorComponent<CameraComponent>(ctx);
@@ -210,7 +210,7 @@ void TransformGizmoHelper::getTransformFromSelectedComponent(EntityContext &ctx)
             getTransformFromEditorComponent<TransformComponent>(ctx);
             break;
         case TRANSFORM_HINGE_JOINT:
-            getTransformFromEditorComponent<PhysicsJointComponent>(ctx);
+            getTransformFromEditorComponent<PhysicsHingeJointComponent>(ctx);
             break;
         case TRANSFORM_CAMERA:
             getTransformFromEditorComponent<CameraComponent>(ctx);

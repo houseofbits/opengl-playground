@@ -4,8 +4,10 @@
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
-#include "../../Physics/Components/PhysicsJointComponent.h"
+#include "../../Physics/Components/PhysicsHingeJointComponent.h"
 #include "../UI/TexturePreviewHelper.h"
+#include "../../Physics/Components/PhysicsFixedJointComponent.h"
+#include "../../Physics/Components/PhysicsSliderJointComponent.h"
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_transformGizmo(),
@@ -22,7 +24,9 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
     usesComponent<EnvironmentProbeComponent>();
     usesComponent<CharacterControllerComponent>();
     usesComponent<PhysicsBodyComponent>();
-    usesComponent<PhysicsJointComponent>();
+    usesComponent<PhysicsHingeJointComponent>();
+    usesComponent<PhysicsFixedJointComponent>();
+    usesComponent<PhysicsSliderJointComponent>();
 }
 
 void EditorUISystem::process(EventManager &eventManager) {

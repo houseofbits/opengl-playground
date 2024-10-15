@@ -12,8 +12,9 @@ Character should have a basic gun that shoots tennis balls. I should be able to 
 
 ### Physics
 - [x] Basic, parametric, character controller
-- [ ] Hinge joint component with limits and motor drive
-- [ ] Hard physics joint
+- [x] Hinge joint component with limits and motor drive
+- [x] Fixed physics joint
+- [ ] Slider joint
 - [ ] Trigger shape component
 
 ### Behaviour

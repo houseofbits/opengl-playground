@@ -4,17 +4,21 @@
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../Physics/Components/CharacterControllerComponent.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
-#include "../../Physics/Components/PhysicsJointComponent.h"
+#include "../../Physics/Components/PhysicsHingeJointComponent.h"
 #include "../Systems/EditorUISystem.h"
 #include "ComponentEdit/CameraComponentEdit.h"
 #include "ComponentEdit/CharacterControllerComponentEdit.h"
 #include "ComponentEdit/EnvironmentProbeComponentEdit.h"
 #include "ComponentEdit/LightComponentEdit.h"
 #include "ComponentEdit/PhysicsBodyComponentEdit.h"
-#include "ComponentEdit/PhysicsJointComponentEdit.h"
+#include "ComponentEdit/PhysicsHingeJointComponentEdit.h"
 #include "ComponentEdit/StaticMeshComponentEdit.h"
 #include "ComponentEdit/TransformComponentEdit.h"
 #include "../../../Core/Helper/StringUtils.h"
+#include "../../Physics/Components/PhysicsFixedJointComponent.h"
+#include "ComponentEdit/PhysicsFixedJointComponentEdit.h"
+#include "../../Physics/Components/PhysicsSliderJointComponent.h"
+#include "ComponentEdit/PhysicsSliderJointComponentEdit.h"
 #include <utility>
 
 std::vector<std::string> ENTITY_CREATION_OPTIONS = {
@@ -29,15 +33,16 @@ std::vector<std::string> ENTITY_CREATION_OPTIONS = {
 };
 
 std::vector<std::pair<std::string, std::string>> COMPONENT_NAMES = {
-        {"light",        "Light"},
-        {"camera",       "Camera"},
-        {"mesh",         "Render mesh"},
-        {"probe",        "Environment probe"},
-        {"sky",          "Skybox"},
-        {"cct",          "Character"},
-        {"physicsBody",  "Physics body"},
-        {"physicsJoint", "Physics joint"},
-        {"behaviour",    "Behaviour"},
+        {"light",             "Light"},
+        {"camera",            "Camera"},
+        {"mesh",              "Render mesh"},
+        {"probe",             "Environment probe"},
+        {"sky",               "Skybox"},
+        {"cct",               "Character"},
+        {"physicsBody",       "Physics body"},
+        {"physicsHingeJoint", "Physics hinge joint"},
+        {"physicsSliderJoint", "Physics slider joint"},
+        {"physicsFixedJoint", "Physics fixed joint"},
 };
 
 EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntityId(0),
@@ -59,7 +64,9 @@ EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntityId(0),
     m_componentEditors[EnvironmentProbeComponent::TypeName()] = new EnvironmentProbeComponentEdit(editor);
     m_componentEditors[PhysicsBodyComponent::TypeName()] = new PhysicsBodyComponentEdit(editor);
     m_componentEditors[CharacterControllerComponent::TypeName()] = new CharacterControllerComponentEdit(editor);
-    m_componentEditors[PhysicsJointComponent::TypeName()] = new PhysicsJointComponentEdit(editor);
+    m_componentEditors[PhysicsHingeJointComponent::TypeName()] = new PhysicsHingeJointComponentEdit(editor);
+    m_componentEditors[PhysicsFixedJointComponent::TypeName()] = new PhysicsFixedJointComponentEdit(editor);
+    m_componentEditors[PhysicsSliderJointComponent::TypeName()] = new PhysicsSliderJointComponentEdit(editor);
 
     for (const auto &edit: m_componentEditors) {
         m_entityListFilter[edit.first] = true;
@@ -121,7 +128,7 @@ void EditWindowUI::process() {
     Entity *e = m_EditorUISystem->m_EntityContext->getEntity(m_selectedEntityId);
     if (e != nullptr && ImGui::Begin("Edit entity")) {
         if (ImGui::InputText("Name", &e->m_Name)) {
-            updateEntityNameReferences(e->m_Id.id(),  e->m_Name);
+            updateEntityNameReferences(e->m_Id.id(), e->m_Name);
         }
 
         for (const auto &edit: m_componentEditors) {
@@ -278,13 +285,13 @@ void EditWindowUI::processBehavioursEdit(Entity *e) {
 }
 
 void EditWindowUI::updateEntityNameReferences(Identity::Type entityId, const std::string &newName) {
-    for (const auto &transformComponent : m_EditorUISystem->getComponentContainer<TransformComponent>()) {
+    for (const auto &transformComponent: m_EditorUISystem->getComponentContainer<TransformComponent>()) {
         if (transformComponent.second->m_parentEntityId == entityId) {
             transformComponent.second->m_parentEntityName = newName;
         }
     }
 
-    for (const auto &jointComponent : m_EditorUISystem->getComponentContainer<PhysicsJointComponent>()) {
+    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsHingeJointComponent>()) {
         if (jointComponent.second->m_targetEntityId == entityId) {
             jointComponent.second->m_targetEntityName = newName;
         }

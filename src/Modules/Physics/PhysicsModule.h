@@ -3,20 +3,24 @@
 #include "../../Core/API.h"
 #include "Components/CharacterControllerComponent.h"
 #include "Components/PhysicsBodyComponent.h"
-#include "Components/PhysicsJointComponent.h"
+#include "Components/PhysicsHingeJointComponent.h"
 #include "Systems/CharacterControllerSystem.h"
 #include "Systems/JointsProcessingSystem.h"
 #include "Systems/PhysicsBodyProcessingSystem.h"
 #include "Systems/PhysicsSystem.h"
 #include "Behaviours/CharacterMouseLookBehaviour.h"
 #include "Behaviours/CharacterPickingBehaviour.h"
+#include "Components/PhysicsSliderJointComponent.h"
+#include "Components/PhysicsFixedJointComponent.h"
 
 class PhysicsModule : public EntityModule {
 public:
     void registerComponents(EntityContext &ctx) override {
         ctx.registerComponent<CharacterControllerComponent>("cct");
         ctx.registerComponent<PhysicsBodyComponent>("physicsBody");
-        ctx.registerComponent<PhysicsJointComponent>("physicsJoint");
+        ctx.registerComponent<PhysicsHingeJointComponent>("physicsHingeJoint");
+        ctx.registerComponent<PhysicsSliderJointComponent>("physicsSliderJoint");
+        ctx.registerComponent<PhysicsFixedJointComponent>("physicsFixedJoint");
     };
 
     void registerBehaviours(EntityContext & ctx) override {
