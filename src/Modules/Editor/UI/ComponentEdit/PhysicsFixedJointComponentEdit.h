@@ -26,7 +26,9 @@ public:
             return;
         }
 
-        TargetEntityHelper<PhysicsBodyComponent>(m_EditorUISystem->m_EntityContext, body->m_targetEntityName,
-                                                 "Target##TARGET_ENTITY_NAME");
+        if (TargetEntityHelper<PhysicsBodyComponent>(m_EditorUISystem->m_EntityContext, body->m_targetEntityName,
+                                                 "Target##TARGET_ENTITY_NAME")) {
+            body->release();
+        }
     }
 };

@@ -2,7 +2,7 @@
 
 #include "../../../../SourceLibs/imgui/imgui.h"
 #include "../../../Common/Components/CameraComponent.h"
-#include "../../../Physics/Components/CharacterControllerComponent.h"
+#include "../../../Physics/Components/PhysicsCharacterComponent.h"
 #include "../FileDialogHelper.h"
 #include "../TextPromptHelper.h"
 #include "BaseComponentEdit.h"
@@ -14,7 +14,7 @@ public:
 
     bool isEntityEditable(Identity::Type entityId) override {
         return m_EditorUISystem->m_EntityContext
-                ->doesEntityHaveComponent<CharacterControllerComponent>(entityId);
+                ->doesEntityHaveComponent<PhysicsCharacterComponent>(entityId);
     }
 
     std::string getName() override {
@@ -22,7 +22,7 @@ public:
     }
 
     void process(Identity::Type entityId) override {
-        auto *comp = m_EditorUISystem->getComponent<CharacterControllerComponent>(entityId);
+        auto *comp = m_EditorUISystem->getComponent<PhysicsCharacterComponent>(entityId);
         if (comp == nullptr) {
             return;
         }

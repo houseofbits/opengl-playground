@@ -6,7 +6,7 @@ CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
                                                          m_PhysicsResource() {
     usesComponent<TransformComponent>();
     usesComponent<CameraComponent>();
-    usesComponent<CharacterControllerComponent>();
+    usesComponent<PhysicsCharacterComponent>();
 }
 
 void CharacterControllerSystem::initialize(ResourceManager &resourceManager) {
@@ -37,14 +37,14 @@ void CharacterControllerSystem::handleEditorUIEvent(const EditorUIEvent &event) 
 }
 
 void CharacterControllerSystem::resetToInitialTransform() {
-    for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
+    for (const auto component: getComponentContainer<PhysicsCharacterComponent>()) {
         auto *transform = getComponent<TransformComponent>(component.first);
         transform->m_transform = transform->m_initialTransform;
     }
 }
 
 void CharacterControllerSystem::updateCCTs() {
-    for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
+    for (const auto component: getComponentContainer<PhysicsCharacterComponent>()) {
         auto *transform = getComponent<TransformComponent>(component.first);
 
         if (!component.second->isCreated()) {

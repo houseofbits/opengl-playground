@@ -32,7 +32,7 @@ void TransformComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<ShadowMapRenderSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);             //Multiple dependencies
     ctx.registerComponentWithEntitySystemHaving<PhysicsBodyProcessingSystem, PhysicsBodyComponent>(this);
-    ctx.registerComponentWithEntitySystemHaving<CharacterControllerSystem, CharacterControllerComponent>(this);
+    ctx.registerComponentWithEntitySystemHaving<CharacterControllerSystem, PhysicsCharacterComponent>(this);
 
     //    ctx.getEntitySystem<DoorUpdateSystem>().entityHaving<DoorComponent>().registerComponent(this); ????
 }

@@ -1,6 +1,6 @@
 #include "CharacterPickingBehaviour.h"
 #include "../Helpers/PhysicsRayCastResult.h"
-#include "../Components/CharacterControllerComponent.h"
+#include "../Components/PhysicsCharacterComponent.h"
 #include "../../Common/Components/CameraComponent.h"
 #include "../Events/PhysicsPickingEvent.h"
 
@@ -26,7 +26,7 @@ void CharacterPickingBehaviour::handleInputEvent(const InputEvent &event) {
             return;
         }
 
-        auto *characterComponent = m_Entity->getComponent<CharacterControllerComponent>();
+        auto *characterComponent = m_Entity->getComponent<PhysicsCharacterComponent>();
         if (characterComponent == nullptr) {
             return;
         }

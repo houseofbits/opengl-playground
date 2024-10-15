@@ -26,8 +26,10 @@ public:
             return;
         }
 
-        TargetEntityHelper<PhysicsBodyComponent>(m_EditorUISystem->m_EntityContext, body->m_targetEntityName,
-                                                 "Target##TARGET_ENTITY_NAME");
+        if (TargetEntityHelper<PhysicsBodyComponent>(m_EditorUISystem->m_EntityContext, body->m_targetEntityName,
+                                                 "Target##TARGET_ENTITY_NAME")) {
+            body->release();
+        }
 
         ImGui::InputFloat3("Attachment A", (float *) &body->m_localAttachmentA);
         ImGui::InputFloat3("Axis A", (float *) &body->m_axisA);

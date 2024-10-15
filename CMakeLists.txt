@@ -95,8 +95,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Systems/PhysicsSystem.h
         src/Modules/Editor/UI/ComponentEdit/BaseComponentEdit.h
         src/Modules/Editor/UI/ComponentEdit/TransformComponentEdit.h
-        src/Modules/Physics/Components/CharacterControllerComponent.cpp
-        src/Modules/Physics/Components/CharacterControllerComponent.h
+        src/Modules/Physics/Components/PhysicsCharacterComponent.cpp
+        src/Modules/Physics/Components/PhysicsCharacterComponent.h
         src/Core/Helper/Types.h
         src/Modules/Physics/Resources/PhysicsMeshResource.cpp
         src/Modules/Physics/Resources/PhysicsMeshResource.h

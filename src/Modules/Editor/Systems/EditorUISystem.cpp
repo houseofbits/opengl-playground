@@ -2,7 +2,7 @@
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
-#include "../../Physics/Components/CharacterControllerComponent.h"
+#include "../../Physics/Components/PhysicsCharacterComponent.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
 #include "../../Physics/Components/PhysicsHingeJointComponent.h"
 #include "../UI/TexturePreviewHelper.h"
@@ -22,7 +22,7 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
     usesComponent<TransformComponent>();
     usesComponent<CameraComponent>();
     usesComponent<EnvironmentProbeComponent>();
-    usesComponent<CharacterControllerComponent>();
+    usesComponent<PhysicsCharacterComponent>();
     usesComponent<PhysicsBodyComponent>();
     usesComponent<PhysicsHingeJointComponent>();
     usesComponent<PhysicsFixedJointComponent>();

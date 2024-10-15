@@ -14,14 +14,14 @@ Character should have a basic gun that shoots tennis balls. I should be able to 
 - [x] Basic, parametric, character controller
 - [x] Hinge joint component with limits and motor drive
 - [x] Fixed physics joint
-- [ ] Slider joint
+- [x] Slider joint
 - [ ] Trigger shape component
 
 ### Behaviour
-- [ ] Door activation behaviour
+- [ ] Door activation behaviour (door state)
 - [ ] Trigger shape behaviour
-- [ ] Basic scripting behaviour prototype
 - [ ] Character gun look-at and character rotation 
+- [ ] Basic scripting behaviour prototype
 
 ### Editor
 - [ ] Transform gizmo having selectable targets (Transform, Joint pivot, Joint axis)

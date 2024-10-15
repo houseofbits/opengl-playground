@@ -62,22 +62,6 @@ void PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBody
     if (!areAllowedToConnect(bodyA, bodyB)) {
         return;
     }
-//    if (!bodyA.isCreated() || !bodyB.isCreated()) {
-//        return;
-//    }
-//
-//    if (bodyA.m_EntityId == bodyB.m_EntityId) {
-//        Log::warn("PhysicsJointComponent: joint bodies cannot be the same");
-//
-//        return;
-//    }
-//
-//    if (bodyA.m_BodyType == PhysicsBodyComponent::BODY_TYPE_STATIC &&
-//        bodyB.m_BodyType == PhysicsBodyComponent::BODY_TYPE_STATIC) {
-//        Log::warn("PhysicsJointComponent: both bodies are STATIC, joint will have no effect");
-//
-//        return;
-//    }
 
     JPH::HingeConstraintSettings settings;
     settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;

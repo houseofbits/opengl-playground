@@ -1,7 +1,7 @@
 #include "MainToolbarUI.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
-#include "../../Physics/Components/CharacterControllerComponent.h"
+#include "../../Physics/Components/PhysicsCharacterComponent.h"
 #include "../Systems/EditorUISystem.h"
 
 
@@ -126,7 +126,7 @@ void MainToolbarUI::runSimulation() {
     sendEditorStateEvent();
 
     m_previousSelectedCameraComponentId = m_selectedCameraComponentId;
-    auto cc = m_EditorUISystem->getComponentContainer<CharacterControllerComponent>();
+    auto cc = m_EditorUISystem->getComponentContainer<PhysicsCharacterComponent>();
     if (!cc.empty()) {
         auto* ccCam = m_EditorUISystem->getComponent<CameraComponent>(cc.begin()->first);
         if (ccCam!= nullptr) {

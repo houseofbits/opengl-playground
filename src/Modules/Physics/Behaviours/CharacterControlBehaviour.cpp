@@ -1,6 +1,6 @@
 #include "CharacterControlBehaviour.h"
 #include "../../Common/Components/CameraComponent.h"
-#include "../Components/CharacterControllerComponent.h"
+#include "../Components/PhysicsCharacterComponent.h"
 
 CharacterControlBehaviour::CharacterControlBehaviour() : EntityBehaviour() {
 
@@ -23,7 +23,7 @@ void CharacterControlBehaviour::handleInputEvent(const InputEvent & event) {
         return;
     }
 
-    auto* characterComponent = m_Entity->getComponent<CharacterControllerComponent>();
+    auto* characterComponent = m_Entity->getComponent<PhysicsCharacterComponent>();
     if (characterComponent == nullptr) {
         return;
     }

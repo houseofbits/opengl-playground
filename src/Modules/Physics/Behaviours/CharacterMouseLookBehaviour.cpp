@@ -1,7 +1,7 @@
 #include "CharacterMouseLookBehaviour.h"
 #include "../../../Core/Helper/Time.h"
 #include "../../Common/Components/CameraComponent.h"
-#include "../Components/CharacterControllerComponent.h"
+#include "../Components/PhysicsCharacterComponent.h"
 
 CharacterMouseLookBehaviour::CharacterMouseLookBehaviour() : EntityBehaviour() {
 
@@ -25,7 +25,7 @@ void CharacterMouseLookBehaviour::handleInputEvent(const InputEvent & event) {
         float lookSpeed = 0.15;
         cameraComponent->rotateView(-event.mouseMotion * lookSpeed * Time::frameTime);
 
-        auto *characterComponent = m_Entity->getComponent<CharacterControllerComponent>();
+        auto *characterComponent = m_Entity->getComponent<PhysicsCharacterComponent>();
         if (characterComponent == nullptr) {
             return;
         }

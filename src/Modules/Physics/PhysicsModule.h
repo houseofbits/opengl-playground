@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../Core/API.h"
-#include "Components/CharacterControllerComponent.h"
+#include "Components/PhysicsCharacterComponent.h"
 #include "Components/PhysicsBodyComponent.h"
 #include "Components/PhysicsHingeJointComponent.h"
 #include "Systems/CharacterControllerSystem.h"
@@ -12,15 +12,17 @@
 #include "Behaviours/CharacterPickingBehaviour.h"
 #include "Components/PhysicsSliderJointComponent.h"
 #include "Components/PhysicsFixedJointComponent.h"
+#include "Components/PhysicsTriggerShapeComponent.h"
 
 class PhysicsModule : public EntityModule {
 public:
     void registerComponents(EntityContext &ctx) override {
-        ctx.registerComponent<CharacterControllerComponent>("cct");
+        ctx.registerComponent<PhysicsCharacterComponent>("cct");
         ctx.registerComponent<PhysicsBodyComponent>("physicsBody");
         ctx.registerComponent<PhysicsHingeJointComponent>("physicsHingeJoint");
         ctx.registerComponent<PhysicsSliderJointComponent>("physicsSliderJoint");
         ctx.registerComponent<PhysicsFixedJointComponent>("physicsFixedJoint");
+        ctx.registerComponent<PhysicsTriggerShapeComponent>("physicsTriggerShape");
     };
 
     void registerBehaviours(EntityContext & ctx) override {
