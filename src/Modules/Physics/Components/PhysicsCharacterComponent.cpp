@@ -63,8 +63,8 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
     characterSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
     characterSettings.mMassPropertiesOverride.mMass = 80;
     characterSettings.mAllowedDOFs =
-            JPH::EAllowedDOFs::TranslationX | JPH::EAllowedDOFs::TranslationY | JPH::EAllowedDOFs::TranslationZ |
-            JPH::EAllowedDOFs::RotationY;
+            JPH::EAllowedDOFs::TranslationX | JPH::EAllowedDOFs::TranslationY | JPH::EAllowedDOFs::TranslationZ;
+            //| JPH::EAllowedDOFs::RotationY;
     characterSettings.mLinearDamping = 10;
     characterSettings.mAngularDamping = 10;
 //    characterSettings.mNumPositionStepsOverride = 255;

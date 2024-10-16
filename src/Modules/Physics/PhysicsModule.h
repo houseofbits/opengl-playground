@@ -13,6 +13,7 @@
 #include "Components/PhysicsSliderJointComponent.h"
 #include "Components/PhysicsFixedJointComponent.h"
 #include "Components/PhysicsTriggerShapeComponent.h"
+#include "Behaviours/DoorActivationBehaviour.h"
 
 class PhysicsModule : public EntityModule {
 public:
@@ -29,6 +30,7 @@ public:
         ctx.registerBehaviour<CameraControlInputBehaviour>();
         ctx.registerBehaviour<CharacterMouseLookBehaviour>();
         ctx.registerBehaviour<CharacterPickingBehaviour>();
+        ctx.registerBehaviour<DoorActivationBehaviour>();
     }
 
     void registerSystems(EntityContext &ctx) override {
@@ -38,3 +40,5 @@ public:
         ctx.registerEntitySystem<CharacterControllerSystem>(4);
     };
 };
+
+

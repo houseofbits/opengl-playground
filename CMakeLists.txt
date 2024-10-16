@@ -146,6 +146,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Components/PhysicsFixedJointComponent.h
         src/Modules/Physics/Helpers/BasePhysicsJoint.h
         src/Modules/Editor/UI/TargetEntityHelper.h
+        src/Modules/Physics/Behaviours/DoorActivationBehaviour.cpp
+        src/Modules/Physics/Behaviours/DoorActivationBehaviour.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
