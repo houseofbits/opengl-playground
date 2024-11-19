@@ -11,6 +11,7 @@
 #include "Systems/ShadowMapRenderSystem.h"
 #include "Systems/StorageBufferUpdateSystem.h"
 #include "Systems/OverlayRenderSystem.h"
+#include "Systems/PhysicsDebugRenderSystem.h"
 
 class RendererModule : public EntityModule {
 public:
@@ -26,6 +27,7 @@ public:
         ctx.registerEntitySystem<ShadowMapRenderSystem>(2);
         ctx.registerEntitySystem<EnvironmentProbeRenderSystem>(3);
         ctx.registerEntitySystem<MainRenderSystem>(5);
+        ctx.registerEntitySystem<PhysicsDebugRenderSystem>(6);
         ctx.registerEntitySystem<OverlayRenderSystem>(10);
     };
 };

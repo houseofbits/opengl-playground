@@ -5,7 +5,7 @@
 #include "../../Editor/Events/EditorUIEvent.h"
 #include "../Components/PhysicsCharacterComponent.h"
 #include "../Resources/PhysicsResource.h"
-#include "../Helpers/DebugRendererImpl.h"
+#include "../../Renderer/Helpers/PhysicsDebugRenderer.h"
 
 class PhysicsSystem : public EntitySystem {
 public:
@@ -22,5 +22,5 @@ public:
 private:
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     bool m_isSimulationDisabled;
-    DebugRendererImpl m_debugRenderer;
+    PhysicsDebugRenderer m_debugRenderer;
 };

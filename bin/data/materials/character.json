@@ -5,7 +5,8 @@
         1.0
     ],
     "diffuseTexture": "resources/textures/character-capsule.png",
-    "doesCastShadows": true,
-    "doesReceiveShadows": true,
-    "selfIllumination": 0.28600001335144043
+    "doesCastShadows": false,
+    "doesReceiveShadows": false,
+    "selfIllumination": 0.28600001335144043,
+    "wrappingType": 0
 }

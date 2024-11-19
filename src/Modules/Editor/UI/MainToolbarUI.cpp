@@ -104,6 +104,10 @@ void MainToolbarUI::processViewMenu() {
             sendUIEvent(EditorUIEvent::TOGGLE_RENDER_REFLECTIONS);
             m_renderShaderType = 2;
         }
+        if (ImGui::MenuItem("View physics", nullptr, m_renderShaderType == 3)) {
+            sendUIEvent(EditorUIEvent::TOGGLE_RENDER_PHYSICS);
+            m_renderShaderType = 3;
+        }
         ImGui::SeparatorText("Cameras");
 
         for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {

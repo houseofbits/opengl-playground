@@ -38,6 +38,7 @@ PhysicsResource::PhysicsResource() : Resource(),
                                      m_broadPhaseLayerMapper(),
                                      m_contactListener(),
                                      m_jobPool(nullptr),
+                                     m_debugRenderer(nullptr),
                                      m_tempAllocator(nullptr) {
 }
 
@@ -75,6 +76,8 @@ Resource::Status PhysicsResource::build() {
     m_PhysicsSystem.SetGravity({0, -9.8, 0});
     m_PhysicsSystem.SetContactListener(&m_contactListener);
 
+    m_debugRenderer = PhysicsDebugRenderer::getInstance();
+
     return Resource::STATUS_READY;
 }
 
@@ -108,4 +111,10 @@ JPH::BodyInterface &PhysicsResource::getInterface() {
 
 JPH::PhysicsSystem &PhysicsResource::getSystem() {
     return m_PhysicsSystem;
+}
+
+void PhysicsResource::drawDebug(PhysicsDebugRenderer& renderer) {
+    JPH::BodyManager::DrawSettings drawSettings;
+
+    m_PhysicsSystem.DrawBodies(drawSettings, &renderer);
 }

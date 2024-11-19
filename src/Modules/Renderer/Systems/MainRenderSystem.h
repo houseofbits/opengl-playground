@@ -34,6 +34,7 @@ private:
 
     Camera *findActiveCamera();
 
+    bool m_isEnabled;
     ShaderType m_shaderType;
     int m_viewportWidth;
     int m_viewportHeight;

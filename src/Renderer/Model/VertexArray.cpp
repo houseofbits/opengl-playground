@@ -3,15 +3,22 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+VertexArray::VertexArray() : elementsArray(), bufferIds() {
+
+}
+
+VertexArray::~VertexArray() {
+    deleteBuffers();
+}
+
 void VertexArray::createBuffers(
     std::vector<unsigned int> *indices,
     std::vector<float> *vertices,
     std::vector<float> *normals,
     std::vector<float> *texCoords,
-    std::vector<float> *tangents)
+    std::vector<float> *tangents,
+    std::vector<float> *colors)
 {
-    numberOfVerts = indices->size();
-
     glGenVertexArrays(1, &vertexArrayObjectId);
     glBindVertexArray(vertexArrayObjectId);
 
@@ -46,12 +53,20 @@ void VertexArray::createBuffers(
         glEnableVertexAttribArray(3);
     }
 
+    if (colors != nullptr)
+    {
+        generateFloatBuffer(colors);
+
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(4);
+    }
+
     glBindVertexArray(0);
 }
 
 void VertexArray::deleteBuffers()
 {
-    if (bufferIds.size() > 0)
+    if (!bufferIds.empty())
     {
         glDeleteBuffers((GLsizei)bufferIds.size(), bufferIds.data());
         bufferIds.clear();
@@ -73,10 +88,10 @@ unsigned int VertexArray::generateIndexBuffer(std::vector<unsigned int> *array)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferId);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, array->size() * sizeof(GLuint), array->data(), GL_STATIC_DRAW);
 
-    Element el;
+    Element el{};
     el.bufferId = bufferId;
     el.mode = GL_TRIANGLES;
-    el.count = array->size();
+    el.count = (int) array->size();
     el.componentType = GL_UNSIGNED_INT;
     el.bufferOffset = 0;
 

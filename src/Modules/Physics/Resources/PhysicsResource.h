@@ -18,6 +18,7 @@
 #include "../Helpers/ObjectVsBroadPhaseLayerFilterImpl.h"
 #include "../Helpers/BroadPhaseLayerMapper.h"
 #include "../Helpers/ContactListenerImpl.h"
+#include "../../Renderer/Helpers/PhysicsDebugRenderer.h"
 
 class PhysicsResource : public Resource {
 public:
@@ -27,6 +28,8 @@ public:
     Resource::Status build() override;
     void destroy() override;
     void simulate();
+    void drawDebug(PhysicsDebugRenderer & renderer);
+
     void addContactPoint(Identity::Type entityId, glm::vec3 point);
     void clearEntityContacts();
     JPH::PhysicsSystem& getSystem();
@@ -41,4 +44,5 @@ private:
     ContactListenerImpl m_contactListener;
     JPH::JobSystemThreadPool* m_jobPool;
     JPH::TempAllocatorImpl* m_tempAllocator;
+    PhysicsDebugRenderer* m_debugRenderer;
 };

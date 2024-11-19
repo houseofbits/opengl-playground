@@ -121,8 +121,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/BroadPhaseLayerMapper.h
         src/Modules/Physics/Helpers/ObjectVsBroadPhaseLayerFilterImpl.h
         src/Modules/Physics/Helpers/ContactListenerImpl.h
-        src/Modules/Physics/Helpers/DebugRendererImpl.cpp
-        src/Modules/Physics/Helpers/DebugRendererImpl.h
+        src/Modules/Renderer/Helpers/PhysicsDebugRenderer.cpp
+        src/Modules/Renderer/Helpers/PhysicsDebugRenderer.h
         src/Modules/Renderer/Systems/OverlayRenderSystem.cpp
         src/Modules/Renderer/Systems/OverlayRenderSystem.h
         src/Modules/Common/Behaviours/CameraControlInputBehaviour.cpp
@@ -148,6 +148,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Editor/UI/TargetEntityHelper.h
         src/Modules/Physics/Behaviours/DoorActivationBehaviour.cpp
         src/Modules/Physics/Behaviours/DoorActivationBehaviour.h
+        src/Modules/Renderer/Systems/PhysicsDebugRenderSystem.cpp
+        src/Modules/Renderer/Systems/PhysicsDebugRenderSystem.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

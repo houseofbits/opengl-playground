@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 
 MainRenderSystem::MainRenderSystem() : EntitySystem(),
+                                       m_isEnabled(true),
                                        m_shaderType(SHADER_SHADED),
                                        m_ShaderPrograms(),
                                        m_LightsBuffer(),
@@ -84,6 +85,10 @@ void MainRenderSystem::process(EventManager &eventManager) {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
+    if (!m_isEnabled) {
+        return;
+    }
+
     m_ShaderPrograms[m_shaderType]().use();
     camera->bind(m_ShaderPrograms[m_shaderType]());
     m_LightsBuffer().bind(m_ShaderPrograms[m_shaderType]());
@@ -119,6 +124,7 @@ Camera *MainRenderSystem::findActiveCamera() {
 }
 
 void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent & event) {
+    m_isEnabled = true;
     if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_SHADED) {
         m_shaderType = SHADER_SHADED;
     }
@@ -127,5 +133,8 @@ void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent & event) {
     }
     if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_REFLECTIONS) {
         m_shaderType = SHADER_REFLECTION;
+    }
+    if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_PHYSICS) {
+        m_isEnabled = false;
     }
 }

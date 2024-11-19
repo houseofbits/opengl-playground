@@ -4,6 +4,7 @@
 #include "../../Physics/Systems/PhysicsSystem.h"
 #include "../../Renderer/Systems/MainRenderSystem.h"
 #include "../Systems/TransformHierarchyProcessingSystem.h"
+#include "../../Renderer/Systems/PhysicsDebugRenderSystem.h"
 
 CameraComponent::CameraComponent() : Component(),
                                      ComponentTransformEdit(),
@@ -21,6 +22,7 @@ void CameraComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
     ctx.registerComponentWithEntitySystem<PhysicsSystem>(this);
     ctx.registerComponentWithEntitySystem<CharacterControllerSystem>(this);
+    ctx.registerComponentWithEntitySystem<PhysicsDebugRenderSystem>(this);
 }
 
 void CameraComponent::serialize(nlohmann::json &j) {
