@@ -12,6 +12,8 @@ public:
 
     ~PhysicsDebugRenderer() override;
 
+    void init();
+
     void DrawLine(JPH::RVec3Arg inFrom, JPH::RVec3Arg inTo,
                   JPH::ColorArg inColor) override;
 

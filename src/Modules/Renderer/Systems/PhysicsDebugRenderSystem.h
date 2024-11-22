@@ -24,7 +24,6 @@ private:
     Camera *findActiveCamera();
 
     bool m_isEnabled;
-    PhysicsDebugRenderer* m_renderer;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     ResourceHandle<ShaderProgramResource> m_ShaderProgram;
 };

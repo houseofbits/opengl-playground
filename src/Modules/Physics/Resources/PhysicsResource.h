@@ -28,7 +28,7 @@ public:
     Resource::Status build() override;
     void destroy() override;
     void simulate();
-    void drawDebug(PhysicsDebugRenderer & renderer);
+    void drawDebug(ShaderProgramResource &shader);
 
     void addContactPoint(Identity::Type entityId, glm::vec3 point);
     void clearEntityContacts();

@@ -46,10 +46,6 @@ Resource::Status PhysicsResource::fetchData(ResourceManager &) {
     return Resource::STATUS_DATA_READY;
 }
 
-/**
- * Note: Physics simulation configuration and details can be loaded from the json config file. So that each scene could
- * have its own physics settings applied.
- */
 Resource::Status PhysicsResource::build() {
     RegisterDefaultAllocator();
     Trace = TraceImpl;
@@ -113,8 +109,12 @@ JPH::PhysicsSystem &PhysicsResource::getSystem() {
     return m_PhysicsSystem;
 }
 
-void PhysicsResource::drawDebug(PhysicsDebugRenderer& renderer) {
+void PhysicsResource::drawDebug(ShaderProgramResource &shader) {
+    m_debugRenderer->NextFrame();
+    
     JPH::BodyManager::DrawSettings drawSettings;
 
-    m_PhysicsSystem.DrawBodies(drawSettings, &renderer);
+    m_debugRenderer->m_shader = &shader;
+
+    m_PhysicsSystem.DrawBodies(drawSettings, m_debugRenderer);
 }

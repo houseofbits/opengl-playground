@@ -46,11 +46,40 @@ JPH::DebugRenderer::Batch PhysicsDebugRenderer::CreateTriangleBatch(const Triang
 JPH::DebugRenderer::Batch
 PhysicsDebugRenderer::CreateTriangleBatch(const Vertex *inVertices, int inVertexCount, const JPH::uint32 *inIndices,
                                           int inIndexCount) {
-    auto *triangle_data = new TriangleData();
+    auto *triangleData = new TriangleData();
 
-    Log::warn("PhysicsDebugRenderer::CreateTriangleBatch not implemented");
+    std::vector<unsigned int> el = {};
+    std::vector<float> p{};
+    std::vector<float> n{};
+    std::vector<float> c{};
+    std::vector<float> uv{};
 
-    return triangle_data;
+    for (int i = 0; i < inIndexCount; ++i) {
+        el.push_back(inIndices[i]);
+    }
+
+    for (int i = 0; i < inVertexCount; ++i) {
+        auto j = inVertices[i];
+        p.push_back(j.mPosition.x);
+        p.push_back(j.mPosition.y);
+        p.push_back(j.mPosition.z);
+
+        n.push_back(j.mNormal.x);
+        n.push_back(j.mNormal.y);
+        n.push_back(j.mNormal.z);
+
+        c.push_back(j.mColor.r);
+        c.push_back(j.mColor.g);
+        c.push_back(j.mColor.b);
+        c.push_back(j.mColor.a);
+
+        uv.push_back(j.mUV.x);
+        uv.push_back(j.mUV.y);
+    }
+
+    triangleData->m_vbo.createBuffers(&el, &p, &n, &uv);
+
+    return triangleData;
 }
 
 void
@@ -80,7 +109,12 @@ void PhysicsDebugRenderer::DrawText3D(JPH::RVec3Arg inPosition, const JPH::strin
     Log::warn("PhysicsDebugRenderer::DrawText3D not implemented");
 }
 
-PhysicsDebugRenderer::PhysicsDebugRenderer() : DebugRenderer() {
+PhysicsDebugRenderer::PhysicsDebugRenderer() : DebugRenderer(), m_shader(nullptr) {
+    DebugRenderer::Initialize();
+}
+
+void PhysicsDebugRenderer::init() {
+
 }
 
 PhysicsDebugRenderer::~PhysicsDebugRenderer() = default;

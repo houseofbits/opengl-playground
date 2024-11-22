@@ -22,5 +22,4 @@ public:
 private:
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     bool m_isSimulationDisabled;
-    PhysicsDebugRenderer m_debugRenderer;
 };
