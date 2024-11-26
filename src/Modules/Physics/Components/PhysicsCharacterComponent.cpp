@@ -79,30 +79,6 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
     m_physicsBody->SetUserData(reinterpret_cast<unsigned long>(userData));
 
     m_PhysicsResource().getInterface().AddBody(m_physicsBody->GetID(), JPH::EActivation::Activate);
-
-
-//    JPH::RefConst<JPH::Shape> capsuleShape = new JPH::CapsuleShape(2, 1);
-//    JPH::BodyCreationSettings bodySettings(
-//            capsuleShape,
-//            JPH::Vec3(0, 3, 0),
-//            JPH::Quat::sIdentity(),
-//            JPH::EMotionType::Dynamic,
-//            Layers::MOVING
-//    );
-//    JPH::Body *body = m_PhysicsResource().getInterface().CreateBody(bodySettings);
-//    m_PhysicsResource().getInterface().AddBody(body->GetID(), JPH::EActivation::Activate);
-//
-
-//    JPH::RefConst<JPH::Shape> sphereShape = new JPH::SphereShape(1);
-//    JPH::BodyCreationSettings bodySettings2(
-//            sphereShape,
-//            JPH::Vec3(0, 5, 0),
-//            JPH::Quat::sIdentity(),
-//            JPH::EMotionType::Dynamic,
-//            Layers::MOVING
-//    );
-//    JPH::Body *body2 = m_PhysicsResource().getInterface().CreateBody(bodySettings2);
-//    m_PhysicsResource().getInterface().AddBody(body2->GetID(), JPH::EActivation::Activate);
 }
 
 bool PhysicsCharacterComponent::isReady() {
