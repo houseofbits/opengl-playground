@@ -86,15 +86,15 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Systems/ShadowMapRenderSystem.h
         src/Modules/Renderer/Resources/ShadowMapResource.cpp
         src/Modules/Renderer/Resources/ShadowMapResource.h
-        src/Modules/Editor/UI/FileDialogHelper.h
+        src/Modules/Editor/Helpers/FileDialogHelper.h
         src/Modules/Editor/UI/MaterialEditWindowUI.cpp
         src/Modules/Editor/UI/MaterialEditWindowUI.h
-        src/Modules/Editor/UI/TexturePreviewHelper.h
-        src/Modules/Editor/UI/TextPromptHelper.h
+        src/Modules/Editor/Helpers/TexturePreviewHelper.h
+        src/Modules/Editor/Helpers/TextPromptHelper.h
         src/Modules/Physics/Systems/PhysicsSystem.cpp
         src/Modules/Physics/Systems/PhysicsSystem.h
-        src/Modules/Editor/UI/ComponentEdit/BaseComponentEdit.h
-        src/Modules/Editor/UI/ComponentEdit/TransformComponentEdit.h
+        src/Modules/Editor/UI/BaseComponentEdit.h
+        src/Modules/Common/Editors/TransformComponentEdit.h
         src/Modules/Physics/Components/PhysicsCharacterComponent.cpp
         src/Modules/Physics/Components/PhysicsCharacterComponent.h
         src/Core/Helper/Types.h
@@ -137,15 +137,15 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Behaviours/CharacterMouseLookBehaviour.h
         src/Modules/Physics/Behaviours/CharacterPickingBehaviour.cpp
         src/Modules/Physics/Behaviours/CharacterPickingBehaviour.h
-        src/Modules/Editor/UI/TransformGizmoHelper.cpp
-        src/Modules/Editor/UI/TransformGizmoHelper.h
+        src/Modules/Editor/Helpers/TransformGizmoHelper.cpp
+        src/Modules/Editor/Helpers/TransformGizmoHelper.h
         src/Core/Helper/ComponentTransformEdit.h
         src/Modules/Common/Systems/TransformHierarchyProcessingSystem.cpp
         src/Modules/Common/Systems/TransformHierarchyProcessingSystem.h
         src/Modules/Physics/Components/PhysicsFixedJointComponent.cpp
         src/Modules/Physics/Components/PhysicsFixedJointComponent.h
         src/Modules/Physics/Helpers/BasePhysicsJoint.h
-        src/Modules/Editor/UI/TargetEntityHelper.h
+        src/Modules/Editor/Helpers/TargetEntityHelper.h
         src/Modules/Physics/Behaviours/DoorActivationBehaviour.cpp
         src/Modules/Physics/Behaviours/DoorActivationBehaviour.h
         src/Modules/Renderer/Systems/PhysicsDebugRenderSystem.cpp

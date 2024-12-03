@@ -4,8 +4,8 @@
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../Systems/EditorUISystem.h"
-#include "FileDialogHelper.h"
-#include "TexturePreviewHelper.h"
+#include "../Helpers/FileDialogHelper.h"
+#include "../Helpers/TexturePreviewHelper.h"
 
 MaterialEditWindowUI::MaterialEditWindowUI(EditorUISystem *editor) : m_EditorUISystem(editor),
                                                                      m_material(),

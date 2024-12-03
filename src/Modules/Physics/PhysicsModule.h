@@ -14,6 +14,11 @@
 #include "Components/PhysicsFixedJointComponent.h"
 #include "Components/PhysicsTriggerShapeComponent.h"
 #include "Behaviours/DoorActivationBehaviour.h"
+#include "Editors/CharacterControllerComponentEdit.h"
+#include "Editors/PhysicsBodyComponentEdit.h"
+#include "Editors/PhysicsHingeJointComponentEdit.h"
+#include "Editors/PhysicsSliderJointComponentEdit.h"
+#include "Editors/PhysicsFixedJointComponentEdit.h"
 
 class PhysicsModule : public EntityModule {
 public:
@@ -39,6 +44,17 @@ public:
         ctx.registerEntitySystem<PhysicsBodyProcessingSystem>(3);
         ctx.registerEntitySystem<CharacterControllerSystem>(4);
     };
+
+    void postRegister(EntityContext &ctx) override {
+        auto editorSystem = ctx.getSystem<EditorUISystem>();
+        if (editorSystem != nullptr) {
+            editorSystem->registerComponentEditor<PhysicsCharacterComponent, CharacterControllerComponentEdit>();
+            editorSystem->registerComponentEditor<PhysicsBodyComponent, PhysicsBodyComponentEdit>();
+            editorSystem->registerComponentEditor<PhysicsHingeJointComponent, PhysicsHingeJointComponentEdit>();
+            editorSystem->registerComponentEditor<PhysicsSliderJointComponent, PhysicsSliderJointComponentEdit>();
+            editorSystem->registerComponentEditor<PhysicsFixedJointComponent, PhysicsFixedJointComponentEdit>();
+        }
+    }
 };
 
 

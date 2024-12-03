@@ -29,4 +29,5 @@ public:
 
     void deserialize(nlohmann::json &json);
     void buildEntity(Entity &entity, const std::string &configurationName, ResourceManager &resourceManager);
+    std::vector<std::string> getAllConfigurationNames();
 };

@@ -12,6 +12,9 @@
 #include "Systems/StorageBufferUpdateSystem.h"
 #include "Systems/OverlayRenderSystem.h"
 #include "Systems/PhysicsDebugRenderSystem.h"
+#include "Editors/LightComponentEdit.h"
+#include "Editors/StaticMeshComponentEdit.h"
+#include "Editors/EnvironmentProbeComponentEdit.h"
 
 class RendererModule : public EntityModule {
 public:
@@ -30,4 +33,13 @@ public:
         ctx.registerEntitySystem<PhysicsDebugRenderSystem>(6);
         ctx.registerEntitySystem<OverlayRenderSystem>(10);
     };
+
+    void postRegister(EntityContext &ctx) override {
+        auto editorSystem = ctx.getSystem<EditorUISystem>();
+        if (editorSystem != nullptr) {
+            editorSystem->registerComponentEditor<LightComponent, LightComponentEdit>();
+            editorSystem->registerComponentEditor<StaticMeshComponent, StaticMeshComponentEdit>();
+            editorSystem->registerComponentEditor<EnvironmentProbeComponent, EnvironmentProbeComponentEdit>();
+        }
+    }
 };

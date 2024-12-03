@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ComponentEdit/BaseComponentEdit.h"
+#include "BaseComponentEdit.h"
 #include "../../../Core/Entity/Entity.h"
 #include <string>
 #include <map>
@@ -27,14 +27,17 @@ private:
     void sendEntityRemovalEvent();
     void updateEntityNameReferences(Identity::Type, const std::string&);
 
+    void processEntityCreation();
+    void processComponentCreation();
+
     EditorUISystem *m_EditorUISystem;
     std::string m_lightProjectorPath;
     std::string m_meshModelPath;
     std::string m_meshMaterialPath;
-    int m_selectedEntityCreationType;
-    int m_selectedComponentCreationType;
+    std::string m_selectedEntityCreationType;
+    std::string m_selectedComponentCreationType;
     int m_selectedBehaviour;
-    std::map<std::string, BaseComponentEdit*> m_componentEditors;
-    std::map<std::string, bool> m_entityListFilter;
+//    std::map<std::string, BaseComponentEdit*> m_componentEditors;
+//    std::map<std::string, bool> m_entityListFilter;
     std::string m_filterString;
 };

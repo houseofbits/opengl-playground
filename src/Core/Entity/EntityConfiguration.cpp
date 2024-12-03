@@ -2,10 +2,12 @@
 #include "../../Core/Helper/Log.h"
 #include "Entity.h"
 
-EntityConfiguration::EntityConfiguration(Factory<Component> &factory) : m_EntityConfiguration(), m_ComponentFactory(factory) {
+EntityConfiguration::EntityConfiguration(Factory<Component> &factory)
+        : m_EntityConfiguration(), m_ComponentFactory(factory) {
 }
 
-void EntityConfiguration::buildEntity(Entity &entity, const std::string &configurationName, ResourceManager &resourceManager) {
+void EntityConfiguration::buildEntity(Entity &entity, const std::string &configurationName,
+                                      ResourceManager &resourceManager) {
     auto it = m_EntityConfiguration.find(configurationName);
     if (it == m_EntityConfiguration.end()) {
         Log::error("EntityConfiguration::buildEntity: Entity configuration not found " + configurationName);
@@ -15,7 +17,8 @@ void EntityConfiguration::buildEntity(Entity &entity, const std::string &configu
     for (auto const &componentConfig: (*it).second) {
         Component *c = m_ComponentFactory.createInstance(componentConfig.second.m_ClassName);
         if (c == nullptr) {
-            Log::error("EntityConfiguration::buildEntity: Component constructor not found " + componentConfig.second.m_ClassName);
+            Log::error("EntityConfiguration::buildEntity: Component constructor not found " +
+                       componentConfig.second.m_ClassName);
             break;
         }
         c->m_Id = Identity::create(Identity::COMPONENT);
@@ -68,4 +71,14 @@ void EntityConfiguration::deserialize(nlohmann::json &json) {
 
         m_EntityConfiguration[name] = config;
     }
+}
+
+std::vector<std::string> EntityConfiguration::getAllConfigurationNames() {
+    std::vector<std::string> names;
+
+    for (const auto &configuration: m_EntityConfiguration) {
+        names.push_back(configuration.first);
+    }
+
+    return names;
 }

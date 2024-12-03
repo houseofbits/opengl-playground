@@ -69,11 +69,17 @@ public:
         return p;
     }
 
+    void postRegisterModules() {
+        for (const auto module : m_Modules) {
+            module->postRegister(*this);
+        }
+    }
+
     template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value>>
-    EntitySystem *getSystem() {
+    T *getSystem() {
         for (const auto &elem: m_Systems) {
             if (dynamic_cast<T *>(elem)) {
-                return elem;
+                return dynamic_cast<T *>(elem);
             }
         }
 
@@ -168,4 +174,6 @@ public:
     void processBehaviours(ResourceManager &, EventManager &);
 
     std::vector<std::string> getBehaviourTypes();
+
+    std::vector<std::string> getAllConfigurationNames();
 };

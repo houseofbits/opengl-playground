@@ -5,7 +5,7 @@
 #include "../../Physics/Components/PhysicsCharacterComponent.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
 #include "../../Physics/Components/PhysicsHingeJointComponent.h"
-#include "../UI/TexturePreviewHelper.h"
+#include "../Helpers/TexturePreviewHelper.h"
 #include "../../Physics/Components/PhysicsFixedJointComponent.h"
 #include "../../Physics/Components/PhysicsSliderJointComponent.h"
 
@@ -16,17 +16,18 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_isDemoWindowVisible(false),
                                    m_MainToolbarUI(this),
                                    m_EditWindowUI(this),
-                                   m_MaterialEditWindowUI(this) {
-    usesComponent<StaticMeshComponent>();
-    usesComponent<LightComponent>();
-    usesComponent<TransformComponent>();
+                                   m_MaterialEditWindowUI(this),
+                                   m_componentEditors() {
+//    usesComponent<StaticMeshComponent>();
+//    usesComponent<LightComponent>();
+//    usesComponent<TransformComponent>();
     usesComponent<CameraComponent>();
-    usesComponent<EnvironmentProbeComponent>();
-    usesComponent<PhysicsCharacterComponent>();
-    usesComponent<PhysicsBodyComponent>();
-    usesComponent<PhysicsHingeJointComponent>();
-    usesComponent<PhysicsFixedJointComponent>();
-    usesComponent<PhysicsSliderJointComponent>();
+//    usesComponent<EnvironmentProbeComponent>();
+//    usesComponent<PhysicsCharacterComponent>();
+//    usesComponent<PhysicsBodyComponent>();
+//    usesComponent<PhysicsHingeJointComponent>();
+//    usesComponent<PhysicsFixedJointComponent>();
+//    usesComponent<PhysicsSliderJointComponent>();
 }
 
 void EditorUISystem::process(EventManager &eventManager) {
@@ -109,7 +110,7 @@ Camera *EditorUISystem::findActiveCamera() {
 
 TransformComponent *EditorUISystem::getSelectedTransformComponent() {
     if (m_EditWindowUI.isTransformComponentSelected()) {
-        return getComponent<TransformComponent>(m_EditWindowUI.m_selectedEntityId);
+        return m_EntityContext->getEntityComponent<TransformComponent>(m_EditWindowUI.m_selectedEntityId);
     }
     return nullptr;
 }

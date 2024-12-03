@@ -122,6 +122,8 @@ void EntityContext::registerEntitiesWithSystems(EventManager &eventManager) {
 }
 
 void EntityContext::initializeSystems(ResourceManager &resourceManager, EventManager &eventManager) {
+    postRegisterModules();
+
     m_Systems.sort(
             [](const EntitySystem *a, const EntitySystem *b) { return a->m_processPriority < b->m_processPriority; });
 
@@ -158,7 +160,7 @@ Entity *EntityContext::findEntity(const std::string &name) {
     return nullptr;
 }
 
-void EntityContext::createComponentInplace(Identity::Type entityId, const std::string& componentName) {
+void EntityContext::createComponentInplace(Identity::Type entityId, const std::string &componentName) {
     Entity *e = getEntity(entityId);
     if (e != nullptr) {
         Component *c = m_ComponentFactory.createInstance(componentName);
@@ -184,7 +186,7 @@ void EntityContext::createComponentInplace(Identity::Type entityId, const std::s
     }
 }
 
-void EntityContext::removeComponent(Identity::Type entityId, const std::string& componentName) {
+void EntityContext::removeComponent(Identity::Type entityId, const std::string &componentName) {
     Entity *e = getEntity(entityId);
     if (e != nullptr) {
         auto *c = e->getComponent(componentName);
@@ -200,7 +202,7 @@ std::vector<std::string> EntityContext::getBehaviourTypes() {
     return m_EntityBehaviourFactory.getNames();
 }
 
-void EntityContext::addBehaviour(Identity::Type entityId, const std::string& type) {
+void EntityContext::addBehaviour(Identity::Type entityId, const std::string &type) {
     auto *e = getEntity(entityId);
     if (e == nullptr) {
         return;
@@ -222,7 +224,7 @@ void EntityContext::addBehaviour(Identity::Type entityId, const std::string& typ
     m_entityBehavioursReadyToInitialize.push_back(b);
 }
 
-void EntityContext::removeBehaviour(Identity::Type entityId, const std::string& type) {
+void EntityContext::removeBehaviour(Identity::Type entityId, const std::string &type) {
     auto *e = getEntity(entityId);
     if (e == nullptr) {
         return;
@@ -251,4 +253,8 @@ void EntityContext::processBehaviours(ResourceManager &resourceManager, EventMan
         delete behaviour;
     }
     m_entityBehavioursForRemoval.clear();
+}
+
+std::vector<std::string> EntityContext::getAllConfigurationNames() {
+    return m_EntityConfiguration.getAllConfigurationNames();
 }

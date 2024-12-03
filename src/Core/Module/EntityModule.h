@@ -11,4 +11,6 @@ public:
     virtual void registerBehaviours(EntityContext &) {};
 
     virtual void registerSystems(EntityContext &) {};
+
+    virtual void postRegister(EntityContext &) {};
 };
