@@ -16,4 +16,9 @@ public:
     void handleInputEvent(const InputEvent &);
 
     void handleCameraActivationEvent(const CameraActivationEvent &);
+
+    void handleWindowEvent(const WindowEvent &);
+
+private:
+    glm::ivec2 m_viewportSize;
 };

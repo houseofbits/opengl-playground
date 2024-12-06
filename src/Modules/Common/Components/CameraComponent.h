@@ -3,8 +3,9 @@
 #include "../../../Core/API.h"
 #include "../../../Renderer/Camera/Camera.h"
 #include "../../../Core/Helper/ComponentTransformEdit.h"
+#include "BaseCameraComponent.h"
 
-class CameraComponent : public Component, public ComponentTransformEdit {
+class CameraComponent : public Component, public ComponentTransformEdit, public BaseCameraComponent {
 TYPE_DEFINITION(CameraComponent);
 
 public:
@@ -38,8 +39,6 @@ public:
 
     void updateTransformWorld();
 
-    Camera m_Camera;
-    bool m_isActive;
     Type m_type;
 
 private:

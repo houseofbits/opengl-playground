@@ -9,8 +9,7 @@
 
 CameraComponent::CameraComponent() : Component(),
                                      ComponentTransformEdit(),
-                                     m_Camera(),
-                                     m_isActive(true),
+                                     BaseCameraComponent(),
                                      m_type(TYPE_FREE),
                                      m_initialTransformLocal(1.0),
                                      m_currentTransformWorld(1.0),

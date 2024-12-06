@@ -157,6 +157,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Common/Events/CameraActivationEvent.h
         src/Modules/Common/Systems/CameraSystem.cpp
         src/Modules/Common/Systems/CameraSystem.h
+        src/Modules/Common/Components/BaseCameraComponent.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

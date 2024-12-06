@@ -5,8 +5,7 @@
 #include "../../Renderer/Systems/PhysicsDebugRenderSystem.h"
 
 EditorCameraComponent::EditorCameraComponent() : Component(),
-                                                 m_Camera(),
-                                                 m_isActive(true) {
+                                                 BaseCameraComponent() {
 
 }
 

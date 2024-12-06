@@ -2,8 +2,9 @@
 
 #include "../../../Core/API.h"
 #include "../../../Renderer/Camera/Camera.h"
+#include "../../Common/Components/BaseCameraComponent.h"
 
-class EditorCameraComponent  : public Component {
+class EditorCameraComponent  : public Component, public BaseCameraComponent {
     TYPE_DEFINITION(EditorCameraComponent);
 public:
     EditorCameraComponent();
@@ -17,7 +18,4 @@ public:
     void rotateView(glm::vec2 viewChangeAlongScreenAxis);
 
     void moveView(glm::vec3 direction);
-
-    Camera m_Camera;
-    bool m_isActive;
 };

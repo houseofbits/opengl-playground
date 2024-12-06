@@ -16,8 +16,6 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_activeCameraId(0) {
     usesComponent<StaticMeshComponent>();
     usesComponent<TransformComponent>();
-//    usesComponent<CameraComponent>();
-//    usesComponent<EditorCameraComponent>();
     usesComponent<SkyComponent>();
 }
 
@@ -126,15 +124,15 @@ Camera *MainRenderSystem::findActiveCamera() {
         return nullptr;
     }
 
-    auto camera = entity->getComponent<CameraComponent>();
+    auto camera = entity->getComponent<BaseCameraComponent>();
     if (camera != nullptr) {
         return &camera->m_Camera;
     }
-
-    auto editorCamera = entity->getComponent<EditorCameraComponent>();
-    if (editorCamera != nullptr) {
-        return &editorCamera->m_Camera;
-    }
+//
+//    auto editorCamera = entity->getComponent<EditorCameraComponent>();
+//    if (editorCamera != nullptr) {
+//        return &editorCamera->m_Camera;
+//    }
 
     return nullptr;
 }
