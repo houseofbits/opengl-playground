@@ -5,7 +5,6 @@ CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
                                                          m_isSimulationDisabled(false),
                                                          m_PhysicsResource() {
     usesComponent<TransformComponent>();
-    usesComponent<CameraComponent>();
     usesComponent<PhysicsCharacterComponent>();
 }
 
