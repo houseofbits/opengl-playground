@@ -193,7 +193,7 @@ void EntityContext::removeComponent(Identity::Type entityId, const std::string &
         if (c != nullptr) {
             unregisterComponentFromSystems(c);
             e->removeComponent(*c);
-            delete c;
+//            delete c;
         }
     }
 }

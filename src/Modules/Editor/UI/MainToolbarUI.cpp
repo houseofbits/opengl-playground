@@ -3,14 +3,14 @@
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
 #include "../../Physics/Components/PhysicsCharacterComponent.h"
 #include "../Systems/EditorUISystem.h"
+#include "../Components/EditorCameraComponent.h"
+#include "../../Common/Events/CameraActivationEvent.h"
 
 
 MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
                                                        m_isEditWindowVisible(true),
                                                        m_isSimulationEnabled(true),
-                                                       m_renderShaderType(0),
-                                                       m_previousSelectedCameraComponentId(0),
-                                                       m_selectedCameraComponentId(0) {
+                                                       m_renderShaderType(0){
 }
 
 void MainToolbarUI::process() {
@@ -85,12 +85,6 @@ void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) {
 }
 
 void MainToolbarUI::processViewMenu() {
-    for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
-        if (comp.second->m_isActive) {
-            m_selectedCameraComponentId = (int) comp.first;
-        }
-    }
-
     if (ImGui::BeginMenu("View")) {
         if (ImGui::MenuItem("View shaded", nullptr, m_renderShaderType == 0)) {
             sendUIEvent(EditorUIEvent::TOGGLE_RENDER_SHADED);
@@ -110,17 +104,22 @@ void MainToolbarUI::processViewMenu() {
         }
         ImGui::SeparatorText("Cameras");
 
+        for (const auto comp: m_EditorUISystem->getComponentContainer<EditorCameraComponent>()) {
+            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(comp.first);
+            if (ImGui::MenuItem(e->getListName().c_str(), nullptr, comp.second->m_isActive)) {
+                m_EditorUISystem->m_EventManager->triggerEvent<CameraActivationEvent>(comp.first);
+            }
+        }
+
         for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
             Entity *e = m_EditorUISystem->m_EntityContext->getEntity(comp.first);
             if (ImGui::MenuItem(e->getListName().c_str(), nullptr, comp.second->m_isActive)) {
-                m_selectedCameraComponentId = (int) comp.first;
+                m_EditorUISystem->m_EventManager->triggerEvent<CameraActivationEvent>(comp.first);
             }
         }
 
         ImGui::EndMenu();
     }
-
-    activateCameras();
 }
 
 void MainToolbarUI::runSimulation() {
@@ -128,17 +127,6 @@ void MainToolbarUI::runSimulation() {
     sendUIEvent(EditorUIEvent::TOGGLE_SIMULATION_ENABLED);
     m_isEditWindowVisible = false;
     sendEditorStateEvent();
-
-    m_previousSelectedCameraComponentId = m_selectedCameraComponentId;
-    auto cc = m_EditorUISystem->getComponentContainer<PhysicsCharacterComponent>();
-    if (!cc.empty()) {
-        auto* ccCam = m_EditorUISystem->getComponent<CameraComponent>(cc.begin()->first);
-        if (ccCam!= nullptr) {
-            m_selectedCameraComponentId = (int) ccCam->m_EntityId.id();
-        }
-    }
-
-    activateCameras();
 }
 
 void MainToolbarUI::stopSimulation() {
@@ -148,15 +136,5 @@ void MainToolbarUI::stopSimulation() {
     m_isEditWindowVisible = true;
     sendEditorStateEvent();
 
-    if (m_previousSelectedCameraComponentId) {
-        m_selectedCameraComponentId = m_previousSelectedCameraComponentId;
-        m_previousSelectedCameraComponentId = 0;
-        activateCameras();
-    }
 }
 
-void MainToolbarUI::activateCameras() {
-    for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
-        comp.second->m_isActive = m_selectedCameraComponentId == comp.first;
-    }
-}

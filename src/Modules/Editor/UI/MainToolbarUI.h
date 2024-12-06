@@ -13,8 +13,6 @@ public:
     bool m_isEditWindowVisible;
     int m_renderShaderType;
     bool m_isSimulationEnabled;
-    int m_selectedCameraComponentId;
-    int m_previousSelectedCameraComponentId;
 
 private:
     void processViewMenu();
@@ -23,7 +21,6 @@ private:
     void sendEditorStateEvent();
     void runSimulation();
     void stopSimulation();
-    void activateCameras();
 
     EditorUISystem *m_EditorUISystem;
 };

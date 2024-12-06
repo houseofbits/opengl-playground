@@ -8,6 +8,7 @@
 #include "../Resources/EnvironmentProbesCubeMapArrayResource.h"
 #include "../Resources/LightsBufferResource.h"
 #include "../Resources/ShaderProgramResource.h"
+#include "../../Common/Events/CameraActivationEvent.h"
 
 class MainRenderSystem : public EntitySystem {
 public:
@@ -22,6 +23,8 @@ public:
     void handleWindowEvent(const WindowEvent &);
 
     void handleEditorUIEvent(const EditorUIEvent &);
+
+    void handleCameraActivationEvent(const CameraActivationEvent &);
 
 private:
     enum ShaderType {
@@ -42,4 +45,5 @@ private:
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
     ResourceHandle<EnvironmentProbesBufferResource> m_ProbesBuffer;
     ResourceHandle<EnvironmentProbesCubeMapArrayResource> m_ProbesCubeMapArray;
+    Identity::Type m_activeCameraId;
 };

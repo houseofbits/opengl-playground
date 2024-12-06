@@ -38,7 +38,7 @@ public:
     void registerBehaviourEventHandlers(EventManager &eventManager);
 
     [[nodiscard]] std::string getListName() const {
-        return m_Name;
+        return m_Name;// + " (" + std::to_string(m_Id.id()) + ")";
     }
 
     template<class T>
@@ -80,5 +80,5 @@ public:
     Status m_Status;
     std::list<Component::TComponentPtr> m_Components;
     std::list<EntityBehaviour*> m_Behaviours;
-    std::list<EntitySystem::TEntitySystemPtr> m_Systems;
+//    std::list<EntitySystem::TEntitySystemPtr> m_Systems;
 };

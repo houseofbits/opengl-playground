@@ -14,7 +14,7 @@ public:
         return "Render mesh";
     }
 
-    void process(Entity &entity, EditorUISystem& system) {
+    void process(Entity &entity, EditorUISystem& system) override {
         auto *mesh = entity.getComponent<StaticMeshComponent>();
         if (mesh == nullptr) {
             return;

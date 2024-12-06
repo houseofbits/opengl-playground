@@ -37,7 +37,5 @@ private:
     std::string m_selectedEntityCreationType;
     std::string m_selectedComponentCreationType;
     int m_selectedBehaviour;
-//    std::map<std::string, BaseComponentEdit*> m_componentEditors;
-//    std::map<std::string, bool> m_entityListFilter;
     std::string m_filterString;
 };

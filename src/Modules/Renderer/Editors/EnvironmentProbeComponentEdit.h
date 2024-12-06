@@ -12,7 +12,7 @@ public:
         return "Environment probe";
     }
 
-    void process(Entity &entity, EditorUISystem& system) {
+    void process(Entity &entity, EditorUISystem& system) override {
         auto *probe = entity.getComponent<EnvironmentProbeComponent>();
         if (probe == nullptr) {
             return;

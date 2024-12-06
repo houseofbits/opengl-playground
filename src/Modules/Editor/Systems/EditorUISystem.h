@@ -41,7 +41,6 @@ public:
 
     ResourceManager *m_ResourceManager;
     bool m_isImUIInitialized;
-    bool m_isDemoWindowVisible;
     TransformGizmoHelper m_transformGizmo;
     MainToolbarUI m_MainToolbarUI;
     EditWindowUI m_EditWindowUI;

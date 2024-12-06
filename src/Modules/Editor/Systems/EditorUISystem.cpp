@@ -8,26 +8,18 @@
 #include "../Helpers/TexturePreviewHelper.h"
 #include "../../Physics/Components/PhysicsFixedJointComponent.h"
 #include "../../Physics/Components/PhysicsSliderJointComponent.h"
+#include "../Components/EditorCameraComponent.h"
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_transformGizmo(),
                                    m_ResourceManager(nullptr),
                                    m_isImUIInitialized(false),
-                                   m_isDemoWindowVisible(false),
                                    m_MainToolbarUI(this),
                                    m_EditWindowUI(this),
                                    m_MaterialEditWindowUI(this),
                                    m_componentEditors() {
-//    usesComponent<StaticMeshComponent>();
-//    usesComponent<LightComponent>();
-//    usesComponent<TransformComponent>();
     usesComponent<CameraComponent>();
-//    usesComponent<EnvironmentProbeComponent>();
-//    usesComponent<PhysicsCharacterComponent>();
-//    usesComponent<PhysicsBodyComponent>();
-//    usesComponent<PhysicsHingeJointComponent>();
-//    usesComponent<PhysicsFixedJointComponent>();
-//    usesComponent<PhysicsSliderJointComponent>();
+    usesComponent<EditorCameraComponent>();
 }
 
 void EditorUISystem::process(EventManager &eventManager) {
@@ -97,7 +89,7 @@ void EditorUISystem::handleRawSDLEvent(const RawSDLEvent &event) {
 }
 
 Camera *EditorUISystem::findActiveCamera() {
-    auto *c = findComponent<CameraComponent>([](CameraComponent *camera) {
+    auto *c = findComponent<EditorCameraComponent>([](EditorCameraComponent *camera) {
         return camera->m_isActive;
     });
 

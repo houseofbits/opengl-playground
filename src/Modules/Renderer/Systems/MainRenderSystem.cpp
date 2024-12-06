@@ -2,6 +2,7 @@
 #include "../../Common/Components/CameraComponent.h"
 #include "../Components/SkyComponent.h"
 #include "../Components/StaticMeshComponent.h"
+#include "../../Editor/Components/EditorCameraComponent.h"
 #include <GL/glew.h>
 
 MainRenderSystem::MainRenderSystem() : EntitySystem(),
@@ -11,16 +12,19 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_LightsBuffer(),
                                        m_ProbesBuffer(),
                                        m_viewportWidth(1024),
-                                       m_viewportHeight(768) {
+                                       m_viewportHeight(768),
+                                       m_activeCameraId(0) {
     usesComponent<StaticMeshComponent>();
     usesComponent<TransformComponent>();
-    usesComponent<CameraComponent>();
+//    usesComponent<CameraComponent>();
+//    usesComponent<EditorCameraComponent>();
     usesComponent<SkyComponent>();
 }
 
 void MainRenderSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &MainRenderSystem::handleWindowEvent);
     eventManager.registerEventReceiver(this, &MainRenderSystem::handleEditorUIEvent);
+    eventManager.registerEventReceiver(this, &MainRenderSystem::handleCameraActivationEvent);
 }
 
 void MainRenderSystem::handleWindowEvent(const WindowEvent & event) {
@@ -112,12 +116,24 @@ void MainRenderSystem::process(EventManager &eventManager) {
 }
 
 Camera *MainRenderSystem::findActiveCamera() {
-    auto *c = findComponent<CameraComponent>([](CameraComponent *camera) {
-        return camera->m_isActive;
-    });
+    if (!m_activeCameraId) {
+        return nullptr;
+    }
 
-    if (c != nullptr) {
-        return &c->m_Camera;
+    auto entity = m_EntityContext->getEntity(m_activeCameraId);
+
+    if (!entity) {
+        return nullptr;
+    }
+
+    auto camera = entity->getComponent<CameraComponent>();
+    if (camera != nullptr) {
+        return &camera->m_Camera;
+    }
+
+    auto editorCamera = entity->getComponent<EditorCameraComponent>();
+    if (editorCamera != nullptr) {
+        return &editorCamera->m_Camera;
     }
 
     return nullptr;
@@ -137,4 +153,8 @@ void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent & event) {
     if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_PHYSICS) {
         m_isEnabled = false;
     }
+}
+
+void MainRenderSystem::handleCameraActivationEvent(const CameraActivationEvent &event) {
+    m_activeCameraId = event.m_cameraComponentId;
 }

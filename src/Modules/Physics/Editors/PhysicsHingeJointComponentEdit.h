@@ -5,6 +5,7 @@
 #include "../../Editor/Helpers/TextPromptHelper.h"
 #include "../../Editor/Helpers/TargetEntityHelper.h"
 #include "../../Editor/UI/BaseComponentEdit.h"
+#include "../Components/PhysicsHingeJointComponent.h"
 
 class PhysicsHingeJointComponentEdit : public BaseComponentEdit {
 public:
@@ -13,7 +14,7 @@ public:
         return "Physics hinge joint";
     }
 
-    void process(Entity &entity, EditorUISystem& system) {
+    void process(Entity &entity, EditorUISystem& system) override {
         auto *body = entity.getComponent<PhysicsHingeJointComponent>();
         if (body == nullptr) {
             return;

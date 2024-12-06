@@ -1,14 +1,12 @@
 #include "PhysicsDebugRenderSystem.h"
 #include "../../Common/Components/CameraComponent.h"
+#include "../../Editor/Components/EditorCameraComponent.h"
 
-
-PhysicsDebugRenderSystem::PhysicsDebugRenderSystem() : EntitySystem(), m_isEnabled(false) {
-    usesComponent<CameraComponent>();
+PhysicsDebugRenderSystem::PhysicsDebugRenderSystem() : EntitySystem(), m_isEnabled(false), m_activeCameraId(0) {
 }
 
 void PhysicsDebugRenderSystem::initialize(ResourceManager &resourceManager) {
     resourceManager.request(m_PhysicsResource, "physics");
-
     resourceManager.request(m_ShaderProgram, "resources/shaders/basic|.vert|.frag");
 }
 
@@ -46,13 +44,29 @@ void PhysicsDebugRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {
 }
 
 Camera *PhysicsDebugRenderSystem::findActiveCamera() {
-    auto *c = findComponent<CameraComponent>([](CameraComponent *camera) {
-        return camera->m_isActive;
-    });
+    if (!m_activeCameraId) {
+        return nullptr;
+    }
 
-    if (c != nullptr) {
-        return &c->m_Camera;
+    auto entity = m_EntityContext->getEntity(m_activeCameraId);
+
+    if (!entity) {
+        return nullptr;
+    }
+
+    auto camera = entity->getComponent<CameraComponent>();
+    if (camera != nullptr) {
+        return &camera->m_Camera;
+    }
+
+    auto editorCamera = entity->getComponent<EditorCameraComponent>();
+    if (editorCamera != nullptr) {
+        return &editorCamera->m_Camera;
     }
 
     return nullptr;
+}
+
+void PhysicsDebugRenderSystem::handleCameraActivationEvent(const CameraActivationEvent &event) {
+    m_activeCameraId = event.m_cameraComponentId;
 }

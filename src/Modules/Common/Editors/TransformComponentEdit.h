@@ -9,7 +9,7 @@ public:
         return "Transform";
     }
 
-    void process(Entity &entity, EditorUISystem& system) {
+    void process(Entity &entity, EditorUISystem& system) override {
         auto *transform = entity.getComponent<TransformComponent>();
         if (transform == nullptr) {
             return;

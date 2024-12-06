@@ -24,7 +24,7 @@ public:
         return "Light";
     }
 
-    void process(Entity &entity, EditorUISystem& system) {
+    void process(Entity &entity, EditorUISystem& system) override {
         auto *light = entity.getComponent<LightComponent>();
         if (light == nullptr) {
             return;

@@ -150,6 +150,13 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Behaviours/DoorActivationBehaviour.h
         src/Modules/Renderer/Systems/PhysicsDebugRenderSystem.cpp
         src/Modules/Renderer/Systems/PhysicsDebugRenderSystem.h
+        src/Modules/Editor/Components/EditorCameraComponent.cpp
+        src/Modules/Editor/Components/EditorCameraComponent.h
+        src/Modules/Editor/Systems/EditorCameraSystem.cpp
+        src/Modules/Editor/Systems/EditorCameraSystem.h
+        src/Modules/Common/Events/CameraActivationEvent.h
+        src/Modules/Common/Systems/CameraSystem.cpp
+        src/Modules/Common/Systems/CameraSystem.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

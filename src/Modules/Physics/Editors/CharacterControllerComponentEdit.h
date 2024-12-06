@@ -13,7 +13,7 @@ public:
         return "Character controller";
     }
 
-    void process(Entity &entity, EditorUISystem& system) {
+    void process(Entity &entity, EditorUISystem& system) override {
         auto *comp = entity.getComponent<PhysicsCharacterComponent>();
         if (comp == nullptr) {
             return;

@@ -4,7 +4,9 @@
 #include "../../Editor/Helpers/FileDialogHelper.h"
 #include "../../Editor/Helpers/TextPromptHelper.h"
 #include "../../Editor/UI/BaseComponentEdit.h"
+#include "../../Editor/Systems/EditorUISystem.h"
 #include "../Components/PhysicsSliderJointComponent.h"
+#include "../../Editor/Helpers/TargetEntityHelper.h"
 
 class PhysicsSliderJointComponentEdit : public BaseComponentEdit {
 public:
@@ -13,7 +15,7 @@ public:
         return "Physics slider joint";
     }
 
-    void process(Entity &entity, EditorUISystem& system) {
+    void process(Entity &entity, EditorUISystem& system) override {
         auto *body = entity.getComponent<PhysicsSliderJointComponent>();
         if (body == nullptr) {
             return;

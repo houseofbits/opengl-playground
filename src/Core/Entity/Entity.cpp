@@ -5,8 +5,9 @@ Entity::Entity() : m_Id(),
                    m_Name(),
                    m_Status(CREATED),
                    m_Components(),
-                   m_Behaviours(),
-                   m_Systems() {
+                   m_Behaviours()
+//                   m_Systems()
+{
 
 }
 

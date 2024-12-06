@@ -21,7 +21,7 @@ public:
         return "Physics body";
     }
 
-    void process(Entity &entity, EditorUISystem& system) {
+    void process(Entity &entity, EditorUISystem& system) override {
         auto *body = entity.getComponent<PhysicsBodyComponent>();
         if (body == nullptr) {
             return;

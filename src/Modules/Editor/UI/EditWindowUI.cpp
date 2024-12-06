@@ -32,14 +32,6 @@ void EditWindowUI::process() {
         ImGui::PushItemWidth(-FLT_MIN);
         if (ImGui::InputText("##FILTER_STRING", &m_filterString)) {
         }
-
-//        if (ImGui::BeginCombo("##ENTITY_FILTER", "Filter")) {
-//            for (const auto &edit: m_EditorUISystem->m_componentEditors) {
-//                ImGui::Checkbox(edit.second->getName().c_str(), &m_entityListFilter[edit.first]);
-//            }
-//            m_selectedEntityId = -1;
-//            ImGui::EndCombo();
-//        }
         ImGui::PopItemWidth();
 
         processEntitiesList();
