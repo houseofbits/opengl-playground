@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../../Core/API.h"
+#include "Components/MainCharacterBehaviourComponent.h"
+#include "../Editor/Systems/EditorUISystem.h"
+#include "Editors/MainCharacterBehaviourComponentEdit.h"
+#include "Systems/MainCharacterBehaviourSystem.h"
+
+class BehavioursModule : public EntityModule {
+public:
+    void registerComponents(EntityContext &ctx) override {
+        ctx.registerComponent<MainCharacterBehaviourComponent>("mainCharacterBehaviour");
+    };
+
+    void registerSystems(EntityContext &ctx) override {
+        ctx.registerEntitySystem<MainCharacterBehaviourSystem>(1);
+    };
+
+    void postRegister(EntityContext &ctx) override {
+        auto editorSystem = ctx.getSystem<EditorUISystem>();
+        if (editorSystem != nullptr) {
+            editorSystem->registerComponentEditor<MainCharacterBehaviourComponent, MainCharacterBehaviourComponentEdit>();
+        }
+    }
+};
+
+
