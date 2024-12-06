@@ -1,8 +1,6 @@
 #include "MainRenderSystem.h"
-#include "../../Common/Components/CameraComponent.h"
 #include "../Components/SkyComponent.h"
 #include "../Components/StaticMeshComponent.h"
-#include "../../Editor/Components/EditorCameraComponent.h"
 #include <GL/glew.h>
 
 MainRenderSystem::MainRenderSystem() : EntitySystem(),
@@ -13,7 +11,7 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_ProbesBuffer(),
                                        m_viewportWidth(1024),
                                        m_viewportHeight(768),
-                                       m_activeCameraId(0) {
+                                       m_activeCameraHelper() {
     usesComponent<StaticMeshComponent>();
     usesComponent<TransformComponent>();
     usesComponent<SkyComponent>();
@@ -22,10 +20,10 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
 void MainRenderSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &MainRenderSystem::handleWindowEvent);
     eventManager.registerEventReceiver(this, &MainRenderSystem::handleEditorUIEvent);
-    eventManager.registerEventReceiver(this, &MainRenderSystem::handleCameraActivationEvent);
+    m_activeCameraHelper.registerEventHandler(eventManager);
 }
 
-void MainRenderSystem::handleWindowEvent(const WindowEvent & event) {
+void MainRenderSystem::handleWindowEvent(const WindowEvent &event) {
     if (event.eventType == WindowEvent::RESIZE || event.eventType == WindowEvent::CREATE) {
         m_viewportWidth = event.window->viewportWidth;
         m_viewportHeight = event.window->viewportHeight;
@@ -67,7 +65,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
     glViewport(0, 0, m_viewportWidth, m_viewportHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    Camera *camera = findActiveCamera();
+    Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
     if (camera == nullptr) {
         return;
     }
@@ -113,31 +111,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
     }
 }
 
-Camera *MainRenderSystem::findActiveCamera() {
-    if (!m_activeCameraId) {
-        return nullptr;
-    }
-
-    auto entity = m_EntityContext->getEntity(m_activeCameraId);
-
-    if (!entity) {
-        return nullptr;
-    }
-
-    auto camera = entity->getComponent<BaseCameraComponent>();
-    if (camera != nullptr) {
-        return &camera->m_Camera;
-    }
-//
-//    auto editorCamera = entity->getComponent<EditorCameraComponent>();
-//    if (editorCamera != nullptr) {
-//        return &editorCamera->m_Camera;
-//    }
-
-    return nullptr;
-}
-
-void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent & event) {
+void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {
     m_isEnabled = true;
     if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_SHADED) {
         m_shaderType = SHADER_SHADED;
@@ -151,8 +125,4 @@ void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent & event) {
     if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_PHYSICS) {
         m_isEnabled = false;
     }
-}
-
-void MainRenderSystem::handleCameraActivationEvent(const CameraActivationEvent &event) {
-    m_activeCameraId = event.m_cameraComponentId;
 }

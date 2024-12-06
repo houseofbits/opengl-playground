@@ -1,8 +1,6 @@
 #include "PhysicsDebugRenderSystem.h"
-#include "../../Common/Components/CameraComponent.h"
-#include "../../Editor/Components/EditorCameraComponent.h"
 
-PhysicsDebugRenderSystem::PhysicsDebugRenderSystem() : EntitySystem(), m_isEnabled(false), m_activeCameraId(0) {
+PhysicsDebugRenderSystem::PhysicsDebugRenderSystem() : EntitySystem(), m_isEnabled(false), m_activeCameraHelper() {
 }
 
 void PhysicsDebugRenderSystem::initialize(ResourceManager &resourceManager) {
@@ -16,7 +14,7 @@ void PhysicsDebugRenderSystem::process(EventManager &) {
         return;
     }
 
-    Camera *camera = findActiveCamera();
+    Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
     if (camera == nullptr) {
         return;
     }
@@ -30,6 +28,7 @@ void PhysicsDebugRenderSystem::process(EventManager &) {
 void PhysicsDebugRenderSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &PhysicsDebugRenderSystem::handleWindowEvent);
     eventManager.registerEventReceiver(this, &PhysicsDebugRenderSystem::handleEditorUIEvent);
+    m_activeCameraHelper.registerEventHandler(eventManager);
 }
 
 void PhysicsDebugRenderSystem::handleWindowEvent(const WindowEvent &) {
@@ -41,32 +40,4 @@ void PhysicsDebugRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {
     if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_PHYSICS) {
         m_isEnabled = true;
     }
-}
-
-Camera *PhysicsDebugRenderSystem::findActiveCamera() {
-    if (!m_activeCameraId) {
-        return nullptr;
-    }
-
-    auto entity = m_EntityContext->getEntity(m_activeCameraId);
-
-    if (!entity) {
-        return nullptr;
-    }
-
-    auto camera = entity->getComponent<BaseCameraComponent>();
-    if (camera != nullptr) {
-        return &camera->m_Camera;
-    }
-//
-//    auto editorCamera = entity->getComponent<EditorCameraComponent>();
-//    if (editorCamera != nullptr) {
-//        return &editorCamera->m_Camera;
-//    }
-
-    return nullptr;
-}
-
-void PhysicsDebugRenderSystem::handleCameraActivationEvent(const CameraActivationEvent &event) {
-    m_activeCameraId = event.m_cameraComponentId;
 }

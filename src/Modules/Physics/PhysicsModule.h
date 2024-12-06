@@ -13,7 +13,6 @@
 #include "Components/PhysicsSliderJointComponent.h"
 #include "Components/PhysicsFixedJointComponent.h"
 #include "Components/PhysicsTriggerShapeComponent.h"
-#include "Behaviours/DoorActivationBehaviour.h"
 #include "Editors/CharacterControllerComponentEdit.h"
 #include "Editors/PhysicsBodyComponentEdit.h"
 #include "Editors/PhysicsHingeJointComponentEdit.h"
@@ -32,10 +31,8 @@ public:
     };
 
     void registerBehaviours(EntityContext & ctx) override {
-        ctx.registerBehaviour<CameraControlInputBehaviour>();
         ctx.registerBehaviour<CharacterMouseLookBehaviour>();
         ctx.registerBehaviour<CharacterPickingBehaviour>();
-        ctx.registerBehaviour<DoorActivationBehaviour>();
     }
 
     void registerSystems(EntityContext &ctx) override {

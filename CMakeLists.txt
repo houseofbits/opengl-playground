@@ -125,14 +125,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Helpers/PhysicsDebugRenderer.h
         src/Modules/Renderer/Systems/OverlayRenderSystem.cpp
         src/Modules/Renderer/Systems/OverlayRenderSystem.h
-        src/Modules/Common/Behaviours/CameraControlInputBehaviour.cpp
-        src/Modules/Common/Behaviours/CameraControlInputBehaviour.h
         src/Core/Behaviour/EntityBehaviour.cpp
         src/Core/Behaviour/EntityBehaviour.h
         src/Modules/Physics/Behaviours/CharacterControlBehaviour.cpp
         src/Modules/Physics/Behaviours/CharacterControlBehaviour.h
-        src/Modules/Common/Behaviours/CameraViewportBehaviour.cpp
-        src/Modules/Common/Behaviours/CameraViewportBehaviour.h
         src/Modules/Physics/Behaviours/CharacterMouseLookBehaviour.cpp
         src/Modules/Physics/Behaviours/CharacterMouseLookBehaviour.h
         src/Modules/Physics/Behaviours/CharacterPickingBehaviour.cpp
@@ -146,8 +142,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Components/PhysicsFixedJointComponent.h
         src/Modules/Physics/Helpers/BasePhysicsJoint.h
         src/Modules/Editor/Helpers/TargetEntityHelper.h
-        src/Modules/Physics/Behaviours/DoorActivationBehaviour.cpp
-        src/Modules/Physics/Behaviours/DoorActivationBehaviour.h
         src/Modules/Renderer/Systems/PhysicsDebugRenderSystem.cpp
         src/Modules/Renderer/Systems/PhysicsDebugRenderSystem.h
         src/Modules/Editor/Components/EditorCameraComponent.cpp
@@ -158,6 +152,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Common/Systems/CameraSystem.cpp
         src/Modules/Common/Systems/CameraSystem.h
         src/Modules/Common/Components/BaseCameraComponent.h
+        src/Modules/Common/Helpers/ActiveCameraHelper.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

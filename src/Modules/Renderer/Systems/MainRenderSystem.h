@@ -9,6 +9,7 @@
 #include "../Resources/LightsBufferResource.h"
 #include "../Resources/ShaderProgramResource.h"
 #include "../../Common/Events/CameraActivationEvent.h"
+#include "../../Common/Helpers/ActiveCameraHelper.h"
 
 class MainRenderSystem : public EntitySystem {
 public:
@@ -24,8 +25,6 @@ public:
 
     void handleEditorUIEvent(const EditorUIEvent &);
 
-    void handleCameraActivationEvent(const CameraActivationEvent &);
-
 private:
     enum ShaderType {
         SHADER_SHADED = 0,
@@ -35,8 +34,6 @@ private:
         NUM_SHADERS
     };
 
-    Camera *findActiveCamera();
-
     bool m_isEnabled;
     ShaderType m_shaderType;
     int m_viewportWidth;
@@ -45,5 +42,5 @@ private:
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
     ResourceHandle<EnvironmentProbesBufferResource> m_ProbesBuffer;
     ResourceHandle<EnvironmentProbesCubeMapArrayResource> m_ProbesCubeMapArray;
-    Identity::Type m_activeCameraId;
+    ActiveCameraHelper m_activeCameraHelper;
 };

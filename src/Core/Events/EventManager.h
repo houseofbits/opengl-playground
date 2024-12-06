@@ -12,7 +12,9 @@
 
 class EventHandler {
 public:
-    virtual Identity::Type getId() = 0;
+    virtual Identity::Type getId() {
+        return 0;
+    }
 };
 
 class BaseHandlerFunction {

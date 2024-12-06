@@ -3,9 +3,7 @@
 #include "../../Core/API.h"
 #include "Components/CameraComponent.h"
 #include "Components/TransformComponent.h"
-#include "Behaviours/CameraControlInputBehaviour.h"
 #include "../Physics/Behaviours/CharacterControlBehaviour.h"
-#include "Behaviours/CameraViewportBehaviour.h"
 #include "Systems/TransformHierarchyProcessingSystem.h"
 #include "../Editor/Systems/EditorUISystem.h"
 #include "Editors/CameraComponentEdit.h"
@@ -18,11 +16,6 @@ public:
         ctx.registerComponent<TransformComponent>("transform");
         ctx.registerComponent<CameraComponent>("camera");
     };
-
-    void registerBehaviours(EntityContext &ctx) override {
-        ctx.registerBehaviour<CharacterControlBehaviour>();
-        ctx.registerBehaviour<CameraViewportBehaviour>();
-    }
 
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<TransformHierarchyProcessingSystem>(10);
