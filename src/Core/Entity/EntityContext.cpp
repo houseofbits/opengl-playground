@@ -59,7 +59,7 @@ EntityContext::createEntityFromJson(nlohmann::json &entityJson) {
         for (auto &[key, value]: behavioursJson.items()) {
             EntityBehaviour *b = m_EntityBehaviourFactory.createInstance(key);
             if (b == nullptr) {
-                Log::error("Behaviour class not found ", key);
+                Log::error("Behaviours class not found ", key);
                 continue;
             }
 
@@ -209,7 +209,7 @@ void EntityContext::addBehaviour(Identity::Type entityId, const std::string &typ
     }
 
     if (e->findBehaviour(type) != nullptr) {
-        Log::warn("Cannot add behaviour. Behaviour already exists on entity");
+        Log::warn("Cannot add behaviour. Behaviours already exists on entity");
 
         return;
     }
@@ -232,7 +232,7 @@ void EntityContext::removeBehaviour(Identity::Type entityId, const std::string &
 
     auto b = e->findBehaviour(type);
     if (b == nullptr) {
-        Log::warn("Cannot remove behaviour. Behaviour not found on entity");
+        Log::warn("Cannot remove behaviour. Behaviours not found on entity");
 
         return;
     }

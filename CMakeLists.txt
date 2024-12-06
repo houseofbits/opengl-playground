@@ -153,6 +153,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Common/Systems/CameraSystem.h
         src/Modules/Common/Components/BaseCameraComponent.h
         src/Modules/Common/Helpers/ActiveCameraHelper.h
+        src/Modules/Behaviours/Components/MainCharacterBehaviourComponent.cpp
+        src/Modules/Behaviours/Components/MainCharacterBehaviourComponent.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
