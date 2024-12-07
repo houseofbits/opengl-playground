@@ -38,7 +38,7 @@ void Window::create()
         viewportHeight,
         windowFlags);
 
-    eventManager->queueEvent<WindowEvent>(WindowEvent::Type::CREATE, this);
+    eventManager->queueEvent<SystemEvent>(SystemEvent::Type::WINDOW_CREATED, this);
 
     if (sdlWindow == nullptr)
     {
@@ -89,7 +89,7 @@ void Window::create()
 //    glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES, &maxVertices);
 //    std::cout << "GS maximum number of vertices: " << maxVertices << std::endl;
 
-    eventManager->queueEvent<WindowEvent>(WindowEvent::Type::OPENGL_CONTEXT_CREATED, this);
+    eventManager->queueEvent<SystemEvent>(SystemEvent::Type::WINDOW_CONTEXT_CREATED, this);
 
     // std::cout<<"Window created"<<std::endl;
 }
@@ -143,7 +143,7 @@ bool Window::pollEvents()
                     SDL_SetWindowFullscreen(sdlWindow, windowFlags);
                 }
 
-                    eventManager->queueEvent<WindowEvent>(WindowEvent::Type::RESIZE, this);
+                    eventManager->queueEvent<SystemEvent>(SystemEvent::Type::WINDOW_RESIZED, this);
                 break;
             }
         }

@@ -17,7 +17,8 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_MainToolbarUI(this),
                                    m_EditWindowUI(this),
                                    m_MaterialEditWindowUI(this),
-                                   m_componentEditors() {
+                                   m_componentEditors(),
+                                   m_activeCameraHelper() {
     usesComponent<CameraComponent>();
     usesComponent<EditorCameraComponent>();
 }
@@ -39,9 +40,10 @@ void EditorUISystem::process(EventManager &eventManager) {
     TexturePreviewHelper::process();
 
     if (!m_MainToolbarUI.m_isSimulationEnabled) {
-        Camera *camera = findActiveCamera();
-        assert(camera != nullptr);
-        m_transformGizmo.processGizmo(*m_EntityContext, m_EditWindowUI.m_selectedEntityId, *camera);
+        Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
+        if (!camera) {
+            m_transformGizmo.processGizmo(*m_EntityContext, m_EditWindowUI.m_selectedEntityId, *camera);
+        }
     }
 
     ImGui::Render();
@@ -70,12 +72,13 @@ void EditorUISystem::initialize(ResourceManager &manager) {
 }
 
 void EditorUISystem::registerEventHandlers(EventManager &eventManager) {
-    eventManager.registerEventReceiver(this, &EditorUISystem::handleWindowEvent);
+    eventManager.registerEventReceiver(this, &EditorUISystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &EditorUISystem::handleRawSDLEvent);
+    m_activeCameraHelper.registerEventHandler(eventManager);
 }
 
-void EditorUISystem::handleWindowEvent(const WindowEvent &event) {
-    if (event.eventType == WindowEvent::OPENGL_CONTEXT_CREATED) {
+void EditorUISystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::WINDOW_CONTEXT_CREATED) {
         ImGui_ImplSDL2_InitForOpenGL(event.window->getSDLWindow(), event.window->getSDLContext());
         ImGui_ImplOpenGL3_Init("#version 410");
         m_isImUIInitialized = true;
@@ -86,18 +89,6 @@ void EditorUISystem::handleRawSDLEvent(const RawSDLEvent &event) {
     if (m_isImUIInitialized) {
         ImGui_ImplSDL2_ProcessEvent(&event.sdlEvent);
     }
-}
-
-Camera *EditorUISystem::findActiveCamera() {
-    auto *c = findComponent<EditorCameraComponent>([](EditorCameraComponent *camera) {
-        return camera->m_isActive;
-    });
-
-    if (c != nullptr) {
-        return &c->m_Camera;
-    }
-
-    return nullptr;
 }
 
 TransformComponent *EditorUISystem::getSelectedTransformComponent() {

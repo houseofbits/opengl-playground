@@ -41,8 +41,6 @@ void MainApplication::run() {
         }
 
         m_EventManager.processEvents();
-
-        m_EntityContext.processBehaviours(m_ResourceManager, m_EventManager);
         m_EntityContext.processSystems(m_EventManager);
 
         m_Window.doubleBuffer();
@@ -86,11 +84,5 @@ void MainApplication::handleEntityCreationEvent(const EntityCreationEvent &event
     }
     if (event.m_Type == EntityCreationEvent::REMOVE_COMPONENT) {
         m_EntityContext.removeComponent(event.m_entityId, event.m_name);
-    }
-    if (event.m_Type == EntityCreationEvent::ADD_BEHAVIOUR) {
-        m_EntityContext.addBehaviour(event.m_entityId, event.m_name);
-    }
-    if (event.m_Type == EntityCreationEvent::REMOVE_BEHAVIOUR) {
-        m_EntityContext.removeBehaviour(event.m_entityId, event.m_name);
     }
 }

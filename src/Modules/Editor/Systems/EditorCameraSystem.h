@@ -17,7 +17,7 @@ public:
 
     void handleCameraActivationEvent(const CameraActivationEvent &);
 
-    void handleWindowEvent(const WindowEvent &);
+    void handleSystemEvent(const SystemEvent &);
 
 private:
     glm::ivec2 m_viewportSize;

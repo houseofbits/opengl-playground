@@ -16,7 +16,7 @@ void EditorCameraSystem::initialize(ResourceManager &) {
 
 void EditorCameraSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &EditorCameraSystem::handleInputEvent);
-    eventManager.registerEventReceiver(this, &EditorCameraSystem::handleWindowEvent);
+    eventManager.registerEventReceiver(this, &EditorCameraSystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &EditorCameraSystem::handleCameraActivationEvent);
 }
 
@@ -84,8 +84,8 @@ void EditorCameraSystem::handleCameraActivationEvent(const CameraActivationEvent
     }
 }
 
-void EditorCameraSystem::handleWindowEvent(const WindowEvent &event) {
-    if (event.eventType == WindowEvent::RESIZE || event.eventType == WindowEvent::CREATE) {
+void EditorCameraSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::WINDOW_RESIZED || event.eventType == SystemEvent::WINDOW_CREATED) {
         m_viewportSize.x = event.window->viewportWidth;
         m_viewportSize.y = event.window->viewportHeight;
     }

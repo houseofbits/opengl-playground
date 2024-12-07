@@ -13,7 +13,7 @@ public:
 
     void registerEventHandlers(EventManager &) override;
 
-    void handleWindowEvent(const WindowEvent &);
+    void handleSystemEvent(const SystemEvent &);
 
     void handleEditorUIEvent(const EditorUIEvent &);
 };

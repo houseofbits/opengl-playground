@@ -18,13 +18,13 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
 }
 
 void MainRenderSystem::registerEventHandlers(EventManager &eventManager) {
-    eventManager.registerEventReceiver(this, &MainRenderSystem::handleWindowEvent);
+    eventManager.registerEventReceiver(this, &MainRenderSystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &MainRenderSystem::handleEditorUIEvent);
     m_activeCameraHelper.registerEventHandler(eventManager);
 }
 
-void MainRenderSystem::handleWindowEvent(const WindowEvent &event) {
-    if (event.eventType == WindowEvent::RESIZE || event.eventType == WindowEvent::CREATE) {
+void MainRenderSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::WINDOW_RESIZED || event.eventType == SystemEvent::WINDOW_CREATED) {
         m_viewportWidth = event.window->viewportWidth;
         m_viewportHeight = event.window->viewportHeight;
     }

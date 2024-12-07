@@ -2,7 +2,7 @@
 
 #include "Core/Events/Event.h"
 #include "Core/Events/EventManager.h"
-#include "Core/Events/WindowEvent.h"
+#include "Core/Events/SystemEvent.h"
 #include "Core/Reflection/TypedClass.h"
 #include "Exception.h"
 #include "Core/Helper/Log.h"

@@ -8,8 +8,6 @@
 #include "Systems/JointsProcessingSystem.h"
 #include "Systems/PhysicsBodyProcessingSystem.h"
 #include "Systems/PhysicsSystem.h"
-#include "Behaviours/CharacterMouseLookBehaviour.h"
-#include "Behaviours/CharacterPickingBehaviour.h"
 #include "Components/PhysicsSliderJointComponent.h"
 #include "Components/PhysicsFixedJointComponent.h"
 #include "Components/PhysicsTriggerShapeComponent.h"
@@ -29,11 +27,6 @@ public:
         ctx.registerComponent<PhysicsFixedJointComponent>("physicsFixedJoint");
         ctx.registerComponent<PhysicsTriggerShapeComponent>("physicsTriggerShape");
     };
-
-    void registerBehaviours(EntityContext & ctx) override {
-        ctx.registerBehaviour<CharacterMouseLookBehaviour>();
-        ctx.registerBehaviour<CharacterPickingBehaviour>();
-    }
 
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<PhysicsSystem>(1);

@@ -9,6 +9,13 @@ class EventManager;
 class EntityContext;
 class ResourceManager;
 
+
+/**
+ * TODO: Split the container logic into separate class, divide into entity register, and component register
+ *  CompoentRegister, EntityRegister
+ *
+ */
+
 class EntitySystem : public EventHandler {
 public:
     EntitySystem() : EventHandler() {}

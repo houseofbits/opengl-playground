@@ -2,6 +2,8 @@
 
 #include "../../../Core/API.h"
 #include "../Components/MainCharacterBehaviourComponent.h"
+#include "../../Physics/Components/PhysicsCharacterComponent.h"
+#include "../../Common/Components/CameraComponent.h"
 
 class MainCharacterBehaviourSystem : public EntitySystem {
 public:
@@ -14,6 +16,14 @@ public:
     void registerEventHandlers(EventManager &) override;
 
     void handleInputEvent(const InputEvent &);
+
+private:
+
+    static void handleMouseLook(const InputEvent &, PhysicsCharacterComponent *, CameraComponent *);
+
+    static void handleMovement(const InputEvent &, PhysicsCharacterComponent *, CameraComponent *);
+
+    static void handleAction(const InputEvent &, PhysicsCharacterComponent *, CameraComponent *);
 
     Entity *getCharacterEntity() {
         auto c = findComponent<MainCharacterBehaviourComponent>(

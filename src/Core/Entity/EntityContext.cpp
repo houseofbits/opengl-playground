@@ -6,10 +6,7 @@
 EntityContext::EntityContext() : m_ComponentFactory(),
                                  m_EntityConfiguration(m_ComponentFactory),
                                  m_Entities(),
-                                 m_Systems(),
-                                 m_entityBehavioursReadyToInitialize(),
-                                 m_entityBehavioursForRemoval(),
-                                 m_EntityBehaviourFactory() {
+                                 m_Systems() {
 }
 
 Entity::TEntityPtr EntityContext::addEntity() {
@@ -52,20 +49,6 @@ EntityContext::createEntityFromJson(nlohmann::json &entityJson) {
         c->m_EntityId = e->m_Id;
 
         e->addComponent(*c);
-    }
-
-    if (entityJson.contains("behaviours") && entityJson["behaviours"].is_object()) {
-        nlohmann::json behavioursJson = entityJson["behaviours"];
-        for (auto &[key, value]: behavioursJson.items()) {
-            EntityBehaviour *b = m_EntityBehaviourFactory.createInstance(key);
-            if (b == nullptr) {
-                Log::error("Behaviours class not found ", key);
-                continue;
-            }
-
-            b->setEntity(e.get());
-            e->addBehaviour(*b);
-        }
     }
 
     return e;
@@ -132,6 +115,8 @@ void EntityContext::initializeSystems(ResourceManager &resourceManager, EventMan
         system->initialize(resourceManager);
         system->registerEventHandlers(eventManager);
     }
+
+    eventManager.queueEvent<SystemEvent>(SystemEvent::ENTITY_SYSTEMS_READY);
 }
 
 void EntityContext::processSystems(EventManager &eventManager) {
@@ -198,63 +183,21 @@ void EntityContext::removeComponent(Identity::Type entityId, const std::string &
     }
 }
 
-std::vector<std::string> EntityContext::getBehaviourTypes() {
-    return m_EntityBehaviourFactory.getNames();
-}
-
-void EntityContext::addBehaviour(Identity::Type entityId, const std::string &type) {
-    auto *e = getEntity(entityId);
-    if (e == nullptr) {
-        return;
-    }
-
-    if (e->findBehaviour(type) != nullptr) {
-        Log::warn("Cannot add behaviour. Behaviours already exists on entity");
-
-        return;
-    }
-
-    auto *b = m_EntityBehaviourFactory.createInstance(type);
-    if (b == nullptr) {
-        return;
-    }
-
-    b->setEntity(e);
-    e->addBehaviour(*b);
-    m_entityBehavioursReadyToInitialize.push_back(b);
-}
-
-void EntityContext::removeBehaviour(Identity::Type entityId, const std::string &type) {
-    auto *e = getEntity(entityId);
-    if (e == nullptr) {
-        return;
-    }
-
-    auto b = e->findBehaviour(type);
-    if (b == nullptr) {
-        Log::warn("Cannot remove behaviour. Behaviours not found on entity");
-
-        return;
-    }
-
-    m_entityBehavioursForRemoval.push_back(b);
-}
-
-void EntityContext::processBehaviours(ResourceManager &resourceManager, EventManager &eventManager) {
-    for (const auto &behaviour: m_entityBehavioursReadyToInitialize) {
-        behaviour->initialize(resourceManager);
-        behaviour->registerEventHandlers(eventManager);
-    }
-    m_entityBehavioursReadyToInitialize.clear();
-
-    for (const auto &behaviour: m_entityBehavioursForRemoval) {
-        eventManager.removeEventHandler((EventHandler *) behaviour);
-        behaviour->detachFromEntity();
-        delete behaviour;
-    }
-    m_entityBehavioursForRemoval.clear();
-}
-
 std::vector<std::string> EntityContext::getAllConfigurationNames() {
     return m_EntityConfiguration.getAllConfigurationNames();
+}
+
+Entity *EntityContext::findEntity(std::function<bool(Entity *)> functor) {
+    auto it = std::find_if(
+            m_Entities.begin(),
+            m_Entities.end(),
+            [&functor](const auto &v) {
+                return functor(v.get());
+            });
+
+    if (it == m_Entities.end()) {
+        return nullptr;
+    }
+
+    return it->get();
 }

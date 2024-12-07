@@ -17,14 +17,11 @@
 class EntityContext {
 private:
     Factory<Component> m_ComponentFactory;
-    Factory<EntityBehaviour> m_EntityBehaviourFactory;
     EntityConfiguration m_EntityConfiguration;
 
     std::list<std::shared_ptr<Entity>> m_Entities;
     std::list<EntitySystem *> m_Systems;
     std::list<EntityModule *> m_Modules;
-    std::list<EntityBehaviour *> m_entityBehavioursReadyToInitialize;
-    std::list<EntityBehaviour *> m_entityBehavioursForRemoval;
 
     std::shared_ptr<Entity> addEntity();
 
@@ -43,11 +40,6 @@ public:
         }
     }
 
-    template<class T>
-    void registerBehaviour() {
-        m_EntityBehaviourFactory.registerName<T>(T::TypeName());
-    }
-
     template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value>>
     T *registerEntitySystem(unsigned int processPriority = 0) {
         auto *p = new T();
@@ -63,14 +55,13 @@ public:
         auto *p = new T();
         m_Modules.push_back(p);
         m_Modules.back()->registerComponents(*this);
-        m_Modules.back()->registerBehaviours(*this);
         m_Modules.back()->registerSystems(*this);
 
         return p;
     }
 
     void postRegisterModules() {
-        for (const auto module : m_Modules) {
+        for (const auto module: m_Modules) {
             module->postRegister(*this);
         }
     }
@@ -143,6 +134,8 @@ public:
 
     Entity *findEntity(const std::string &name);
 
+    Entity *findEntity(std::function<bool(Entity *)> functor);
+
     void unregisterComponentFromSystems(Component *);
 
     void deserializeEntityMap(nlohmann::json &j);
@@ -166,14 +159,6 @@ public:
     void createComponentInplace(Identity::Type entityId, const std::string &componentName);
 
     void removeComponent(Identity::Type entityId, const std::string &componentName);
-
-    void addBehaviour(Identity::Type entityId, const std::string &type);
-
-    void removeBehaviour(Identity::Type entityId, const std::string &type);
-
-    void processBehaviours(ResourceManager &, EventManager &);
-
-    std::vector<std::string> getBehaviourTypes();
 
     std::vector<std::string> getAllConfigurationNames();
 };

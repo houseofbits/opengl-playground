@@ -15,7 +15,7 @@ void CameraSystem::initialize(ResourceManager &) {
 
 void CameraSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &CameraSystem::handleInputEvent);
-    eventManager.registerEventReceiver(this, &CameraSystem::handleWindowEvent);
+    eventManager.registerEventReceiver(this, &CameraSystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &CameraSystem::handleCameraActivationEvent);
 }
 
@@ -34,8 +34,8 @@ void CameraSystem::handleCameraActivationEvent(const CameraActivationEvent &even
     }
 }
 
-void CameraSystem::handleWindowEvent(const WindowEvent &event) {
-    if (event.eventType == WindowEvent::RESIZE || event.eventType == WindowEvent::CREATE) {
+void CameraSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::WINDOW_RESIZED || event.eventType == SystemEvent::WINDOW_CREATED) {
         m_viewportSize.x = event.window->viewportWidth;
         m_viewportSize.y = event.window->viewportHeight;
     }

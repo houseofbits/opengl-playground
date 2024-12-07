@@ -8,7 +8,7 @@
 #include "Events/EventManager.h"
 #include "Events/InputEvent.h"
 #include "Events/RawSDLEvent.h"
-#include "Events/WindowEvent.h"
+#include "Events/SystemEvent.h"
 #include "Reflection/Type.h"
 #include "Reflection/TypedClass.h"
 #include "Resources/ResourceHandle.h"

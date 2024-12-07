@@ -4,6 +4,7 @@
 #include "../../../Renderer/Camera/Camera.h"
 #include "../Events/CameraActivationEvent.h"
 #include "../Components/BaseCameraComponent.h"
+#include "../../Editor/Components/EditorCameraComponent.h"
 
 class ActiveCameraHelper : public EventHandler {
 public:
@@ -13,8 +14,15 @@ public:
 
     Camera *find(EntityContext &ctx) {
         if (!m_activeCameraId) {
-            //TODO: Find active camera, or return first camera in the list
-            return nullptr;
+            auto e = ctx.findEntity([](Entity *e) {
+                auto c = e->getComponent<BaseCameraComponent>();
+
+                return c != nullptr && c->m_isActive;
+            });
+
+            if (e) {
+                m_activeCameraId = e->m_Id.id();
+            }
         }
 
         auto entity = ctx.getEntity(m_activeCameraId);

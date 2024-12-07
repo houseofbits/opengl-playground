@@ -2,7 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../../../Core/Events/RawSDLEvent.h"
-#include "../../../Core/Events/WindowEvent.h"
+#include "../../../Core/Events/SystemEvent.h"
 #include "../../Common/Components/CameraComponent.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../../Renderer/Components/EnvironmentProbeComponent.h"
@@ -13,6 +13,7 @@
 #include "../UI/MainToolbarUI.h"
 #include "../UI/MaterialEditWindowUI.h"
 #include "../Helpers/TransformGizmoHelper.h"
+#include "../../Common/Helpers/ActiveCameraHelper.h"
 
 class EditorUISystem : public EntitySystem {
 public:
@@ -24,11 +25,9 @@ public:
 
     void registerEventHandlers(EventManager &) override;
 
-    void handleWindowEvent(const WindowEvent &);
+    void handleSystemEvent(const SystemEvent &);
 
     void handleRawSDLEvent(const RawSDLEvent &);
-
-    Camera *findActiveCamera();
 
     TransformComponent *getSelectedTransformComponent();
 
@@ -46,6 +45,7 @@ public:
     EditWindowUI m_EditWindowUI;
     MaterialEditWindowUI m_MaterialEditWindowUI;
     std::map<std::string, BaseComponentEdit*> m_componentEditors;
+    ActiveCameraHelper m_activeCameraHelper;
 
 private:
     void processDockSpaceWindow();

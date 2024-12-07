@@ -19,7 +19,6 @@ public:
 private:
 
     void processEntitiesList();
-    void processBehavioursEdit(Entity *e);
     void sendEntityCreationEvent(std::string, std::string);
     void sendComponentCreationEvent(std::string);
     void sendComponentRemovalEvent(std::string);
@@ -36,6 +35,5 @@ private:
     std::string m_meshMaterialPath;
     std::string m_selectedEntityCreationType;
     std::string m_selectedComponentCreationType;
-    int m_selectedBehaviour;
     std::string m_filterString;
 };

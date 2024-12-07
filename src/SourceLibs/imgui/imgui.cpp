@@ -6644,7 +6644,7 @@ ImGuiID ImGui::GetWindowResizeCornerID(ImGuiWindow* window, int n)
 {
     IM_ASSERT(n >= 0 && n < 4);
     ImGuiID id = window->DockIsActive ? window->DockNode->HostWindow->ID : window->ID;
-    id = ImHashStr("#RESIZE", 0, id);
+    id = ImHashStr("#WINDOW_RESIZED", 0, id);
     id = ImHashData(&n, sizeof(int), id);
     return id;
 }
@@ -6655,7 +6655,7 @@ ImGuiID ImGui::GetWindowResizeBorderID(ImGuiWindow* window, ImGuiDir dir)
     IM_ASSERT(dir >= 0 && dir < 4);
     int n = (int)dir + 4;
     ImGuiID id = window->DockIsActive ? window->DockNode->HostWindow->ID : window->ID;
-    id = ImHashStr("#RESIZE", 0, id);
+    id = ImHashStr("#WINDOW_RESIZED", 0, id);
     id = ImHashData(&n, sizeof(int), id);
     return id;
 }
@@ -6699,7 +6699,7 @@ static int ImGui::UpdateWindowManualResize(ImGuiWindow* window, const ImVec2& si
     window->DC.NavLayerCurrent = ImGuiNavLayer_Menu;
 
     // Manual resize grips
-    PushID("#RESIZE");
+    PushID("#WINDOW_RESIZED");
     for (int resize_grip_n = 0; resize_grip_n < resize_grip_count; resize_grip_n++)
     {
         const ImGuiResizeGripDef& def = resize_grip_def[resize_grip_n];

@@ -14,11 +14,11 @@ void OverlayRenderSystem::initialize(ResourceManager &) {
 }
 
 void OverlayRenderSystem::registerEventHandlers(EventManager &eventManager) {
-    eventManager.registerEventReceiver(this, &OverlayRenderSystem::handleWindowEvent);
+    eventManager.registerEventReceiver(this, &OverlayRenderSystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &OverlayRenderSystem::handleEditorUIEvent);
 }
 
-void OverlayRenderSystem::handleWindowEvent(const WindowEvent & event) {
+void OverlayRenderSystem::handleSystemEvent(const SystemEvent & event) {
 
 }
 
