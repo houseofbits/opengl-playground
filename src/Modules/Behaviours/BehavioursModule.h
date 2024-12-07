@@ -5,11 +5,14 @@
 #include "../Editor/Systems/EditorUISystem.h"
 #include "Editors/MainCharacterBehaviourComponentEdit.h"
 #include "Systems/MainCharacterBehaviourSystem.h"
+#include "Components/DoorBehaviourComponent.h"
+#include "Editors/DoorBehaviourComponentEdit.h"
 
 class BehavioursModule : public EntityModule {
 public:
     void registerComponents(EntityContext &ctx) override {
         ctx.registerComponent<MainCharacterBehaviourComponent>("mainCharacterBehaviour");
+        ctx.registerComponent<DoorBehaviourComponent>("doorBehaviour");
     };
 
     void registerSystems(EntityContext &ctx) override {
@@ -20,6 +23,7 @@ public:
         auto editorSystem = ctx.getSystem<EditorUISystem>();
         if (editorSystem != nullptr) {
             editorSystem->registerComponentEditor<MainCharacterBehaviourComponent, MainCharacterBehaviourComponentEdit>();
+            editorSystem->registerComponentEditor<DoorBehaviourComponent, DoorBehaviourComponentEdit>();
         }
     }
 };

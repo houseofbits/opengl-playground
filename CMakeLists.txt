@@ -151,6 +151,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Behaviours/Components/MainCharacterBehaviourComponent.h
         src/Modules/Behaviours/Systems/MainCharacterBehaviourSystem.cpp
         src/Modules/Behaviours/Systems/MainCharacterBehaviourSystem.h
+        src/Modules/Behaviours/Components/DoorBehaviourComponent.cpp
+        src/Modules/Behaviours/Components/DoorBehaviourComponent.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
