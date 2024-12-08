@@ -16,6 +16,7 @@ public:
 
     Identity::Type m_selectedEntityId;
     bool m_isBoundsTransformAllowed;
+    bool m_isEntityCreationWindowOpen;
 private:
 
     void processEntitiesList();
@@ -27,6 +28,7 @@ private:
     void updateEntityNameReferences(Identity::Type, const std::string&);
 
     void processEntityCreation();
+    void processEntityCreationWindow();
     void processComponentCreation();
 
     EditorUISystem *m_EditorUISystem;
@@ -35,5 +37,6 @@ private:
     std::string m_meshMaterialPath;
     std::string m_selectedEntityCreationType;
     std::string m_selectedComponentCreationType;
-    std::string m_filterString;
+    std::string m_entitiesFilterString;
+    std::string m_templatesFilterString;
 };

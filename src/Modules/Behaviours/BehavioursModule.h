@@ -7,6 +7,7 @@
 #include "Systems/MainCharacterBehaviourSystem.h"
 #include "Components/DoorBehaviourComponent.h"
 #include "Editors/DoorBehaviourComponentEdit.h"
+#include "Systems/DoorBehaviourSystem.h"
 
 class BehavioursModule : public EntityModule {
 public:
@@ -17,6 +18,7 @@ public:
 
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<MainCharacterBehaviourSystem>(1);
+        ctx.registerEntitySystem<DoorBehaviourSystem>(2);
     };
 
     void postRegister(EntityContext &ctx) override {
@@ -27,5 +29,3 @@ public:
         }
     }
 };
-
-
