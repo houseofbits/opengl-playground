@@ -92,13 +92,6 @@ void EntityContext::unregisterComponentFromSystems(Component *component) {
 void EntityContext::registerEntitiesWithSystems(EventManager &eventManager) {
     for (const auto &e: m_Entities) {
         if (e->m_Status == Entity::CREATED && e->isReadyToRegister()) {
-            if (!e->m_Behaviours.empty()) {
-                for (const auto &behaviour: e->m_Behaviours) {
-                    behaviour->setEventManager(&eventManager);
-                    behaviour->registerEventHandlers(eventManager);
-                }
-            }
-
             e->registerWithSystems(*this);
         }
     }

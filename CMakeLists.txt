@@ -125,8 +125,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Helpers/PhysicsDebugRenderer.h
         src/Modules/Renderer/Systems/OverlayRenderSystem.cpp
         src/Modules/Renderer/Systems/OverlayRenderSystem.h
-        src/Core/Behaviour/EntityBehaviour.cpp
-        src/Core/Behaviour/EntityBehaviour.h
         src/Modules/Editor/Helpers/TransformGizmoHelper.cpp
         src/Modules/Editor/Helpers/TransformGizmoHelper.h
         src/Core/Helper/ComponentTransformEdit.h

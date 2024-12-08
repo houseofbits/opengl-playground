@@ -4,8 +4,7 @@
 Entity::Entity() : m_Id(),
                    m_Name(),
                    m_Status(CREATED),
-                   m_Components(),
-                   m_Behaviours()
+                   m_Components()
 //                   m_Systems()
 {
 
@@ -42,40 +41,4 @@ void Entity::removeComponent(Component &c) {
             return;
         }
     }
-}
-
-void Entity::addBehaviour(EntityBehaviour &behaviour) {
-    m_Behaviours.push_back(&behaviour);
-}
-
-void Entity::removeBehaviour(EntityBehaviour *behaviour) {
-    for (auto it = m_Behaviours.begin(); it != m_Behaviours.end(); ++it) {
-        if ((*it)->getTypeId() == behaviour->getTypeId()) {
-            m_Behaviours.erase(it);
-
-            return;
-        }
-    }
-}
-
-void Entity::registerBehaviourEventHandlers(EventManager &eventManager) {
-    if (!m_Behaviours.empty()) {
-        for (const auto &behaviour: m_Behaviours) {
-            behaviour->registerEventHandlers(eventManager);
-        }
-    }
-}
-
-EntityBehaviour *Entity::findBehaviour(std::string typeName) {
-    auto it = std::find_if(
-            m_Behaviours.begin(),
-            m_Behaviours.end(),
-            [&](EntityBehaviour *p) {
-                return p->getTypeName() == typeName;
-            });
-    if (it != m_Behaviours.end()) {
-        return (*it);
-    }
-
-    return nullptr;
 }

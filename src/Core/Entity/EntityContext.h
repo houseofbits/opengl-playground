@@ -5,7 +5,6 @@
 #include "Component.h"
 #include "Entity.h"
 #include "EntityConfiguration.h"
-#include "../Behaviour/EntityBehaviour.h"
 #include <memory>
 
 //0. add empty entity

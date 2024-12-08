@@ -2,7 +2,6 @@
 
 #include "../Reflection/Identity.h"
 #include "../System/EntitySystem.h"
-#include "../Behaviour/EntityBehaviour.h"
 #include <list>
 #include <string>
 
@@ -29,13 +28,7 @@ public:
 
     void unregisterFromSystems(EntityContext &);
 
-    void addBehaviour(EntityBehaviour &);
-
-    void removeBehaviour(EntityBehaviour *);
-
     bool isReadyToRegister();
-
-    void registerBehaviourEventHandlers(EventManager &eventManager);
 
     [[nodiscard]] std::string getListName() const {
         return m_Name;// + " (" + std::to_string(m_Id.id()) + ")";
@@ -73,12 +66,9 @@ public:
         return nullptr;
     }
 
-    EntityBehaviour* findBehaviour(std::string typeName);
-
     Identity m_Id;
     std::string m_Name;
     Status m_Status;
     std::list<Component::TComponentPtr> m_Components;
-    std::list<EntityBehaviour*> m_Behaviours;
 //    std::list<EntitySystem::TEntitySystemPtr> m_Systems;
 };
