@@ -57,7 +57,7 @@ EntityContext::createEntityFromJson(nlohmann::json &entityJson) {
 void EntityContext::removeEntity(int entityId) {
     Entity *e = getEntity(entityId);
     if (e != nullptr) {
-        e->unregisterFromSystems(*this);
+        unregisterEntityFromSystems(*e);
 
         for (const auto &entity: m_Entities) {
             if (entity->m_Id.id() == entityId) {
@@ -83,7 +83,7 @@ void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager &reso
     }
 }
 
-void EntityContext::unregisterComponentFromSystems(Component *component) {
+void EntityContext::unregisterEntityFromSystems(Entity& entity) {
     //TODO: Handle entity removal or component change
 //    for (const auto &system: m_Systems) {
 //        system->unregisterComponent(component);
@@ -93,8 +93,8 @@ void EntityContext::unregisterComponentFromSystems(Component *component) {
 void EntityContext::registerEntitiesWithSystems(EventManager &eventManager) {
     for (const auto &e: m_Entities) {
         if (e->m_Status == Entity::CREATED && e->isReadyToRegister()) {
-            e->registerWithSystems(*this);
             registerEntityWithSystems(*e);
+            e->setStatus(Entity::ACTIVE);
         }
     }
 }
@@ -171,8 +171,9 @@ void EntityContext::createComponentInplace(Identity::Type entityId, const std::s
         // 1) unregister entity from systems
         // 2) register to systems again
 
+        unregisterEntityFromSystems(*e);
         e->addComponent(*c);
-        c->registerWithSystems(*this);
+        e->setStatus(Entity::CREATED);
     }
 }
 
@@ -181,8 +182,9 @@ void EntityContext::removeComponent(Identity::Type entityId, const std::string &
     if (e != nullptr) {
         auto *c = e->getComponent(componentName);
         if (c != nullptr) {
-            unregisterComponentFromSystems(c);
+            unregisterEntityFromSystems(*e);
             e->removeComponent(*c);
+            e->setStatus(Entity::CREATED);
 //            delete c;
             //TODO: register with systems
             // 1) unregister entity from systems

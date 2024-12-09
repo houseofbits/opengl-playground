@@ -27,10 +27,6 @@ void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceM
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
-void PhysicsSliderJointComponent::registerWithSystems(EntityContext &ctx) {
-
-}
-
 bool PhysicsSliderJointComponent::isReady() {
     return m_PhysicsResource.isReady();
 }

@@ -11,6 +11,4 @@ public:
     void serialize(nlohmann::json &j) override;
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
-
-    void registerWithSystems(EntityContext &ctx) override;
 };

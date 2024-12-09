@@ -20,6 +20,7 @@ PhysicsBodyComponent::PhysicsBodyComponent() : Component(),
 }
 
 PhysicsBodyComponent::~PhysicsBodyComponent() {
+
 }
 
 void PhysicsBodyComponent::serialize(nlohmann::json &j) {
@@ -43,10 +44,6 @@ void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager 
 
     m_BodyType = j.value(TYPE_KEY, m_BodyType);
     m_MeshType = j.value(SHAPE_KEY, m_MeshType);
-}
-
-void PhysicsBodyComponent::registerWithSystems(EntityContext &ctx) {
-
 }
 
 bool PhysicsBodyComponent::isReady() {

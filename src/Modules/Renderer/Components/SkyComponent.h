@@ -5,7 +5,7 @@
 #include "../Resources/CubeTextureResource.h"
 
 class SkyComponent : public Component {
-    TYPE_DEFINITION(SkyComponent);
+TYPE_DEFINITION(SkyComponent);
 
 public:
     inline static const std::string CUBE_MAP_KEY = "cubeMap";
@@ -23,8 +23,7 @@ public:
         m_box.create(10.0);
     }
 
-    void registerWithSystems(EntityContext &ctx) override;
-    std::string getListName(Entity* e) {
+    std::string getListName(Entity *e) {
         return e->m_Name + " " + " SKY";
     }
 

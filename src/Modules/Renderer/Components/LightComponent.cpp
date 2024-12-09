@@ -64,10 +64,6 @@ void LightComponent::deserialize(const nlohmann::json &j, ResourceManager &resou
     }
 }
 
-void LightComponent::registerWithSystems(EntityContext &ctx) {
-
-}
-
 std::string LightComponent::getLightTypeName() {
     return m_TypeNameMap[m_Type];
 }

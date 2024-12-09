@@ -24,9 +24,7 @@ public:
 
     void removeComponent(Component &);
 
-    void registerWithSystems(EntityContext &);
-
-    void unregisterFromSystems(EntityContext &);
+    void setStatus(Status);
 
     bool isReadyToRegister();
 

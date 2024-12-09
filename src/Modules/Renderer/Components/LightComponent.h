@@ -5,7 +5,7 @@
 #include "../Resources/TextureResource.h"
 
 class LightComponent : public Component {
-    TYPE_DEFINITION(LightComponent);
+TYPE_DEFINITION(LightComponent);
 
 public:
     inline static const std::string TYPE_KEY = "type";
@@ -29,15 +29,21 @@ public:
     LightComponent();
 
     void serialize(nlohmann::json &j) override;
+
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
-    void registerWithSystems(EntityContext &ctx) override;
+
     std::string getLightTypeName();
+
     Type getLightTypeFromName(const std::string &name);
+
     void prepareShadowMapResources(ResourceManager &resourceManager);
+
     int getNumberOfBufferLights() const;
-    std::string getListName(Entity* e) {
+
+    std::string getListName(Entity *e) {
         return e->m_Name + " " + m_TypeNameMap[m_Type] + " LIGHT";
     }
+
     void resizeShadowMaps(int size);
 
     bool m_isEnabled;
@@ -52,10 +58,11 @@ public:
     int m_shadowResolution;
     float m_shadowBias;
     ResourceHandle<TextureResource> m_Projection;
-    std::vector<ResourceHandle<ShadowMapResource>*> m_ShadowMaps;
+    std::vector<ResourceHandle<ShadowMapResource> *> m_ShadowMaps;
     std::vector<int> m_lightBufferIndices;
 
 private:
     std::string getShadowMapResourceName(int viewIndex);
+
     void removeShadowMaps();
 };

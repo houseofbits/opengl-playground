@@ -7,10 +7,6 @@ EditorCameraComponent::EditorCameraComponent() : Component(),
 
 }
 
-void EditorCameraComponent::registerWithSystems(EntityContext &ctx) {
-
-}
-
 void EditorCameraComponent::serialize(nlohmann::json &j) {
     j["position"] = m_Camera.getPosition();
     j["viewDirection"] = m_Camera.getViewDirection();

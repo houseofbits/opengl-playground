@@ -6,7 +6,3 @@ StaticMeshComponent::StaticMeshComponent() : Component(), m_Mesh(), m_Material()
         {SHADOW, "SHADOW_ONLY"}
     };
 }
-
-void StaticMeshComponent::registerWithSystems(EntityContext& ctx) {
-
-}

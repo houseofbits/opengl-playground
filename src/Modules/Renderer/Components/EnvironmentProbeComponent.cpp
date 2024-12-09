@@ -10,7 +10,3 @@ void EnvironmentProbeComponent::serialize(nlohmann::json &j) {
 void EnvironmentProbeComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
     m_DebugColor = j.value(DEBUG_COLOR_KEY, m_DebugColor);
 }
-
-void EnvironmentProbeComponent::registerWithSystems(EntityContext &ctx) {
-
-}

@@ -15,10 +15,6 @@ TransformComponent::TransformComponent() : Component(),
                                            m_shouldSyncWorldTransformToLocal(false) {
 }
 
-void TransformComponent::registerWithSystems(EntityContext &ctx) {
-
-}
-
 void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat &rotation, glm::vec3 &scale) {
     translation = m_transform[3];
 

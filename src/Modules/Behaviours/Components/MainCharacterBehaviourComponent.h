@@ -12,9 +12,5 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    void registerWithSystems(EntityContext &ctx) override;
-
     bool m_isActive;
-
-
 };

@@ -27,8 +27,6 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    void registerWithSystems(EntityContext &ctx) override;
-
     void resetTransform();
 
     void setTranslation(glm::vec3 pos);

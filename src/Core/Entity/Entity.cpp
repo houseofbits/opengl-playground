@@ -5,7 +5,6 @@ Entity::Entity() : m_Id(),
                    m_Name(),
                    m_Status(CREATED),
                    m_Components()
-//                   m_Systems()
 {
 
 }
@@ -14,18 +13,8 @@ void Entity::addComponent(Component &component) {
     m_Components.push_back(Component::TComponentPtr(&component));
 }
 
-void Entity::registerWithSystems(EntityContext &ctx) {
-    for (const auto &component: m_Components) {
-        component->registerWithSystems(ctx);
-    }
-
-    m_Status = ACTIVE;
-}
-
-void Entity::unregisterFromSystems(EntityContext &ctx) {
-    for (const auto &component: m_Components) {
-        ctx.unregisterComponentFromSystems(component.get());
-    }
+void Entity::setStatus(Status status) {
+    m_Status = status;
 }
 
 bool Entity::isReadyToRegister() {

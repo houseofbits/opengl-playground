@@ -24,8 +24,6 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    void registerWithSystems(EntityContext &ctx) override;
-
     bool isReady() override;
 
     void create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) override;

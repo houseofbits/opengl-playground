@@ -115,7 +115,7 @@ public:
 
     Entity *findEntity(std::function<bool(Entity *)> functor);
 
-    void unregisterComponentFromSystems(Component *);
+    void unregisterEntityFromSystems(Entity&);
 
     void deserializeEntityMap(nlohmann::json &j);
 

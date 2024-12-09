@@ -25,11 +25,6 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    /**
-     * @deprecated
-     */
-    void registerWithSystems(EntityContext &ctx) override;
-
     void rotateView(glm::vec2 viewChangeAlongScreenAxis);
 
     void moveView(glm::vec3 direction);

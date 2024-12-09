@@ -13,7 +13,3 @@ void MainCharacterBehaviourComponent::serialize(nlohmann::json &j) {
 void MainCharacterBehaviourComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
 
 }
-
-void MainCharacterBehaviourComponent::registerWithSystems(EntityContext &ctx) {
-
-}

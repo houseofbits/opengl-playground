@@ -47,10 +47,6 @@ void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceMa
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
-void PhysicsHingeJointComponent::registerWithSystems(EntityContext &ctx) {
-
-}
-
 bool PhysicsHingeJointComponent::isReady() {
     return m_PhysicsResource.isReady();
 }

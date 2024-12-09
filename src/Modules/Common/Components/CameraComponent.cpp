@@ -10,10 +10,6 @@ CameraComponent::CameraComponent() : Component(),
                                      m_shouldSyncWorldTransformToLocal(false) {
 }
 
-void CameraComponent::registerWithSystems(EntityContext &ctx) {
-
-}
-
 void CameraComponent::serialize(nlohmann::json &j) {
     j["position"] = glm::vec3(m_initialTransformLocal[3]);
     j["viewDirection"] = glm::vec3(m_initialTransformLocal[2]);

@@ -18,10 +18,6 @@ void PhysicsFixedJointComponent::deserialize(const nlohmann::json &j, ResourceMa
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
-void PhysicsFixedJointComponent::registerWithSystems(EntityContext &ctx) {
-
-}
-
 bool PhysicsFixedJointComponent::isReady() {
     return m_PhysicsResource.isReady();
 }

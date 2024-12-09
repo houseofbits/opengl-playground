@@ -35,10 +35,6 @@ void PhysicsCharacterComponent::deserialize(const nlohmann::json &j, ResourceMan
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
-void PhysicsCharacterComponent::registerWithSystems(EntityContext &ctx) {
-
-}
-
 void PhysicsCharacterComponent::create(TransformComponent &transform) {
 
     float cylinderHalfHeight = (m_height - m_stepTolerance - (m_radius * 2.f)) * 0.5f;
