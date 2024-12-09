@@ -31,7 +31,6 @@ void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceM
 
 void PhysicsSliderJointComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<JointsProcessingSystem>(this);
 }
 
 bool PhysicsSliderJointComponent::isReady() {

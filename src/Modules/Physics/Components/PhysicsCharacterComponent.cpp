@@ -1,6 +1,5 @@
 #include "PhysicsCharacterComponent.h"
 #include "../../Editor/Systems/EditorUISystem.h"
-#include "../Systems/CharacterControllerSystem.h"
 #include "../Helpers/PhysicsTypeCast.h"
 #include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
 #include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
@@ -37,7 +36,6 @@ void PhysicsCharacterComponent::deserialize(const nlohmann::json &j, ResourceMan
 }
 
 void PhysicsCharacterComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<CharacterControllerSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
 }
 

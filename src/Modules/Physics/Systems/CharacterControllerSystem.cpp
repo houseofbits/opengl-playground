@@ -4,8 +4,7 @@
 CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
                                                          m_isSimulationDisabled(false),
                                                          m_PhysicsResource() {
-    usesComponent<TransformComponent>();
-    usesComponent<PhysicsCharacterComponent>();
+    m_registry = useComponentsRegistry<TransformComponent, PhysicsCharacterComponent>();
 }
 
 void CharacterControllerSystem::initialize(ResourceManager &resourceManager) {
@@ -36,20 +35,20 @@ void CharacterControllerSystem::handleEditorUIEvent(const EditorUIEvent &event) 
 }
 
 void CharacterControllerSystem::resetToInitialTransform() {
-    for (const auto component: getComponentContainer<PhysicsCharacterComponent>()) {
-        auto *transform = getComponent<TransformComponent>(component.first);
+    for (const auto [id, components]: m_registry->container()) {
+        const auto &[transform, cct] = components.get();
         transform->m_transform = transform->m_initialTransform;
     }
 }
 
 void CharacterControllerSystem::updateCCTs() {
-    for (const auto component: getComponentContainer<PhysicsCharacterComponent>()) {
-        auto *transform = getComponent<TransformComponent>(component.first);
+    for (const auto [id, components]: m_registry->container()) {
+        const auto &[transform, cct] = components.get();
 
-        if (!component.second->isCreated()) {
-            component.second->create(*transform);
+        if (!cct->isCreated()) {
+            cct->create(*transform);
         } else {
-            component.second->update(*transform, !m_isSimulationDisabled);
+            cct->update(*transform, !m_isSimulationDisabled);
         }
     }
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Reflection/Identity.h"
-#include "../System/EntitySystem.h"
+#include "./Component.h"
 #include <list>
 #include <string>
 
@@ -70,5 +70,4 @@ public:
     std::string m_Name;
     Status m_Status;
     std::list<Component::TComponentPtr> m_Components;
-//    std::list<EntitySystem::TEntitySystemPtr> m_Systems;
 };

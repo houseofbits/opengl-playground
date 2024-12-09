@@ -1,9 +1,5 @@
 #include "CameraComponent.h"
 #include "../../Editor/Systems/EditorUISystem.h"
-#include "../../Physics/Systems/CharacterControllerSystem.h"
-#include "../../Renderer/Systems/MainRenderSystem.h"
-#include "../Systems/TransformHierarchyProcessingSystem.h"
-#include "../Systems/CameraSystem.h"
 
 CameraComponent::CameraComponent() : Component(),
                                      ComponentTransformEdit(),
@@ -15,9 +11,7 @@ CameraComponent::CameraComponent() : Component(),
 }
 
 void CameraComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<TransformHierarchyProcessingSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<CameraSystem>(this);
 }
 
 void CameraComponent::serialize(nlohmann::json &j) {

@@ -1,22 +1,13 @@
 #include "PhysicsBodyComponent.h"
 #include "../../Editor/Systems/EditorUISystem.h"
 #include "../Helpers/PhysicsTypeCast.h"
-#include "../Systems/PhysicsBodyProcessingSystem.h"
 #include "Jolt/Physics/Collision/Shape/MeshShape.h"
 #include "Jolt/Physics/Collision/Shape/ConvexHullShape.h"
 #include "Jolt/Physics/Collision/PhysicsMaterialSimple.h"
-
 #include <Jolt/Jolt.h>
-#include <Jolt/RegisterTypes.h>
-#include <Jolt/Core/Factory.h>
-#include <Jolt/Core/TempAllocator.h>
-#include <Jolt/Core/JobSystemThreadPool.h>
-#include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
-#include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
-#include <Jolt/Physics/Body/BodyActivationListener.h>
 
 PhysicsBodyComponent::PhysicsBodyComponent() : Component(),
                                                m_BodyType(BODY_TYPE_STATIC),
@@ -56,7 +47,6 @@ void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager 
 }
 
 void PhysicsBodyComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<PhysicsBodyProcessingSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
 }
 

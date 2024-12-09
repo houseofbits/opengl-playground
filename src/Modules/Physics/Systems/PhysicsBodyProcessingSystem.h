@@ -3,6 +3,8 @@
 #include "../../../Core/API.h"
 #include "../../Editor/Events/EditorUIEvent.h"
 #include "../Resources/PhysicsResource.h"
+#include "../../Common/Components/TransformComponent.h"
+#include "../Components/PhysicsBodyComponent.h"
 
 class PhysicsBodyProcessingSystem : public EntitySystem {
 public:
@@ -23,4 +25,5 @@ private:
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     bool m_isSimulationDisabled;
+    RelatedComponentRegistry<TransformComponent, PhysicsBodyComponent>* m_registry;
 };

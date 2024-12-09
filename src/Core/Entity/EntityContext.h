@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "Entity.h"
 #include "EntityConfiguration.h"
+#include "../System/EntitySystem.h"
 #include <memory>
 
 //0. add empty entity
@@ -150,6 +151,8 @@ public:
     void serializeEntities(nlohmann::json &j);
 
     void registerEntitiesWithSystems(EventManager &eventManager);
+
+    void registerEntityWithSystems(Entity& entity); //TODO: Private ???
 
     void initializeSystems(ResourceManager &, EventManager &);
 

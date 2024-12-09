@@ -2,7 +2,7 @@
 #include "../Components/CameraComponent.h"
 
 CameraSystem::CameraSystem() : EntitySystem(), m_viewportSize(0, 0) {
-    usesComponent<CameraComponent>();
+    m_registry = useComponentRegistry<CameraComponent>();
 }
 
 void CameraSystem::process(EventManager &) {
@@ -24,7 +24,7 @@ void CameraSystem::handleInputEvent(const InputEvent &) {
 }
 
 void CameraSystem::handleCameraActivationEvent(const CameraActivationEvent &event) {
-    for (const auto [id, component]: getComponentContainer<CameraComponent>()) {
+    for (const auto [id, component]: m_registry->container()) {
         component->setActive(false);
 
         if (id == event.m_cameraComponentId) {
@@ -38,5 +38,9 @@ void CameraSystem::handleSystemEvent(const SystemEvent &event) {
     if (event.eventType == SystemEvent::WINDOW_RESIZED || event.eventType == SystemEvent::WINDOW_CREATED) {
         m_viewportSize.x = event.window->viewportWidth;
         m_viewportSize.y = event.window->viewportHeight;
+
+        for (const auto [id, component]: m_registry->container()) {
+            component->setViewportSize(m_viewportSize);
+        }
     }
 }

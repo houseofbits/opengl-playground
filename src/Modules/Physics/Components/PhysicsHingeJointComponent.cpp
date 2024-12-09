@@ -51,7 +51,6 @@ void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceMa
 
 void PhysicsHingeJointComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<JointsProcessingSystem>(this);
 }
 
 bool PhysicsHingeJointComponent::isReady() {

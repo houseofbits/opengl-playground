@@ -6,7 +6,7 @@
 #include "../../Physics/Events/PhysicsPickingEvent.h"
 
 MainCharacterBehaviourSystem::MainCharacterBehaviourSystem() : EntitySystem() {
-    usesComponent<MainCharacterBehaviourComponent>();
+    m_registry = useComponentsRegistry<CameraComponent, PhysicsCharacterComponent, MainCharacterBehaviourComponent>();
 }
 
 void MainCharacterBehaviourSystem::initialize(ResourceManager &) {
@@ -23,22 +23,15 @@ void MainCharacterBehaviourSystem::registerEventHandlers(EventManager &eventMana
 
 void MainCharacterBehaviourSystem::handleInputEvent(const InputEvent &event) {
 
-    auto entity = getCharacterEntity();
-    if (!entity) {
-        return;
-    }
-    auto cameraComponent = entity->getComponent<CameraComponent>();
-    if (!cameraComponent || !cameraComponent->m_isActive) {
-        return;
-    }
-    auto *characterComponent = entity->getComponent<PhysicsCharacterComponent>();
-    if (characterComponent == nullptr) {
-        return;
-    }
+    for (const auto &[id, components]: m_registry->container()) {
+        const auto &[camera, character, behaviour] = components.get();
 
-    handleMouseLook(event, characterComponent, cameraComponent);
-    handleMovement(event, characterComponent, cameraComponent);
-    handleAction(event, characterComponent, cameraComponent);
+        if (behaviour->m_isActive) {
+            handleMouseLook(event, character, camera);
+            handleMovement(event, character, camera);
+            handleAction(event, character, camera);
+        }
+    }
 }
 
 void MainCharacterBehaviourSystem::handleMouseLook(const InputEvent &event,

@@ -37,4 +37,5 @@ private:
         return m_EntityContext->getEntity(c->m_EntityId.id());
     }
 
+    RelatedComponentRegistry<CameraComponent, PhysicsCharacterComponent, MainCharacterBehaviourComponent>* m_registry;
 };

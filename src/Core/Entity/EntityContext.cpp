@@ -93,7 +93,14 @@ void EntityContext::registerEntitiesWithSystems(EventManager &eventManager) {
     for (const auto &e: m_Entities) {
         if (e->m_Status == Entity::CREATED && e->isReadyToRegister()) {
             e->registerWithSystems(*this);
+            registerEntityWithSystems(*e);
         }
+    }
+}
+
+void EntityContext::registerEntityWithSystems(Entity &entity) {
+    for (const auto &system: m_Systems) {
+        system->registerEntityComponents(entity);
     }
 }
 
@@ -159,6 +166,10 @@ void EntityContext::createComponentInplace(Identity::Type entityId, const std::s
         c->m_Name = componentName;
         c->m_EntityId = e->m_Id;
 
+        //TODO: register with systems
+        // 1) unregister entity from systems
+        // 2) register to systems again
+
         e->addComponent(*c);
         c->registerWithSystems(*this);
     }
@@ -172,6 +183,10 @@ void EntityContext::removeComponent(Identity::Type entityId, const std::string &
             unregisterComponentFromSystems(c);
             e->removeComponent(*c);
 //            delete c;
+            //TODO: register with systems
+            // 1) unregister entity from systems
+            // 2) register to systems again
+
         }
     }
 }

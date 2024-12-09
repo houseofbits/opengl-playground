@@ -1,12 +1,9 @@
 #include "JointsProcessingSystem.h"
-#include "../Components/PhysicsHingeJointComponent.h"
-#include "../Components/PhysicsFixedJointComponent.h"
-#include "../Components/PhysicsSliderJointComponent.h"
 
 JointsProcessingSystem::JointsProcessingSystem() : EntitySystem() {
-    usesComponent<PhysicsHingeJointComponent>();
-    usesComponent<PhysicsFixedJointComponent>();
-    usesComponent<PhysicsSliderJointComponent>();
+    m_hingeJointComponentRegistry = useComponentRegistry<PhysicsHingeJointComponent>();
+    m_fixedJointComponentRegistry = useComponentRegistry<PhysicsFixedJointComponent>();
+    m_sliderJointComponentRegistry = useComponentRegistry<PhysicsSliderJointComponent>();
 }
 
 void JointsProcessingSystem::initialize(ResourceManager &resourceManager) {
@@ -22,19 +19,19 @@ void JointsProcessingSystem::process(EventManager &eventManager) {
         return;
     }
 
-    for (const auto &joint: getComponentContainer<PhysicsHingeJointComponent>()) {
-        processJoint(joint.first, (BasePhysicsJoint*)joint.second);
+    for (const auto &[id, joint]: m_hingeJointComponentRegistry->container()) {
+        processJoint(id, (BasePhysicsJoint*)joint);
     }
-    for (const auto &joint: getComponentContainer<PhysicsFixedJointComponent>()) {
-        processJoint(joint.first, (BasePhysicsJoint*)joint.second);
+    for (const auto &[id, joint]: m_fixedJointComponentRegistry->container()) {
+        processJoint(id, (BasePhysicsJoint*)joint);
     }
-    for (const auto &joint: getComponentContainer<PhysicsSliderJointComponent>()) {
-        processJoint(joint.first, (BasePhysicsJoint*)joint.second);
+    for (const auto &[id, joint]: m_sliderJointComponentRegistry->container()) {
+        processJoint(id, (BasePhysicsJoint*)joint);
     }
 }
 
 void JointsProcessingSystem::handleCharacterPickingEvent(const PhysicsPickingEvent &event) {
-    auto *hinge = getComponent<PhysicsHingeJointComponent>(event.m_entityId);
+    auto *hinge = m_hingeJointComponentRegistry->get(event.m_entityId);
     if (hinge != nullptr && event.m_doActivate) {
         hinge->activate();
     }

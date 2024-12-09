@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../../../Core/API.h"
+#include "../Components/CameraComponent.h"
+#include "../Components/TransformComponent.h"
 
 class TransformHierarchyProcessingSystem : public EntitySystem {
 public:
@@ -13,4 +15,6 @@ public:
 private:
     int calculateDepth(Identity::Type entityId);
 
+    SingleComponentRegistry<TransformComponent>* m_transformComponentRegistry;
+    SingleComponentRegistry<CameraComponent>* m_cameraComponentRegistry;
 };

@@ -21,7 +21,6 @@ void PhysicsFixedJointComponent::deserialize(const nlohmann::json &j, ResourceMa
 
 void PhysicsFixedJointComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<JointsProcessingSystem>(this);
 }
 
 bool PhysicsFixedJointComponent::isReady() {

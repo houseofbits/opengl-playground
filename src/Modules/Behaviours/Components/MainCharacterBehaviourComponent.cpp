@@ -15,5 +15,5 @@ void MainCharacterBehaviourComponent::deserialize(const nlohmann::json &j, Resou
 }
 
 void MainCharacterBehaviourComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<MainCharacterBehaviourSystem>(this);
+
 }

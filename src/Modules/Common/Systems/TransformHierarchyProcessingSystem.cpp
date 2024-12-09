@@ -1,10 +1,8 @@
 #include "TransformHierarchyProcessingSystem.h"
-#include "../Components/CameraComponent.h"
-#include "../Components/TransformComponent.h"
 
 TransformHierarchyProcessingSystem::TransformHierarchyProcessingSystem() : EntitySystem() {
-    usesComponent<CameraComponent>();
-    usesComponent<TransformComponent>();
+    m_transformComponentRegistry = useComponentRegistry<TransformComponent>();
+    m_cameraComponentRegistry = useComponentRegistry<CameraComponent>();
 }
 
 void TransformHierarchyProcessingSystem::initialize(ResourceManager &) {
@@ -20,27 +18,27 @@ void TransformHierarchyProcessingSystem::process(EventManager &) {
 
     std::vector<std::pair<Identity::Type, int>> localTransforms;
 
-    for (const auto &transformComponent: getComponentContainer<TransformComponent>()) {
-        if (transformComponent.second->m_shouldUpdateParentEntityId) {
-            if (transformComponent.second->m_parentEntityName.empty()) {
-                transformComponent.second->m_parentEntityId = 0;
-                transformComponent.second->m_shouldUpdateParentEntityId = false;
+    for (const auto [id, component]: m_transformComponentRegistry->container()) {
+        if (component->m_shouldUpdateParentEntityId) {
+            if (component->m_parentEntityName.empty()) {
+                component->m_parentEntityId = 0;
+                component->m_shouldUpdateParentEntityId = false;
 
                 continue;
             }
-            auto a = m_EntityContext->findEntity(transformComponent.second->m_parentEntityName);
+            auto a = m_EntityContext->findEntity(component->m_parentEntityName);
             if (a != nullptr) {
-                transformComponent.second->m_parentEntityId = a->m_Id.id();
+                component->m_parentEntityId = a->m_Id.id();
             } else {
-                Log::warn("Could not find parent entity ", transformComponent.second->m_parentEntityName);
+                Log::warn("Could not find parent entity ", component->m_parentEntityName);
             }
-            transformComponent.second->m_shouldUpdateParentEntityId = false;
+            component->m_shouldUpdateParentEntityId = false;
         }
 
-        if (transformComponent.second->m_parentEntityId > 0) {
-            int depth = calculateDepth(transformComponent.first);
+        if (component->m_parentEntityId > 0) {
+            int depth = calculateDepth(id);
             if (depth > 0) {
-                localTransforms.emplace_back(transformComponent.first, depth);
+                localTransforms.emplace_back(id, depth);
             }
         }
     }
@@ -51,20 +49,20 @@ void TransformHierarchyProcessingSystem::process(EventManager &) {
     });
 
     for (const auto ts: localTransforms) {
-        auto *transformComponent = getComponent<TransformComponent>(ts.first);
-        auto *parentTransformComponent = getComponent<TransformComponent>(transformComponent->m_parentEntityId);
+        auto *transformComponent = m_transformComponentRegistry->get(ts.first);
+        auto *parentTransformComponent = m_transformComponentRegistry->get(transformComponent->m_parentEntityId);
 
         if (parentTransformComponent != nullptr) {
             transformComponent->updateTransformFromParent(parentTransformComponent->getModelMatrix());
         }
     }
 
-    for (const auto &cameraComponent: getComponentContainer<CameraComponent>()) {
-        auto *transformComponent = getComponent<TransformComponent>(cameraComponent.first);
+    for (const auto [id, component]: m_cameraComponentRegistry->container()) {
+        auto *transformComponent = m_transformComponentRegistry->get(id);
         if (transformComponent != nullptr) {
-            cameraComponent.second->updateTransformFromParent(transformComponent->m_transform);
+            component->updateTransformFromParent(transformComponent->m_transform);
         } else {
-            cameraComponent.second->updateTransformWorld();
+            component->updateTransformWorld();
         }
     }
 }
@@ -74,7 +72,7 @@ int TransformHierarchyProcessingSystem::calculateDepth(Identity::Type entityId) 
     int d = 0;
     Identity::Type id = entityId;
     do {
-        e = getComponent<TransformComponent>(id);
+        e = m_transformComponentRegistry->get(id);
         if (e != nullptr && e->m_parentEntityId > 0) {
             d++;
             id = e->m_parentEntityId;

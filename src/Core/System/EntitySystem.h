@@ -3,12 +3,15 @@
 #include "../Entity/Component.h"
 #include "../Reflection/Type.h"
 #include "../Events/EventManager.h"
+#include "AbstractComponentRegistry.h"
+#include "RelatedComponentRegistry.h"
+#include "SingleComponentRegistry.h"
 #include <memory>
 
 class EventManager;
 class EntityContext;
 class ResourceManager;
-
+class Entity;
 
 /**
  * TODO: Split the container logic into separate class, divide into entity register, and component register
@@ -44,16 +47,25 @@ public:
     public:
         typedef std::unordered_map<Identity::Type, T *> ContainerType;
 
+        /**
+         * @deprecated
+         */
         void registerComponent(Component *comp) override {
             if (isOfType<T>(comp)) {
                 m_components[comp->m_EntityId()] = dynamic_cast<T *>(comp);
             }
         }
 
+        /**
+         * @deprecated
+         */
         void unregisterComponent(Component *comp) override {
             m_components.erase(comp->m_EntityId.id());
         }
 
+        /**
+         * @deprecated
+         */
         T *get(Identity::Type entityId) {
             if (m_components.find(entityId) == m_components.end()) {
                 return nullptr;
@@ -62,6 +74,9 @@ public:
             return m_components[entityId];
         }
 
+        /**
+         * @deprecated
+         */
         T *find(std::function<bool(T *)> functor) {
             auto it = std::find_if(
                     m_components.begin(),
@@ -84,11 +99,17 @@ public:
         ContainerType m_components{};
     };
 
+    /**
+     * @deprecated
+     */
     template<class T>
     void usesComponent() {
         m_components[T::TypeId()] = new RComponentContainer<T>();
     }
 
+    /**
+     * @deprecated
+     */
     virtual void registerComponent(Component *comp) {
         if (m_components.find(comp->getTypeId()) == m_components.end()) {
             return;
@@ -97,27 +118,42 @@ public:
         m_components[comp->getTypeId()]->registerComponent(comp);
     }
 
+    /**
+     * @deprecated
+     */
     virtual void unregisterComponent(Component *comp) {
         for (auto m: m_components) {
             m.second->unregisterComponent(comp);
         }
     }
 
+    /**
+     * @deprecated
+     */
     template<class T>
     T *getComponent(Identity::Type entityId) {
         return getContainer<T>()->get(entityId);
     }
 
+    /**
+     * @deprecated
+     */
     template<class T>
     T *findComponent(std::function<bool(T *)> functor) {
         return getContainer<T>()->find(functor);
     }
 
+    /**
+     * @deprecated
+     */
     template<class T>
     typename RComponentContainer<T>::ContainerType &getComponentContainer() {
         return getContainer<T>()->m_components;
     }
 
+    /**
+     * @deprecated
+     */
     template<class T>
     bool doesComponentsExist() {
         return !getContainer<T>()->isEmpty();
@@ -132,6 +168,32 @@ public:
     EventManager *m_EventManager{nullptr};
     std::unordered_map<unsigned int, VComponentContainer *> m_components{};
     unsigned int m_processPriority{};
+
+    ///////////////////////////////////////////////////////////////////////
+    //NEW STUFF
+    template<class... Ts>
+    RelatedComponentRegistry<Ts...> *useComponentsRegistry() {
+        auto reg = new RelatedComponentRegistry<Ts...>();
+        m_registries.push_back(reg);
+
+        return reg;
+    }
+
+    template<class T>
+    SingleComponentRegistry<T> *useComponentRegistry() {
+        auto reg = new SingleComponentRegistry<T>();
+        m_registries.push_back(reg);
+
+        return reg;
+    }
+
+    void registerEntityComponents(Entity &entity) {
+        for (const auto &reg: m_registries) {
+            reg->registerComponents(entity);
+        }
+    }
+
+    std::list<AbstractComponentRegistry *> m_registries;
 
 protected:
     template<class T>

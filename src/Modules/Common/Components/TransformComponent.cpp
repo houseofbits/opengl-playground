@@ -4,12 +4,10 @@
 #include "../../Physics/Components/PhysicsBodyComponent.h"
 #include "../../Physics/Systems/CharacterControllerSystem.h"
 #include "../../Physics/Systems/PhysicsBodyProcessingSystem.h"
-#include "../../Physics/Systems/PhysicsSystem.h"
 #include "../../Renderer/Systems/EnvironmentProbeRenderSystem.h"
 #include "../../Renderer/Systems/MainRenderSystem.h"
 #include "../../Renderer/Systems/ShadowMapRenderSystem.h"
 #include "../../Renderer/Systems/StorageBufferUpdateSystem.h"
-#include "../Systems/TransformHierarchyProcessingSystem.h"
 
 TransformComponent::TransformComponent() : Component(),
                                            ComponentTransformEdit(),
@@ -25,7 +23,6 @@ TransformComponent::TransformComponent() : Component(),
 }
 
 void TransformComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<TransformHierarchyProcessingSystem>(this);
     ctx.registerComponentWithEntitySystemHaving<MainRenderSystem, StaticMeshComponent>(this);
     ctx.registerComponentWithEntitySystemHaving<EnvironmentProbeRenderSystem, EnvironmentProbeComponent>(this);
     ctx.registerComponentWithEntitySystem<StorageBufferUpdateSystem>(this);
@@ -33,8 +30,6 @@ void TransformComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);             //Multiple dependencies
     ctx.registerComponentWithEntitySystemHaving<PhysicsBodyProcessingSystem, PhysicsBodyComponent>(this);
     ctx.registerComponentWithEntitySystemHaving<CharacterControllerSystem, PhysicsCharacterComponent>(this);
-
-    //    ctx.getEntitySystem<DoorUpdateSystem>().entityHaving<DoorComponent>().registerComponent(this); ????
 }
 
 void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat &rotation, glm::vec3 &scale) {

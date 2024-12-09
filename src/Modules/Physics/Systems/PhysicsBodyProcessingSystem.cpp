@@ -1,11 +1,9 @@
 #include "PhysicsBodyProcessingSystem.h"
-#include "../Components/PhysicsBodyComponent.h"
 
 PhysicsBodyProcessingSystem::PhysicsBodyProcessingSystem() : EntitySystem(),
                                                              m_PhysicsResource(),
                                                              m_isSimulationDisabled(false) {
-    usesComponent<PhysicsBodyComponent>();
-    usesComponent<TransformComponent>();
+    m_registry = useComponentsRegistry<TransformComponent, PhysicsBodyComponent>();
 }
 
 void PhysicsBodyProcessingSystem::initialize(ResourceManager &resourceManager) {
@@ -21,17 +19,17 @@ void PhysicsBodyProcessingSystem::process(EventManager &eventManager) {
         return;
     }
 
-    for (const auto body: getComponentContainer<PhysicsBodyComponent>()) {
-        auto *transform = getComponent<TransformComponent>(body.first);
-        if (!body.second->isCreated()) {
-            body.second->create(*transform);
+    for (const auto &[id, components]: m_registry->container()) {
+        const auto &[transform, body] = components.get();
+        if (!body->isCreated()) {
+            body->create(*transform);
         } else {
-            body.second->update(*transform, !m_isSimulationDisabled);
+            body->update(*transform, !m_isSimulationDisabled);
         }
     }
 }
 
-void PhysicsBodyProcessingSystem::handleEditorUIEvent(const EditorUIEvent & event) {
+void PhysicsBodyProcessingSystem::handleEditorUIEvent(const EditorUIEvent &event) {
     if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
         m_isSimulationDisabled = false;
         wakeUpAll();
@@ -44,14 +42,15 @@ void PhysicsBodyProcessingSystem::handleEditorUIEvent(const EditorUIEvent & even
 }
 
 void PhysicsBodyProcessingSystem::resetToInitialTransform() {
-    for (const auto body: getComponentContainer<PhysicsBodyComponent>()) {
-        auto *transform = getComponent<TransformComponent>(body.first);
+    for (const auto [id, components]: m_registry->container()) {
+        const auto &[transform, body] = components.get();
         transform->m_transform = transform->m_initialTransform;
     }
 }
 
 void PhysicsBodyProcessingSystem::wakeUpAll() {
-    for (const auto body: getComponentContainer<PhysicsBodyComponent>()) {
-        body.second->wakeUp();
+    for (const auto [id, components]: m_registry->container()) {
+        const auto &[transform, body] = components.get();
+        body->wakeUp();
     }
 }

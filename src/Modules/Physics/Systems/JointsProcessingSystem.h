@@ -4,6 +4,9 @@
 #include "../Events/PhysicsPickingEvent.h"
 #include "../Resources/PhysicsResource.h"
 #include "../Helpers/BasePhysicsJoint.h"
+#include "../Components/PhysicsHingeJointComponent.h"
+#include "../Components/PhysicsFixedJointComponent.h"
+#include "../Components/PhysicsSliderJointComponent.h"
 
 class JointsProcessingSystem : public EntitySystem {
 public:
@@ -21,4 +24,8 @@ public:
 
 private:
     void processJoint(Identity::Type entityId, BasePhysicsJoint* joint);
+
+    SingleComponentRegistry<PhysicsHingeJointComponent>* m_hingeJointComponentRegistry;
+    SingleComponentRegistry<PhysicsFixedJointComponent>* m_fixedJointComponentRegistry;
+    SingleComponentRegistry<PhysicsSliderJointComponent>* m_sliderJointComponentRegistry;
 };

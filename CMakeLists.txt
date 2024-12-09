@@ -153,6 +153,11 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Behaviours/Components/DoorBehaviourComponent.h
         src/Modules/Behaviours/Systems/DoorBehaviourSystem.cpp
         src/Modules/Behaviours/Systems/DoorBehaviourSystem.h
+        src/Core/System/ComponentsTuple.cpp
+        src/Core/System/ComponentsTuple.h
+        src/Core/System/AbstractComponentRegistry.h
+        src/Core/System/RelatedComponentRegistry.h
+        src/Core/System/SingleComponentRegistry.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
