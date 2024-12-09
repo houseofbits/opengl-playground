@@ -2,13 +2,7 @@
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
-#include "../../Physics/Components/PhysicsCharacterComponent.h"
-#include "../../Physics/Components/PhysicsBodyComponent.h"
-#include "../../Physics/Components/PhysicsHingeJointComponent.h"
 #include "../Helpers/TexturePreviewHelper.h"
-#include "../../Physics/Components/PhysicsFixedJointComponent.h"
-#include "../../Physics/Components/PhysicsSliderJointComponent.h"
-#include "../Components/EditorCameraComponent.h"
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_transformGizmo(),

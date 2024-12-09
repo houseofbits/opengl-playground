@@ -1,8 +1,6 @@
 #include "EditorCameraComponent.h"
 #include "../../Renderer/Systems/MainRenderSystem.h"
 #include "../Systems/EditorUISystem.h"
-#include "../Systems/EditorCameraSystem.h"
-#include "../../Renderer/Systems/PhysicsDebugRenderSystem.h"
 
 EditorCameraComponent::EditorCameraComponent() : Component(),
                                                  BaseCameraComponent() {
@@ -11,7 +9,6 @@ EditorCameraComponent::EditorCameraComponent() : Component(),
 
 void EditorCameraComponent::registerWithSystems(EntityContext &ctx) {
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<EditorCameraSystem>(this);
 }
 
 void EditorCameraComponent::serialize(nlohmann::json &j) {

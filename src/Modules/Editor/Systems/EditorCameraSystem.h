@@ -2,6 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../../Common/Events/CameraActivationEvent.h"
+#include "../Components/EditorCameraComponent.h"
 
 class EditorCameraSystem : public EntitySystem {
 public:
@@ -21,4 +22,5 @@ public:
 
 private:
     glm::ivec2 m_viewportSize;
+    SingleComponentRegistry<EditorCameraComponent>* m_registry;
 };

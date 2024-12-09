@@ -1,9 +1,8 @@
 #include "EditorCameraSystem.h"
-#include "../Components/EditorCameraComponent.h"
 #include "../../../Core/Helper/Time.h"
 
 EditorCameraSystem::EditorCameraSystem() : EntitySystem(), m_viewportSize(0, 0) {
-    usesComponent<EditorCameraComponent>();
+    m_registry = useComponentRegistry<EditorCameraComponent>();
 }
 
 void EditorCameraSystem::process(EventManager &) {
@@ -25,56 +24,54 @@ void EditorCameraSystem::handleInputEvent(const InputEvent &event) {
         return;
     }
 
-    auto *cameraComponent = findComponent<EditorCameraComponent>([](EditorCameraComponent *c) {
-        return c->m_isActive;
-    });
+    for (const auto [id, cameraComponent]: m_registry->container()) {
+        if (!cameraComponent->m_isActive) {
+            continue;
+        }
 
-    if (!cameraComponent) {
-        return;
-    }
+        if (event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) {
+            float lookSpeed = 0.15;
+            cameraComponent->rotateView(-event.mouseMotion * lookSpeed * Time::frameTime);
+        }
 
-    if (event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) {
-        float lookSpeed = 0.15;
-        cameraComponent->rotateView(-event.mouseMotion * lookSpeed * Time::frameTime);
-    }
+        float moveSpeed = 3;
+        glm::vec3 direction(0.0);
+        bool doMove = false;
 
-    float moveSpeed = 3;
-    glm::vec3 direction(0.0);
-    bool doMove = false;
+        if (event.type == InputEvent::MOUSEMOVE && event.mouseButtonRight) {
+            direction.x -= event.mouseMotion.x;
+            direction.y += event.mouseMotion.y;
+            doMove = true;
+        }
 
-    if (event.type == InputEvent::MOUSEMOVE && event.mouseButtonRight) {
-        direction.x -= event.mouseMotion.x;
-        direction.y += event.mouseMotion.y;
-        doMove = true;
-    }
+        if (event.type == InputEvent::KEYPRESS && event.keyCode == 26) {
+            direction.z += 1;
+            doMove = true;
+        }
 
-    if (event.type == InputEvent::KEYPRESS && event.keyCode == 26) {
-        direction.z += 1;
-        doMove = true;
-    }
+        if (event.type == InputEvent::KEYPRESS && event.keyCode == 22) {
+            direction.z -= 1;
+            doMove = true;
+        }
 
-    if (event.type == InputEvent::KEYPRESS && event.keyCode == 22) {
-        direction.z -= 1;
-        doMove = true;
-    }
+        if (event.type == InputEvent::KEYPRESS && event.keyCode == 4) {
+            direction.x -= 1;
+            doMove = true;
+        }
 
-    if (event.type == InputEvent::KEYPRESS && event.keyCode == 4) {
-        direction.x -= 1;
-        doMove = true;
-    }
+        if (event.type == InputEvent::KEYPRESS && event.keyCode == 7) {
+            direction.x += 1;
+            doMove = true;
+        }
 
-    if (event.type == InputEvent::KEYPRESS && event.keyCode == 7) {
-        direction.x += 1;
-        doMove = true;
-    }
-
-    if (doMove) {
-        cameraComponent->moveView(glm::normalize(direction) * moveSpeed * Time::frameTime);
+        if (doMove) {
+            cameraComponent->moveView(glm::normalize(direction) * moveSpeed * Time::frameTime);
+        }
     }
 }
 
 void EditorCameraSystem::handleCameraActivationEvent(const CameraActivationEvent &event) {
-    for (const auto [id, component]: getComponentContainer<EditorCameraComponent>()) {
+    for (const auto [id, component]: m_registry->container()) {
         component->setActive(false);
 
         if (id == event.m_cameraComponentId) {
