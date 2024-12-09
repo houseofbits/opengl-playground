@@ -1,10 +1,8 @@
 #include "PhysicsHingeJointComponent.h"
 
 #include "../../Editor/Systems/EditorUISystem.h"
-#include "../Systems/JointsProcessingSystem.h"
 #include <utility>
 #include "../Helpers/PhysicsTypeCast.h"
-#include <Jolt/Jolt.h>
 #include <Jolt/Physics/Constraints/HingeConstraint.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/GroupFilterTable.h>
@@ -50,7 +48,7 @@ void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceMa
 }
 
 void PhysicsHingeJointComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+
 }
 
 bool PhysicsHingeJointComponent::isReady() {

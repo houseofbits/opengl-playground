@@ -84,9 +84,10 @@ void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager &reso
 }
 
 void EntityContext::unregisterComponentFromSystems(Component *component) {
-    for (const auto &system: m_Systems) {
-        system->unregisterComponent(component);
-    }
+    //TODO: Handle entity removal or component change
+//    for (const auto &system: m_Systems) {
+//        system->unregisterComponent(component);
+//    }
 }
 
 void EntityContext::registerEntitiesWithSystems(EventManager &eventManager) {

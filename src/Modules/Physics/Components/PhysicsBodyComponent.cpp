@@ -1,5 +1,4 @@
 #include "PhysicsBodyComponent.h"
-#include "../../Editor/Systems/EditorUISystem.h"
 #include "../Helpers/PhysicsTypeCast.h"
 #include "Jolt/Physics/Collision/Shape/MeshShape.h"
 #include "Jolt/Physics/Collision/Shape/ConvexHullShape.h"
@@ -47,7 +46,7 @@ void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager 
 }
 
 void PhysicsBodyComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+
 }
 
 bool PhysicsBodyComponent::isReady() {

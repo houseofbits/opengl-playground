@@ -36,7 +36,7 @@ void PhysicsCharacterComponent::deserialize(const nlohmann::json &j, ResourceMan
 }
 
 void PhysicsCharacterComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+
 }
 
 void PhysicsCharacterComponent::create(TransformComponent &transform) {

@@ -1,9 +1,6 @@
 #include "TransformComponent.h"
 #include "../../../Core/Helper/Types.h"
 #include "../../Editor/Systems/EditorUISystem.h"
-#include "../../Renderer/Systems/EnvironmentProbeRenderSystem.h"
-#include "../../Renderer/Systems/MainRenderSystem.h"
-#include "../../Renderer/Systems/ShadowMapRenderSystem.h"
 
 TransformComponent::TransformComponent() : Component(),
                                            ComponentTransformEdit(),
@@ -19,7 +16,7 @@ TransformComponent::TransformComponent() : Component(),
 }
 
 void TransformComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);             //Multiple dependencies
+
 }
 
 void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat &rotation, glm::vec3 &scale) {

@@ -11,7 +11,7 @@ CameraComponent::CameraComponent() : Component(),
 }
 
 void CameraComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+
 }
 
 void CameraComponent::serialize(nlohmann::json &j) {

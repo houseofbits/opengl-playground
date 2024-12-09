@@ -1,5 +1,4 @@
 #include "PhysicsFixedJointComponent.h"
-#include "../Systems/JointsProcessingSystem.h"
 #include "../../Editor/Systems/EditorUISystem.h"
 
 PhysicsFixedJointComponent::PhysicsFixedJointComponent() : Component(),
@@ -20,7 +19,7 @@ void PhysicsFixedJointComponent::deserialize(const nlohmann::json &j, ResourceMa
 }
 
 void PhysicsFixedJointComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+
 }
 
 bool PhysicsFixedJointComponent::isReady() {

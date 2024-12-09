@@ -10,7 +10,7 @@
 MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
                                                        m_isEditWindowVisible(true),
                                                        m_isSimulationEnabled(true),
-                                                       m_renderShaderType(0){
+                                                       m_renderShaderType(0) {
 }
 
 void MainToolbarUI::process() {
@@ -46,7 +46,8 @@ void MainToolbarUI::process() {
             }
             if (ImGui::MenuItem("Simulation enabled", nullptr, m_isSimulationEnabled)) {
                 m_isSimulationEnabled = !m_isSimulationEnabled;
-                sendUIEvent(m_isSimulationEnabled ? EditorUIEvent::TOGGLE_SIMULATION_ENABLED : EditorUIEvent::TOGGLE_SIMULATION_DISABLED);
+                sendUIEvent(m_isSimulationEnabled ? EditorUIEvent::TOGGLE_SIMULATION_ENABLED
+                                                  : EditorUIEvent::TOGGLE_SIMULATION_DISABLED);
             }
             if (ImGui::MenuItem("Reset rigid bodies")) {
                 m_isSimulationEnabled = false;
@@ -104,17 +105,17 @@ void MainToolbarUI::processViewMenu() {
         }
         ImGui::SeparatorText("Cameras");
 
-        for (const auto comp: m_EditorUISystem->getComponentContainer<EditorCameraComponent>()) {
-            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(comp.first);
-            if (ImGui::MenuItem(e->getListName().c_str(), nullptr, comp.second->m_isActive)) {
-                m_EditorUISystem->m_EventManager->triggerEvent<CameraActivationEvent>(comp.first);
+        for (const auto &[id, camera]: m_EditorUISystem->m_editorCameraComponentRegistry->container()) {
+            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(id);
+            if (ImGui::MenuItem(e->getListName().c_str(), nullptr, camera->m_isActive)) {
+                m_EditorUISystem->m_EventManager->triggerEvent<CameraActivationEvent>(id);
             }
         }
 
-        for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
-            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(comp.first);
-            if (ImGui::MenuItem(e->getListName().c_str(), nullptr, comp.second->m_isActive)) {
-                m_EditorUISystem->m_EventManager->triggerEvent<CameraActivationEvent>(comp.first);
+        for (const auto &[id, camera]: m_EditorUISystem->m_cameraComponentRegistry->container()) {
+            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(id);
+            if (ImGui::MenuItem(e->getListName().c_str(), nullptr, camera->m_isActive)) {
+                m_EditorUISystem->m_EventManager->triggerEvent<CameraActivationEvent>(id);
             }
         }
 

@@ -8,7 +8,7 @@ EditorCameraComponent::EditorCameraComponent() : Component(),
 }
 
 void EditorCameraComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+
 }
 
 void EditorCameraComponent::serialize(nlohmann::json &j) {

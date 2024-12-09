@@ -1,6 +1,4 @@
 #include "PhysicsSliderJointComponent.h"
-#include "../../Editor/Systems/EditorUISystem.h"
-#include "../Systems/JointsProcessingSystem.h"
 #include "../Helpers/PhysicsTypeCast.h"
 
 PhysicsSliderJointComponent::PhysicsSliderJointComponent() : Component(),
@@ -30,7 +28,7 @@ void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceM
 }
 
 void PhysicsSliderJointComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+
 }
 
 bool PhysicsSliderJointComponent::isReady() {

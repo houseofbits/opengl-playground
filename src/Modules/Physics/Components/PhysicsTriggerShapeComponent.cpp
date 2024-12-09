@@ -1,5 +1,4 @@
 #include "PhysicsTriggerShapeComponent.h"
-#include "../../Editor/Systems/EditorUISystem.h"
 
 PhysicsTriggerShapeComponent::PhysicsTriggerShapeComponent() : Component(),
                                                                m_PhysicsResource() {
@@ -17,7 +16,7 @@ void PhysicsTriggerShapeComponent::deserialize(const nlohmann::json &j, Resource
 }
 
 void PhysicsTriggerShapeComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
+
 }
 
 bool PhysicsTriggerShapeComponent::isReady() {

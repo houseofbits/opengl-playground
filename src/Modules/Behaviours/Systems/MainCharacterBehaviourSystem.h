@@ -25,17 +25,5 @@ private:
 
     static void handleAction(const InputEvent &, PhysicsCharacterComponent *, CameraComponent *);
 
-    Entity *getCharacterEntity() {
-        auto c = findComponent<MainCharacterBehaviourComponent>(
-                [](MainCharacterBehaviourComponent *c) {
-                    return c->m_isActive;
-                });
-        if (!c) {
-            return nullptr;
-        }
-
-        return m_EntityContext->getEntity(c->m_EntityId.id());
-    }
-
     RelatedComponentRegistry<CameraComponent, PhysicsCharacterComponent, MainCharacterBehaviourComponent>* m_registry;
 };

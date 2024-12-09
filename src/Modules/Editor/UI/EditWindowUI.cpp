@@ -119,29 +119,30 @@ void EditWindowUI::sendComponentRemovalEvent(std::string name) {
 }
 
 void EditWindowUI::updateEntityNameReferences(Identity::Type entityId, const std::string &newName) {
-    for (const auto &transformComponent: m_EditorUISystem->getComponentContainer<TransformComponent>()) {
-        if (transformComponent.second->m_parentEntityId == entityId) {
-            transformComponent.second->m_parentEntityName = newName;
-        }
-    }
-
-    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsHingeJointComponent>()) {
-        if (jointComponent.second->m_targetEntityId == entityId) {
-            jointComponent.second->m_targetEntityName = newName;
-        }
-    }
-
-    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsFixedJointComponent>()) {
-        if (jointComponent.second->m_targetEntityId == entityId) {
-            jointComponent.second->m_targetEntityName = newName;
-        }
-    }
-
-    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsSliderJointComponent>()) {
-        if (jointComponent.second->m_targetEntityId == entityId) {
-            jointComponent.second->m_targetEntityName = newName;
-        }
-    }
+    //TODO: Add event type for name changes
+//    for (const auto &transformComponent: m_EditorUISystem->getComponentContainer<TransformComponent>()) {
+//        if (transformComponent.second->m_parentEntityId == entityId) {
+//            transformComponent.second->m_parentEntityName = newName;
+//        }
+//    }
+//
+//    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsHingeJointComponent>()) {
+//        if (jointComponent.second->m_targetEntityId == entityId) {
+//            jointComponent.second->m_targetEntityName = newName;
+//        }
+//    }
+//
+//    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsFixedJointComponent>()) {
+//        if (jointComponent.second->m_targetEntityId == entityId) {
+//            jointComponent.second->m_targetEntityName = newName;
+//        }
+//    }
+//
+//    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsSliderJointComponent>()) {
+//        if (jointComponent.second->m_targetEntityId == entityId) {
+//            jointComponent.second->m_targetEntityName = newName;
+//        }
+//    }
 }
 
 void EditWindowUI::processComponentCreation() {

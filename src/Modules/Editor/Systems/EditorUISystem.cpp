@@ -13,8 +13,8 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_MaterialEditWindowUI(this),
                                    m_componentEditors(),
                                    m_activeCameraHelper() {
-    usesComponent<CameraComponent>();
-    usesComponent<EditorCameraComponent>();
+    m_editorCameraComponentRegistry = useComponentRegistry<EditorCameraComponent>();
+    m_cameraComponentRegistry = useComponentRegistry<CameraComponent>();
 }
 
 void EditorUISystem::process(EventManager &eventManager) {

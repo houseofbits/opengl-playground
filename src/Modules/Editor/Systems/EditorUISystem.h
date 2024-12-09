@@ -46,6 +46,8 @@ public:
     MaterialEditWindowUI m_MaterialEditWindowUI;
     std::map<std::string, BaseComponentEdit*> m_componentEditors;
     ActiveCameraHelper m_activeCameraHelper;
+    SingleComponentRegistry<EditorCameraComponent>* m_editorCameraComponentRegistry;
+    SingleComponentRegistry<CameraComponent>* m_cameraComponentRegistry;
 
 private:
     void processDockSpaceWindow();
