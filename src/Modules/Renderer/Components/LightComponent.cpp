@@ -68,9 +68,7 @@ void LightComponent::deserialize(const nlohmann::json &j, ResourceManager &resou
 }
 
 void LightComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<StorageBufferUpdateSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<ShadowMapRenderSystem>(this);
 }
 
 std::string LightComponent::getLightTypeName() {

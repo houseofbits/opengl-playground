@@ -12,9 +12,8 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_viewportWidth(1024),
                                        m_viewportHeight(768),
                                        m_activeCameraHelper() {
-    usesComponent<StaticMeshComponent>();
-    usesComponent<TransformComponent>();
-    usesComponent<SkyComponent>();
+    m_meshComponentRegistry = useComponentsRegistry<TransformComponent, StaticMeshComponent>();
+    m_skyComponentRegistry = useComponentRegistry<SkyComponent>();
 }
 
 void MainRenderSystem::registerEventHandlers(EventManager &eventManager) {
@@ -70,8 +69,9 @@ void MainRenderSystem::process(EventManager &eventManager) {
         return;
     }
 
-    auto sky = getComponentContainer<SkyComponent>().begin();
-    if (doesComponentsExist<SkyComponent>() && sky->second->m_cubeMap().isReady()) {
+    const auto& sky = m_skyComponentRegistry->container().begin();
+    bool doesSkyComponentExist = sky != m_skyComponentRegistry->container().end();
+    if (doesSkyComponentExist && sky->second->m_cubeMap().isReady()) {
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
 
@@ -96,18 +96,16 @@ void MainRenderSystem::process(EventManager &eventManager) {
     if (m_ProbesCubeMapArray().isReady()) {
         m_ShaderPrograms[m_shaderType]().setUniform("probesCubeArraySampler", m_ProbesCubeMapArray().m_handleId);
     }
-    if (doesComponentsExist<SkyComponent>() && sky->second->m_cubeMap().isReady()) {
+    if (doesSkyComponentExist && sky->second->m_cubeMap().isReady()) {
         m_ShaderPrograms[m_shaderType]().setUniform("environmentSampler", sky->second->m_cubeMap().m_handleId);
     }
 
-    for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
-        if (mesh.second->m_targetRenderer != StaticMeshComponent::SOLID) {
-            continue;
-        }
-        auto *transform = getComponent<TransformComponent>(mesh.first);
+    for (const auto &[id, components]: m_meshComponentRegistry->container()) {
+        const auto &[transform, mesh] = components.get();
+
         m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getModelMatrix());
-        mesh.second->m_Material().bind(m_ShaderPrograms[m_shaderType]());
-        mesh.second->m_Mesh().render();
+        mesh->m_Material().bind(m_ShaderPrograms[m_shaderType]());
+        mesh->m_Mesh().render();
     }
 }
 

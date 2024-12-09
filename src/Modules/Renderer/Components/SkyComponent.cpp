@@ -7,6 +7,5 @@ SkyComponent::SkyComponent() : Component(), m_cubeMap() {
 }
 
 void SkyComponent::registerWithSystems(EntityContext& ctx) {
-    ctx.registerComponentWithEntitySystem<MainRenderSystem>(this);
-    ctx.registerComponentWithEntitySystem<EnvironmentProbeRenderSystem>(this);
+
 }

@@ -8,6 +8,7 @@
 #include "../Resources/EnvironmentProbesCubeMapArrayResource.h"
 #include "../Resources/LightsBufferResource.h"
 #include "../Resources/ShaderProgramResource.h"
+#include "../Components/StaticMeshComponent.h"
 
 class EnvironmentProbeRenderSystem : public EntitySystem {
 public:
@@ -36,4 +37,6 @@ private:
     ResourceHandle<EnvironmentProbesCubeMapArrayResource> m_cubeMapArray;
     Camera m_Camera;
     bool m_isRenderEnabled;
+    RelatedComponentRegistry<TransformComponent, EnvironmentProbeComponent>* m_probeComponentRegistry;
+    RelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
 };

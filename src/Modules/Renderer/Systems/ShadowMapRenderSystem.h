@@ -3,6 +3,7 @@
 #include "../../../Core/API.h"
 #include "../../Editor/Events/EditorUIEvent.h"
 #include "../Resources/LightsBufferResource.h"
+#include "../Components/StaticMeshComponent.h"
 
 class ShadowMapRenderSystem : public EntitySystem {
 public:
@@ -24,4 +25,6 @@ private:
     ResourceManager *m_ResourceManager;
     ResourceHandle<ShaderProgramResource> m_ShaderProgram;
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
+    RelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
+    RelatedComponentRegistry<TransformComponent, LightComponent>* m_lightComponentRegistry;
 };

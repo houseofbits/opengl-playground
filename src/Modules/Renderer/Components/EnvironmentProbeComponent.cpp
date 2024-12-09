@@ -15,7 +15,5 @@ void EnvironmentProbeComponent::deserialize(const nlohmann::json &j, ResourceMan
 }
 
 void EnvironmentProbeComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<StorageBufferUpdateSystem>(this);
     ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<EnvironmentProbeRenderSystem>(this);
 }

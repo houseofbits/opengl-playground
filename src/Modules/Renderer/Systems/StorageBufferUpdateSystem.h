@@ -14,4 +14,6 @@ public:
 
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
     ResourceHandle<EnvironmentProbesBufferResource> m_ProbesBuffer;
+    RelatedComponentRegistry<TransformComponent, EnvironmentProbeComponent>* m_probeComponentRegistry;
+    RelatedComponentRegistry<TransformComponent, LightComponent>* m_lightComponentRegistry;
 };

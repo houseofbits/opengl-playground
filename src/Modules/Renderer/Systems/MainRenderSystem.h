@@ -10,6 +10,8 @@
 #include "../Resources/ShaderProgramResource.h"
 #include "../../Common/Events/CameraActivationEvent.h"
 #include "../../Common/Helpers/ActiveCameraHelper.h"
+#include "../Components/StaticMeshComponent.h"
+#include "../Components/SkyComponent.h"
 
 class MainRenderSystem : public EntitySystem {
 public:
@@ -43,4 +45,6 @@ private:
     ResourceHandle<EnvironmentProbesBufferResource> m_ProbesBuffer;
     ResourceHandle<EnvironmentProbesCubeMapArrayResource> m_ProbesCubeMapArray;
     ActiveCameraHelper m_activeCameraHelper;
+    RelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
+    SingleComponentRegistry<SkyComponent>* m_skyComponentRegistry;
 };
