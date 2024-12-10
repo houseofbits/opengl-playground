@@ -47,8 +47,8 @@ void TransformGizmoHelper::processGizmo(EntityContext &ctx, Identity::Type &sele
 
     if (ImGuizmo::Manipulate(glm::value_ptr(camera.viewMatrix),
                              glm::value_ptr(camera.projectionMatrix),
-                             (ImGuizmo::OPERATION) m_selectedGizmoOperation,
-                             (ImGuizmo::MODE) m_selectedGizmoMode,
+                             static_cast<ImGuizmo::OPERATION>(m_selectedGizmoOperation),
+                             static_cast<ImGuizmo::MODE>(m_selectedGizmoMode),
                              glm::value_ptr(m_transform),
                              nullptr,
                              nullptr,

@@ -1,8 +1,5 @@
 #include "MainCharacterBehaviourSystem.h"
-#include "../Components/MainCharacterBehaviourComponent.h"
-#include "../../Common/Components/CameraComponent.h"
 #include "../../../Core/Helper/Time.h"
-#include "../../Physics/Components/PhysicsCharacterComponent.h"
 #include "../../Physics/Events/PhysicsPickingEvent.h"
 
 MainCharacterBehaviourSystem::MainCharacterBehaviourSystem() : EntitySystem() {

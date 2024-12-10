@@ -35,7 +35,7 @@ void EditorUISystem::process(EventManager &eventManager) {
 
     if (!m_MainToolbarUI.m_isSimulationEnabled) {
         Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
-        if (!camera) {
+        if (camera != nullptr) {
             m_transformGizmo.processGizmo(*m_EntityContext, m_EditWindowUI.m_selectedEntityId, *camera);
         }
     }

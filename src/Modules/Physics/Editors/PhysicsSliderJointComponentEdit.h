@@ -1,8 +1,6 @@
 #pragma once
 
 #include "../../../SourceLibs/imgui/imgui.h"
-#include "../../Editor/Helpers/FileDialogHelper.h"
-#include "../../Editor/Helpers/TextPromptHelper.h"
 #include "../../Editor/UI/BaseComponentEdit.h"
 #include "../../Editor/Systems/EditorUISystem.h"
 #include "../Components/PhysicsSliderJointComponent.h"
@@ -10,19 +8,18 @@
 
 class PhysicsSliderJointComponentEdit : public BaseComponentEdit {
 public:
-
     std::string getName() override {
         return "Physics slider joint";
     }
 
-    void process(Entity &entity, EditorUISystem& system) override {
+    void process(Entity &entity, EditorUISystem &system) override {
         auto *body = entity.getComponent<PhysicsSliderJointComponent>();
         if (body == nullptr) {
             return;
         }
 
         if (TargetEntityHelper<PhysicsBodyComponent>(system.m_EntityContext, body->m_targetEntityName,
-                                                 "Target##TARGET_ENTITY_NAME")) {
+                                                     "Target##TARGET_ENTITY_NAME")) {
             body->release();
         }
 
@@ -32,6 +29,14 @@ public:
 
         if (body->m_isLimitsEnabled) {
             ImGui::InputFloat2("Min/Max", (float *) &body->m_limits);
+        }
+
+        ImGui::Checkbox("Motor", &body->m_isMotorSettingsEnabled);
+
+        if (body->m_isMotorSettingsEnabled) {
+            ImGui::DragFloat("Force limit", &body->m_motorForceLimit, 0.1f);
+            ImGui::DragFloat("Damping", &body->m_motorDamping, 0.1f);
+            ImGui::DragFloat("Frequency", &body->m_motorFrequency, 0.1f);
         }
     }
 };

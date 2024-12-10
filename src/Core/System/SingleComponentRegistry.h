@@ -27,5 +27,9 @@ public:
         return nullptr;
     }
 
+    bool contains(Identity::Type id) override {
+        return m_container.find(id) != m_container.end();
+    }
+
     ContainerType m_container{};
 };

@@ -2,7 +2,9 @@
 #include "../Systems/MainCharacterBehaviourSystem.h"
 
 
-MainCharacterBehaviourComponent::MainCharacterBehaviourComponent() : Component(), m_isActive(true) {
+MainCharacterBehaviourComponent::MainCharacterBehaviourComponent() : Component(),
+                                                                     m_isActive(true),
+                                                                     m_mouseLookSpeed(0.15) {
 
 }
 

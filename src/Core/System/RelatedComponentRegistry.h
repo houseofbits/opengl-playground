@@ -6,6 +6,8 @@
 template<class... Ts>
 class RelatedComponentRegistry : public AbstractComponentRegistry {
 public:
+    ~RelatedComponentRegistry() override = default;
+
     typedef ComponentsTuple<Ts...> TupleT;
     typedef std::unordered_map<Identity::Type, TupleT> ContainerType;
 
@@ -15,6 +17,10 @@ public:
         }
 
         m_container[entity.m_Id.id()].registerComponents(entity);
+    }
+
+    bool contains(Identity::Type id) override {
+        return m_container.find(id) != m_container.end();
     }
 
     ContainerType& container() {

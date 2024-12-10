@@ -13,4 +13,5 @@ public:
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
     bool m_isActive;
+    float m_mouseLookSpeed;
 };
