@@ -12,6 +12,8 @@
 
 class EventHandler {
 public:
+    virtual ~EventHandler() = default;
+
     virtual Identity::Type getId() {
         return 0;
     }

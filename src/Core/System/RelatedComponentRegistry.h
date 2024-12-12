@@ -19,6 +19,10 @@ public:
         m_container[entity.m_Id.id()].registerComponents(entity);
     }
 
+    void unregisterComponents(Identity::Type entityId) override {
+        m_container.erase(entityId);
+    }
+
     bool contains(Identity::Type id) override {
         return m_container.find(id) != m_container.end();
     }

@@ -55,11 +55,18 @@ public:
         return reg;
     }
 
-    void registerEntityComponents(Entity &entity) {
+    virtual void registerEntityComponents(Entity &entity) {
         for (const auto &reg: m_registries) {
             reg->registerComponents(entity);
         }
     }
+
+    virtual void unregisterComponents(Identity::Type entityId) {
+        for (const auto &reg: m_registries) {
+            reg->unregisterComponents(entityId);
+        }
+    }
+
 
     std::list<AbstractComponentRegistry *> m_registries;
 };

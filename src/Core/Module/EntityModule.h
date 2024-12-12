@@ -4,6 +4,8 @@ class EntityContext;
 
 class EntityModule {
 public:
+    virtual ~EntityModule() = default;
+
     EntityModule();
 
     virtual void registerComponents(EntityContext &) {};

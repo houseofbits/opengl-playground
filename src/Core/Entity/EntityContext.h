@@ -78,8 +78,8 @@ public:
     }
 
     template<class T>
-    bool doesEntityHaveComponent(Identity::Type id) {
-        auto *e = getEntity(id);
+    bool doesEntityHaveComponent(Identity::Type entityId) {
+        auto *e = getEntity(entityId);
         if (e != nullptr) {
             auto *c = e->getComponent<T>();
 
@@ -90,8 +90,8 @@ public:
     }
 
     template<class T>
-    T *getEntityComponent(Identity::Type id) {
-        auto *e = getEntity(id);
+    T *getEntityComponent(Identity::Type entityId) {
+        auto *e = getEntity(entityId);
         if (e) {
             return e->getComponent<T>();
         }
@@ -106,6 +106,21 @@ public:
             return e->getComponent<T>();
         }
 
+        return nullptr;
+    }
+
+    template<class T>
+    T* getComponent(const Identity::Type componentId) {
+        for (const auto &e: m_Entities) {
+            if (auto component = e->getComponent(componentId)) {
+                auto cT = dynamic_cast<T *>(component);
+                if (cT) {
+                    return cT;
+                }
+
+                return nullptr;
+            }
+        }
         return nullptr;
     }
 

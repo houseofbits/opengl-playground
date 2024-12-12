@@ -3,6 +3,7 @@
 #include "Application/Application.h"
 #include "Entity/Component.h"
 #include "Entity/EntityContext.h"
+#include "System/EntitySystem.h"
 #include "Events/EntityCreationEvent.h"
 #include "Events/Event.h"
 #include "Events/EventManager.h"

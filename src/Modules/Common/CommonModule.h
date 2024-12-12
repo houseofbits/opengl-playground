@@ -8,6 +8,7 @@
 #include "Editors/CameraComponentEdit.h"
 #include "Editors/TransformComponentEdit.h"
 #include "Systems/CameraSystem.h"
+#include "Systems/EntityLinkingSystem.h"
 
 class CommonModule : public EntityModule {
 public:
@@ -19,6 +20,7 @@ public:
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<TransformHierarchyProcessingSystem>(10);
         ctx.registerEntitySystem<CameraSystem>(1);
+        ctx.registerEntitySystem<EntityLinkingSystem>(2);
     }
 
     void postRegister(EntityContext &ctx) override {

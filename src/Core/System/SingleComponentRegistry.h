@@ -15,6 +15,14 @@ public:
         m_container[entity.m_Id.id()] = entity.getComponent<T>();
     }
 
+    void registerComponent(Identity::Type id, T* &component) {
+        m_container[id] = component;
+    }
+
+    void unregisterComponents(Identity::Type entityId) override {
+        m_container.erase(entityId);
+    }
+
     ContainerType &container() {
         return m_container;
     }
