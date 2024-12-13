@@ -4,12 +4,13 @@
 
 #include "../../../Core/API.h"
 #include "../../../Core/Helper/ComponentTransformEdit.h"
+#include "../Helpers/EntityLinkedComponent.h"
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
-class TransformComponent : public Component, public ComponentTransformEdit {
+class TransformComponent : public Component, public ComponentTransformEdit, public EntityLinkedComponent {
 TYPE_DEFINITION(TransformComponent);
 
 public:
@@ -66,9 +67,5 @@ public:
     bool m_isScalingEnabled;
     glm::mat4 m_transform;
     glm::mat4 m_initialTransform;
-
-    bool m_shouldUpdateParentEntityId;
-    std::string m_parentEntityName;
-    Identity::Type m_parentEntityId;
     bool m_shouldSyncWorldTransformToLocal;
 };

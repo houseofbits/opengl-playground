@@ -9,6 +9,7 @@ class EntityContext;
 class Component : public BaseClass {
 public:
     Component() = default;
+
     virtual ~Component() = default;
 
     typedef std::shared_ptr<Component> TComponentPtr;
@@ -17,11 +18,23 @@ public:
     Identity m_Id{};
     std::string m_Name;
 
-    virtual void serialize(nlohmann::json&) = 0;
+    virtual void serialize(nlohmann::json &) = 0;
+
     virtual void deserialize(const nlohmann::json &, ResourceManager &resourceManager) = 0;
+
     // Validation to ensure the component can be registered with systems
     // For example: check if all the resources have been properly loaded.
     virtual bool isReady() {
         return true;
+    }
+
+    template<class T>
+    T *getInstance() {
+        auto cp = dynamic_cast<T *>(this);
+        if (cp) {
+            return cp;
+        }
+
+        return nullptr;
     }
 };

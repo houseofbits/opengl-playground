@@ -30,8 +30,6 @@ public:
 
     void release() override;
 
-    void attach(std::string entityName);
-
     void activate();
 
     void update() override;

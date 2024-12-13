@@ -3,7 +3,7 @@
 #include "../../../Core/API.h"
 
 class EntityLinkingEvent;
-class ComponentLinkedEntity;
+class EntityLinkedComponent;
 
 class EntityLinkingSystem : public EntitySystem {
 public:
@@ -18,5 +18,5 @@ public:
     void registerEntityComponents(Entity &entity) override;
 
 private:
-    SingleComponentRegistry<ComponentLinkedEntity>* m_registry;
+    SingleComponentRegistry<EntityLinkedComponent>* m_registry;
 };

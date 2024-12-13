@@ -20,9 +20,11 @@ public:
             return;
         }
 
-        if (TargetEntityHelper<PhysicsBodyComponent>(system.m_EntityContext, body->m_targetEntityName,
-                                                 "Target##TARGET_ENTITY_NAME")) {
-            body->release();
-        }
+        EntityLinkedComponentEdit::process<PhysicsBodyComponent>(
+            *system.m_EventManager,
+            *system.m_EntityContext,
+            body,
+            "Attachment entity##TRANSFORM_PARENT_ENTITY_NAME"
+        );
     }
 };

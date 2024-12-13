@@ -9,9 +9,9 @@ TransformComponent::TransformComponent() : Component(),
                                            m_isTranslationEnabled(true),
                                            m_isRotationEnabled(true),
                                            m_isScalingEnabled(true),
-                                           m_parentEntityId(0),
-                                           m_parentEntityName(),
-                                           m_shouldUpdateParentEntityId(false),
+                                           // m_parentEntityId(0),
+                                           // m_parentEntityName(),
+                                           // m_shouldUpdateParentEntityId(false),
                                            m_shouldSyncWorldTransformToLocal(false) {
 }
 
@@ -30,6 +30,8 @@ void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat 
 }
 
 void TransformComponent::serialize(nlohmann::json &j) {
+    serializeLinkedEntity(j);
+
     glm::vec3 translation = m_initialTransform[3];
 
     glm::vec3 scale;
@@ -53,12 +55,14 @@ void TransformComponent::serialize(nlohmann::json &j) {
     if (m_isScalingEnabled) {
         j[SCALE_KEY] = scale;
     }
-    if (m_parentEntityId > 0) {
-        j[PARENT_ENTITY_KEY] = m_parentEntityName;
-    }
+    // if (m_parentEntityId > 0) {
+    //     j[PARENT_ENTITY_KEY] = m_parentEntityName;
+    // }
 }
 
 void TransformComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
+    deserializeLinkedEntity(j);
+
     glm::vec3 t = j.value(TRANSLATION_KEY, glm::vec3(0, 0, 0));
     glm::quat r = j.value(ROTATION_KEY, glm::quat(1, 0, 0, 0));
     glm::vec3 s = j.value(SCALE_KEY, glm::vec3(1, 1, 1));
@@ -79,9 +83,10 @@ void TransformComponent::deserialize(const nlohmann::json &j, ResourceManager &r
 
     m_initialTransform = m_transform;
 
-    m_parentEntityName = j.value(PARENT_ENTITY_KEY, m_parentEntityName);
-    if (!m_parentEntityName.empty()) {
-        m_shouldUpdateParentEntityId = true;
+    //remove after resave
+    std::string name = j.value(PARENT_ENTITY_KEY, "");
+    if (!name.empty()) {
+        setLinkedEntityName(name);
     }
 }
 
@@ -179,7 +184,7 @@ glm::mat4 TransformComponent::getEditorTransform() {
 void TransformComponent::setFromEditorTransform(const glm::mat4 &m) {
     m_transform = m;
 
-    if (m_parentEntityId > 0) {
+    if (isLinkedToEntityId() > 0) {
         m_shouldSyncWorldTransformToLocal = true;
     } else {
         m_initialTransform = m;

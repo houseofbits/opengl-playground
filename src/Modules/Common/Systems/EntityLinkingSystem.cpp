@@ -1,10 +1,10 @@
 #include "EntityLinkingSystem.h"
 
 #include "../Events/EntityLinkingEvent.h"
-#include "../Helpers/ComponentLinkedEntity.h"
+#include "../Helpers/EntityLinkedComponent.h"
 
 EntityLinkingSystem::EntityLinkingSystem() {
-    m_registry = useComponentRegistry<ComponentLinkedEntity>();
+    m_registry = useComponentRegistry<EntityLinkedComponent>();
 }
 
 void EntityLinkingSystem::process(EventManager &manager) {
@@ -33,7 +33,7 @@ void EntityLinkingSystem::handleEntityLinkingEvent(const EntityLinkingEvent &eve
         EntityLinkingEvent::TYPE_LINK_WITH_NAME) {
         auto component = m_registry->get(event.m_componentId);
         if (!component) {
-            component = m_EntityContext->getComponent<ComponentLinkedEntity>(event.m_componentId);
+            component = m_EntityContext->getComponent<EntityLinkedComponent>(event.m_componentId);
             if (component) {
                 m_registry->registerComponent(event.m_componentId, component);
             } else {
@@ -51,7 +51,7 @@ void EntityLinkingSystem::handleEntityLinkingEvent(const EntityLinkingEvent &eve
 
 void EntityLinkingSystem::registerEntityComponents(Entity &entity) {
     for (const auto &c: entity.m_Components) {
-        if (auto cl = dynamic_cast<ComponentLinkedEntity *>(c.get()); cl && cl->isLinkableToEntity()) {
+        if (auto cl = dynamic_cast<EntityLinkedComponent *>(c.get()); cl && cl->isLinkableToEntity()) {
             m_registry->registerComponent(c->m_Id.id(), cl);
         }
     }

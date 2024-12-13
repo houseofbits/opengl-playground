@@ -8,6 +8,8 @@
 #include "../Components/PhysicsFixedJointComponent.h"
 #include "../Components/PhysicsSliderJointComponent.h"
 
+class EntityLinkingEvent;
+
 class JointsProcessingSystem : public EntitySystem {
 public:
     JointsProcessingSystem();
@@ -19,6 +21,8 @@ public:
     void process(EventManager &) override;
 
     void handleCharacterPickingEvent(const PhysicsPickingEvent &);
+
+    void handleEntityLinkingEvent(const EntityLinkingEvent&);
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 

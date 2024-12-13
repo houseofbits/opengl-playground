@@ -6,7 +6,6 @@ TransformHierarchyProcessingSystem::TransformHierarchyProcessingSystem() : Entit
 }
 
 void TransformHierarchyProcessingSystem::initialize(ResourceManager &) {
-
 }
 
 void TransformHierarchyProcessingSystem::process(EventManager &) {
@@ -16,26 +15,10 @@ void TransformHierarchyProcessingSystem::process(EventManager &) {
      * 3. Process linearly
      */
 
-    std::vector<std::pair<Identity::Type, int>> localTransforms;
+    std::vector<std::pair<Identity::Type, int> > localTransforms;
 
     for (const auto [id, component]: m_transformComponentRegistry->container()) {
-        if (component->m_shouldUpdateParentEntityId) {
-            if (component->m_parentEntityName.empty()) {
-                component->m_parentEntityId = 0;
-                component->m_shouldUpdateParentEntityId = false;
-
-                continue;
-            }
-            auto a = m_EntityContext->findEntity(component->m_parentEntityName);
-            if (a != nullptr) {
-                component->m_parentEntityId = a->m_Id.id();
-            } else {
-                Log::warn("Could not find parent entity ", component->m_parentEntityName);
-            }
-            component->m_shouldUpdateParentEntityId = false;
-        }
-
-        if (component->m_parentEntityId > 0) {
+        if (component->isLinkedToEntityId()) {
             int depth = calculateDepth(id);
             if (depth > 0) {
                 localTransforms.emplace_back(id, depth);
@@ -50,9 +33,9 @@ void TransformHierarchyProcessingSystem::process(EventManager &) {
 
     for (const auto ts: localTransforms) {
         auto *transformComponent = m_transformComponentRegistry->get(ts.first);
-        auto *parentTransformComponent = m_transformComponentRegistry->get(transformComponent->m_parentEntityId);
 
-        if (parentTransformComponent != nullptr) {
+        if (auto *parentTransformComponent = m_transformComponentRegistry->get(transformComponent->getLinkedEntityId());
+            parentTransformComponent != nullptr) {
             transformComponent->updateTransformFromParent(parentTransformComponent->getModelMatrix());
         }
     }
@@ -67,17 +50,17 @@ void TransformHierarchyProcessingSystem::process(EventManager &) {
     }
 }
 
-int TransformHierarchyProcessingSystem::calculateDepth(Identity::Type entityId) {
+int TransformHierarchyProcessingSystem::calculateDepth(Identity::Type entityId) const {
     TransformComponent *e = nullptr;
     int d = 0;
     Identity::Type id = entityId;
     do {
         e = m_transformComponentRegistry->get(id);
-        if (e != nullptr && e->m_parentEntityId > 0) {
+        if (e != nullptr && e->isLinkedToEntityId()) {
             d++;
-            id = e->m_parentEntityId;
+            id = e->getLinkedEntityId();
         }
-    } while (e != nullptr && e->m_parentEntityId > 0);
+    } while (e != nullptr && e->isLinkedToEntityId());
 
     return d;
 }

@@ -2,7 +2,7 @@
 
 #include "../Components/PhysicsBodyComponent.h"
 
-class BasePhysicsJoint {
+class BasePhysicsJoint : public EntityLinkedComponent {
 public:
     BasePhysicsJoint() : m_targetEntityName(), m_targetEntityId(0) {}
 

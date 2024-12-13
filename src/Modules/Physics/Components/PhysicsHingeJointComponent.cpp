@@ -23,7 +23,9 @@ PhysicsHingeJointComponent::PhysicsHingeJointComponent() : Component(),
 }
 
 void PhysicsHingeJointComponent::serialize(nlohmann::json &j) {
+    serializeLinkedEntity(j);
     j[ENTITY_KEY] = m_targetEntityName;
+
     j[ARE_LIMITS_ENABLED_KEY] = m_isLimitsEnabled;
     j[ARE_LOCKING_LIMITS_ENABLED_KEY] = m_isLockingToLimitsEnabled;
     j[AXIS_A_KEY] = m_axisA;
@@ -34,8 +36,10 @@ void PhysicsHingeJointComponent::serialize(nlohmann::json &j) {
 }
 
 void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
-
+    deserializeLinkedEntity(j);
     m_targetEntityName = j.value(ENTITY_KEY, m_targetEntityName);
+    setLinkedEntityName(m_targetEntityName);
+
     m_isLimitsEnabled = j.value(ARE_LIMITS_ENABLED_KEY, m_isLimitsEnabled);
     m_isLockingToLimitsEnabled = j.value(ARE_LOCKING_LIMITS_ENABLED_KEY, m_isLockingToLimitsEnabled);
     m_axisA = j.value(AXIS_A_KEY, m_axisA);
@@ -81,11 +85,6 @@ void PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBody
 
     bodyA.wakeUp();
     bodyB.wakeUp();
-}
-
-void PhysicsHingeJointComponent::attach(std::string entityName) {
-    release();
-    m_targetEntityName = std::move(entityName);
 }
 
 void PhysicsHingeJointComponent::release() {

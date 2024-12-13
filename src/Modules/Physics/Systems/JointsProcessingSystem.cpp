@@ -1,4 +1,5 @@
 #include "JointsProcessingSystem.h"
+#include "../../Common//Events//EntityLinkingEvent.h"
 
 JointsProcessingSystem::JointsProcessingSystem() : EntitySystem() {
     m_hingeJointComponentRegistry = useComponentRegistry<PhysicsHingeJointComponent>();
@@ -12,6 +13,7 @@ void JointsProcessingSystem::initialize(ResourceManager &resourceManager) {
 
 void JointsProcessingSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &JointsProcessingSystem::handleCharacterPickingEvent);
+    eventManager.registerEventReceiver(this, &JointsProcessingSystem::handleEntityLinkingEvent);
 }
 
 void JointsProcessingSystem::process(EventManager &eventManager) {
@@ -44,14 +46,32 @@ void JointsProcessingSystem::processJoint(Identity::Type entityId, BasePhysicsJo
             return;
         }
 
-        auto *bodyB = m_EntityContext->findEntityComponent<PhysicsBodyComponent>(joint->m_targetEntityName);
+        auto *bodyB = m_EntityContext->findEntityComponent<PhysicsBodyComponent>(joint->getLinkedEntityName());
         if (bodyB == nullptr) {
             return;
         }
 
-        joint->m_targetEntityId = bodyB->m_EntityId.id();
+        // joint->m_targetEntityId = bodyB->m_EntityId.id();
         joint->create(*bodyA, *bodyB);
     } else {
         joint->update();
+    }
+}
+
+void JointsProcessingSystem::handleEntityLinkingEvent(const EntityLinkingEvent &event) {
+    for (const auto &[id, joint]: m_hingeJointComponentRegistry->container()) {
+        if (joint->m_Id.id() == event.m_componentId) {
+            joint->release();
+        }
+    }
+    for (const auto &[id, joint]: m_fixedJointComponentRegistry->container()) {
+        if (joint->m_Id.id() == event.m_componentId) {
+            joint->release();
+        }
+    }
+    for (const auto &[id, joint]: m_sliderJointComponentRegistry->container()) {
+        if (joint->m_Id.id() == event.m_componentId) {
+            joint->release();
+        }
     }
 }

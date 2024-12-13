@@ -13,7 +13,7 @@ public:
     void process(EventManager &) override;
 
 private:
-    int calculateDepth(Identity::Type entityId);
+    int calculateDepth(Identity::Type entityId) const;
 
     SingleComponentRegistry<TransformComponent>* m_transformComponentRegistry;
     SingleComponentRegistry<CameraComponent>* m_cameraComponentRegistry;

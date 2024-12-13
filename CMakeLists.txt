@@ -158,9 +158,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/System/AbstractComponentRegistry.h
         src/Core/System/RelatedComponentRegistry.h
         src/Core/System/SingleComponentRegistry.h
-        src/Modules/Common/Helpers/ComponentLinkedEntity.h
+        src/Modules/Common/Helpers/EntityLinkedComponent.h
         src/Modules/Common/Systems/EntityLinkingSystem.cpp
         src/Modules/Common/Systems/EntityLinkingSystem.h
+        src/Modules/Common/Editors/EntityLinkedComponentEdit.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
