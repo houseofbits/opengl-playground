@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../Events/PhysicsPickingEvent.h"
 #include "../Resources/PhysicsResource.h"
 #include "../Helpers/BasePhysicsJoint.h"
 #include "../Components/PhysicsHingeJointComponent.h"
@@ -20,14 +19,12 @@ public:
 
     void process(EventManager &) override;
 
-    void handleCharacterPickingEvent(const PhysicsPickingEvent &);
-
     void handleEntityLinkingEvent(const EntityLinkingEvent&);
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 
 private:
-    void processJoint(Identity::Type entityId, BasePhysicsJoint* joint);
+    void processJoint(Identity::Type entityId, BasePhysicsJoint* joint) const;
 
     SingleComponentRegistry<PhysicsHingeJointComponent>* m_hingeJointComponentRegistry;
     SingleComponentRegistry<PhysicsFixedJointComponent>* m_fixedJointComponentRegistry;

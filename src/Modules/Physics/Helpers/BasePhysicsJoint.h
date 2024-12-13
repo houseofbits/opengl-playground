@@ -15,6 +15,25 @@ public:
 
     virtual void update() = 0;
 
+    virtual float getUnitPosition() const {
+        return 0;
+    }
+
+    virtual void activate() {
+    }
+
+    virtual void setMotorVelocity(float velocity) const {
+    }
+
+    virtual void setMotorOff() const {
+    }
+
+    virtual void lockInPlace() {
+    }
+
+    virtual void unLock() {
+    }
+
     [[nodiscard]] virtual bool isCreated() const = 0;
 
     static bool areAllowedToConnect(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {

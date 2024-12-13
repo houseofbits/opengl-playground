@@ -4,6 +4,7 @@
 #include "../../Physics/Events/PhysicsPickingEvent.h"
 #include "../Components/DoorBehaviourComponent.h"
 #include "../../Physics/Components/PhysicsSliderJointComponent.h"
+#include "../../Physics/Components/PhysicsHingeJointComponent.h"
 
 class DoorBehaviourSystem : public EntitySystem {
 public:
@@ -18,5 +19,10 @@ public:
     void handleCharacterPickingEvent(const PhysicsPickingEvent &);
 
 private:
-    RelatedComponentRegistry<DoorBehaviourComponent, PhysicsSliderJointComponent>* m_sliderJointComponentRegistry;
+    static void handleJointPickingEvent(BasePhysicsJoint *, DoorBehaviourComponent *);
+
+    static void processJointBehaviour(BasePhysicsJoint *, DoorBehaviourComponent *);
+
+    RelatedComponentRegistry<DoorBehaviourComponent, PhysicsSliderJointComponent> *m_sliderJointComponentRegistry;
+    RelatedComponentRegistry<DoorBehaviourComponent, PhysicsHingeJointComponent> *m_hingeJointComponentRegistry;
 };

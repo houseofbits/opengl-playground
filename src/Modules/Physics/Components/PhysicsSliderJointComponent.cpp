@@ -61,16 +61,16 @@ void PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBod
         settings.mLimitsMax = m_limits.y;
     }
 
+    m_Joint = dynamic_cast<JPH::SliderConstraint *>(settings.Create(*bodyA.m_physicsBody, *bodyB.m_physicsBody));
+
+    m_PhysicsResource().getSystem().AddConstraint(m_Joint);
+
     if (m_isMotorSettingsEnabled) {
         MotorSettings &motor_settings = m_Joint->GetMotorSettings();
         motor_settings.mSpringSettings.mFrequency = m_motorFrequency;
         motor_settings.mSpringSettings.mDamping = m_motorDamping;
         motor_settings.SetForceLimit(m_motorForceLimit);
     }
-
-    m_Joint = dynamic_cast<JPH::SliderConstraint *>(settings.Create(*bodyA.m_physicsBody, *bodyB.m_physicsBody));
-
-    m_PhysicsResource().getSystem().AddConstraint(m_Joint);
 }
 
 void PhysicsSliderJointComponent::release() {

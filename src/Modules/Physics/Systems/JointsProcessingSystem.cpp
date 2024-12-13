@@ -1,5 +1,5 @@
 #include "JointsProcessingSystem.h"
-#include "../../Common//Events//EntityLinkingEvent.h"
+#include "../../Common/Events/EntityLinkingEvent.h"
 
 JointsProcessingSystem::JointsProcessingSystem() : EntitySystem() {
     m_hingeJointComponentRegistry = useComponentRegistry<PhysicsHingeJointComponent>();
@@ -12,7 +12,6 @@ void JointsProcessingSystem::initialize(ResourceManager &resourceManager) {
 }
 
 void JointsProcessingSystem::registerEventHandlers(EventManager &eventManager) {
-    eventManager.registerEventReceiver(this, &JointsProcessingSystem::handleCharacterPickingEvent);
     eventManager.registerEventReceiver(this, &JointsProcessingSystem::handleEntityLinkingEvent);
 }
 
@@ -22,24 +21,17 @@ void JointsProcessingSystem::process(EventManager &eventManager) {
     }
 
     for (const auto &[id, joint]: m_hingeJointComponentRegistry->container()) {
-        processJoint(id, (BasePhysicsJoint*)joint);
+        processJoint(id, (BasePhysicsJoint *) joint);
     }
     for (const auto &[id, joint]: m_fixedJointComponentRegistry->container()) {
-        processJoint(id, (BasePhysicsJoint*)joint);
+        processJoint(id, (BasePhysicsJoint *) joint);
     }
     for (const auto &[id, joint]: m_sliderJointComponentRegistry->container()) {
-        processJoint(id, (BasePhysicsJoint*)joint);
+        processJoint(id, (BasePhysicsJoint *) joint);
     }
 }
 
-void JointsProcessingSystem::handleCharacterPickingEvent(const PhysicsPickingEvent &event) {
-    auto *hinge = m_hingeJointComponentRegistry->get(event.m_entityId);
-    if (hinge != nullptr && event.m_doActivate) {
-        hinge->activate();
-    }
-}
-
-void JointsProcessingSystem::processJoint(Identity::Type entityId, BasePhysicsJoint *joint) {
+void JointsProcessingSystem::processJoint(Identity::Type entityId, BasePhysicsJoint *joint) const {
     if (!joint->isCreated()) {
         auto *bodyA = m_EntityContext->getEntityComponent<PhysicsBodyComponent>(entityId);
         if (bodyA == nullptr) {
@@ -51,7 +43,6 @@ void JointsProcessingSystem::processJoint(Identity::Type entityId, BasePhysicsJo
             return;
         }
 
-        // joint->m_targetEntityId = bodyB->m_EntityId.id();
         joint->create(*bodyA, *bodyB);
     } else {
         joint->update();

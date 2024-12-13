@@ -7,6 +7,7 @@ class DoorBehaviourComponent : public Component {
 
     inline static const std::string INITIAL_STATE_KEY = "initialState";
     inline static const std::string FIXED_KEY = "fixed";
+    inline static const std::string VELOCITY_KEY = "velocity";
 
 public:
     enum DoorState {
@@ -25,7 +26,5 @@ public:
     bool m_isInitiallyOpen;
     DoorState m_state;
     bool m_isFixedOnFinalState;
-
-    //m_openActivationTarget;
-    //m_closeActivationTarget;
+    float m_velocity;
 };

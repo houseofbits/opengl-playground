@@ -1,11 +1,12 @@
 #include "PhysicsHingeJointComponent.h"
 
 #include "../../Editor/Systems/EditorUISystem.h"
-#include <utility>
 #include "../Helpers/PhysicsTypeCast.h"
 #include <Jolt/Physics/Constraints/HingeConstraint.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/GroupFilterTable.h>
+
+using namespace JPH;
 
 PhysicsHingeJointComponent::PhysicsHingeJointComponent() : Component(),
                                                            ComponentTransformEdit(),
@@ -19,7 +20,11 @@ PhysicsHingeJointComponent::PhysicsHingeJointComponent() : Component(),
                                                            m_axisB(0, 1, 0),
                                                            m_localAttachmentA(0, 0, 0),
                                                            m_localAttachmentB(0, 0, 0),
-                                                           m_moveState(UNKNOWN) {
+                                                           m_moveState(UNKNOWN),
+                                                           m_isMotorSettingsEnabled(false),
+                                                           m_motorForceLimit(0),
+                                                           m_motorDamping(0),
+                                                           m_motorFrequency(0) {
 }
 
 void PhysicsHingeJointComponent::serialize(nlohmann::json &j) {
@@ -32,6 +37,12 @@ void PhysicsHingeJointComponent::serialize(nlohmann::json &j) {
     j[ATTACHMENT_A_KEY] = m_localAttachmentA;
     j[ATTACHMENT_B_KEY] = m_localAttachmentB;
     j[LIMITS_KEY] = m_angularLimits;
+    if (m_isMotorSettingsEnabled) {
+        j[ENABLE_MOTOR_SETTINGS_KEY] = m_isMotorSettingsEnabled;
+        j[MOTOR_MAX_FORCE_KEY] = m_motorForceLimit;
+        j[MOTOR_DAMPING_KEY] = m_motorDamping;
+        j[MOTOR_FREQUENCY_KEY] = m_motorFrequency;
+    }
 }
 
 void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -44,6 +55,10 @@ void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceMa
     m_localAttachmentA = j.value(ATTACHMENT_A_KEY, m_localAttachmentA);
     m_localAttachmentB = j.value(ATTACHMENT_B_KEY, m_localAttachmentB);
     m_angularLimits = j.value(LIMITS_KEY, m_angularLimits);
+    m_isMotorSettingsEnabled = j.value(ENABLE_MOTOR_SETTINGS_KEY, m_isMotorSettingsEnabled);
+    m_motorForceLimit = j.value(MOTOR_MAX_FORCE_KEY, m_motorForceLimit);
+    m_motorDamping = j.value(MOTOR_DAMPING_KEY, m_motorDamping);
+    m_motorFrequency = j.value(MOTOR_FREQUENCY_KEY, m_motorFrequency);
 
     resourceManager.request(m_PhysicsResource, "physics");
 }
@@ -80,6 +95,13 @@ void PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBody
 
     m_PhysicsResource().getSystem().AddConstraint(m_Joint);
 
+    if (m_isMotorSettingsEnabled) {
+        MotorSettings &motor_settings = m_Joint->GetMotorSettings();
+        motor_settings.mSpringSettings.mFrequency = m_motorFrequency;
+        motor_settings.mSpringSettings.mDamping = m_motorDamping;
+        motor_settings.SetForceLimit(m_motorForceLimit);
+    }
+
     bodyA.wakeUp();
     bodyB.wakeUp();
 }
@@ -93,64 +115,70 @@ void PhysicsHingeJointComponent::release() {
 }
 
 void PhysicsHingeJointComponent::activate() {
-    if (m_moveState == CLOSED) {
-        open();
-    }
-    if (m_moveState == OPEN) {
-        close();
-    }
+    m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody1()->GetID());
+    m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody2()->GetID());
 }
 
 void PhysicsHingeJointComponent::update() {
-    float angle = m_Joint->GetCurrentAngle();
-
-    if (m_moveState != CLOSED && angle <= (m_angularLimits.x + 0.01)) {
-        m_moveState = CLOSED;
-        m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, 0, 0});
-        if (m_isLockingToLimitsEnabled) {
-            m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Static,
-                                                             JPH::EActivation::DontActivate);
-        }
-    }
-
-    if (m_moveState != OPEN && angle >= (m_angularLimits.y - 0.01)) {
-        m_moveState = OPEN;
-        m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, 0, 0});
-        if (m_isLockingToLimitsEnabled) {
-            m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Static,
-                                                             JPH::EActivation::DontActivate);
-        }
-    }
+    // float angle = m_Joint->GetCurrentAngle();
+    //
+    // if (m_moveState != CLOSED && angle <= (m_angularLimits.x + 0.01)) {
+    //     m_moveState = CLOSED;
+    //     m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, 0, 0});
+    //     if (m_isLockingToLimitsEnabled) {
+    //         m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Static,
+    //                                                          JPH::EActivation::DontActivate);
+    //     }
+    // }
+    //
+    // if (m_moveState != OPEN && angle >= (m_angularLimits.y - 0.01)) {
+    //     m_moveState = OPEN;
+    //     m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, 0, 0});
+    //     if (m_isLockingToLimitsEnabled) {
+    //         m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Static,
+    //                                                          JPH::EActivation::DontActivate);
+    //     }
+    // }
 }
 
 bool PhysicsHingeJointComponent::isCreated() const {
     return m_Joint != nullptr;
 }
 
-void PhysicsHingeJointComponent::open() {
-    m_moveState = OPENING;
-    if (m_isLockingToLimitsEnabled) {
-        m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Dynamic,
-                                                         JPH::EActivation::Activate);
-    }
+// void PhysicsHingeJointComponent::open() {
+//     m_moveState = OPENING;
+//     if (m_isLockingToLimitsEnabled) {
+//         m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Dynamic,
+//                                                          JPH::EActivation::Activate);
+//     }
+//
+//     m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, -10, 0});
+//
+//     m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody1()->GetID());
+//     m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody2()->GetID());
+// }
+//
+// void PhysicsHingeJointComponent::close() {
+//     m_moveState = CLOSING;
+//     if (m_isLockingToLimitsEnabled) {
+//         m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Dynamic,
+//                                                          JPH::EActivation::Activate);
+//     }
+//
+//     m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, 10, 0});
+//
+//     m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody1()->GetID());
+//     m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody2()->GetID());
+// }
 
-    m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, -10, 0});
-
-    m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody1()->GetID());
-    m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody2()->GetID());
+void PhysicsHingeJointComponent::setMotorVelocity(float velocity) const {
+    m_Joint->SetMotorState(JPH::EMotorState::Velocity);
+    m_Joint->SetTargetAngularVelocity(velocity);
 }
 
-void PhysicsHingeJointComponent::close() {
-    m_moveState = CLOSING;
-    if (m_isLockingToLimitsEnabled) {
-        m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(), JPH::EMotionType::Dynamic,
-                                                         JPH::EActivation::Activate);
-    }
-
-    m_PhysicsResource().getInterface().SetAngularVelocity(m_Joint->GetBody1()->GetID(), {0, 10, 0});
-
-    m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody1()->GetID());
-    m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody2()->GetID());
+void PhysicsHingeJointComponent::setMotorOff() const {
+    m_Joint->SetMotorState(JPH::EMotorState::Off);
+    m_Joint->SetTargetAngularVelocity(0);
 }
 
 glm::mat4 PhysicsHingeJointComponent::getEditorTransform() {
@@ -158,5 +186,23 @@ glm::mat4 PhysicsHingeJointComponent::getEditorTransform() {
 }
 
 void PhysicsHingeJointComponent::setFromEditorTransform(const glm::mat4 &) {
+}
 
+float PhysicsHingeJointComponent::getUnitPosition() const {
+    float pos = m_Joint->GetCurrentAngle();
+    const float range = m_angularLimits.y - m_angularLimits.x;
+
+    return (pos - m_angularLimits.x) / range;
+}
+
+void PhysicsHingeJointComponent::lockInPlace() {
+    m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(),
+                                                     EMotionType::Static,
+                                                     EActivation::DontActivate);
+}
+
+void PhysicsHingeJointComponent::unLock() {
+    m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(),
+                                                     EMotionType::Dynamic,
+                                                     EActivation::Activate);
 }

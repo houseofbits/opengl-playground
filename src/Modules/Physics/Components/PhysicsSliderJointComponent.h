@@ -34,17 +34,17 @@ public:
 
     void update() override;
 
-    float getUnitPosition() const;
+    float getUnitPosition() const override;
 
-    void activate();
+    void activate() override;
 
-    void setMotorVelocity(float velocity) const;
+    void setMotorVelocity(float velocity) const override;
 
-    void setMotorOff() const;
+    void setMotorOff() const override;
 
-    void lockInPlace();
+    void lockInPlace() override;
 
-    void unLock();
+    void unLock() override;
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     JPH::SliderConstraint *m_Joint;
