@@ -10,13 +10,10 @@ PhysicsFixedJointComponent::PhysicsFixedJointComponent() : Component(),
 
 void PhysicsFixedJointComponent::serialize(nlohmann::json &j) {
     serializeLinkedEntity(j);
-    j[ENTITY_KEY] = m_targetEntityName;
 }
 
 void PhysicsFixedJointComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
     deserializeLinkedEntity(j);
-    m_targetEntityName = j.value(ENTITY_KEY, m_targetEntityName);
-    setLinkedEntityName(m_targetEntityName);
 
     resourceManager.request(m_PhysicsResource, "physics");
 }

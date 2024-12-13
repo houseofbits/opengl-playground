@@ -18,7 +18,6 @@ PhysicsSliderJointComponent::PhysicsSliderJointComponent() : Component(),
 
 void PhysicsSliderJointComponent::serialize(nlohmann::json &j) {
     serializeLinkedEntity(j);
-    j[ENTITY_KEY] = m_targetEntityName;
 
     j[ARE_LIMITS_ENABLED_KEY] = m_isLimitsEnabled;
     j[LIMITS_KEY] = m_limits;
@@ -33,8 +32,6 @@ void PhysicsSliderJointComponent::serialize(nlohmann::json &j) {
 
 void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
     deserializeLinkedEntity(j);
-    m_targetEntityName = j.value(ENTITY_KEY, m_targetEntityName);
-    setLinkedEntityName(m_targetEntityName);
 
     m_isLimitsEnabled = j.value(ARE_LIMITS_ENABLED_KEY, m_isLimitsEnabled);
     m_limits = j.value(LIMITS_KEY, m_limits);

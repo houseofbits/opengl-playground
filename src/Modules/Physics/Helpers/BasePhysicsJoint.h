@@ -4,7 +4,8 @@
 
 class BasePhysicsJoint : public EntityLinkedComponent {
 public:
-    BasePhysicsJoint() : m_targetEntityName(), m_targetEntityId(0) {}
+    BasePhysicsJoint() {
+    }
 
     virtual ~BasePhysicsJoint() = default;
 
@@ -32,7 +33,4 @@ public:
 
         return true;
     }
-
-    std::string m_targetEntityName;
-    Identity::Type m_targetEntityId;
 };
