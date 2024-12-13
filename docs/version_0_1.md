@@ -18,7 +18,7 @@ Character should have a basic gun that shoots tennis balls. I should be able to 
 - [ ] Trigger shape component
 
 ### Behaviour
-- [ ] Door activation behaviour (door state)
+- [x] Door activation behaviour (door state)
 - [ ] Trigger shape behaviour
 - [ ] Character gun look-at and character rotation 
 - [ ] Basic scripting behaviour prototype
@@ -33,7 +33,6 @@ Character should have a basic gun that shoots tennis balls. I should be able to 
 ### General
 - [x] Relative transform for camera 
 - [x] Relative transforms (assign parent transform component)
-- [ ] Basic animation component (animates transform, position and rotation)
 
 ### Rendering
 - [ ] Overlay cross-hair

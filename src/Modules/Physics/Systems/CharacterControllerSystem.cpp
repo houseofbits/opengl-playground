@@ -34,14 +34,14 @@ void CharacterControllerSystem::handleEditorUIEvent(const EditorUIEvent &event) 
     }
 }
 
-void CharacterControllerSystem::resetToInitialTransform() {
+void CharacterControllerSystem::resetToInitialTransform() const {
     for (const auto [id, components]: m_registry->container()) {
         const auto &[transform, cct] = components.get();
         transform->m_transform = transform->m_initialTransform;
     }
 }
 
-void CharacterControllerSystem::updateCCTs() {
+void CharacterControllerSystem::updateCCTs() const {
     for (const auto [id, components]: m_registry->container()) {
         const auto &[transform, cct] = components.get();
 

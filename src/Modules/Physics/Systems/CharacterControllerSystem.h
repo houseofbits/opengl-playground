@@ -19,9 +19,9 @@ public:
     void handleEditorUIEvent(const EditorUIEvent &);
 
 private:
-    void updateCCTs();
+    void updateCCTs() const;
 
-    void resetToInitialTransform();
+    void resetToInitialTransform() const;
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     bool m_isSimulationDisabled;

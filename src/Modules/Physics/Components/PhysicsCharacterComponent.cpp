@@ -9,18 +9,18 @@
 PhysicsCharacterComponent::PhysicsCharacterComponent() : Component(),
                                                          m_height(1.75),
                                                          m_radius(0.25),
+                                                         m_PhysicsResource(),
+                                                         m_isOnGround(false),
+                                                         m_stepTolerance(0.2),
                                                          m_physicsBody(nullptr),
                                                          m_haveGroundDetected(false),
                                                          m_minDistanceToGround(1000),
-                                                         m_stepTolerance(0.2),
-                                                         m_isOnGround(false),
-                                                         m_PhysicsResource(),
+                                                         m_lookingDirection(0, 0, 1),
                                                          m_groundSpringForce(100000.f),
                                                          m_groundSpringDamping(2000.f),
                                                          m_freeFallForce(50000.f),
-                                                         m_lookingDirection(0, 0, 1),
-                                                         m_movementDirection(0),
-                                                         m_doMove(false) {
+                                                         m_doMove(false),
+                                                         m_movementDirection(0) {
 }
 
 void PhysicsCharacterComponent::serialize(nlohmann::json &j) {
@@ -36,23 +36,22 @@ void PhysicsCharacterComponent::deserialize(const nlohmann::json &j, ResourceMan
 }
 
 void PhysicsCharacterComponent::create(TransformComponent &transform) {
-
     float cylinderHalfHeight = (m_height - m_stepTolerance - (m_radius * 2.f)) * 0.5f;
     float cylinderOffsetY = m_height - (cylinderHalfHeight + m_radius);
 
     auto mStandingShape = JPH::RotatedTranslatedShapeSettings(
-            JPH::Vec3(0, cylinderOffsetY, 0),
-            JPH::Quat::sIdentity(),
-            new JPH::CapsuleShape(cylinderHalfHeight, m_radius))
+                JPH::Vec3(0, cylinderOffsetY, 0),
+                JPH::Quat::sIdentity(),
+                new JPH::CapsuleShape(cylinderHalfHeight, m_radius))
             .Create()
             .Get();
 
     auto characterSettings = JPH::BodyCreationSettings(
-            mStandingShape,
-            PhysicsTypeCast::glmToJPH(transform.getTranslation()),
-            PhysicsTypeCast::glmToJPH(transform.getRotation()),
-            JPH::EMotionType::Dynamic,
-            Layers::MOVING);
+        mStandingShape,
+        PhysicsTypeCast::glmToJPH(transform.getTranslation()),
+        PhysicsTypeCast::glmToJPH(transform.getRotation()),
+        JPH::EMotionType::Dynamic,
+        Layers::MOVING);
 
     characterSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
     characterSettings.mMassPropertiesOverride.mMass = 80;
@@ -61,8 +60,8 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
     //| JPH::EAllowedDOFs::RotationY;
     characterSettings.mLinearDamping = 10;
     characterSettings.mAngularDamping = 10;
-//    characterSettings.mNumPositionStepsOverride = 255;
-//    characterSettings.mNumVelocityStepsOverride = 255;
+    //    characterSettings.mNumPositionStepsOverride = 255;
+    //    characterSettings.mNumVelocityStepsOverride = 255;
 
     m_physicsBody = m_PhysicsResource().getInterface().CreateBody(characterSettings);
 
@@ -93,9 +92,9 @@ void PhysicsCharacterComponent::update(TransformComponent &transform, bool isSim
     } else {
         m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBody->GetID(),
                                                                   PhysicsTypeCast::glmToJPH(transform.getTranslation() +
-                                                                                            glm::vec3(0,
-                                                                                                      m_stepTolerance,
-                                                                                                      0)),
+                                                                      glm::vec3(0,
+                                                                          m_stepTolerance,
+                                                                          0)),
                                                                   PhysicsTypeCast::glmToJPH(transform.getRotation()),
                                                                   JPH::EActivation::DontActivate);
     }
@@ -190,8 +189,7 @@ bool PhysicsCharacterComponent::rayCast(glm::vec3 position, glm::vec3 direction,
     JPH::RRayCast ray{PhysicsTypeCast::glmToJPH(position), PhysicsTypeCast::glmToJPH(direction)};
     JPH::IgnoreSingleBodyFilter bodyFilter(m_physicsBody->GetID());
     if (m_PhysicsResource().getSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, {}, bodyFilter)) {
-        auto *userData = reinterpret_cast<PhysicsUserData *>(m_PhysicsResource().getInterface().GetUserData(
-                hit.mBodyID));
+        auto *userData = m_PhysicsResource().getBodyUserData(hit.mBodyID);
         result.m_entityId = userData->m_entityId;
         result.m_touchPoint = PhysicsTypeCast::JPHToGlm(ray.GetPointOnRay(hit.mFraction));
         result.m_distance = ray.mDirection.Length() * hit.mFraction;
@@ -206,7 +204,7 @@ glm::vec3 PhysicsCharacterComponent::getVelocity() const {
     return PhysicsTypeCast::JPHToGlm(m_physicsBody->GetLinearVelocity());
 }
 
-void PhysicsCharacterComponent::setLookingDirection(glm::vec3 &direction) {
+void PhysicsCharacterComponent::setLookingDirection(const glm::vec3 &direction) {
     m_lookingDirection = direction;
 }
 

@@ -30,6 +30,10 @@ public:
     void simulate();
     void drawDebug(ShaderProgramResource &shader);
 
+    PhysicsUserData * getBodyUserData(JPH::BodyID id) {
+        return reinterpret_cast<PhysicsUserData *>(getInterface().GetUserData(id));
+    }
+
     void addContactPoint(Identity::Type entityId, glm::vec3 point);
     void clearEntityContacts();
     JPH::PhysicsSystem& getSystem();

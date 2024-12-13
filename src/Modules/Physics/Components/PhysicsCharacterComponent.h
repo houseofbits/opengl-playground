@@ -29,7 +29,7 @@ public:
 
     [[nodiscard]] glm::vec3 getVelocity() const;
 
-    void setLookingDirection(glm::vec3 &direction);
+    void setLookingDirection(const glm::vec3 &direction);
 
     float m_height;
     float m_radius;
