@@ -40,9 +40,9 @@ public:
 
     [[nodiscard]] bool isCreated() const override;
 
-    glm::mat4 getEditorTransform() override;
+    glm::mat4 getWorldTransform() override;
 
-    void setFromEditorTransform(const glm::mat4 &) override;
+    void setWorldTransform(const glm::mat4 &) override;
 
     float getUnitPosition() const;
 

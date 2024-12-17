@@ -26,7 +26,7 @@ void LightStorageBuffer::appendLight(TransformComponent &transform, LightCompone
     SpotLightStructure structure;
     structure.color = light.m_Color;
     structure.intensity = light.m_Intensity;
-    structure.position = transform.getTranslation();
+    structure.position = transform.getWorldPosition();
     structure.direction = transform.getDirection();
     structure.attenuation = light.m_Attenuation;
     structure.projectorSamplerIndex = projectorIndex;
@@ -43,7 +43,7 @@ void LightStorageBuffer::appendLight(TransformComponent &transform, LightCompone
         append(structure);
     } else if (light.m_Type == LightComponent::OMNI) {
         for (auto side : CUBE_DIRECTIONS) {
-            structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(side, transform.getTranslation(), light.m_Attenuation);
+            structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(side, transform.getWorldPosition(), light.m_Attenuation);
             structure.isPointSource = 1;
 
             append(structure);

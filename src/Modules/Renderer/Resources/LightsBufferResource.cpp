@@ -35,7 +35,7 @@ void LightsBufferResource::appendLight(TransformComponent &transform, LightCompo
         LightStructure structure;
         structure.color = light.m_Color;
         structure.intensity = light.m_Intensity;
-        structure.position = transform.getTranslation();
+        structure.position = transform.getWorldPosition();
         structure.direction = transform.getDirection();
         structure.attenuation = light.m_Attenuation;
         structure.projectorSamplerHandle = 0;
@@ -53,7 +53,7 @@ void LightsBufferResource::appendLight(TransformComponent &transform, LightCompo
 
         switch (light.m_Type) {
             case LightComponent::OMNI:
-                structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(CUBE_DIRECTIONS[i], transform.getTranslation(), light.m_Attenuation);
+                structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(CUBE_DIRECTIONS[i], transform.getWorldPosition(), light.m_Attenuation);
                 break;
             case LightComponent::SPOT:
                 structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(transform, light);

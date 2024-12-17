@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../../Common/Components/CameraComponent.h"
 #include "../../Editor/Events/EditorUIEvent.h"
 #include "../Components/PhysicsCharacterComponent.h"
 #include "../Resources/PhysicsResource.h"

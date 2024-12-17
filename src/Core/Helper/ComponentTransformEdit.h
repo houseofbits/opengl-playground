@@ -9,7 +9,7 @@ public:
 
     virtual ~ComponentTransformEdit() = default;
 
-    virtual glm::mat4 getEditorTransform() = 0;
+    virtual glm::mat4 getWorldTransform() = 0;
 
-    virtual void setFromEditorTransform(const glm::mat4 &) = 0;
+    virtual void setWorldTransform(const glm::mat4 &) = 0;
 };

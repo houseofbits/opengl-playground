@@ -42,18 +42,18 @@ private:
     void setSelectedComponentTransform(EntityContext &ctx);
 
     template<class T>
-    void setTransformToEditorComponent(EntityContext &ctx) {
-        auto edit = (ComponentTransformEdit *) ctx.getEntityComponent<T>(m_selectedEntityId);
+    void setTransformToEditorComponent(EntityContext &ctx) const {
+        auto edit = static_cast<ComponentTransformEdit *>(ctx.getEntityComponent<T>(m_selectedEntityId));
         if (edit != nullptr) {
-            edit->setFromEditorTransform(m_transform);
+            edit->setWorldTransform(m_transform);
         }
     }
 
     template<class T>
     void getTransformFromEditorComponent(EntityContext &ctx) {
-        auto edit = (ComponentTransformEdit *) ctx.getEntityComponent<T>(m_selectedEntityId);
+        auto edit = static_cast<ComponentTransformEdit *>(ctx.getEntityComponent<T>(m_selectedEntityId));
         if (edit != nullptr) {
-            m_transform = edit->getEditorTransform();
+            m_transform = edit->getWorldTransform();
         }
     }
 

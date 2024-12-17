@@ -29,6 +29,9 @@ public:
         if (transform->m_isScalingEnabled) {
             ImGui::InputFloat3("Scaling", matrixScale);
         }
+
+        ImGui::Checkbox("Is relative rotation disabled##TRANSFORM_REL_ROTATION", &transform->m_isRelativeRotationDisabled);
+
         ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale,
                                                 &transform->m_transform[0][0]);
 

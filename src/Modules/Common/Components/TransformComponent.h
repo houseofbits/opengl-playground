@@ -11,9 +11,7 @@
 #include <glm/vec3.hpp>
 
 class TransformComponent : public Component, public ComponentTransformEdit, public EntityLinkedComponent {
-TYPE_DEFINITION(TransformComponent);
-
-public:
+    TYPE_DEFINITION(TransformComponent);
     inline static const std::string TRANSLATION_KEY = "translation";
     inline static const std::string ROTATION_KEY = "rotation";
     inline static const std::string SCALE_KEY = "scale";
@@ -21,7 +19,9 @@ public:
     inline static const std::string ALLOW_ROTATION_KEY = "allowRotation";
     inline static const std::string ALLOW_SCALING_KEY = "allowScaling";
     inline static const std::string PARENT_ENTITY_KEY = "parent";
+    inline static const std::string REL_ROTATION_KEY = "disableRelRotation";
 
+public:
     TransformComponent();
 
     void serialize(nlohmann::json &j) override;
@@ -40,7 +40,9 @@ public:
 
     [[nodiscard]] glm::mat4 getInverseModelMatrix() const;
 
-    glm::vec3 getTranslation();
+    glm::vec3 getWorldPosition();
+
+    glm::vec3 getLocalPosition();
 
     glm::vec3 getScale();
 
@@ -56,11 +58,30 @@ public:
 
     glm::quat getInitialRotation();
 
-    glm::mat4 getEditorTransform() override;
+    glm::mat4 getWorldTransform() override;
 
-    void setFromEditorTransform(const glm::mat4 &) override;
+    void setWorldTransform(const glm::mat4 &) override;
+
+    void setWorldRotation(const glm::mat4 &);
+    void setLocalRotation(const glm::mat4 &);
 
     void updateTransformFromParent(const glm::mat4 &);
+
+    void updateTransformWorld();
+
+    void setLinkedEntityId(const Identity::Type entityId) override {
+        EntityLinkedComponent::setLinkedEntityId(entityId);
+        m_isTransformInSync = false;
+    }
+
+    void setLinkedEntityName(std::string name) override {
+        EntityLinkedComponent::setLinkedEntityName(name);
+        m_isTransformInSync = false;
+    }
+
+    bool isInSync() const {
+        return m_isTransformInSync;
+    }
 
     bool m_isTranslationEnabled;
     bool m_isRotationEnabled;
@@ -68,4 +89,9 @@ public:
     glm::mat4 m_transform;
     glm::mat4 m_initialTransform;
     bool m_shouldSyncWorldTransformToLocal;
+    bool m_isRelativeRotationDisabled;
+
+private:
+    //Are the local and world transforms in sync - TransformHierarchyProcessingSystem has recalculated either one
+    bool m_isTransformInSync;
 };

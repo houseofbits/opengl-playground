@@ -21,6 +21,4 @@ public:
 
         ImGui::InputFloat("Velocity", &body->m_velocity);
     }
-
-    std::string m_meshPath;
 };

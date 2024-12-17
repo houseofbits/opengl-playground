@@ -7,11 +7,9 @@ MainCharacterBehaviourSystem::MainCharacterBehaviourSystem() : EntitySystem() {
 }
 
 void MainCharacterBehaviourSystem::initialize(ResourceManager &) {
-
 }
 
 void MainCharacterBehaviourSystem::process(EventManager &) {
-
 }
 
 void MainCharacterBehaviourSystem::registerEventHandlers(EventManager &eventManager) {
@@ -19,11 +17,10 @@ void MainCharacterBehaviourSystem::registerEventHandlers(EventManager &eventMana
 }
 
 void MainCharacterBehaviourSystem::handleInputEvent(const InputEvent &event) {
-
     for (const auto &[id, components]: m_registry->container()) {
         const auto &[camera, character, behaviour] = components.get();
 
-        if (behaviour->m_isActive) {
+        if (camera->m_isActive && behaviour->m_isActive) {
             handleMouseLook(event, character, camera);
             handleMovement(event, character, camera);
             handleAction(event, character, camera);
@@ -74,9 +71,9 @@ void MainCharacterBehaviourSystem::handleMovement(const InputEvent &event,
             movementDirection = movementDirection + rightDirection;
         }
         //Space-bar
-//    if (event->type == InputEvent::KEYPRESS && event->keyCode == 44) {
-//        doMove = true;
-//    }
+        //    if (event->type == InputEvent::KEYPRESS && event->keyCode == 44) {
+        //        doMove = true;
+        //    }
 
         if (doMove) {
             characterComponent->move(glm::normalize(movementDirection));
@@ -89,16 +86,14 @@ void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
                                                 CameraComponent *cameraComponent) {
     if ((event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) ||
         (event.type == InputEvent::MOUSEUP && event.mouseButtonRight)) {
-
         PhysicsRayCastResult hit;
         if (characterComponent->rayCast(cameraComponent->m_Camera.position,
                                         cameraComponent->m_Camera.getViewDirection() * 10.f, hit)) {
-
             event.m_EventManager->queueEvent<PhysicsPickingEvent>(
-                    hit.m_entityId,
-                    hit.m_distance,
-                    hit.m_touchPoint,
-                    event.mouseButtonRight
+                hit.m_entityId,
+                hit.m_distance,
+                hit.m_touchPoint,
+                event.mouseButtonRight
             );
         }
     }

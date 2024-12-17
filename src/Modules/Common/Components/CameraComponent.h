@@ -6,19 +6,16 @@
 #include "BaseCameraComponent.h"
 
 class CameraComponent : public Component, public ComponentTransformEdit, public BaseCameraComponent {
-TYPE_DEFINITION(CameraComponent);
+    friend class CameraComponentEdit;
+
+    TYPE_DEFINITION(CameraComponent);
+    inline static const std::string POSITION_KEY = "position";
+    inline static const std::string VIEW_KEY = "viewDirection";
+    inline static const std::string UP_KEY = "upDirection";
+    inline static const std::string REL_ROTATION_KEY = "disableRelRotation";
+    inline static const std::string ACTIVE_KEY = "isActive";
 
 public:
-    enum Type {
-        TYPE_FP,
-        TYPE_FREE,
-    };
-
-    inline static std::map<Type, std::string> m_TypeNameMap = {
-            {Type::TYPE_FP,   "FP"},
-            {Type::TYPE_FREE, "FREE"},
-    };
-
     CameraComponent();
 
     void serialize(nlohmann::json &j) override;
@@ -29,21 +26,21 @@ public:
 
     void moveView(glm::vec3 direction);
 
-    glm::mat4 getEditorTransform() override;
+    glm::mat4 getWorldTransform() override;
 
-    void setFromEditorTransform(const glm::mat4 &) override;
+    void setWorldTransform(const glm::mat4 &) override;
 
     void updateTransformFromParent(const glm::mat4 &parent);
 
     void updateTransformWorld();
 
-    Type m_type;
+    glm::vec3 getWorldPosition() {
+        return m_currentTransformWorld[3];
+    }
 
 private:
-
-    static Type getTypeFromName(const std::string &name);
-
     glm::mat4 m_initialTransformLocal;
     glm::mat4 m_currentTransformWorld;
     bool m_shouldSyncWorldTransformToLocal;
+    bool m_isRelativeRotationDisabled;;
 };

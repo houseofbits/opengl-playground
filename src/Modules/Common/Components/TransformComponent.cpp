@@ -12,6 +12,8 @@ TransformComponent::TransformComponent() : Component(),
                                            // m_parentEntityId(0),
                                            // m_parentEntityName(),
                                            // m_shouldUpdateParentEntityId(false),
+                                           m_isRelativeRotationDisabled(false),
+                                           m_isTransformInSync(false),
                                            m_shouldSyncWorldTransformToLocal(false) {
 }
 
@@ -22,9 +24,9 @@ void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat 
         scale[i] = glm::length(glm::vec3(m_transform[i]));
 
     const glm::mat3 rotMtx(
-            glm::vec3(m_transform[0]) / scale[0],
-            glm::vec3(m_transform[1]) / scale[1],
-            glm::vec3(m_transform[2]) / scale[2]);
+        glm::vec3(m_transform[0]) / scale[0],
+        glm::vec3(m_transform[1]) / scale[1],
+        glm::vec3(m_transform[2]) / scale[2]);
 
     rotation = glm::quat_cast(rotMtx);
 }
@@ -40,9 +42,9 @@ void TransformComponent::serialize(nlohmann::json &j) {
     }
 
     const glm::mat3 rotMtx(
-            glm::vec3(m_initialTransform[0]) / scale[0],
-            glm::vec3(m_initialTransform[1]) / scale[1],
-            glm::vec3(m_initialTransform[2]) / scale[2]);
+        glm::vec3(m_initialTransform[0]) / scale[0],
+        glm::vec3(m_initialTransform[1]) / scale[1],
+        glm::vec3(m_initialTransform[2]) / scale[2]);
 
     glm::quat rotation = glm::quat_cast(rotMtx);
 
@@ -55,9 +57,7 @@ void TransformComponent::serialize(nlohmann::json &j) {
     if (m_isScalingEnabled) {
         j[SCALE_KEY] = scale;
     }
-    // if (m_parentEntityId > 0) {
-    //     j[PARENT_ENTITY_KEY] = m_parentEntityName;
-    // }
+    j[REL_ROTATION_KEY] = m_isRelativeRotationDisabled;
 }
 
 void TransformComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -70,6 +70,7 @@ void TransformComponent::deserialize(const nlohmann::json &j, ResourceManager &r
     m_isTranslationEnabled = j.value(ALLOW_TRANSLATION_KEY, m_isTranslationEnabled);
     m_isRotationEnabled = j.value(ALLOW_ROTATION_KEY, m_isRotationEnabled);
     m_isScalingEnabled = j.value(ALLOW_SCALING_KEY, m_isScalingEnabled);
+    m_isRelativeRotationDisabled = j.value(REL_ROTATION_KEY, m_isRelativeRotationDisabled);
 
     if (m_isTranslationEnabled) {
         setTranslation(t);
@@ -121,8 +122,12 @@ glm::mat4 TransformComponent::getInverseModelMatrix() const {
     return glm::inverse(m_transform);
 }
 
-glm::vec3 TransformComponent::getTranslation() {
+glm::vec3 TransformComponent::getWorldPosition() {
     return m_transform[3];
+}
+
+glm::vec3 TransformComponent::getLocalPosition() {
+    return m_initialTransform[3];
 }
 
 glm::vec3 TransformComponent::getScale() {
@@ -141,9 +146,9 @@ glm::quat TransformComponent::getRotation() {
     }
 
     const glm::mat3 rotMtx(
-            glm::vec3(m_transform[0]) / scale[0],
-            glm::vec3(m_transform[1]) / scale[1],
-            glm::vec3(m_transform[2]) / scale[2]);
+        glm::vec3(m_transform[0]) / scale[0],
+        glm::vec3(m_transform[1]) / scale[1],
+        glm::vec3(m_transform[2]) / scale[2]);
 
     return glm::quat_cast(rotMtx);
 }
@@ -170,21 +175,21 @@ glm::vec3 TransformComponent::getInitialScale() {
 glm::quat TransformComponent::getInitialRotation() {
     glm::vec3 scale = getInitialScale();
     const glm::mat3 rotMtx(
-            glm::vec3(m_initialTransform[0]) / scale[0],
-            glm::vec3(m_initialTransform[1]) / scale[1],
-            glm::vec3(m_initialTransform[2]) / scale[2]);
+        glm::vec3(m_initialTransform[0]) / scale[0],
+        glm::vec3(m_initialTransform[1]) / scale[1],
+        glm::vec3(m_initialTransform[2]) / scale[2]);
 
     return glm::quat_cast(rotMtx);
 }
 
-glm::mat4 TransformComponent::getEditorTransform() {
+glm::mat4 TransformComponent::getWorldTransform() {
     return m_transform;
 }
 
-void TransformComponent::setFromEditorTransform(const glm::mat4 &m) {
+void TransformComponent::setWorldTransform(const glm::mat4 &m) {
     m_transform = m;
 
-    if (isLinkedToEntityId() > 0) {
+    if (isLinkableToEntity() > 0) {
         m_shouldSyncWorldTransformToLocal = true;
     } else {
         m_initialTransform = m;
@@ -198,4 +203,50 @@ void TransformComponent::updateTransformFromParent(const glm::mat4 &parentWorldS
     } else {
         m_transform = parentWorldSpaceTransform * m_initialTransform;
     }
+
+    m_isTransformInSync = true;
+}
+
+void TransformComponent::updateTransformWorld() {
+    m_isTransformInSync = true;
+}
+
+void TransformComponent::setWorldRotation(const glm::mat4 &rotationMatrix) {
+    if (!m_isTransformInSync) {
+        return;
+    }
+
+    const auto translation = glm::vec3(m_transform[3]);
+
+    glm::vec3 scale;
+    scale.x = glm::length(glm::vec3(m_transform[0]));
+    scale.y = glm::length(glm::vec3(m_transform[1]));
+    scale.z = glm::length(glm::vec3(m_transform[2]));
+
+    auto rotation = glm::mat3(rotationMatrix);
+
+    auto result = glm::mat4(1.0f);
+    result[0] = glm::vec4(glm::normalize(rotation[0]) * scale.x, 0.0f);
+    result[1] = glm::vec4(glm::normalize(rotation[1]) * scale.y, 0.0f);
+    result[2] = glm::vec4(glm::normalize(rotation[2]) * scale.z, 0.0f);
+    result[3] = glm::vec4(translation, 1.0f);
+
+    setWorldTransform(result);
+}
+
+void TransformComponent::setLocalRotation(const glm::mat4 &rotationMatrix) {
+    const auto translation = glm::vec3(m_initialTransform[3]);
+
+    glm::vec3 scale;
+    scale.x = glm::length(glm::vec3(m_initialTransform[0]));
+    scale.y = glm::length(glm::vec3(m_initialTransform[1]));
+    scale.z = glm::length(glm::vec3(m_initialTransform[2]));
+
+    auto rotation = glm::mat3(rotationMatrix);
+
+    m_initialTransform = glm::mat4(1.0f);
+    m_initialTransform[0] = glm::vec4(glm::normalize(rotation[0]) * scale.x, 0.0f);
+    m_initialTransform[1] = glm::vec4(glm::normalize(rotation[1]) * scale.y, 0.0f);
+    m_initialTransform[2] = glm::vec4(glm::normalize(rotation[2]) * scale.z, 0.0f);
+    m_initialTransform[3] = glm::vec4(translation, 1.0f);
 }

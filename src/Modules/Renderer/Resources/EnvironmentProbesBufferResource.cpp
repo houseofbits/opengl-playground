@@ -26,7 +26,7 @@ void EnvironmentProbesBufferResource::bind(ShaderProgramResource &shader) {
 
 void EnvironmentProbesBufferResource::appendProbe(TransformComponent &transform, EnvironmentProbeComponent &probe) {
     EnvironmentProbeStructure structure;
-    structure.position = transform.getTranslation();
+    structure.position = transform.getWorldPosition();
     glm::vec3 size = transform.getScale();
     structure.boundingBoxMin = glm::vec4(-(size * glm::vec3(0.5)) + structure.position, 1.0);
     structure.boundingBoxMax = glm::vec4(size * glm::vec3(0.5) + structure.position, 1.0);

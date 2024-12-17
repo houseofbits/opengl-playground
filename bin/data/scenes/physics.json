@@ -3,19 +3,19 @@
         "EditorCameraComponent": {
             "isActive": false,
             "position": [
-                1.867039442062378,
-                2.610323667526245,
-                -17.120412826538086
+                1.373107671737671,
+                3.882359743118286,
+                -9.459466934204102
             ],
             "upDirection": [
-                -0.16581028699874878,
-                0.8368515372276306,
-                0.5217148661613464
+                -0.0002548181510064751,
+                0.9999006986618042,
+                0.014095395803451538
             ],
             "viewDirection": [
-                -0.25347277522087097,
-                -0.5474298596382141,
-                0.7975413203239441
+                0.018073363229632378,
+                0.014097698032855988,
+                -0.9997372627258301
             ]
         },
         "name": "camera-free"
@@ -39,6 +39,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -74,6 +75,7 @@
         },
         "name": "light-omni-primary",
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -107,6 +109,7 @@
         },
         "name": "light-omni-secondary",
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -128,14 +131,14 @@
     {
         "light": {
             "attenuation": 16.900007247924805,
-            "beamAngle": 118.0,
+            "beamAngle": 90.5,
             "castShadows": true,
             "color": [
                 0.9273356199264526,
                 1.0,
                 0.6470588445663452
             ],
-            "intensity": 0.6999999284744263,
+            "intensity": 1.7000001668930054,
             "isEnabled": true,
             "projectionTexture": "resources/textures/spot-proj-3.png",
             "shadowBias": 4.999999873689376e-05,
@@ -144,21 +147,22 @@
         },
         "name": "light-spot-1",
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
-                0.9192657470703125,
-                -0.053051479160785675,
-                -0.07386458665132523,
-                -0.382988303899765
+                0.9961946606636047,
+                0.0,
+                0.0,
+                -0.08715647459030151
             ],
             "scale": [
-                1.0000003576278687,
-                1.0000004768371582,
-                1.0000001192092896
+                1.0000001192092896,
+                1.000001072883606,
+                0.9999997615814209
             ],
             "translation": [
-                -4.756770610809326,
-                6.068532943725586,
-                -13.13306713104248
+                0.06053328514099121,
+                1.864804744720459,
+                0.3072347640991211
             ]
         }
     },
@@ -181,6 +185,7 @@
             "type": 1
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -218,6 +223,7 @@
             "type": 1
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -255,6 +261,7 @@
             "type": 1
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -292,6 +299,7 @@
             "type": 1
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -329,6 +337,7 @@
             "type": 1
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -366,6 +375,7 @@
             "type": 1
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -403,6 +413,7 @@
             "type": 1
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -452,6 +463,7 @@
             ]
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -489,6 +501,7 @@
             "type": 1
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -529,6 +542,7 @@
             "linkedEntity": "rigid-body-9"
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -550,22 +564,22 @@
     {
         "MainCharacterBehaviourComponent": null,
         "camera": {
+            "disableRelRotation": true,
             "isActive": true,
             "position": [
                 0.0,
                 1.6170787811279297,
                 0.0
             ],
-            "type": "FP",
             "upDirection": [
-                -0.018178101629018784,
-                0.9780253171920776,
-                0.2076924741268158
+                0.013009139336645603,
+                0.9698333740234375,
+                0.24342164397239685
             ],
             "viewDirection": [
-                -0.08527480810880661,
-                -0.20848645269870758,
-                0.9743005633354187
+                0.05175676941871643,
+                -0.24376900494098663,
+                0.9684513211250305
             ]
         },
         "cct": {
@@ -579,6 +593,7 @@
         },
         "name": "character-main",
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -616,6 +631,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -653,6 +669,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -690,6 +707,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -761,6 +779,7 @@
             "linkedEntity": "door-1-frame"
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0006599745829589665,
                 9.355163638247177e-05,
@@ -769,7 +788,7 @@
             ],
             "scale": [
                 0.9999999403953552,
-                0.99994295835495,
+                0.9999426603317261,
                 0.9999982714653015
             ],
             "translation": [
@@ -798,16 +817,17 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.9999999403953552,
                 0.0,
-                0.0002736254537012428
+                0.00027362562832422554
             ],
             "scale": [
-                6.422619819641113,
+                6.422617435455322,
                 2.1647439002990723,
-                14.235430717468262
+                14.235422134399414
             ],
             "translation": [
                 2.9336347579956055,
@@ -835,16 +855,17 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.9999999403953552,
                 0.0,
-                0.0002736254537012428
+                0.0002736255992203951
             ],
             "scale": [
-                6.422619342803955,
+                6.422616958618164,
                 2.1647439002990723,
-                14.235430717468262
+                14.235422134399414
             ],
             "translation": [
                 -0.23978161811828613,
@@ -872,6 +893,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.7044540643692017,
@@ -909,6 +931,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -946,6 +969,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 -5.85507174428318e-13,
                 0.7071071267127991,
@@ -953,9 +977,9 @@
                 0.7071064114570618
             ],
             "scale": [
-                6.420300483703613,
+                6.420298099517822,
                 4.405955791473389,
-                0.9999966025352478
+                0.9999963045120239
             ],
             "translation": [
                 -8.915526390075684,
@@ -983,6 +1007,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.7044540643692017,
@@ -1020,6 +1045,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 -0.004501163959503174,
@@ -1057,6 +1083,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -1094,6 +1121,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.7156206965446472,
@@ -1101,9 +1129,9 @@
                 -0.6984891295433044
             ],
             "scale": [
-                6.422689437866211,
+                6.422693729400635,
                 2.1647439002990723,
-                14.235640525817871
+                14.235645294189453
             ],
             "translation": [
                 2.7740838527679443,
@@ -1131,6 +1159,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -1168,6 +1197,7 @@
             "type": 1
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -1203,6 +1233,7 @@
         },
         "name": "light-omni-2",
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -1240,6 +1271,7 @@
             "type": 1
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 -0.1455843299627304,
                 -0.03483333811163902,
@@ -1277,6 +1309,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "linkedEntity": "relative-static-mesh-parent",
             "rotation": [
                 8.636044412924093e-07,
@@ -1297,6 +1330,7 @@
         }
     },
     {
+        "GunBehaviourComponent": null,
         "mesh": {
             "material": "data/materials/light-column.json",
             "model": "resources/BoxTextured.gltf",
@@ -1315,22 +1349,23 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "linkedEntity": "character-main",
             "rotation": [
-                8.636050665700168e-07,
-                -7.471049912055605e-08,
-                2.1945345451968024e-07,
+                0.0,
+                0.0,
+                0.0,
                 1.0
             ],
             "scale": [
-                0.12227066606283188,
-                0.11339554935693741,
-                0.7676607370376587
+                0.13827663660049438,
+                0.13168707489967346,
+                1.6713995933532715
             ],
             "translation": [
-                -0.20612239837646484,
-                1.0920058488845825,
-                0.3887939453125
+                -0.3416402339935303,
+                1.0320048332214355,
+                0.2810201644897461
             ]
         }
     },
@@ -1342,6 +1377,7 @@
         },
         "name": "door-1-knob",
         "transform": {
+            "disableRelRotation": false,
             "linkedEntity": "door-1",
             "rotation": [
                 0.0,
@@ -1380,6 +1416,7 @@
             "type": 0
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -1435,6 +1472,7 @@
             "linkedEntity": "door-2-frame"
         },
         "transform": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0006599745829589665,
                 9.355163638247177e-05,
@@ -1443,13 +1481,51 @@
             ],
             "scale": [
                 0.9999999403953552,
-                0.9999428987503052,
+                0.9999426007270813,
                 0.9999982714653015
             ],
             "translation": [
                 1.3904942274093628,
                 -0.027859114110469818,
                 -11.285264015197754
+            ]
+        }
+    },
+    {
+        "light": {
+            "attenuation": 16.900007247924805,
+            "beamAngle": 118.0,
+            "castShadows": true,
+            "color": [
+                0.9273356199264526,
+                1.0,
+                0.6470588445663452
+            ],
+            "intensity": 0.6999999284744263,
+            "isEnabled": true,
+            "projectionTexture": "resources/textures/spot-proj-3.png",
+            "shadowBias": 4.999999873689376e-05,
+            "shadowResolution": 2048,
+            "type": "SPOT"
+        },
+        "name": "light-spot-1-COPY",
+        "transform": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.9192657470703125,
+                -0.053051479160785675,
+                -0.07386458665132523,
+                -0.382988303899765
+            ],
+            "scale": [
+                1.0000003576278687,
+                1.0000004768371582,
+                1.0000001192092896
+            ],
+            "translation": [
+                -4.756770610809326,
+                6.068532943725586,
+                -13.13306713104248
             ]
         }
     }

@@ -181,11 +181,11 @@ void PhysicsHingeJointComponent::setMotorOff() const {
     m_Joint->SetTargetAngularVelocity(0);
 }
 
-glm::mat4 PhysicsHingeJointComponent::getEditorTransform() {
+glm::mat4 PhysicsHingeJointComponent::getWorldTransform() {
     return glm::mat4(1.0);
 }
 
-void PhysicsHingeJointComponent::setFromEditorTransform(const glm::mat4 &) {
+void PhysicsHingeJointComponent::setWorldTransform(const glm::mat4 &) {
 }
 
 float PhysicsHingeJointComponent::getUnitPosition() const {

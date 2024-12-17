@@ -40,13 +40,13 @@ public:
         return m_hasUnknownLinkedEntityId && !m_linkedEntityName.empty();
     }
 
-    void setLinkedEntityId(const Identity::Type entityId) {
+    virtual void setLinkedEntityId(const Identity::Type entityId) {
         m_linkedEntityId = entityId;
         m_hasUnknownLinkedEntityId = false;
         m_isEntityLinked = true;
     }
 
-    void setLinkedEntityName(std::string name) {
+    virtual void setLinkedEntityName(std::string name) {
         m_linkedEntityName = std::move(name);
         m_hasUnknownLinkedEntityId = true;
         m_isEntityLinked = false;

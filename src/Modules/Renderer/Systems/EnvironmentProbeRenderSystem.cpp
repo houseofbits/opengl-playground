@@ -64,7 +64,7 @@ void EnvironmentProbeRenderSystem::process(EventManager &eventManager) {
     for (const auto &[id, components]: m_probeComponentRegistry->container()) {
         const auto &[transform, probe] = components.get();
 
-        m_Camera.setPosition(transform->getTranslation());
+        m_Camera.setPosition(transform->getWorldPosition());
         probe->m_cubeMapLayerIndex = layer;
         //
         //        std::cout << layer << " " << probeTransform->getTranslation().x

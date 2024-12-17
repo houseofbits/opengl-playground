@@ -89,7 +89,7 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
 
     auto settings = JPH::BodyCreationSettings(
             shapeSettings,
-            PhysicsTypeCast::glmToJPH(transform.getTranslation()),
+            PhysicsTypeCast::glmToJPH(transform.getWorldPosition()),
             PhysicsTypeCast::glmToJPH(transform.getRotation()),
             motionType,
             layer);
@@ -148,7 +148,7 @@ void PhysicsBodyComponent::update(TransformComponent &transform, bool isSimulati
         PhysicsTypeCast::applyJPHMat44ToTransformComponent(transform, t);
     } else {
         m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBody->GetID(),
-                                                                  PhysicsTypeCast::glmToJPH(transform.getTranslation()),
+                                                                  PhysicsTypeCast::glmToJPH(transform.getWorldPosition()),
                                                                   PhysicsTypeCast::glmToJPH(transform.getRotation()),
                                                                   JPH::EActivation::DontActivate);
     }
