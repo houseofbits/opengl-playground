@@ -41,6 +41,9 @@ void EntityLinkingSystem::handleEntityLinkingEvent(const EntityLinkingEvent &eve
             }
         }
         if (event.m_linkType == EntityLinkingEvent::TYPE_LINK_WITH_ID) {
+            if (const auto entity = m_EntityContext->getEntity(event.m_linkedEntityId)) {
+                component->setLinkedEntityName(entity->m_Name);
+            }
             component->setLinkedEntityId(event.m_linkedEntityId);
         }
         if (event.m_linkType == EntityLinkingEvent::TYPE_LINK_WITH_NAME) {

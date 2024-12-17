@@ -21,19 +21,25 @@ public:
         ImGuizmo::DecomposeMatrixToComponents(&transform->m_transform[0][0], matrixTranslation, matrixRotation,
                                               matrixScale);
         if (transform->m_isTranslationEnabled) {
-            ImGui::InputFloat3("Translation", matrixTranslation);
+            if (ImGui::InputFloat3("Translation", matrixTranslation)) {
+                updateTransform(transform, matrixTranslation, matrixRotation, matrixScale);
+            }
         }
         if (transform->m_isRotationEnabled) {
-            ImGui::InputFloat3("Rotation", matrixRotation);
+            if (ImGui::InputFloat3("Rotation", matrixRotation)) {
+                updateTransform(transform, matrixTranslation, matrixRotation, matrixScale);
+            }
         }
         if (transform->m_isScalingEnabled) {
-            ImGui::InputFloat3("Scaling", matrixScale);
+            if (ImGui::InputFloat3("Scaling", matrixScale)) {
+                updateTransform(transform, matrixTranslation, matrixRotation, matrixScale);
+            }
         }
 
         ImGui::Checkbox("Is relative rotation disabled##TRANSFORM_REL_ROTATION", &transform->m_isRelativeRotationDisabled);
 
-        ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale,
-                                                &transform->m_transform[0][0]);
+        // ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale,
+        //                                         &transform->m_transform[0][0]);
 
         EntityLinkedComponentEdit::process<TransformComponent>(
             *system.m_EventManager,
@@ -41,5 +47,12 @@ public:
             transform,
             "Parent entity##TRANSFORM_PARENT_ENTITY_NAME"
         );
+    }
+
+    static void updateTransform(TransformComponent* comp, float t[3], float r[3], float s[3]) {
+        glm::mat4 matrix = glm::mat4(1.0f);
+        ImGuizmo::RecomposeMatrixFromComponents(t, r, s, &matrix[0][0]);
+
+        comp->setWorldTransform(matrix);
     }
 };

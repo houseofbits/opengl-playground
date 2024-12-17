@@ -8,6 +8,8 @@ class EntityLinkedComponent {
     inline static const std::string KEY = "linkedEntity";
 
 public:
+    virtual ~EntityLinkedComponent() = default;
+
     EntityLinkedComponent() : m_isEntityLinked(false),
                               m_hasUnknownLinkedEntityId(false),
                               m_linkedEntityId(0),

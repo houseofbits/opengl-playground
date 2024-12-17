@@ -1,6 +1,6 @@
 #include "GunBehaviourComponent.h"
 
-GunBehaviourComponent::GunBehaviourComponent() : Component(),m_isActive(true) {
+GunBehaviourComponent::GunBehaviourComponent() : Component(), m_isActive(true) {
 }
 
 void GunBehaviourComponent::serialize(nlohmann::json &j) {

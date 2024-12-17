@@ -14,7 +14,7 @@ public:
         TYPE_UNLINK,
     };
 
-    EntityLinkingEvent(const Identity::Type componentId, Identity::Type linkedId) : BaseEvent(),
+    EntityLinkingEvent(const Identity::Type componentId, const Identity::Type linkedId) : BaseEvent(),
         m_componentId(componentId),
         m_linkedEntityId(linkedId) {
         m_linkType = TYPE_LINK_WITH_ID;
