@@ -38,9 +38,6 @@ public:
 
         ImGui::Checkbox("Is relative rotation disabled##TRANSFORM_REL_ROTATION", &transform->m_isRelativeRotationDisabled);
 
-        // ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale,
-        //                                         &transform->m_transform[0][0]);
-
         EntityLinkedComponentEdit::process<TransformComponent>(
             *system.m_EventManager,
             *system.m_EntityContext,
