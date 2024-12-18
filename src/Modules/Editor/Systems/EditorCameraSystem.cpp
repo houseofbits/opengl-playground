@@ -6,11 +6,9 @@ EditorCameraSystem::EditorCameraSystem() : EntitySystem(), m_viewportSize(0, 0) 
 }
 
 void EditorCameraSystem::process(EventManager &) {
-
 }
 
 void EditorCameraSystem::initialize(ResourceManager &) {
-
 }
 
 void EditorCameraSystem::registerEventHandlers(EventManager &eventManager) {
@@ -29,12 +27,24 @@ void EditorCameraSystem::handleInputEvent(const InputEvent &event) {
             continue;
         }
 
+        if (event.type == InputEvent::MOUSEWHEEL && cameraComponent->isOrthographic()) {
+            float scale = cameraComponent->m_orthographicScale += event.mouseWheel.y * 0.1;
+            if (scale < 0.2) {
+                scale = 0.2;
+            }
+            cameraComponent->setOrthographicScale(scale);
+        }
+
         if (event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) {
             float lookSpeed = 0.15;
             cameraComponent->rotateView(-event.mouseMotion * lookSpeed * Time::frameTime);
         }
 
         float moveSpeed = 3;
+        if (cameraComponent->isOrthographic()) {
+            moveSpeed = cameraComponent->m_orthographicScale * 0.1;
+        }
+
         glm::vec3 direction(0.0);
         bool doMove = false;
 

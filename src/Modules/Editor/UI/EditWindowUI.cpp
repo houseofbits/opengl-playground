@@ -11,7 +11,7 @@
 #include "../../Physics/Components/PhysicsSliderJointComponent.h"
 #include <utility>
 
-EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntityId(0),
+EditWindowUI::EditWindowUI(EditorUISystem *editor) : //m_selectedEntityId(0),
                                                      m_EditorUISystem(editor),
                                                      m_lightProjectorPath(),
                                                      m_isBoundsTransformAllowed(false),
@@ -39,7 +39,7 @@ void EditWindowUI::process() {
     }
     ImGui::PopStyleVar();
 
-    Entity *e = m_EditorUISystem->m_EntityContext->getEntity(m_selectedEntityId);
+    Entity *e = m_EditorUISystem->m_EntityContext->getEntity(m_EditorUISystem->m_selectedEntityId);
     if (e != nullptr && ImGui::Begin("Edit entity")) {
         if (ImGui::InputText("Name", &e->m_Name)) {
             updateEntityNameReferences(e->m_Id.id(), e->m_Name);
@@ -72,8 +72,8 @@ void EditWindowUI::processEntitiesList() {
             bool isEditable =
                     m_entitiesFilterString.empty() || StringUtils::contains(entity->m_Name, m_entitiesFilterString);
 
-            if (isEditable && ImGui::Selectable(name.c_str(), m_selectedEntityId == entity->m_Id.id())) {
-                m_selectedEntityId = (int) entity->m_Id.id();
+            if (isEditable && ImGui::Selectable(name.c_str(), m_EditorUISystem->m_selectedEntityId == entity->m_Id.id())) {
+                m_EditorUISystem->m_selectedEntityId = (int) entity->m_Id.id();
                 m_isEntityCreationWindowOpen = false;
             }
         }
@@ -83,11 +83,11 @@ void EditWindowUI::processEntitiesList() {
 }
 
 bool EditWindowUI::isTransformComponentSelected() {
-    if (m_selectedEntityId == 0) {
+    if (m_EditorUISystem->m_selectedEntityId == 0) {
         return false;
     }
 
-    if (!m_EditorUISystem->m_EntityContext->getEntityComponent<TransformComponent>(m_selectedEntityId)) {
+    if (!m_EditorUISystem->m_EntityContext->getEntityComponent<TransformComponent>(m_EditorUISystem->m_selectedEntityId)) {
         return false;
     }
 
@@ -101,7 +101,7 @@ void EditWindowUI::sendEntityCreationEvent(std::string configName, std::string e
 
 void EditWindowUI::sendEntityRemovalEvent() {
     m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE,
-                                                                      m_selectedEntityId);
+                                                                      m_EditorUISystem->m_selectedEntityId);
 }
 
 void EditWindowUI::sendEntityCloneEvent(Identity::Type entityId) {
@@ -110,12 +110,12 @@ void EditWindowUI::sendEntityCloneEvent(Identity::Type entityId) {
 
 void EditWindowUI::sendComponentCreationEvent(std::string name) {
     m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::CREATE_COMPONENT,
-                                                                      m_selectedEntityId, std::move(name));
+                                                                      m_EditorUISystem->m_selectedEntityId, std::move(name));
 }
 
 void EditWindowUI::sendComponentRemovalEvent(std::string name) {
     m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE_COMPONENT,
-                                                                      m_selectedEntityId, std::move(name));
+                                                                     m_EditorUISystem-> m_selectedEntityId, std::move(name));
 }
 
 void EditWindowUI::updateEntityNameReferences(Identity::Type entityId, const std::string &newName) {
@@ -206,22 +206,22 @@ void EditWindowUI::processEntityCreationWindow() {
 }
 
 void EditWindowUI::processEntityCreation() {
-    if (m_selectedEntityId > 0) {
+    if (m_EditorUISystem->m_selectedEntityId > 0) {
         if (ImGui::Button("Clone")) {
-            sendEntityCloneEvent(m_selectedEntityId);
+            sendEntityCloneEvent(m_EditorUISystem->m_selectedEntityId);
         }
 
         ImGui::SameLine();
         if (ImGui::Button("Delete")) {
             sendEntityRemovalEvent();
-            m_selectedEntityId = 0;
+            m_EditorUISystem->m_selectedEntityId = 0;
         }
 
         ImGui::SameLine();
     }
 
     if (ImGui::Button("Create")) {
-        m_selectedEntityId = 0;
+        m_EditorUISystem->m_selectedEntityId = 0;
         m_isEntityCreationWindowOpen = true;
     }
 }

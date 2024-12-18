@@ -11,6 +11,7 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_MainToolbarUI(this),
                                    m_EditWindowUI(this),
                                    m_MaterialEditWindowUI(this),
+                                   m_selectedEntityId(0),
                                    m_componentEditors(),
                                    m_activeCameraHelper() {
     m_editorCameraComponentRegistry = useComponentRegistry<EditorCameraComponent>();
@@ -36,7 +37,7 @@ void EditorUISystem::process(EventManager &eventManager) {
     if (!m_MainToolbarUI.m_isSimulationEnabled) {
         Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
         if (camera != nullptr) {
-            m_transformGizmo.processGizmo(*m_EntityContext, m_EditWindowUI.m_selectedEntityId, *camera);
+            m_transformGizmo.processGizmo(*m_EntityContext, m_selectedEntityId, *camera);
         }
     }
 
@@ -54,15 +55,15 @@ void EditorUISystem::initialize(ResourceManager &manager) {
     (void) io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-//    ImGui_ImplSDL2_Init();
-//    ImGui_ImplOpenGL3_Init();
-//
+    //    ImGui_ImplSDL2_Init();
+    //    ImGui_ImplOpenGL3_Init();
+    //
 
-//    ImGui::StyleColorsLight();
+    //    ImGui::StyleColorsLight();
 
-//    ImGuiStyle& style = ImGui::GetStyle();
-//    style.WindowPadding.x = 0;
-//    style.WindowPadding.y = 0;
+    //    ImGuiStyle& style = ImGui::GetStyle();
+    //    style.WindowPadding.x = 0;
+    //    style.WindowPadding.y = 0;
 }
 
 void EditorUISystem::registerEventHandlers(EventManager &eventManager) {
@@ -87,7 +88,7 @@ void EditorUISystem::handleRawSDLEvent(const RawSDLEvent &event) {
 
 TransformComponent *EditorUISystem::getSelectedTransformComponent() {
     if (m_EditWindowUI.isTransformComponentSelected()) {
-        return m_EntityContext->getEntityComponent<TransformComponent>(m_EditWindowUI.m_selectedEntityId);
+        return m_EntityContext->getEntityComponent<TransformComponent>(m_selectedEntityId);
     }
     return nullptr;
 }
@@ -107,7 +108,7 @@ void EditorUISystem::processDockSpaceWindow() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                   ImGuiWindowFlags_NoMove;
+            ImGuiWindowFlags_NoMove;
     windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
     ImGui::Begin("Dockspace Window", nullptr, windowFlags);
     ImGui::PopStyleVar(2);

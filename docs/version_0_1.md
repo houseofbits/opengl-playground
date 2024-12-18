@@ -20,7 +20,7 @@ Character should have a basic gun that shoots tennis balls. I should be able to 
 ### Behaviour
 - [x] Door activation behaviour (door state)
 - [ ] Trigger shape behaviour
-- [ ] Character gun look-at and character rotation 
+- [x] Character gun look-at and character rotation 
 - [ ] Basic scripting behaviour prototype
 
 ### Editor

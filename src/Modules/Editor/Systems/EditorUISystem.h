@@ -48,6 +48,7 @@ public:
     ActiveCameraHelper m_activeCameraHelper;
     SingleComponentRegistry<EditorCameraComponent>* m_editorCameraComponentRegistry;
     SingleComponentRegistry<CameraComponent>* m_cameraComponentRegistry;
+    Identity::Type m_selectedEntityId;
 
 private:
     void processDockSpaceWindow();

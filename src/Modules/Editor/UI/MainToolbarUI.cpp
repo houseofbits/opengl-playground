@@ -6,7 +6,6 @@
 #include "../Components/EditorCameraComponent.h"
 #include "../../Common/Events/CameraActivationEvent.h"
 
-
 MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
                                                        m_isEditWindowVisible(true),
                                                        m_isSimulationEnabled(true),
@@ -14,7 +13,6 @@ MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
 }
 
 void MainToolbarUI::process() {
-
     if (ImGui::BeginMainMenuBar()) {
         ImGui::PushID(0);
         if (!m_isSimulationEnabled) {
@@ -46,8 +44,9 @@ void MainToolbarUI::process() {
             }
             if (ImGui::MenuItem("Simulation enabled", nullptr, m_isSimulationEnabled)) {
                 m_isSimulationEnabled = !m_isSimulationEnabled;
-                sendUIEvent(m_isSimulationEnabled ? EditorUIEvent::TOGGLE_SIMULATION_ENABLED
-                                                  : EditorUIEvent::TOGGLE_SIMULATION_DISABLED);
+                sendUIEvent(m_isSimulationEnabled
+                                ? EditorUIEvent::TOGGLE_SIMULATION_ENABLED
+                                : EditorUIEvent::TOGGLE_SIMULATION_DISABLED);
             }
             if (ImGui::MenuItem("Reset rigid bodies")) {
                 m_isSimulationEnabled = false;
@@ -78,7 +77,7 @@ void MainToolbarUI::sendSaveEvent() {
 
 void MainToolbarUI::sendEditorStateEvent() {
     m_EditorUISystem->m_EventManager->queueEvent<EditorUIEvent>(
-            m_isEditWindowVisible ? EditorUIEvent::EDITOR_ENABLED : EditorUIEvent::EDITOR_DISABLED);
+        m_isEditWindowVisible ? EditorUIEvent::EDITOR_ENABLED : EditorUIEvent::EDITOR_DISABLED);
 }
 
 void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) {
@@ -119,6 +118,27 @@ void MainToolbarUI::processViewMenu() {
             }
         }
 
+        ImGui::SeparatorText("Views");
+
+        for (const auto &[id, camera]: m_EditorUISystem->m_editorCameraComponentRegistry->container()) {
+            if (camera->m_isActive && camera->isOrthographic()) {
+                for (const auto &[type, name]: EditorCameraComponent::OrthographicViewNames) {
+                    if (ImGui::MenuItem(name.c_str())) {
+                        camera->setOrthographicViewType(type);
+
+                        if (m_EditorUISystem->m_selectedEntityId > 0) {
+                            if (auto selectedTransformComponent = m_EditorUISystem->m_EntityContext->getEntityComponent<
+                                TransformComponent>(m_EditorUISystem->m_selectedEntityId)) {
+                                camera->setOrthographicViewTypeFocused(type, *selectedTransformComponent);
+                            }
+                        }
+                    }
+                }
+
+                break;
+            }
+        }
+
         ImGui::EndMenu();
     }
 }
@@ -136,6 +156,4 @@ void MainToolbarUI::stopSimulation() {
     sendUIEvent(EditorUIEvent::RESET_TO_INITIAL_TRANSFORM);
     m_isEditWindowVisible = true;
     sendEditorStateEvent();
-
 }
-

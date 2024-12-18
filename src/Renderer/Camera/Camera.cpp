@@ -6,7 +6,7 @@
 
 Camera::Camera() : direction(0, 0, -1), up(0, 1, 0), right(-1, 0, 0),
                    position(0), projectionMatrix(0.0), viewMatrix(0.0), projectionViewMatrix(0.0),
-                   fieldOfView(90.0f), aspectRatio(1.0), zFar(1000) {
+                   fieldOfView(90.0f), aspectRatio(1.0), zFar(1000), isOrthographic(false), orthographicScale(1.0) {
 }
 
 glm::mat4 &Camera::getProjectionViewMatrix() {
@@ -21,8 +21,7 @@ glm::vec3 &Camera::getUpDirection() {
     return up;
 }
 
-Camera &Camera::setViewportSize(unsigned int viewportWidth, unsigned int viewportHeight)
-{
+Camera &Camera::setViewportSize(unsigned int viewportWidth, unsigned int viewportHeight) {
     aspectRatio = (float) viewportWidth / (float) viewportHeight;
 
     calculateProjection();
@@ -30,8 +29,7 @@ Camera &Camera::setViewportSize(unsigned int viewportWidth, unsigned int viewpor
     return *this;
 }
 
-Camera &Camera::setFieldOfView(float degrees)
-{
+Camera &Camera::setFieldOfView(float degrees) {
     fieldOfView = degrees;
 
     calculateProjection();
@@ -53,20 +51,19 @@ Camera &Camera::setZFar(float zfar) {
     return *this;
 }
 
-
 Camera &Camera::setFromAngles(float horizontal, float vertical) {
     float verticalAngle = glm::radians(vertical);
     float horizontalAngle = glm::radians(horizontal);
 
     direction = glm::vec3(
-            std::cos(verticalAngle) * std::sin(horizontalAngle),
-            std::sin(verticalAngle),
-            std::cos(verticalAngle) * std::cos(horizontalAngle));
+        std::cos(verticalAngle) * std::sin(horizontalAngle),
+        std::sin(verticalAngle),
+        std::cos(verticalAngle) * std::cos(horizontalAngle));
 
     right = glm::vec3(
-            std::sin(horizontalAngle - 3.14f / 2.0f),
-            0,
-            std::cos(horizontalAngle - 3.14f / 2.0f));
+        std::sin(horizontalAngle - 3.14f / 2.0f),
+        0,
+        std::cos(horizontalAngle - 3.14f / 2.0f));
 
     right = glm::normalize(right);
 
@@ -79,7 +76,6 @@ Camera &Camera::setFromAngles(float horizontal, float vertical) {
 }
 
 Camera &Camera::setView(glm::vec3 viewDirection, glm::vec3 upDirection) {
-
     direction = glm::normalize(viewDirection);
     right = glm::normalize(glm::cross(direction, upDirection));
     up = glm::normalize(glm::cross(right, direction));
@@ -104,9 +100,21 @@ void Camera::calculateView() {
     projectionViewMatrix = projectionMatrix * viewMatrix;
 }
 
-void Camera::calculateProjection()
-{
-    projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, 0.1f, zFar);
+void Camera::calculateProjection() {
+    if (isOrthographic) {
+        const float halfWidth = (orthographicScale * aspectRatio) / 2.0;
+        const float halfHeight = orthographicScale / 2.0;
+
+        projectionMatrix = glm::ortho(
+            -halfWidth,
+            halfWidth,
+            -halfHeight,
+            halfHeight,
+            0.1f, zFar);
+    } else {
+        projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, 0.1f, zFar);
+    }
+
     projectionViewMatrix = projectionMatrix * viewMatrix;
 }
 
@@ -118,7 +126,7 @@ Camera &Camera::setViewMatrix(glm::mat4 m) {
     return *this;
 }
 
-Camera &Camera::setFromTransformMatrix(const glm::mat4& m) {
+Camera &Camera::setFromTransformMatrix(const glm::mat4 &m) {
     setPosition(m[3]);
     setView(glm::vec3(m[2]), glm::vec3(m[1]));
 
@@ -135,3 +143,17 @@ glm::mat4 Camera::getTransformMatrix() const {
     return m;
 }
 
+Camera &Camera::setOrthographic(const float &scale) {
+    isOrthographic = true;
+    orthographicScale = scale;
+    calculateProjection();
+
+    return *this;
+}
+
+Camera &Camera::setPerspective() {
+    isOrthographic = false;
+    calculateProjection();
+
+    return *this;
+}

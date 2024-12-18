@@ -13,7 +13,7 @@ public:
         return "Editor camera";
     }
 
-    void process(Entity &entity, EditorUISystem& system) override {
+    void process(Entity &entity, EditorUISystem &system) override {
         auto *camera = entity.getComponent<EditorCameraComponent>();
         if (camera == nullptr) {
             return;
@@ -21,6 +21,15 @@ public:
 
         if (ImGui::Checkbox("Active##CAMERA_ACTIVE", &camera->m_isActive)) {
             system.m_EventManager->triggerEvent<CameraActivationEvent>(entity.m_Id.id());
+        }
+
+        static bool isOrthographic = camera->m_type == EditorCameraComponent::TYPE_ORTHOGRAPHIC;
+        if (ImGui::Checkbox("Orthographic##CAMERA_ORTHOGRAPHIC", &isOrthographic)) {
+            camera->setOrthographic(isOrthographic);
+        }
+
+        if (ImGui::DragFloat("Orthographic scale##CAMERA_ORTHOGRAPHIC_SCALE", &camera->m_orthographicScale, 0.5f)) {
+            camera->setOrthographicScale(camera->m_orthographicScale);
         }
     }
 };

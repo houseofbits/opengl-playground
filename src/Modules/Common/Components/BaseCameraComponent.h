@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "../../../Renderer/Camera/Camera.h"
 
 class BaseCameraComponent {

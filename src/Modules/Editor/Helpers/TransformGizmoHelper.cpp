@@ -40,7 +40,7 @@ void TransformGizmoHelper::processGizmo(EntityContext &ctx, Identity::Type &sele
 //
 
     ImGuizmo::BeginFrame();
-    ImGuizmo::SetOrthographic(false);
+    ImGuizmo::SetOrthographic(camera.isOrthographic);
     ImGuizmo::SetDrawlist(ImGui::GetBackgroundDrawList());
     ImGuiViewport *viewport = ImGui::GetMainViewport();
     ImGuizmo::SetRect(viewport->Pos.x, viewport->Pos.y, viewport->Size.x, viewport->Size.y);
