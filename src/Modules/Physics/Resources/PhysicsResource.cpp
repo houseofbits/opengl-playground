@@ -1,21 +1,17 @@
 #include "PhysicsResource.h"
 #include "../Helpers/PhysicsTypeCast.h"
-#include "Jolt/Physics/Collision/CastResult.h"
-#include "Jolt/Physics/Collision/RayCast.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Core/TempAllocator.h>
 #include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Physics/PhysicsSettings.h>
-#include <Jolt/Physics/Collision/Shape/SphereShape.h>
 
 JPH_SUPPRESS_WARNINGS
 using namespace JPH;
 using namespace JPH::literals;
 
 static void TraceImpl(const char *inFMT, ...) {
-    // Format the message
     va_list list;
     va_start(list, inFMT);
     char buffer[1024];
@@ -33,13 +29,12 @@ static bool AssertFailedImpl(const char *inExpression, const char *inMessage, co
 
 PhysicsResource::PhysicsResource() : Resource(),
                                      m_PhysicsSystem(),
-                                     m_objectPairFilter(),
                                      m_broadPhaseFilter(),
                                      m_broadPhaseLayerMapper(),
                                      m_contactListener(),
                                      m_jobPool(nullptr),
-                                     m_debugRenderer(nullptr),
-                                     m_tempAllocator(nullptr) {
+                                     m_tempAllocator(nullptr),
+                                     m_debugRenderer(nullptr) {
 }
 
 Resource::Status PhysicsResource::fetchData(ResourceManager &) {
@@ -53,13 +48,14 @@ Resource::Status PhysicsResource::build() {
     JPH::Factory::sInstance = new JPH::Factory();
     RegisterTypes();
 
-    m_jobPool = new JobSystemThreadPool(cMaxPhysicsJobs, cMaxPhysicsBarriers, (int) thread::hardware_concurrency() - 1);
+    m_jobPool = new JobSystemThreadPool(cMaxPhysicsJobs, cMaxPhysicsBarriers,
+                                        static_cast<int>(thread::hardware_concurrency()) - 1);
     m_tempAllocator = new TempAllocatorImpl(10 * 1024 * 1024);
 
-    const uint cMaxBodies = 1024;
-    const uint cNumBodyMutexes = 0;
-    const uint cMaxBodyPairs = 1024;
-    const uint cMaxContactConstraints = 1024;
+    constexpr uint cMaxBodies = 1024;
+    constexpr uint cNumBodyMutexes = 0;
+    constexpr uint cMaxBodyPairs = 1024;
+    constexpr uint cMaxContactConstraints = 1024;
 
     m_PhysicsSystem.Init(cMaxBodies,
                          cNumBodyMutexes,
@@ -71,6 +67,7 @@ Resource::Status PhysicsResource::build() {
 
     m_PhysicsSystem.SetGravity({0, -9.8, 0});
     m_PhysicsSystem.SetContactListener(&m_contactListener);
+    m_contactListener.setPhysicsResource(*this);
 
     m_debugRenderer = PhysicsDebugRenderer::getInstance();
 
@@ -111,7 +108,7 @@ JPH::PhysicsSystem &PhysicsResource::getSystem() {
 
 void PhysicsResource::drawDebug(ShaderProgramResource &shader) {
     m_debugRenderer->NextFrame();
-    
+
     JPH::BodyManager::DrawSettings drawSettings;
 
     m_debugRenderer->m_shader = &shader;

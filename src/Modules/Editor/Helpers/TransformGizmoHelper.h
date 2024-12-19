@@ -62,6 +62,6 @@ private:
     TransformOptionType m_selectedTransformOption;
     long m_selectedGizmoOperation;
     long m_selectedGizmoMode;
-
+    bool m_isBoundsTransformAllowed;
     glm::mat4 m_transform;
 };

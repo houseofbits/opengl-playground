@@ -5,7 +5,6 @@
 #include "Jolt/Physics/Collision/PhysicsMaterialSimple.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
-#include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 
 PhysicsBodyComponent::PhysicsBodyComponent() : Component(),

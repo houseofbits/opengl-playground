@@ -2,6 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../../Physics/Events/PhysicsPickingEvent.h"
+#include "../../Physics/Events/PhysicsTriggerShapeEvent.h"
 #include "../Components/DoorBehaviourComponent.h"
 #include "../../Physics/Components/PhysicsSliderJointComponent.h"
 #include "../../Physics/Components/PhysicsHingeJointComponent.h"
@@ -18,10 +19,12 @@ public:
 
     void handleCharacterPickingEvent(const PhysicsPickingEvent &);
 
-private:
-    static void handleJointPickingEvent(BasePhysicsJoint *, DoorBehaviourComponent *);
+    void handlePhysicsTriggerShapeEvent(const PhysicsTriggerShapeEvent &);
 
+private:
     static void processJointBehaviour(BasePhysicsJoint *, DoorBehaviourComponent *);
+
+    static void handleActivation(BasePhysicsJoint *, DoorBehaviourComponent *);
 
     RelatedComponentRegistry<DoorBehaviourComponent, PhysicsSliderJointComponent> *m_sliderJointComponentRegistry;
     RelatedComponentRegistry<DoorBehaviourComponent, PhysicsHingeJointComponent> *m_hingeJointComponentRegistry;

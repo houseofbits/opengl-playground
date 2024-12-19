@@ -1,4 +1,5 @@
 #include "PhysicsSystem.h"
+#include "../Events//PhysicsTriggerShapeEvent.h"
 
 PhysicsSystem::PhysicsSystem() : EntitySystem(),
                                  m_isSimulationDisabled(false),
@@ -14,6 +15,11 @@ void PhysicsSystem::process(EventManager &eventManager) {
         return;
     }
 
+    for (const auto &[sensorEntityId, colliderEntityId]: m_PhysicsResource().m_sensorContacts) {
+        eventManager.queueEvent<PhysicsTriggerShapeEvent>(sensorEntityId, colliderEntityId);
+    }
+
+    m_PhysicsResource().m_sensorContacts.clear();
     m_PhysicsResource().clearEntityContacts();
     if (!m_isSimulationDisabled) {
         m_PhysicsResource().simulate();
@@ -24,7 +30,7 @@ void PhysicsSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &PhysicsSystem::handleEditorUIEvent);
 }
 
-void PhysicsSystem::handleEditorUIEvent(const EditorUIEvent & event) {
+void PhysicsSystem::handleEditorUIEvent(const EditorUIEvent &event) {
     if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
         m_isSimulationDisabled = false;
     } else if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {

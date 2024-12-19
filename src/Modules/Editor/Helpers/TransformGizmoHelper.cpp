@@ -7,15 +7,17 @@
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
+#include "../../Physics/Components/PhysicsTriggerShapeComponent.h"
+#include "../../Renderer/Components/EnvironmentProbeComponent.h"
 
-const std::map<long, std::string>TransformGizmoHelper::GizmoOperationNames = {
-        {ImGuizmo::TRANSLATE, "Translate"},
-        {ImGuizmo::ROTATE,    "Rotate"},
-        {ImGuizmo::SCALE,     "Scale"},
+const std::map<long, std::string> TransformGizmoHelper::GizmoOperationNames = {
+    {ImGuizmo::TRANSLATE, "Translate"},
+    {ImGuizmo::ROTATE, "Rotate"},
+    {ImGuizmo::SCALE, "Scale"},
 };
-const std::map<long, std::string>TransformGizmoHelper::GizmoModeNames = {
-        {ImGuizmo::WORLD, "WORLD"},
-        {ImGuizmo::LOCAL, "LOCAL"}
+const std::map<long, std::string> TransformGizmoHelper::GizmoModeNames = {
+    {ImGuizmo::WORLD, "WORLD"},
+    {ImGuizmo::LOCAL, "LOCAL"}
 };
 
 TransformGizmoHelper::TransformGizmoHelper() : m_selectedEntityId(0),
@@ -23,8 +25,8 @@ TransformGizmoHelper::TransformGizmoHelper() : m_selectedEntityId(0),
                                                m_transformOptions(),
                                                m_selectedGizmoOperation(ImGuizmo::TRANSLATE),
                                                m_selectedGizmoMode(ImGuizmo::WORLD),
+                                               m_isBoundsTransformAllowed(false),
                                                m_transform(1.0) {
-
 }
 
 void TransformGizmoHelper::processGizmo(EntityContext &ctx, Identity::Type &selectedEntityId, Camera &camera) {
@@ -36,8 +38,8 @@ void TransformGizmoHelper::processGizmo(EntityContext &ctx, Identity::Type &sele
         handleEntitySelection(ctx, selectedEntityId);
     }
 
-//    static float bounds[] = {-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f};
-//
+    static float bounds[] = {-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f};
+    //
 
     ImGuizmo::BeginFrame();
     ImGuizmo::SetOrthographic(camera.isOrthographic);
@@ -52,7 +54,7 @@ void TransformGizmoHelper::processGizmo(EntityContext &ctx, Identity::Type &sele
                              glm::value_ptr(m_transform),
                              nullptr,
                              nullptr,
-                             nullptr //m_EditWindowUI.m_isBoundsTransformAllowed ? bounds : nullptr
+                             m_isBoundsTransformAllowed ? bounds : nullptr
     )) {
         setSelectedComponentTransform(ctx);
     } else {
@@ -61,7 +63,6 @@ void TransformGizmoHelper::processGizmo(EntityContext &ctx, Identity::Type &sele
 }
 
 void TransformGizmoHelper::handleEntitySelection(EntityContext &ctx, Identity::Type id) {
-
     auto entity = ctx.getEntity(id);
     if (entity != nullptr) {
         m_selectedEntityId = id;
@@ -71,6 +72,11 @@ void TransformGizmoHelper::handleEntitySelection(EntityContext &ctx, Identity::T
             return;
         }
         handleOptionSelection(ctx, m_transformOptions.begin()->first);
+
+        if (entity->hasComponent<PhysicsTriggerShapeComponent>()
+            || entity->hasComponent<EnvironmentProbeComponent>()) {
+            m_isBoundsTransformAllowed = true;
+        }
     }
 }
 
@@ -155,12 +161,12 @@ void TransformGizmoHelper::processToolbar(EntityContext &ctx) {
                 m_selectedGizmoOperation = ImGuizmo::SCALE;
             }
         }
-//        //        if (transform->m_isScalingEnabled) {
-//        //            if (ImGui::Selectable("Universal", m_currentGizmoOperation == ImGuizmo::SCALEU)) {
-//        //                m_currentGizmoOperation = ImGuizmo::SCALEU;
-//        //                selected_transform_type_label = "Universal";
-//        //            }
-//        //        }
+        //        //        if (transform->m_isScalingEnabled) {
+        //        //            if (ImGui::Selectable("Universal", m_currentGizmoOperation == ImGuizmo::SCALEU)) {
+        //        //                m_currentGizmoOperation = ImGuizmo::SCALEU;
+        //        //                selected_transform_type_label = "Universal";
+        //        //            }
+        //        //        }
         ImGui::EndCombo();
     }
 
@@ -179,7 +185,6 @@ void TransformGizmoHelper::processToolbar(EntityContext &ctx) {
 
         ImGui::EndCombo();
     }
-
 }
 
 void

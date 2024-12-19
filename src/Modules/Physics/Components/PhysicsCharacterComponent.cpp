@@ -1,6 +1,7 @@
 #include "PhysicsCharacterComponent.h"
 #include "../../Editor/Systems/EditorUISystem.h"
 #include "../Helpers/PhysicsTypeCast.h"
+#include "../Helpers/SensorLayerFilter.h"
 #include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
 #include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
 #include "Jolt/Physics/Collision/RayCast.h"
@@ -212,7 +213,9 @@ bool PhysicsCharacterComponent::rayCast(glm::vec3 position, glm::vec3 direction,
     JPH::RayCastResult hit;
     JPH::RRayCast ray{PhysicsTypeCast::glmToJPH(position), PhysicsTypeCast::glmToJPH(direction)};
     JPH::IgnoreSingleBodyFilter bodyFilter(m_physicsBody->GetID());
-    if (m_PhysicsResource().getSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, {}, bodyFilter)) {
+    SensorLayerFilter filter{};
+
+    if (m_PhysicsResource().getSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, filter, bodyFilter)) {
         auto *userData = m_PhysicsResource().getBodyUserData(hit.mBodyID);
         result.m_entityId = userData->m_entityId;
         result.m_touchPoint = PhysicsTypeCast::JPHToGlm(ray.GetPointOnRay(hit.mFraction));

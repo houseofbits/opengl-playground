@@ -162,6 +162,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Common/Systems/EntityLinkingSystem.cpp
         src/Modules/Common/Systems/EntityLinkingSystem.h
         src/Modules/Common/Editors/EntityLinkedComponentEdit.h
+        src/Modules/Physics/Helpers/ContactListenerImpl.cpp
+        src/Modules/Physics/Helpers/SensorLayerFilter.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

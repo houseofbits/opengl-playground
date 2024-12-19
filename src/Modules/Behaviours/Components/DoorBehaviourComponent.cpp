@@ -8,12 +8,14 @@ DoorBehaviourComponent::DoorBehaviourComponent() : Component(),
 }
 
 void DoorBehaviourComponent::serialize(nlohmann::json &j) {
+    serializeLinkedEntity(j);
     j[INITIAL_STATE_KEY] = m_isInitiallyOpen;
     j[FIXED_KEY] = m_isFixedOnFinalState;
     j[VELOCITY_KEY] = m_velocity;
 }
 
 void DoorBehaviourComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
+    deserializeLinkedEntity(j);
     m_isInitiallyOpen = j.value(INITIAL_STATE_KEY, m_isInitiallyOpen);
     m_isFixedOnFinalState = j.value(FIXED_KEY, m_isFixedOnFinalState);
     m_velocity = j.value(VELOCITY_KEY, m_velocity);

@@ -24,29 +24,39 @@ class PhysicsResource : public Resource {
 public:
     PhysicsResource();
 
-    Resource::Status fetchData(ResourceManager&) override;
+    Resource::Status fetchData(ResourceManager &) override;
+
     Resource::Status build() override;
+
     void destroy() override;
+
     void simulate();
+
     void drawDebug(ShaderProgramResource &shader);
 
-    PhysicsUserData * getBodyUserData(JPH::BodyID id) {
+    PhysicsUserData *getBodyUserData(JPH::BodyID id) {
         return reinterpret_cast<PhysicsUserData *>(getInterface().GetUserData(id));
     }
 
     void addContactPoint(Identity::Type entityId, glm::vec3 point);
-    void clearEntityContacts();
-    JPH::PhysicsSystem& getSystem();
-    JPH::BodyInterface& getInterface();
 
-    std::map<Identity::Type, std::vector<glm::vec3>> m_entityContacts;
+    void clearEntityContacts();
+
+    JPH::PhysicsSystem &getSystem();
+
+    JPH::BodyInterface &getInterface();
+
+    std::map<Identity::Type, std::vector<glm::vec3> > m_entityContacts;
+
+    std::list<std::pair<Identity::Type, Identity::Type> > m_sensorContacts;
+
 private:
     JPH::PhysicsSystem m_PhysicsSystem;
     ObjectLayerPairFilterImpl m_objectPairFilter;
     ObjectVsBroadPhaseLayerFilterImpl m_broadPhaseFilter;
     BroadPhaseLayerMapper m_broadPhaseLayerMapper;
     ContactListenerImpl m_contactListener;
-    JPH::JobSystemThreadPool* m_jobPool;
-    JPH::TempAllocatorImpl* m_tempAllocator;
-    PhysicsDebugRenderer* m_debugRenderer;
+    JPH::JobSystemThreadPool *m_jobPool;
+    JPH::TempAllocatorImpl *m_tempAllocator;
+    PhysicsDebugRenderer *m_debugRenderer;
 };

@@ -8,6 +8,7 @@
 #include "Systems/JointsProcessingSystem.h"
 #include "Systems/PhysicsBodyProcessingSystem.h"
 #include "Systems/PhysicsSystem.h"
+#include "Systems/PhysicsTriggerShapeSystem.h"
 #include "Components/PhysicsSliderJointComponent.h"
 #include "Components/PhysicsFixedJointComponent.h"
 #include "Components/PhysicsTriggerShapeComponent.h"
@@ -16,6 +17,7 @@
 #include "Editors/PhysicsHingeJointComponentEdit.h"
 #include "Editors/PhysicsSliderJointComponentEdit.h"
 #include "Editors/PhysicsFixedJointComponentEdit.h"
+#include "Editors/PhysicsTriggerShapeComponentEdit.h"
 
 class PhysicsModule : public EntityModule {
 public:
@@ -33,6 +35,7 @@ public:
         ctx.registerEntitySystem<JointsProcessingSystem>(2);
         ctx.registerEntitySystem<PhysicsBodyProcessingSystem>(3);
         ctx.registerEntitySystem<CharacterControllerSystem>(4);
+        ctx.registerEntitySystem<PhysicsTriggerShapeSystem>(5);
     };
 
     void postRegister(EntityContext &ctx) override {
@@ -43,6 +46,7 @@ public:
             editorSystem->registerComponentEditor<PhysicsHingeJointComponent, PhysicsHingeJointComponentEdit>();
             editorSystem->registerComponentEditor<PhysicsSliderJointComponent, PhysicsSliderJointComponentEdit>();
             editorSystem->registerComponentEditor<PhysicsFixedJointComponent, PhysicsFixedJointComponentEdit>();
+            editorSystem->registerComponentEditor<PhysicsTriggerShapeComponent, PhysicsTriggerShapeComponentEdit>();
         }
     }
 };

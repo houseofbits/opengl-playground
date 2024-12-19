@@ -2,11 +2,10 @@
 
 #include "../../../Core/API.h"
 #include "PhysicsBodyComponent.h"
-#include "../Helpers/BasePhysicsJoint.h"
-#include "Jolt/Physics/Constraints/FixedConstraint.h"
 
 class PhysicsTriggerShapeComponent : public Component {
-TYPE_DEFINITION(PhysicsTriggerShapeComponent);
+    TYPE_DEFINITION(PhysicsTriggerShapeComponent);
+
 public:
     PhysicsTriggerShapeComponent();
 
@@ -16,6 +15,11 @@ public:
 
     bool isReady() override;
 
+    void create(TransformComponent &transform);
+
+    [[nodiscard]] bool isCreated() const;
+
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 
+    JPH::Body *m_physicsBody;
 };

@@ -32,27 +32,42 @@ void DoorBehaviourSystem::process(EventManager &) {
 
 void DoorBehaviourSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &DoorBehaviourSystem::handleCharacterPickingEvent);
+    eventManager.registerEventReceiver(this, &DoorBehaviourSystem::handlePhysicsTriggerShapeEvent);
 }
 
 void DoorBehaviourSystem::handleCharacterPickingEvent(const PhysicsPickingEvent &event) {
     for (const auto &[id, components]: m_sliderJointComponentRegistry->container()) {
-        //Toggle open/close on interaction with door body
-        if (id == event.m_entityId && event.m_doActivate) {
-            const auto &[behaviour, joint] = components.get();
-            handleJointPickingEvent(joint, behaviour);
+        const auto &[behaviour, joint] = components.get();
+        if (behaviour->getLinkedEntityId() == event.m_entityId && event.m_doActivate) {
+            handleActivation(joint, behaviour);
         }
     }
 
     for (const auto &[id, components]: m_hingeJointComponentRegistry->container()) {
-        //Toggle open/close on interaction with door body
-        if (id == event.m_entityId && event.m_doActivate) {
-            const auto &[behaviour, joint] = components.get();
-            handleJointPickingEvent(joint, behaviour);
+        const auto &[behaviour, joint] = components.get();
+        if (behaviour->getLinkedEntityId() == event.m_entityId && event.m_doActivate) {
+            handleActivation(joint, behaviour);
         }
     }
 }
 
-void DoorBehaviourSystem::handleJointPickingEvent(BasePhysicsJoint *joint, DoorBehaviourComponent *behaviour) {
+void DoorBehaviourSystem::handlePhysicsTriggerShapeEvent(const PhysicsTriggerShapeEvent &event) {
+    for (const auto &[id, components]: m_sliderJointComponentRegistry->container()) {
+        const auto &[behaviour, joint] = components.get();
+        if (behaviour->getLinkedEntityId() == event.m_sensorEntityId) {
+            handleActivation(joint, behaviour);
+        }
+    }
+
+    for (const auto &[id, components]: m_hingeJointComponentRegistry->container()) {
+        const auto &[behaviour, joint] = components.get();
+        if (behaviour->getLinkedEntityId() == event.m_sensorEntityId) {
+            handleActivation(joint, behaviour);
+        }
+    }
+}
+
+void DoorBehaviourSystem::handleActivation(BasePhysicsJoint *joint, DoorBehaviourComponent *behaviour) {
     if (behaviour->m_state == DoorBehaviourComponent::STATE_CLOSED) {
         behaviour->m_state = DoorBehaviourComponent::STATE_OPENING;
         if (behaviour->m_isFixedOnFinalState) {

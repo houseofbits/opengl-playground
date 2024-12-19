@@ -1,8 +1,9 @@
 #pragma once
 
 #include "../../../Core/API.h"
+#include "../../Common/Helpers/EntityLinkedComponent.h"
 
-class DoorBehaviourComponent : public Component {
+class DoorBehaviourComponent : public Component, public EntityLinkedComponent {
     TYPE_DEFINITION(DoorBehaviourComponent);
 
     inline static const std::string INITIAL_STATE_KEY = "initialState";

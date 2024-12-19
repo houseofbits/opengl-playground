@@ -146,5 +146,16 @@
                 "class": "PhysicsJointComponent"
             }
         }
+    },
+    {
+        "name": "Trigger shape",
+        "components": {
+            "transform": {
+                "class": "TransformComponent"
+            },
+            "physicsTriggerShape": {
+                "class": "PhysicsTriggerShapeComponent"
+            }
+        }
     }
 ]

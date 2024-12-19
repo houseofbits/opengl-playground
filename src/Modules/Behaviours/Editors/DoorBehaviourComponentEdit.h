@@ -20,5 +20,12 @@ public:
         ImGui::Checkbox("Is fixed on final state", &body->m_isFixedOnFinalState);
 
         ImGui::InputFloat("Velocity", &body->m_velocity);
+
+        EntityLinkedComponentEdit::process(
+            *system.m_EventManager,
+            *system.m_EntityContext,
+            body,
+            "Trigger entity##DOOR_TRIGGER_ENTITY_NAME"
+        );
     }
 };
