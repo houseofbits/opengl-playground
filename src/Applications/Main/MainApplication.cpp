@@ -9,7 +9,6 @@
 
 MainApplication::MainApplication() : Application(), EventHandler(), m_Window(&m_EventManager) {
     m_EventManager.registerEventReceiver(this, &MainApplication::handleInputEvent);
-    m_EventManager.registerEventReceiver(this, &MainApplication::handleEditorUIEvent);
     m_EventManager.registerEventReceiver(this, &MainApplication::handleEntityCreationEvent);
 }
 
@@ -24,7 +23,6 @@ void MainApplication::initialize(const std::string &entityDefinitionFileName) {
 
     m_EntityContext.registerModule<CommonModule>();
     m_EntityContext.registerModule<RendererModule>();
-    m_EntityContext.registerModule<EditorUIModule>();
     m_EntityContext.registerModule<PhysicsModule>();
     m_EntityContext.registerModule<BehavioursModule>();
 
@@ -51,12 +49,6 @@ void MainApplication::run() {
 
 void MainApplication::handleInputEvent(const InputEvent &) {
 
-}
-
-void MainApplication::handleEditorUIEvent(const EditorUIEvent &event) {
-    if (event.m_Type == EditorUIEvent::SAVE) {
-        saveEntitiesToFile();
-    }
 }
 
 void MainApplication::handleEntityCreationEvent(const EntityCreationEvent &event) {

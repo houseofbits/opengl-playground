@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../Core/API.h"
-#include "../../Modules/Editor/Events/EditorUIEvent.h"
 #include "../../Window.h"
 
 class MainApplication : public Application, public EventHandler {
@@ -13,8 +12,6 @@ public:
     void initialize(const std::string &entityDefinitionFileName);
 
     void handleInputEvent(const InputEvent&);
-
-    void handleEditorUIEvent(const EditorUIEvent&);
 
     void handleEntityCreationEvent(const EntityCreationEvent&);
 

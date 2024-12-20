@@ -17,5 +17,7 @@ public:
         if (body == nullptr) {
             return;
         }
+
+        ImGui::Text("Box shape physics sensor");
     }
 };

@@ -41,8 +41,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/Json/Json.h
         src/Core/Json/Json.cpp
         src/Core/Json/Json.h
-        src/Applications/Main/MainApplication.cpp
-        src/Applications/Main/MainApplication.h
+        src/Applications/Editor/EditorApplication.cpp
+        src/Applications/Editor/EditorApplication.h
         src/Core/Reflection/Identity.h
         src/Core/Resources/Resource.cpp
         src/Core/Resources/Resource.h
@@ -164,6 +164,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Common/Editors/EntityLinkedComponentEdit.h
         src/Modules/Physics/Helpers/ContactListenerImpl.cpp
         src/Modules/Physics/Helpers/SensorLayerFilter.h
+        src/Core/System/EntitySystemRegistry.cpp
+        src/Core/System/EntitySystemRegistry.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

@@ -15,11 +15,11 @@ Character should have a basic gun that shoots tennis balls. I should be able to 
 - [x] Hinge joint component with limits and motor drive
 - [x] Fixed physics joint
 - [x] Slider joint
-- [ ] Trigger shape component
+- [x] Trigger shape component
 
 ### Behaviour
 - [x] Door activation behaviour (door state)
-- [ ] Trigger shape behaviour
+- [x] Trigger shape behaviour
 - [x] Character gun look-at and character rotation 
 - [ ] Basic scripting behaviour prototype
 
@@ -28,13 +28,13 @@ Character should have a basic gun that shoots tennis balls. I should be able to 
   - [ ] Transform getter/setter for the Joint component
   - [x] Transform getter/setter for camera component
   - [x] UI Transform gizmo helper class
-- [ ] Keyboard shortcuts for transform modes
 
 ### General
 - [x] Relative transform for camera 
 - [x] Relative transforms (assign parent transform component)
 
 ### Rendering
+- [ ] Get rid of geometry shader
 - [ ] Overlay cross-hair
 - [ ] Static decals
 - [ ] Shadow-map improvements
