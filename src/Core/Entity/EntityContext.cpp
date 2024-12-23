@@ -99,10 +99,12 @@ void EntityContext::registerEntitiesWithSystems(EventManager &eventManager) {
     }
 }
 
-void EntityContext::registerEntityWithSystems(Entity &entity) {
+void EntityContext::registerEntityWithSystems(Entity &entity) const {
     for (const auto &system: m_Systems) {
         system->registerEntityComponents(entity);
     }
+
+    entitySystemRegistry.registerEntityWithSystems(entity);
 }
 
 void EntityContext::initializeSystems(ResourceManager &resourceManager, EventManager &eventManager) {
@@ -117,6 +119,18 @@ void EntityContext::initializeSystems(ResourceManager &resourceManager, EventMan
         system->registerEventHandlers(eventManager);
     }
 
+    //////////////////////////////////////////
+    /// V2
+
+    for (const auto &[system, processType]: m_systemInitializers) {
+        system->m_EventManager = &eventManager; //Remove
+        system->initialize(resourceManager);
+        system->registerEventHandlers(eventManager);
+
+        entitySystemRegistry.registerEntitySystem(*system, processType);
+    }
+    m_systemInitializers.clear();
+
     eventManager.queueEvent<SystemEvent>(SystemEvent::ENTITY_SYSTEMS_READY);
 }
 
@@ -126,6 +140,8 @@ void EntityContext::processSystems(EventManager &eventManager) {
     for (const auto &system: m_Systems) {
         system->process(eventManager);
     }
+
+    entitySystemRegistry.processMain();
 }
 
 Entity *EntityContext::getEntity(Identity::Type id) {

@@ -6,7 +6,7 @@
 
 
 
-EntitySystemRegistry::EntitySystemRegistry()
+EntitySystemRegistry::EntitySystemRegistry(): m_eventManager(nullptr)
 {
 
 }

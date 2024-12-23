@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "EntityConfiguration.h"
 #include "../System/EntitySystem.h"
+#include "../System/EntitySystemRegistry.h"
 #include <memory>
 
 //0. add empty entity
@@ -19,16 +20,18 @@ private:
     Factory<Component> m_ComponentFactory;
     EntityConfiguration m_EntityConfiguration;
 
-    std::list<std::shared_ptr<Entity>> m_Entities;
+    std::list<std::shared_ptr<Entity> > m_Entities;
     std::list<EntitySystem *> m_Systems;
     std::list<EntityModule *> m_Modules;
 
     std::shared_ptr<Entity> addEntity();
 
+    std::map<EntitySystem *, EntitySystemRegistry::ProcessType> m_systemInitializers;
+
 public:
     EntityContext();
 
-    std::list<std::shared_ptr<Entity>> &getAllEntities() {
+    std::list<std::shared_ptr<Entity> > &getAllEntities() {
         return m_Entities;
     }
 
@@ -40,7 +43,7 @@ public:
         }
     }
 
-    template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value>>
+    template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T> > >
     T *registerEntitySystem(unsigned int processPriority = 0) {
         auto *p = new T();
         p->m_EntityContext = this;
@@ -50,7 +53,16 @@ public:
         return p;
     }
 
-    template<class T, typename = std::enable_if_t<std::is_base_of<EntityModule, T>::value>>
+    template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T> > >
+    void registerEntitySystem_v2(EntitySystemRegistry::ProcessType processType, unsigned int processPriority = 0) {
+        auto *p = new T();
+        p->m_EntityContext = this;
+        p->m_processPriority = processPriority;
+
+        m_systemInitializers[p] = processType;
+    }
+
+    template<class T, typename = std::enable_if_t<std::is_base_of_v<EntityModule, T> > >
     T *registerModule() {
         auto *p = new T();
         m_Modules.push_back(p);
@@ -66,7 +78,7 @@ public:
         }
     }
 
-    template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value>>
+    template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value> >
     T *getSystem() {
         for (const auto &elem: m_Systems) {
             if (dynamic_cast<T *>(elem)) {
@@ -110,7 +122,7 @@ public:
     }
 
     template<class T>
-    T* getComponent(const Identity::Type componentId) {
+    T *getComponent(const Identity::Type componentId) {
         for (const auto &e: m_Entities) {
             if (auto component = e->getComponent(componentId)) {
                 auto cT = dynamic_cast<T *>(component);
@@ -130,7 +142,7 @@ public:
 
     Entity *findEntity(std::function<bool(Entity *)> functor);
 
-    void unregisterEntityFromSystems(Entity&);
+    void unregisterEntityFromSystems(Entity &);
 
     void deserializeEntityMap(nlohmann::json &j);
 
@@ -146,7 +158,7 @@ public:
 
     void registerEntitiesWithSystems(EventManager &eventManager);
 
-    void registerEntityWithSystems(Entity& entity); //TODO: Private ???
+    void registerEntityWithSystems(Entity &entity) const; //TODO: Private ???
 
     void initializeSystems(ResourceManager &, EventManager &);
 
@@ -157,4 +169,6 @@ public:
     void removeComponent(Identity::Type entityId, const std::string &componentName);
 
     std::vector<std::string> getAllConfigurationNames();
+
+    EntitySystemRegistry entitySystemRegistry;
 };

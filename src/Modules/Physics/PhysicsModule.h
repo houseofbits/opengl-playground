@@ -21,6 +21,8 @@
 
 class PhysicsModule : public EntityModule {
 public:
+    static constexpr EntitySystemRegistry::ProcessType PHYSICS_PROCESS = 2;
+
     void registerComponents(EntityContext &ctx) override {
         ctx.registerComponent<PhysicsCharacterComponent>("cct");
         ctx.registerComponent<PhysicsBodyComponent>("physicsBody");
@@ -31,11 +33,13 @@ public:
     };
 
     void registerSystems(EntityContext &ctx) override {
-        ctx.registerEntitySystem<PhysicsSystem>(1);
-        ctx.registerEntitySystem<JointsProcessingSystem>(2);
-        ctx.registerEntitySystem<PhysicsBodyProcessingSystem>(3);
-        ctx.registerEntitySystem<CharacterControllerSystem>(4);
-        ctx.registerEntitySystem<PhysicsTriggerShapeSystem>(5);
+        ctx.entitySystemRegistry.createContinuousProcess(PHYSICS_PROCESS, 16);
+
+        ctx.registerEntitySystem_v2<PhysicsSystem>(PHYSICS_PROCESS, 1);
+        ctx.registerEntitySystem_v2<JointsProcessingSystem>(PHYSICS_PROCESS, 2);
+        ctx.registerEntitySystem_v2<PhysicsBodyProcessingSystem>(PHYSICS_PROCESS, 3);
+        ctx.registerEntitySystem_v2<CharacterControllerSystem>(PHYSICS_PROCESS, 4);
+        ctx.registerEntitySystem_v2<PhysicsTriggerShapeSystem>(PHYSICS_PROCESS, 5);
     };
 
     void postRegister(EntityContext &ctx) override {
@@ -50,5 +54,3 @@ public:
         }
     }
 };
-
-

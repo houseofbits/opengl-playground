@@ -14,6 +14,8 @@
 
 class BehavioursModule : public EntityModule {
 public:
+    static constexpr  EntitySystemRegistry::ProcessType BEHAVIOUR_PROCESS = 1;
+
     void registerComponents(EntityContext &ctx) override {
         ctx.registerComponent<MainCharacterBehaviourComponent>("mainCharacterBehaviour");
         ctx.registerComponent<DoorBehaviourComponent>("doorBehaviour");
@@ -21,9 +23,11 @@ public:
     };
 
     void registerSystems(EntityContext &ctx) override {
-        ctx.registerEntitySystem<MainCharacterBehaviourSystem>(1);
-        ctx.registerEntitySystem<DoorBehaviourSystem>(2);
-        ctx.registerEntitySystem<GunBehaviourSystem>(2);
+        ctx.entitySystemRegistry.createContinuousProcess(BEHAVIOUR_PROCESS, 32);
+
+        ctx.registerEntitySystem_v2<MainCharacterBehaviourSystem>(BEHAVIOUR_PROCESS, 1);
+        ctx.registerEntitySystem_v2<DoorBehaviourSystem>(BEHAVIOUR_PROCESS, 2);
+        ctx.registerEntitySystem_v2<GunBehaviourSystem>(BEHAVIOUR_PROCESS, 3);
     };
 
     void postRegister(EntityContext &ctx) override {

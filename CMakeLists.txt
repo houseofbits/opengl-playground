@@ -166,6 +166,9 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/SensorLayerFilter.h
         src/Core/System/EntitySystemRegistry.cpp
         src/Core/System/EntitySystemRegistry.h
+        src/Core/System/BaseSystemProcess.h
+        src/Core/System/ContinuousSystemProcess.cpp
+        src/Core/System/ContinuousSystemProcess.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
