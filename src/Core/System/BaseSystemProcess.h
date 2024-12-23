@@ -31,6 +31,17 @@ public:
         processAllSystems();
     }
 
+    template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T>> >
+    T *getSystem() {
+        for (const auto &elem: m_Systems) {
+            if (dynamic_cast<T *>(elem)) {
+                return dynamic_cast<T *>(elem);
+            }
+        }
+
+        return nullptr;
+    }
+
 protected:
     void processAllSystems() const {
         for (const auto &system: m_Systems) {

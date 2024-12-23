@@ -4,6 +4,7 @@
 #include "Entity/Component.h"
 #include "Entity/EntityContext.h"
 #include "System/EntitySystem.h"
+#include "System/EntitySystemRegistry.h"
 #include "Events/EntityCreationEvent.h"
 #include "Events/Event.h"
 #include "Events/EventManager.h"

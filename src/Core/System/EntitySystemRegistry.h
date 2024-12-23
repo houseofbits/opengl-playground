@@ -7,7 +7,7 @@ class EntitySystemRegistry {
 public:
     typedef unsigned int ProcessType;
 
-    static const ProcessType MAIN_PROCESS = 0;
+    static constexpr ProcessType MAIN_PROCESS = 0;
 
     EntitySystemRegistry();
 
@@ -31,7 +31,6 @@ public:
     }
 
     ContinuousSystemProcess &createContinuousProcess(const ProcessType type, const long frequencyMs) {
-
         assert(type != MAIN_PROCESS);
         assert(m_systemProcesses.count(type) == 0);
 
@@ -52,7 +51,7 @@ public:
         return *p;
     }
 
-    void registerEntitySystem(EntitySystem& system, const ProcessType& type) {
+    void registerEntitySystem(EntitySystem &system, const ProcessType &type) {
         const auto process = m_systemProcesses[type];
 
         process->registerEntitySystem(system);
@@ -60,6 +59,18 @@ public:
 
     void processMain() {
         m_systemProcesses[MAIN_PROCESS]->process();
+    }
+
+    template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T> > >
+    T *getSystem() {
+        for (const auto &[type, process]: m_systemProcesses) {
+            const auto system = process->getSystem<T>();
+            if (system != nullptr) {
+                return system;
+            }
+        }
+
+        return nullptr;
     }
 
 private:

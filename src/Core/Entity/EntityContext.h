@@ -44,16 +44,6 @@ public:
     }
 
     template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T> > >
-    T *registerEntitySystem(unsigned int processPriority = 0) {
-        auto *p = new T();
-        p->m_EntityContext = this;
-        p->m_processPriority = processPriority;
-        m_Systems.push_back(p);
-
-        return p;
-    }
-
-    template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T> > >
     void registerEntitySystem_v2(EntitySystemRegistry::ProcessType processType, unsigned int processPriority = 0) {
         auto *p = new T();
         p->m_EntityContext = this;
@@ -78,15 +68,9 @@ public:
         }
     }
 
-    template<class T, typename = std::enable_if_t<std::is_base_of<EntitySystem, T>::value> >
+    template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T> > >
     T *getSystem() {
-        for (const auto &elem: m_Systems) {
-            if (dynamic_cast<T *>(elem)) {
-                return dynamic_cast<T *>(elem);
-            }
-        }
-
-        return nullptr;
+        return entitySystemRegistry.getSystem<T>();
     }
 
     template<class T>

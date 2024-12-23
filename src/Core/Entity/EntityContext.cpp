@@ -110,18 +110,6 @@ void EntityContext::registerEntityWithSystems(Entity &entity) const {
 void EntityContext::initializeSystems(ResourceManager &resourceManager, EventManager &eventManager) {
     postRegisterModules();
 
-    m_Systems.sort(
-            [](const EntitySystem *a, const EntitySystem *b) { return a->m_processPriority < b->m_processPriority; });
-
-    for (const auto &system: m_Systems) {
-        system->m_EventManager = &eventManager;
-        system->initialize(resourceManager);
-        system->registerEventHandlers(eventManager);
-    }
-
-    //////////////////////////////////////////
-    /// V2
-
     for (const auto &[system, processType]: m_systemInitializers) {
         system->m_EventManager = &eventManager; //Remove
         system->initialize(resourceManager);
@@ -136,10 +124,6 @@ void EntityContext::initializeSystems(ResourceManager &resourceManager, EventMan
 
 void EntityContext::processSystems(EventManager &eventManager) {
     registerEntitiesWithSystems(eventManager);
-
-    for (const auto &system: m_Systems) {
-        system->process(eventManager);
-    }
 
     entitySystemRegistry.processMain();
 }
