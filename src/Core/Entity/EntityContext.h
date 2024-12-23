@@ -21,7 +21,6 @@ private:
     EntityConfiguration m_EntityConfiguration;
 
     std::list<std::shared_ptr<Entity> > m_Entities;
-    std::list<EntitySystem *> m_Systems;
     std::list<EntityModule *> m_Modules;
 
     std::shared_ptr<Entity> addEntity();
@@ -44,7 +43,7 @@ public:
     }
 
     template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T> > >
-    void registerEntitySystem_v2(EntitySystemRegistry::ProcessType processType, unsigned int processPriority = 0) {
+    void registerEntitySystem(EntitySystemRegistry::ProcessType processType, unsigned int processPriority = 0) {
         auto *p = new T();
         p->m_EntityContext = this;
         p->m_processPriority = processPriority;

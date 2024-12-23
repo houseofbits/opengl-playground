@@ -35,11 +35,11 @@ public:
     void registerSystems(EntityContext &ctx) override {
         ctx.entitySystemRegistry.createContinuousProcess(PHYSICS_PROCESS, 16);
 
-        ctx.registerEntitySystem_v2<PhysicsSystem>(PHYSICS_PROCESS, 1);
-        ctx.registerEntitySystem_v2<JointsProcessingSystem>(PHYSICS_PROCESS, 2);
-        ctx.registerEntitySystem_v2<PhysicsBodyProcessingSystem>(PHYSICS_PROCESS, 3);
-        ctx.registerEntitySystem_v2<CharacterControllerSystem>(PHYSICS_PROCESS, 4);
-        ctx.registerEntitySystem_v2<PhysicsTriggerShapeSystem>(PHYSICS_PROCESS, 5);
+        ctx.registerEntitySystem<PhysicsSystem>(PHYSICS_PROCESS, 1);
+        ctx.registerEntitySystem<JointsProcessingSystem>(PHYSICS_PROCESS, 2);
+        ctx.registerEntitySystem<PhysicsBodyProcessingSystem>(PHYSICS_PROCESS, 3);
+        ctx.registerEntitySystem<CharacterControllerSystem>(PHYSICS_PROCESS, 4);
+        ctx.registerEntitySystem<PhysicsTriggerShapeSystem>(PHYSICS_PROCESS, 5);
     };
 
     void postRegister(EntityContext &ctx) override {

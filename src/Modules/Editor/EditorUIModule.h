@@ -13,8 +13,8 @@ public:
     };
 
     void registerSystems(EntityContext &ctx) override {
-        ctx.registerEntitySystem_v2<EditorUISystem>(EntitySystemRegistry::MAIN_PROCESS, 10);
-        ctx.registerEntitySystem_v2<EditorCameraSystem>(EntitySystemRegistry::MAIN_PROCESS, 1);
+        ctx.registerEntitySystem<EditorUISystem>(EntitySystemRegistry::MAIN_PROCESS, 10);
+        ctx.registerEntitySystem<EditorCameraSystem>(EntitySystemRegistry::MAIN_PROCESS, 1);
     };
 
     void postRegister(EntityContext &ctx) override {

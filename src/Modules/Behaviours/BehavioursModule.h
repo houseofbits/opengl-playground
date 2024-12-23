@@ -25,9 +25,9 @@ public:
     void registerSystems(EntityContext &ctx) override {
         ctx.entitySystemRegistry.createContinuousProcess(BEHAVIOUR_PROCESS, 32);
 
-        ctx.registerEntitySystem_v2<MainCharacterBehaviourSystem>(BEHAVIOUR_PROCESS, 1);
-        ctx.registerEntitySystem_v2<DoorBehaviourSystem>(BEHAVIOUR_PROCESS, 2);
-        ctx.registerEntitySystem_v2<GunBehaviourSystem>(BEHAVIOUR_PROCESS, 3);
+        ctx.registerEntitySystem<MainCharacterBehaviourSystem>(BEHAVIOUR_PROCESS, 1);
+        ctx.registerEntitySystem<DoorBehaviourSystem>(BEHAVIOUR_PROCESS, 2);
+        ctx.registerEntitySystem<GunBehaviourSystem>(BEHAVIOUR_PROCESS, 3);
     };
 
     void postRegister(EntityContext &ctx) override {

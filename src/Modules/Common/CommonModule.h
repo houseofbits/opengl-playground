@@ -18,9 +18,9 @@ public:
     };
 
     void registerSystems(EntityContext &ctx) override {
-        ctx.registerEntitySystem_v2<TransformHierarchyProcessingSystem>(EntitySystemRegistry::MAIN_PROCESS, 10);
-        ctx.registerEntitySystem_v2<CameraSystem>(EntitySystemRegistry::MAIN_PROCESS, 1);
-        ctx.registerEntitySystem_v2<EntityLinkingSystem>(EntitySystemRegistry::MAIN_PROCESS, 2);
+        ctx.registerEntitySystem<TransformHierarchyProcessingSystem>(EntitySystemRegistry::MAIN_PROCESS, 10);
+        ctx.registerEntitySystem<CameraSystem>(EntitySystemRegistry::MAIN_PROCESS, 1);
+        ctx.registerEntitySystem<EntityLinkingSystem>(EntitySystemRegistry::MAIN_PROCESS, 2);
     }
 
     void postRegister(EntityContext &ctx) override {

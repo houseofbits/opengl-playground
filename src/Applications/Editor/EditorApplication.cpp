@@ -22,8 +22,6 @@ void EditorApplication::initialize(const std::string &entityDefinitionFileName) 
     auto json = nlohmann::json::parse(file);
     m_EntityContext.deserializeEntityMap(json);
 
-    m_EntityContext.entitySystemRegistry.initialize(m_EventManager);
-
     m_EntityContext.registerModule<CommonModule>();
     m_EntityContext.registerModule<RendererModule>();
     m_EntityContext.registerModule<EditorUIModule>();

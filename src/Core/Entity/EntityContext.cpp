@@ -5,8 +5,7 @@
 
 EntityContext::EntityContext() : m_ComponentFactory(),
                                  m_EntityConfiguration(m_ComponentFactory),
-                                 m_Entities(),
-                                 m_Systems() {
+                                 m_Entities() {
 }
 
 Entity::TEntityPtr EntityContext::addEntity() {
@@ -85,9 +84,6 @@ void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager &reso
 
 void EntityContext::unregisterEntityFromSystems(Entity& entity) {
     //TODO: Handle entity removal or component change
-//    for (const auto &system: m_Systems) {
-//        system->unregisterComponent(component);
-//    }
 }
 
 void EntityContext::registerEntitiesWithSystems(EventManager &eventManager) {
@@ -100,10 +96,6 @@ void EntityContext::registerEntitiesWithSystems(EventManager &eventManager) {
 }
 
 void EntityContext::registerEntityWithSystems(Entity &entity) const {
-    for (const auto &system: m_Systems) {
-        system->registerEntityComponents(entity);
-    }
-
     entitySystemRegistry.registerEntityWithSystems(entity);
 }
 

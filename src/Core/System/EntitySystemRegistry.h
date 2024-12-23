@@ -9,12 +9,12 @@ public:
 
     static constexpr ProcessType MAIN_PROCESS = 0;
 
-    EntitySystemRegistry();
-
-    void initialize(EventManager &eventManager) {
-        m_eventManager = &eventManager;
-
+    EntitySystemRegistry() : m_systemProcesses() {
         createMainProcess();
+    }
+
+    void setEventManager(EventManager &eventManager) {
+        m_eventManager = &eventManager;
     }
 
     void registerEntityWithSystems(Entity &entity) const {
