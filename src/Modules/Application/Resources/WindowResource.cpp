@@ -15,20 +15,20 @@ void WindowResource::destroy() {
 }
 
 void WindowResource::create(EventManager &eventManager) {
-    m_Window = new Window(&eventManager);
-    m_Window->create();
-}
-
-bool WindowResource::pollEvents() const {
-    if (m_Window != nullptr) {
-        return m_Window->pollEvents();
-    }
-
-    return true;
+    m_Window = new Window();
+    m_Window->create(eventManager);
 }
 
 void WindowResource::swapBuffers() const {
     if (m_Window != nullptr) {
         return m_Window->doubleBuffer();
     }
+}
+
+glm::ivec2 WindowResource::getViewportSize() const {
+    if (m_Window == nullptr) {
+        return glm::ivec2(0, 0);
+    }
+
+    return glm::ivec2(m_Window->viewportWidth, m_Window->viewportHeight);
 }

@@ -16,6 +16,8 @@ public:
     void handleEntityCreationEvent(const EntityCreationEvent &);
 
 private:
+    void setTime();
+
     ResourceManager *m_ResourceManager;
     ResourceHandle<WindowResource> m_WindowResource;
 };

@@ -1,22 +1,20 @@
 #include "Modules/Application/Events/InputEvent.h"
 #include "Modules/Application/Events/RawSDLEvent.h"
 #include "Modules/Application/Events/SystemEvent.h"
-#include "Core/Helper/Time.h"
 #include "Include.h"
 #include "Core/Helper/GLDebugMessageCallback.h"
 #include <GL/glew.h>
 #include <iostream>
 
-Window::Window(EventManager *eventManager) : sdlWindow(nullptr),
-                                             sdlGlContext(),
-                                             isFullScreen(false),
-                                             windowFlags(),
-                                             eventManager(eventManager),
-                                             viewportWidth(1920),
-                                             viewportHeight(1080) {
+Window::Window() : sdlWindow(nullptr),
+                   sdlGlContext(),
+                   isFullScreen(false),
+                   windowFlags(),
+                   viewportWidth(1920),
+                   viewportHeight(1080) {
 }
 
-void Window::create() {
+void Window::create(EventManager &eventManager) {
     if (SDL_Init(SDL_INIT_VIDEO)) {
         printf("Failed to init SDL Video, error: %s", SDL_GetError());
 
@@ -36,7 +34,7 @@ void Window::create() {
         viewportHeight,
         windowFlags);
 
-    eventManager->queueEvent<SystemEvent>(SystemEvent::Type::WINDOW_CREATED, this);
+    eventManager.queueEvent<SystemEvent>(SystemEvent::Type::WINDOW_CREATED, this);
 
     if (sdlWindow == nullptr) {
         printf("Could not create window: %s", SDL_GetError());
@@ -85,7 +83,7 @@ void Window::create() {
     //    glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES, &maxVertices);
     //    std::cout << "GS maximum number of vertices: " << maxVertices << std::endl;
 
-    eventManager->queueEvent<SystemEvent>(SystemEvent::Type::WINDOW_CONTEXT_CREATED, this);
+    eventManager.queueEvent<SystemEvent>(SystemEvent::Type::WINDOW_CONTEXT_CREATED, this);
 
     // std::cout<<"Window created"<<std::endl;
 }
@@ -95,164 +93,6 @@ void Window::destroy() const {
     SDL_Quit();
 }
 
-bool Window::pollEvents() {
-    setTime();
-
-    SDL_Event sdl_event;
-
-    SDL_Keymod modKeys = SDL_GetModState();
-    bool isShift = modKeys & KMOD_SHIFT;
-    bool isCtrl = modKeys & KMOD_CTRL;
-    bool isAlt = modKeys & KMOD_ALT;
-    bool leftButton = false;
-    bool rightButton = false;
-
-    while (SDL_PollEvent(&sdl_event) != 0) {
-        eventManager->queueEvent<RawSDLEvent>(sdl_event);
-
-        if (sdl_event.type == SDL_QUIT) {
-            return false;
-        } else if (sdl_event.type == SDL_KEYDOWN) {
-            switch (sdl_event.key.keysym.sym) {
-                case SDLK_ESCAPE:
-                    return false;
-                case SDLK_F11:
-                    isFullScreen = !isFullScreen;
-
-                    if (isFullScreen) {
-                        SDL_SetWindowFullscreen(sdlWindow, windowFlags | SDL_WINDOW_FULLSCREEN_DESKTOP);
-                        SDL_GetWindowSize(sdlWindow, &viewportWidth, &viewportHeight);
-                    } else {
-                        viewportWidth = 1920;
-                        viewportHeight = 1080;
-                        SDL_SetWindowFullscreen(sdlWindow, windowFlags);
-                    }
-
-                    eventManager->queueEvent<SystemEvent>(SystemEvent::Type::WINDOW_RESIZED, this);
-                    break;
-                default: ;
-            }
-        }
-
-        if (sdl_event.button.button == SDL_BUTTON_LEFT) {
-            leftButton = true;
-        }
-        if (sdl_event.button.button == SDL_BUTTON_RIGHT || sdl_event.button.button == SDL_BUTTON(SDL_BUTTON_RIGHT)) {
-            rightButton = true;
-        }
-
-        switch (sdl_event.type) {
-            case SDL_KEYDOWN:
-                onKeyEvent(InputEvent::KEYDOWN, sdl_event.key.keysym.scancode, isAlt, isCtrl, isShift);
-                break;
-            case SDL_KEYUP:
-                onKeyEvent(InputEvent::KEYUP, sdl_event.key.keysym.scancode, isAlt, isCtrl, isShift);
-                break;
-            case SDL_MOUSEWHEEL:
-                onMouseWheelEvent(
-                    glm::vec2(static_cast<float>(sdl_event.wheel.x), static_cast<float>(sdl_event.wheel.y)),
-                    leftButton,
-                    rightButton,
-                    isAlt,
-                    isCtrl,
-                    isShift);
-                break;
-            case SDL_MOUSEMOTION:
-                onMouseEvent(
-                    InputEvent::MOUSEMOVE,
-                    glm::vec2(static_cast<float>(sdl_event.motion.x), static_cast<float>(sdl_event.motion.y)),
-                    glm::vec2(static_cast<float>(sdl_event.motion.xrel), static_cast<float>(sdl_event.motion.yrel)),
-                    leftButton,
-                    rightButton,
-                    isAlt,
-                    isCtrl,
-                    isShift);
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                onMouseEvent(
-                    InputEvent::MOUSEDOWN,
-                    glm::vec2(static_cast<float>(sdl_event.motion.x), static_cast<float>(sdl_event.motion.y)),
-                    glm::vec2(static_cast<float>(sdl_event.motion.xrel), static_cast<float>(sdl_event.motion.yrel)),
-                    leftButton,
-                    rightButton,
-                    isAlt,
-                    isCtrl,
-                    isShift);
-                break;
-            case SDL_MOUSEBUTTONUP:
-                onMouseEvent(
-                    InputEvent::MOUSEUP,
-                    glm::vec2(static_cast<float>(sdl_event.motion.x), static_cast<float>(sdl_event.motion.y)),
-                    glm::vec2(static_cast<float>(sdl_event.motion.xrel), static_cast<float>(sdl_event.motion.yrel)),
-                    leftButton,
-                    rightButton,
-                    isAlt,
-                    isCtrl,
-                    isShift);
-                break;
-
-            case SDL_TEXTINPUT:
-                //            eventManager->queueEvent(new InputEvent(InputEvent::TEXTENTER, std::string(sdl_event.text.text)));
-                break;
-            default:
-                ;
-        };
-    }
-
-    int numKeys;
-    const Uint8 *state = SDL_GetKeyboardState(&numKeys);
-    if (numKeys > 0) {
-        for (int i = 0; i < numKeys; i++) {
-            if (state[i] > 0) {
-                onKeyEvent(InputEvent::KEYPRESS, i, isAlt, isCtrl, isShift);
-            }
-        }
-    }
-
-    return true;
-}
-
 void Window::doubleBuffer() const {
     SDL_GL_SwapWindow(sdlWindow);
-}
-
-void Window::onKeyEvent(InputEvent::EventType type, int keysym, bool isAlt, bool isCtrl, bool isShift) const {
-    auto &event = eventManager->createEvent<InputEvent>(type);
-    event.keyCode = keysym;
-    event.modKeyAlt = isAlt;
-    event.modKeyShift = isShift;
-    event.modKeyCtrl = isCtrl;
-    eventManager->queueEvent(event);
-}
-
-void Window::onMouseEvent(InputEvent::EventType type, glm::vec2 position, glm::vec2 motion, bool mouseLeft,
-                          bool mouseRight, bool isAlt, bool isCtrl, bool isShift) const {
-    auto &event = eventManager->createEvent<InputEvent>(type);
-    event.mousePosition = position;
-    event.mouseMotion = motion;
-    event.mouseButtonLeft = mouseLeft;
-    event.mouseButtonRight = mouseRight;
-    event.modKeyAlt = isAlt;
-    event.modKeyShift = isShift;
-    event.modKeyCtrl = isCtrl;
-    eventManager->queueEvent(event);
-}
-
-void Window::onMouseWheelEvent(glm::vec2 wheel, bool mouseLeft, bool mouseRight, bool isAlt, bool isCtrl,
-                               bool isShift) const {
-    auto &event = eventManager->createEvent<InputEvent>(InputEvent::MOUSEWHEEL);
-    event.mouseWheel = wheel;
-    event.mouseButtonLeft = mouseLeft;
-    event.mouseButtonRight = mouseRight;
-    event.modKeyAlt = isAlt;
-    event.modKeyShift = isShift;
-    event.modKeyCtrl = isCtrl;
-    eventManager->queueEvent(event);
-}
-
-void Window::setTime() {
-    float currentTime = static_cast<float>(SDL_GetTicks()) / 1000.0f;
-
-    Time::frameTime = currentTime - Time::timestamp;
-    Time::timestamp = currentTime;
 }

@@ -1,5 +1,6 @@
 #include "ApplicationSystem.h"
 #include "../../../Core/Entity/EntitySerializer.h"
+#include "../../../Core/Helper/Time.h"
 
 ApplicationSystem::ApplicationSystem() : EntitySystem(), m_ResourceManager(nullptr), m_WindowResource() {
 
@@ -14,7 +15,7 @@ void ApplicationSystem::initialize(ResourceManager &resourceManager, EventManage
 }
 
 void ApplicationSystem::process(EventManager &) {
-
+    setTime();
 }
 
 void ApplicationSystem::registerEventHandlers(EventManager &eventManager) {
@@ -47,4 +48,11 @@ void ApplicationSystem::handleEntityCreationEvent(const EntityCreationEvent &eve
     if (event.m_Type == EntityCreationEvent::REMOVE_COMPONENT) {
         m_EntityContext->removeComponent(event.m_entityId, event.m_name);
     }
+}
+
+void ApplicationSystem::setTime() {
+    float currentTime = static_cast<float>(SDL_GetTicks()) / 1000.0f;
+
+    Time::frameTime = currentTime - Time::timestamp;
+    Time::timestamp = currentTime;
 }

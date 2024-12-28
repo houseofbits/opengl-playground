@@ -10,34 +10,21 @@ private:
     SDL_GLContext sdlGlContext;
     bool isFullScreen;
     int windowFlags;
-    EventManager *eventManager;
 
 public:
     int viewportWidth;
     int viewportHeight;
 
 public:
-    explicit Window(EventManager *eventManager);
+    explicit Window();
 
-    void create();
-
-    bool pollEvents();
+    void create(EventManager &);
 
     void doubleBuffer() const;
 
     void destroy() const;
 
-    void onKeyEvent(InputEvent::EventType type, int keysym, bool isAlt, bool isCtrl, bool isdShift) const;
-
-    void onMouseEvent(InputEvent::EventType type, glm::vec2 position, glm::vec2 motion, bool mouseLeft, bool mouseRight,
-                      bool isAlt, bool isCtrl, bool isShift) const;
-
-    void onMouseWheelEvent(glm::vec2 wheel, bool mouseLeft, bool mouseRight, bool isAlt, bool isCtrl,
-                           bool isShift) const;
-
-    static void setTime();
-
-    SDL_Window *getSDLWindow() {
+    SDL_Window *getSDLWindow() const {
         return sdlWindow;
     }
 

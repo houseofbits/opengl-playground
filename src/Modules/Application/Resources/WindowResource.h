@@ -15,9 +15,9 @@ public:
 
     void create(EventManager &);
 
-    [[nodiscard]] bool pollEvents() const;
-
     void swapBuffers() const;
+
+    glm::ivec2 getViewportSize() const;
 
     Window* m_Window;
 };
