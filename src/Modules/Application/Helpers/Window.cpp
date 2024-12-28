@@ -1,8 +1,9 @@
-#include "Modules/Application/Events/InputEvent.h"
-#include "Modules/Application/Events/RawSDLEvent.h"
-#include "Modules/Application/Events/SystemEvent.h"
-#include "Include.h"
-#include "Core/Helper/GLDebugMessageCallback.h"
+#include "Window.h"
+#include "../Events/InputEvent.h"
+#include "Exception.h"
+#include "../Events/RawSDLEvent.h"
+#include "../Events/SystemEvent.h"
+#include "../../../Core/Helper/GLDebugMessageCallback.h"
 #include <GL/glew.h>
 #include <iostream>
 

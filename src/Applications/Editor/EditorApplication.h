@@ -2,7 +2,6 @@
 
 #include "../../Core/API.h"
 #include "../../Modules/Editor/Events/EditorUIEvent.h"
-#include "../../Window.h"
 
 class EditorApplication : public Application, public EventListener {
 public:

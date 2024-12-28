@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../../../Window.h"
+#include "../Helpers/Window.h"
 
 class WindowResource : public Resource {
 public:
