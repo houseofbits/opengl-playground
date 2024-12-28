@@ -101,10 +101,13 @@ void EntityContext::registerEntityWithSystems(Entity &entity) const {
 void EntityContext::initializeSystems(ResourceManager &resourceManager, EventManager &eventManager) {
     for (const auto &[system, processType]: m_systemInitializers) {
         system->m_EventManager = &eventManager; //Remove
-        system->initialize(resourceManager, eventManager);
-        system->registerEventHandlers(eventManager);
 
+        system->registerEventHandlers(eventManager);
         entitySystemRegistry.registerEntitySystem(*system, processType);
+    }
+
+    for (const auto &[system, processType]: m_systemInitializers) {
+        system->initialize(resourceManager, eventManager);
     }
 
     postRegisterModules();
