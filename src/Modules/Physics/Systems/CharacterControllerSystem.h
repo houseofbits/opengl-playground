@@ -9,7 +9,7 @@ class CharacterControllerSystem : public EntitySystem {
 public:
     CharacterControllerSystem();
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void process(EventManager &) override;
 

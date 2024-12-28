@@ -1,6 +1,5 @@
 #include "EntityContext.h"
 #include "EntitySerializer.h"
-#include <iostream>
 #include <memory>
 
 EntityContext::EntityContext() : m_ComponentFactory(),
@@ -82,7 +81,7 @@ void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager &reso
     }
 }
 
-void EntityContext::unregisterEntityFromSystems(Entity& entity) {
+void EntityContext::unregisterEntityFromSystems(Entity &entity) {
     //TODO: Handle entity removal or component change
 }
 
@@ -100,18 +99,17 @@ void EntityContext::registerEntityWithSystems(Entity &entity) const {
 }
 
 void EntityContext::initializeSystems(ResourceManager &resourceManager, EventManager &eventManager) {
-    postRegisterModules();
-
     for (const auto &[system, processType]: m_systemInitializers) {
         system->m_EventManager = &eventManager; //Remove
-        system->initialize(resourceManager);
+        system->initialize(resourceManager, eventManager);
         system->registerEventHandlers(eventManager);
 
         entitySystemRegistry.registerEntitySystem(*system, processType);
     }
-    m_systemInitializers.clear();
 
-    eventManager.queueEvent<SystemEvent>(SystemEvent::ENTITY_SYSTEMS_READY);
+    postRegisterModules();
+
+    m_systemInitializers.clear();
 }
 
 void EntityContext::processSystems(EventManager &eventManager) {
@@ -177,11 +175,10 @@ void EntityContext::removeComponent(Identity::Type entityId, const std::string &
             unregisterEntityFromSystems(*e);
             e->removeComponent(*c);
             e->setStatus(Entity::CREATED);
-//            delete c;
+            //            delete c;
             //TODO: register with systems
             // 1) unregister entity from systems
             // 2) register to systems again
-
         }
     }
 }
@@ -192,11 +189,11 @@ std::vector<std::string> EntityContext::getAllConfigurationNames() {
 
 Entity *EntityContext::findEntity(std::function<bool(Entity *)> functor) {
     auto it = std::find_if(
-            m_Entities.begin(),
-            m_Entities.end(),
-            [&functor](const auto &v) {
-                return functor(v.get());
-            });
+        m_Entities.begin(),
+        m_Entities.end(),
+        [&functor](const auto &v) {
+            return functor(v.get());
+        });
 
     if (it == m_Entities.end()) {
         return nullptr;

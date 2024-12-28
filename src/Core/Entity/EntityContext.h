@@ -35,7 +35,7 @@ public:
     }
 
     template<class T>
-    void registerComponent(std::string alias = "") {
+    void registerComponent(const std::string alias = "") {
         m_ComponentFactory.registerName<T>(T::TypeName());
         if (!alias.empty()) {
             m_ComponentFactory.registerName<T>(alias);
@@ -73,7 +73,7 @@ public:
     }
 
     template<class T>
-    bool doesEntityHaveComponent(Identity::Type entityId) {
+    bool doesEntityHaveComponent(const Identity::Type entityId) {
         auto *e = getEntity(entityId);
         if (e != nullptr) {
             auto *c = e->getComponent<T>();
@@ -85,7 +85,7 @@ public:
     }
 
     template<class T>
-    T *getEntityComponent(Identity::Type entityId) {
+    T *getEntityComponent(const Identity::Type entityId) {
         auto *e = getEntity(entityId);
         if (e) {
             return e->getComponent<T>();

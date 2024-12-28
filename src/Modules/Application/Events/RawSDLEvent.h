@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Event.h"
+#include "../../../Core/API.h"
 #include <SDL2/SDL.h>
 
 class RawSDLEvent : public BaseEvent {

@@ -7,7 +7,8 @@
 #include "../Helpers/BasePhysicsJoint.h"
 
 class PhysicsHingeJointComponent : public Component, public ComponentTransformEdit, public BasePhysicsJoint {
-TYPE_DEFINITION(PhysicsHingeJointComponent);
+    TYPE_DEFINITION(PhysicsHingeJointComponent);
+
 public:
     inline static const std::string ENTITY_KEY = "targetEntity";
     inline static const std::string ARE_LIMITS_ENABLED_KEY = "enableLimits";
@@ -44,15 +45,15 @@ public:
 
     void setWorldTransform(const glm::mat4 &) override;
 
-    float getUnitPosition() const;
+    float getUnitPosition() const override;
 
-    void lockInPlace();
+    void lockInPlace() override;
 
-    void unLock();
+    void unLock() override;
 
-    void setMotorVelocity(float velocity) const;
+    void setMotorVelocity(float velocity) const override;
 
-    void setMotorOff() const;
+    void setMotorOff() const override;
 
     bool m_isLimitsEnabled;
     bool m_isLockingToLimitsEnabled;
@@ -67,20 +68,4 @@ public:
     float m_motorForceLimit;
     float m_motorDamping;
     float m_motorFrequency;
-
-private:
-    enum MovementState {
-        UNKNOWN,
-        CLOSED,
-        OPEN,
-        CLOSING,
-        OPENING,
-    };
-
-    // void open();
-    //
-    // void close();
-
-    MovementState m_moveState;
-
 };

@@ -5,7 +5,7 @@ DoorBehaviourSystem::DoorBehaviourSystem() : EntitySystem() {
     m_hingeJointComponentRegistry = useComponentsRegistry<DoorBehaviourComponent, PhysicsHingeJointComponent>();
 }
 
-void DoorBehaviourSystem::initialize(ResourceManager &) {
+void DoorBehaviourSystem::initialize(ResourceManager &, EventManager&) {
 }
 
 void DoorBehaviourSystem::process(EventManager &) {

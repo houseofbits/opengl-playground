@@ -10,7 +10,7 @@ class PhysicsBodyProcessingSystem : public EntitySystem {
 public:
     PhysicsBodyProcessingSystem();
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void registerEventHandlers(EventManager &) override;
 

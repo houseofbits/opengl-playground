@@ -10,7 +10,7 @@ StorageBufferUpdateSystem::StorageBufferUpdateSystem() : EntitySystem(),
     m_lightComponentRegistry = useComponentsRegistry<TransformComponent, LightComponent>();
 }
 
-void StorageBufferUpdateSystem::initialize(ResourceManager &resourceManager) {
+void StorageBufferUpdateSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     resourceManager.request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager.request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
 //

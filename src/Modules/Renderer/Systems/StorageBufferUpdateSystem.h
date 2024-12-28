@@ -10,7 +10,7 @@ public:
 
     void process(EventManager &) override;
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
     ResourceHandle<EnvironmentProbesBufferResource> m_ProbesBuffer;

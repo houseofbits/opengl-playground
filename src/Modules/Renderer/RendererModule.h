@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../Core/API.h"
-#include "../Common/Components/CameraComponent.h"
 #include "Components/EnvironmentProbeComponent.h"
 #include "Components/LightComponent.h"
 #include "Components/SkyComponent.h"
@@ -35,8 +34,7 @@ public:
     };
 
     void postRegister(EntityContext &ctx) override {
-        auto editorSystem = ctx.getSystem<EditorUISystem>();
-        if (editorSystem != nullptr) {
+        if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
             editorSystem->registerComponentEditor<LightComponent, LightComponentEdit>();
             editorSystem->registerComponentEditor<StaticMeshComponent, StaticMeshComponentEdit>();
             editorSystem->registerComponentEditor<EnvironmentProbeComponent, EnvironmentProbeComponentEdit>();

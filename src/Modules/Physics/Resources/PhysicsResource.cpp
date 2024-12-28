@@ -1,3 +1,4 @@
+#include <cstdarg>
 #include "PhysicsResource.h"
 #include "../Helpers/PhysicsTypeCast.h"
 #include <Jolt/Jolt.h>

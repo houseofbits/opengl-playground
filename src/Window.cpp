@@ -1,5 +1,6 @@
-#include "Core/Events/InputEvent.h"
-#include "Core/Events/RawSDLEvent.h"
+#include "Modules/Application/Events/InputEvent.h"
+#include "Modules/Application/Events/RawSDLEvent.h"
+#include "Modules/Application/Events/SystemEvent.h"
 #include "Core/Helper/Time.h"
 #include "Include.h"
 #include "Core/Helper/GLDebugMessageCallback.h"
@@ -107,7 +108,7 @@ bool Window::pollEvents() {
     bool rightButton = false;
 
     while (SDL_PollEvent(&sdl_event) != 0) {
-        eventManager->triggerEvent<RawSDLEvent>(sdl_event);
+        eventManager->queueEvent<RawSDLEvent>(sdl_event);
 
         if (sdl_event.type == SDL_QUIT) {
             return false;

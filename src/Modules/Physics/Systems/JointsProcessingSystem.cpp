@@ -7,7 +7,7 @@ JointsProcessingSystem::JointsProcessingSystem() : EntitySystem() {
     m_sliderJointComponentRegistry = useComponentRegistry<PhysicsSliderJointComponent>();
 }
 
-void JointsProcessingSystem::initialize(ResourceManager &resourceManager) {
+void JointsProcessingSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     resourceManager.request(m_PhysicsResource, "physics");
 }
 

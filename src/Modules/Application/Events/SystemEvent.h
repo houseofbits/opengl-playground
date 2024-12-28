@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../Window.h"
-#include "Event.h"
+#include "../../../Core/API.h"
+#include "../../../Window.h"
 
 class SystemEvent : public BaseEvent {
 TYPE_DEFINITION(SystemEvent);

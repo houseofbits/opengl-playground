@@ -7,6 +7,11 @@ ContinuousSystemProcess::ContinuousSystemProcess(EventManager &eventManager, lon
     m_frequencyMs(frequencyMs) {
 }
 
+ContinuousSystemProcess::~ContinuousSystemProcess() {
+    m_processRunning = false;
+    m_thread.join();
+}
+
 void ContinuousSystemProcess::process() {
     while (true) {
         if (!m_processRunning) {

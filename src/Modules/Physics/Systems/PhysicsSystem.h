@@ -11,7 +11,7 @@ class PhysicsSystem : public EntitySystem {
 public:
     PhysicsSystem();
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void process(EventManager &) override;
 

@@ -1,8 +1,6 @@
 #pragma once
 
 #include "../../../SourceLibs/imgui/imgui.h"
-#include "../../Editor/Helpers/FileDialogHelper.h"
-#include "../../Editor/Helpers/TextPromptHelper.h"
 #include "../../Editor/Helpers/TargetEntityHelper.h"
 #include "../../Editor/UI/BaseComponentEdit.h"
 #include "../Components/PhysicsHingeJointComponent.h"
@@ -27,16 +25,16 @@ public:
             "Attachment entity##TRANSFORM_PARENT_ENTITY_NAME"
         );
 
-        ImGui::InputFloat3("Attachment A", (float *) &body->m_localAttachmentA);
-        ImGui::InputFloat3("Axis A", (float *) &body->m_axisA);
-        ImGui::InputFloat3("Attachment B", (float *) &body->m_localAttachmentB);
-        ImGui::InputFloat3("Axis B", (float *) &body->m_axisB);
+        ImGui::InputFloat3("Attachment A", reinterpret_cast<float *>(&body->m_localAttachmentA));
+        ImGui::InputFloat3("Axis A", reinterpret_cast<float *>(&body->m_axisA));
+        ImGui::InputFloat3("Attachment B", reinterpret_cast<float *>(&body->m_localAttachmentB));
+        ImGui::InputFloat3("Axis B", reinterpret_cast<float *>(&body->m_axisB));
 
         ImGui::Checkbox("Angular limits", &body->m_isLimitsEnabled);
         ImGui::Checkbox("Lock on limits", &body->m_isLockingToLimitsEnabled);
 
         if (body->m_isLimitsEnabled) {
-            if (ImGui::InputFloat2("Angular limits", (float *) &angularLimits)) {
+            if (ImGui::InputFloat2("Angular limits", reinterpret_cast<float *>(&angularLimits))) {
                 body->m_angularLimits.x = glm::radians(angularLimits.x);
                 body->m_angularLimits.y = glm::radians(angularLimits.y);
             } else {

@@ -45,7 +45,7 @@ void EditorUISystem::process(EventManager &eventManager) {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void EditorUISystem::initialize(ResourceManager &manager) {
+void EditorUISystem::initialize(ResourceManager &manager, EventManager&) {
     m_ResourceManager = &manager;
 
 

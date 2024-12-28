@@ -7,7 +7,7 @@ CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
     m_registry = useComponentsRegistry<TransformComponent, PhysicsCharacterComponent>();
 }
 
-void CharacterControllerSystem::initialize(ResourceManager &resourceManager) {
+void CharacterControllerSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     resourceManager.request(m_PhysicsResource, "physics");
 }
 

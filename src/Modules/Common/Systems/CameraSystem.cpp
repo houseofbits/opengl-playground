@@ -1,5 +1,6 @@
 #include "CameraSystem.h"
 #include "../Components/CameraComponent.h"
+#include "../../Application/Events/SystemEvent.h"
 
 CameraSystem::CameraSystem() : EntitySystem(), m_viewportSize(0, 0) {
     m_registry = useComponentRegistry<CameraComponent>();
@@ -9,7 +10,7 @@ void CameraSystem::process(EventManager &) {
 
 }
 
-void CameraSystem::initialize(ResourceManager &) {
+void CameraSystem::initialize(ResourceManager &, EventManager&) {
 
 }
 

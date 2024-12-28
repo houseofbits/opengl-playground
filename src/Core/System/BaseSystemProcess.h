@@ -45,6 +45,7 @@ public:
 protected:
     void processAllSystems() const {
         for (const auto &system: m_Systems) {
+            system->processEvents();
             system->process(*m_eventManager);
         }
     }

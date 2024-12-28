@@ -3,6 +3,7 @@
 #include "../Entity/Component.h"
 #include "../Reflection/Type.h"
 #include "../Events/EventManager.h"
+#include "../Events/EventManager_V2.h"
 #include "AbstractComponentRegistry.h"
 #include "RelatedComponentRegistry.h"
 #include "SingleComponentRegistry.h"
@@ -13,9 +14,10 @@ class EntityContext;
 class ResourceManager;
 class Entity;
 
-class EntitySystem : public EventHandler {
+class EntitySystem : public EventListener {
 public:
-    EntitySystem() : EventHandler() {}
+    EntitySystem() : EventListener() {
+    }
 
     typedef std::shared_ptr<EntitySystem> TEntitySystemPtr;
 
@@ -23,12 +25,16 @@ public:
      * Initialize is run for all systems once on startup. After the render context
      * is created and before entities are deserialized
      */
-    virtual void initialize(ResourceManager &) {};
+    virtual void initialize(ResourceManager &, EventManager&) {
+    };
     /**
      * Process runs each frame for each system
      */
-    virtual void process(EventManager &) {};
-    virtual void registerEventHandlers(EventManager &) {}
+    virtual void process(EventManager &) {
+    };
+
+    virtual void registerEventHandlers(EventManager &) {
+    }
 
     //Used for event manager to identify target handlers
     Identity::Type getId() override {
@@ -66,7 +72,6 @@ public:
             reg->unregisterComponents(entityId);
         }
     }
-
 
     std::list<AbstractComponentRegistry *> m_registries;
 };

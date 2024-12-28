@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../../../Core/Events/RawSDLEvent.h"
-#include "../../../Core/Events/SystemEvent.h"
+#include "../../../Modules/Application/Events/RawSDLEvent.h"
+#include "../../../Modules/Application/Events/SystemEvent.h"
 #include "../../Common/Components/CameraComponent.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../../Renderer/Components/EnvironmentProbeComponent.h"
@@ -21,7 +21,7 @@ public:
 
     void process(EventManager &) override;
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void registerEventHandlers(EventManager &) override;
 

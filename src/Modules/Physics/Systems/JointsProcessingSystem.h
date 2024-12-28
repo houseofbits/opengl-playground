@@ -13,7 +13,7 @@ class JointsProcessingSystem : public EntitySystem {
 public:
     JointsProcessingSystem();
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void registerEventHandlers(EventManager &) override;
 

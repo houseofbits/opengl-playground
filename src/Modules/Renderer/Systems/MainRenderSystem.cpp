@@ -2,6 +2,7 @@
 #include "../Components/SkyComponent.h"
 #include "../Components/StaticMeshComponent.h"
 #include <GL/glew.h>
+#include "../../Application/Events/SystemEvent.h"
 
 MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_isEnabled(true),
@@ -29,7 +30,7 @@ void MainRenderSystem::handleSystemEvent(const SystemEvent &event) {
     }
 }
 
-void MainRenderSystem::initialize(ResourceManager &resourceManager) {
+void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     glEnable(GL_DEPTH_TEST);
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 

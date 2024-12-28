@@ -11,7 +11,7 @@ class DoorBehaviourSystem : public EntitySystem {
 public:
     DoorBehaviourSystem();
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void process(EventManager &) override;
 

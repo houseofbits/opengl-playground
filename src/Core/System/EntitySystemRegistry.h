@@ -9,8 +9,7 @@ public:
 
     static constexpr ProcessType MAIN_PROCESS = 0;
 
-    EntitySystemRegistry() : m_systemProcesses() {
-        createMainProcess();
+    EntitySystemRegistry() : m_eventManager(nullptr), m_systemProcesses() {
     }
 
     void setEventManager(EventManager &eventManager) {
@@ -24,6 +23,8 @@ public:
     }
 
     BaseSystemProcess &createMainProcess() {
+        assert(m_eventManager!= nullptr);
+
         auto p = new BaseSystemProcess(*m_eventManager);
         m_systemProcesses[MAIN_PROCESS] = p;
 
@@ -31,6 +32,7 @@ public:
     }
 
     ContinuousSystemProcess &createContinuousProcess(const ProcessType type, const long frequencyMs) {
+        assert(m_eventManager!= nullptr);
         assert(type != MAIN_PROCESS);
         assert(m_systemProcesses.count(type) == 0);
 

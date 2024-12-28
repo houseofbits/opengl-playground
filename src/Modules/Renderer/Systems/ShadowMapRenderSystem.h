@@ -11,7 +11,7 @@ public:
 
     void process(EventManager &) override;
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void registerEventHandlers(EventManager &) override;
 

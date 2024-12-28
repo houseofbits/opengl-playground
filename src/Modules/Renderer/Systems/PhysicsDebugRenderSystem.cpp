@@ -1,9 +1,10 @@
 #include "PhysicsDebugRenderSystem.h"
+#include "../../Application/Events/SystemEvent.h"
 
 PhysicsDebugRenderSystem::PhysicsDebugRenderSystem() : EntitySystem(), m_isEnabled(false), m_activeCameraHelper() {
 }
 
-void PhysicsDebugRenderSystem::initialize(ResourceManager &resourceManager) {
+void PhysicsDebugRenderSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     resourceManager.request(m_PhysicsResource, "physics");
     resourceManager.request(m_ShaderProgram, "resources/shaders/basic|.vert|.frag");
 }

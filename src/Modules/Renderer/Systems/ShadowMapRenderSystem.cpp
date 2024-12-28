@@ -8,7 +8,7 @@ ShadowMapRenderSystem::ShadowMapRenderSystem() : EntitySystem(),
     m_lightComponentRegistry = useComponentsRegistry<TransformComponent, LightComponent>();
 }
 
-void ShadowMapRenderSystem::initialize(ResourceManager &resourceManager) {
+void ShadowMapRenderSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     m_ResourceManager = &resourceManager;
     resourceManager.request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager.request(m_ShaderProgram, "data/shaders/shadowMap|.vert|.frag", {"SpotLightStorageBuffer"});

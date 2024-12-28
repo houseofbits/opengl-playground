@@ -5,7 +5,7 @@ TransformHierarchyProcessingSystem::TransformHierarchyProcessingSystem() : Entit
     m_cameraComponentRegistry = useComponentRegistry<CameraComponent>();
 }
 
-void TransformHierarchyProcessingSystem::initialize(ResourceManager &) {
+void TransformHierarchyProcessingSystem::initialize(ResourceManager &, EventManager&) {
 }
 
 void TransformHierarchyProcessingSystem::process(EventManager &) {

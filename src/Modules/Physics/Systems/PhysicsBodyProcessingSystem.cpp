@@ -6,7 +6,7 @@ PhysicsBodyProcessingSystem::PhysicsBodyProcessingSystem() : EntitySystem(),
     m_registry = useComponentsRegistry<TransformComponent, PhysicsBodyComponent>();
 }
 
-void PhysicsBodyProcessingSystem::initialize(ResourceManager &resourceManager) {
+void PhysicsBodyProcessingSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     resourceManager.request(m_PhysicsResource, "physics");
 }
 

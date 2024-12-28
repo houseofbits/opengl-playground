@@ -6,7 +6,7 @@ PhysicsSystem::PhysicsSystem() : EntitySystem(),
                                  m_PhysicsResource() {
 }
 
-void PhysicsSystem::initialize(ResourceManager &resourceManager) {
+void PhysicsSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
@@ -15,14 +15,14 @@ void PhysicsSystem::process(EventManager &eventManager) {
         return;
     }
 
-    for (const auto &[sensorEntityId, colliderEntityId]: m_PhysicsResource().m_sensorContacts) {
-        eventManager.queueEvent<PhysicsTriggerShapeEvent>(sensorEntityId, colliderEntityId);
-    }
-
     m_PhysicsResource().m_sensorContacts.clear();
     m_PhysicsResource().clearEntityContacts();
     if (!m_isSimulationDisabled) {
         m_PhysicsResource().simulate();
+    }
+
+    for (const auto &[sensorEntityId, colliderEntityId]: m_PhysicsResource().m_sensorContacts) {
+        eventManager.queueEvent<PhysicsTriggerShapeEvent>(sensorEntityId, colliderEntityId);
     }
 }
 

@@ -6,7 +6,7 @@
 #include "../Components/BaseCameraComponent.h"
 #include "../../Editor/Components/EditorCameraComponent.h"
 
-class ActiveCameraHelper : public EventHandler {
+class ActiveCameraHelper : public EventListener {
 public:
     ActiveCameraHelper() : m_activeCameraId(0) {
 

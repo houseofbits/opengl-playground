@@ -10,7 +10,7 @@ private:
     }
 
 public:
-    PhysicsTriggerShapeEvent(Identity::Type sensorEntityId, Identity::Type colliderEntityId) : BaseEvent(),
+    PhysicsTriggerShapeEvent(const Identity::Type sensorEntityId, const Identity::Type colliderEntityId) : BaseEvent(),
         m_sensorEntityId(sensorEntityId),
         m_colliderEntityId(colliderEntityId) {
     }

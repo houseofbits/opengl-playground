@@ -1,5 +1,7 @@
 #include "EditorCameraSystem.h"
 #include "../../../Core/Helper/Time.h"
+#include "../../Application/Events/InputEvent.h"
+#include "../../Application/Events/SystemEvent.h"
 
 EditorCameraSystem::EditorCameraSystem() : EntitySystem(), m_viewportSize(0, 0) {
     m_registry = useComponentRegistry<EditorCameraComponent>();
@@ -8,7 +10,7 @@ EditorCameraSystem::EditorCameraSystem() : EntitySystem(), m_viewportSize(0, 0) 
 void EditorCameraSystem::process(EventManager &) {
 }
 
-void EditorCameraSystem::initialize(ResourceManager &) {
+void EditorCameraSystem::initialize(ResourceManager &, EventManager&) {
 }
 
 void EditorCameraSystem::registerEventHandlers(EventManager &eventManager) {

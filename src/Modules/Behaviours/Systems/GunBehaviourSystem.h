@@ -8,7 +8,7 @@ class GunBehaviourSystem : public EntitySystem {
 public:
     GunBehaviourSystem();
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void process(EventManager &) override;
 

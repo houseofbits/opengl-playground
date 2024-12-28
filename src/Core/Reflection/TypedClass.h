@@ -3,11 +3,14 @@
 
 class BaseClass {
 public:
+    typedef unsigned int IdType;
+
     virtual ~BaseClass() = default;
+
     virtual std::string getTypeName() { return "BaseClass"; }
-    virtual unsigned int getTypeId() { return 0; }
+    virtual IdType getTypeId() { return 0; }
     static std::string TypeName() { return "BaseClass"; }
-    static unsigned int TypeId() { return 0; }
+    static IdType TypeId() { return 0; }
 };
 
 class ObjectTypeCounter {
@@ -26,17 +29,17 @@ public:
 
 #define TYPE_DEFINITION(classname)                          \
 private:                                                    \
-    inline static unsigned int typeId = 0;                  \
+    inline static IdType typeId = 0;                        \
     inline static std::string typeName = #classname;        \
                                                             \
 public:                                                     \
     std::string getTypeName() override { return typeName; } \
-    unsigned int getTypeId() override {                     \
+    IdType getTypeId() override {                           \
         return ObjectTypeCounter::get(classname::typeId);   \
     }                                                       \
     static std::string TypeName() {                         \
         return classname::typeName;                         \
     }                                                       \
-    static unsigned int TypeId() {                          \
+    static IdType TypeId() {                                \
         return ObjectTypeCounter::get(classname::typeId);   \
     }

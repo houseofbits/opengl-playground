@@ -2,6 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../../Editor/Events/EditorUIEvent.h"
+#include "../../Application/Events/SystemEvent.h"
 
 class OverlayRenderSystem : public EntitySystem {
 public:
@@ -9,7 +10,7 @@ public:
 
     void process(EventManager &) override;
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void registerEventHandlers(EventManager &) override;
 

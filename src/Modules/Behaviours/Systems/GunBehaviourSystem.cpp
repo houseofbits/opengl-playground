@@ -7,7 +7,7 @@ GunBehaviourSystem::GunBehaviourSystem() : EntitySystem() {
     m_registry = useComponentsRegistry<TransformComponent, GunBehaviourComponent>();
 }
 
-void GunBehaviourSystem::initialize(ResourceManager &) {
+void GunBehaviourSystem::initialize(ResourceManager &, EventManager&) {
 }
 
 void GunBehaviourSystem::process(EventManager &) {

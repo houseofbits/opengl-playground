@@ -2,6 +2,8 @@
 #include <fstream>
 
 Application::Application() : m_EventManager(), m_ResourceManager(), m_EntityContext(), m_EntitySourceFileName() {
+    m_EntityContext.entitySystemRegistry.setEventManager(m_EventManager);
+    m_EntityContext.entitySystemRegistry.createMainProcess();
 }
 
 void Application::run() {
@@ -23,7 +25,7 @@ void Application::saveEntitiesToFile() {
     m_EntityContext.serializeEntities(j);
 
     std::ofstream file;
-    file.open (m_EntitySourceFileName);
+    file.open(m_EntitySourceFileName);
 
     std::string data(j.dump(4));
     file << data;

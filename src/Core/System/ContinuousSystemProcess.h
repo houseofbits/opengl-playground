@@ -9,6 +9,8 @@ class ContinuousSystemProcess final : public BaseSystemProcess {
 public:
     explicit ContinuousSystemProcess(EventManager &eventManager, long frequencyMs);
 
+    ~ContinuousSystemProcess() override;
+
     void process() override;
 
 private:

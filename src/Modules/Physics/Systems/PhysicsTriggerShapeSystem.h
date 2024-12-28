@@ -9,7 +9,7 @@ class PhysicsTriggerShapeSystem final : public EntitySystem {
 public:
     PhysicsTriggerShapeSystem();
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void process(EventManager &) override;
 

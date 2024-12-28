@@ -36,7 +36,7 @@ void EnvironmentProbeRenderSystem::registerEventHandlers(EventManager &eventMana
     eventManager.registerEventReceiver(this, &EnvironmentProbeRenderSystem::handleEditorUIEvent);
 }
 
-void EnvironmentProbeRenderSystem::initialize(ResourceManager &resourceManager) {
+void EnvironmentProbeRenderSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     resourceManager.request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager.request(m_cubeMapArray, "EnvironmentProbesCubeMapArray");
 

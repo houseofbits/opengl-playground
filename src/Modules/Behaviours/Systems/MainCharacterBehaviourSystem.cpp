@@ -1,12 +1,13 @@
 #include "MainCharacterBehaviourSystem.h"
 #include "../../../Core/Helper/Time.h"
 #include "../../Physics/Events/PhysicsPickingEvent.h"
+#include "../../Application/Events/InputEvent.h"
 
 MainCharacterBehaviourSystem::MainCharacterBehaviourSystem() : EntitySystem() {
     m_registry = useComponentsRegistry<CameraComponent, PhysicsCharacterComponent, MainCharacterBehaviourComponent>();
 }
 
-void MainCharacterBehaviourSystem::initialize(ResourceManager &) {
+void MainCharacterBehaviourSystem::initialize(ResourceManager &, EventManager&) {
 }
 
 void MainCharacterBehaviourSystem::process(EventManager &) {

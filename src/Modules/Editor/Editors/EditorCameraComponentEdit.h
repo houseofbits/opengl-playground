@@ -20,7 +20,7 @@ public:
         }
 
         if (ImGui::Checkbox("Active##CAMERA_ACTIVE", &camera->m_isActive)) {
-            system.m_EventManager->triggerEvent<CameraActivationEvent>(entity.m_Id.id());
+            system.m_EventManager->queueEvent<CameraActivationEvent>(entity.m_Id.id());
         }
 
         static bool isOrthographic = camera->m_type == EditorCameraComponent::TYPE_ORTHOGRAPHIC;

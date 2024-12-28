@@ -169,7 +169,12 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/System/BaseSystemProcess.h
         src/Core/System/ContinuousSystemProcess.cpp
         src/Core/System/ContinuousSystemProcess.h
+        src/Modules/Application/ApplicationModule.h
+        src/Modules/Application/Resources/WindowResource.cpp
+        src/Modules/Application/Resources/WindowResource.h
 )
+
+#add_compile_definitions(EVENTMANAGER_V1)
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 

@@ -9,7 +9,7 @@ void OverlayRenderSystem::process(EventManager &eventManager) {
 
 }
 
-void OverlayRenderSystem::initialize(ResourceManager &) {
+void OverlayRenderSystem::initialize(ResourceManager &, EventManager&) {
 
 }
 

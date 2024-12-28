@@ -107,14 +107,14 @@ void MainToolbarUI::processViewMenu() {
         for (const auto &[id, camera]: m_EditorUISystem->m_editorCameraComponentRegistry->container()) {
             Entity *e = m_EditorUISystem->m_EntityContext->getEntity(id);
             if (ImGui::MenuItem(e->getListName().c_str(), nullptr, camera->m_isActive)) {
-                m_EditorUISystem->m_EventManager->triggerEvent<CameraActivationEvent>(id);
+                m_EditorUISystem->m_EventManager->queueEvent<CameraActivationEvent>(id);
             }
         }
 
         for (const auto &[id, camera]: m_EditorUISystem->m_cameraComponentRegistry->container()) {
             Entity *e = m_EditorUISystem->m_EntityContext->getEntity(id);
             if (ImGui::MenuItem(e->getListName().c_str(), nullptr, camera->m_isActive)) {
-                m_EditorUISystem->m_EventManager->triggerEvent<CameraActivationEvent>(id);
+                m_EditorUISystem->m_EventManager->queueEvent<CameraActivationEvent>(id);
             }
         }
 

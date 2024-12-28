@@ -18,8 +18,7 @@ public:
     };
 
     void postRegister(EntityContext &ctx) override {
-        auto editorSystem = ctx.getSystem<EditorUISystem>();
-        if (editorSystem != nullptr) {
+        if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
             editorSystem->registerComponentEditor<EditorCameraComponent, EditorCameraComponentEdit>();
         }
     }

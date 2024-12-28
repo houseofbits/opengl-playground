@@ -6,7 +6,7 @@ PhysicsTriggerShapeSystem::PhysicsTriggerShapeSystem() : EntitySystem() {
     m_registry = useComponentsRegistry<TransformComponent, PhysicsTriggerShapeComponent>();
 }
 
-void PhysicsTriggerShapeSystem::initialize(ResourceManager &) {
+void PhysicsTriggerShapeSystem::initialize(ResourceManager &, EventManager&) {
 }
 
 void PhysicsTriggerShapeSystem::process(EventManager &) {

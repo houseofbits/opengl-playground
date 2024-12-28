@@ -1,8 +1,11 @@
 #pragma once
 
+//This file seems obsolete
+
 #include "Core/Events/Event.h"
 #include "Core/Events/EventManager.h"
-#include "Core/Events/SystemEvent.h"
+#include "Core/Events/EventManager_V2.h"
+// #include "Core/Events/SystemEvent.h"
 #include "Core/Reflection/TypedClass.h"
 #include "Exception.h"
 #include "Core/Helper/Log.h"
