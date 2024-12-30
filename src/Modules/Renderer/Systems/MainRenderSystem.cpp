@@ -7,11 +7,11 @@
 MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_isEnabled(true),
                                        m_shaderType(SHADER_SHADED),
+                                       m_viewportWidth(1024),
+                                       m_viewportHeight(768),
                                        m_ShaderPrograms(),
                                        m_LightsBuffer(),
                                        m_ProbesBuffer(),
-                                       m_viewportWidth(1024),
-                                       m_viewportHeight(768),
                                        m_activeCameraHelper() {
     m_meshComponentRegistry = useComponentsRegistry<TransformComponent, StaticMeshComponent>();
     m_skyComponentRegistry = useComponentRegistry<SkyComponent>();
@@ -20,7 +20,7 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
 void MainRenderSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &MainRenderSystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &MainRenderSystem::handleEditorUIEvent);
-    m_activeCameraHelper.registerEventHandler(eventManager);
+    eventManager.registerEventReceiver(this, &MainRenderSystem::handleCameraActivationEvent);
 }
 
 void MainRenderSystem::handleSystemEvent(const SystemEvent &event) {

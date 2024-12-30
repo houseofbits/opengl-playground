@@ -69,7 +69,7 @@ void EditorUISystem::initialize(ResourceManager &manager, EventManager&) {
 void EditorUISystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &EditorUISystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &EditorUISystem::handleRawSDLEvent);
-    m_activeCameraHelper.registerEventHandler(eventManager);
+    eventManager.registerEventReceiver(this, &EditorUISystem::handleCameraActivationEvent);
 }
 
 void EditorUISystem::handleSystemEvent(const SystemEvent &event) {

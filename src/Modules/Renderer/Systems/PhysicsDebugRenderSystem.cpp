@@ -29,7 +29,7 @@ void PhysicsDebugRenderSystem::process(EventManager &) {
 void PhysicsDebugRenderSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &PhysicsDebugRenderSystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &PhysicsDebugRenderSystem::handleEditorUIEvent);
-    m_activeCameraHelper.registerEventHandler(eventManager);
+    eventManager.registerEventReceiver(this, &PhysicsDebugRenderSystem::handleCameraActivationEvent);
 }
 
 void PhysicsDebugRenderSystem::handleSystemEvent(const SystemEvent &) {

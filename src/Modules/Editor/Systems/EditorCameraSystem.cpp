@@ -38,7 +38,7 @@ void EditorCameraSystem::handleInputEvent(const InputEvent &event) {
         }
 
         if (event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) {
-            float lookSpeed = 0.15;
+            const float lookSpeed = 0.15;
             cameraComponent->rotateView(-event.mouseMotion * lookSpeed * Time::frameTime);
         }
 

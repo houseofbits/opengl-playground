@@ -25,10 +25,10 @@ JPH::DebugRenderer::Batch PhysicsDebugRenderer::CreateTriangleBatch(const Triang
             n.push_back(j.mNormal.y);
             n.push_back(j.mNormal.z);
 
-            c.push_back(j.mColor.r);
-            c.push_back(j.mColor.g);
-            c.push_back(j.mColor.b);
-            c.push_back(j.mColor.a);
+            c.push_back(static_cast<float>(j.mColor.r) / 255.0f);
+            c.push_back(static_cast<float>(j.mColor.g) / 255.0f);
+            c.push_back(static_cast<float>(j.mColor.b) / 255.0f);
+            c.push_back(static_cast<float>(j.mColor.a) / 255.0f);
 
             uv.push_back(j.mUV.x);
             uv.push_back(j.mUV.y);
@@ -38,7 +38,7 @@ JPH::DebugRenderer::Batch PhysicsDebugRenderer::CreateTriangleBatch(const Triang
         }
     }
 
-    triangleData->m_vbo.createBuffers(&el, &p, &n, &uv);
+    triangleData->m_vbo.createBuffers(&el, &p, &n, &uv, nullptr, &c);
 
     return triangleData;
 }
@@ -68,16 +68,16 @@ PhysicsDebugRenderer::CreateTriangleBatch(const Vertex *inVertices, int inVertex
         n.push_back(j.mNormal.y);
         n.push_back(j.mNormal.z);
 
-        c.push_back(j.mColor.r);
-        c.push_back(j.mColor.g);
-        c.push_back(j.mColor.b);
-        c.push_back(j.mColor.a);
+        c.push_back(static_cast<float>(j.mColor.r) / 255.0f);
+        c.push_back(static_cast<float>(j.mColor.g) / 255.0f);
+        c.push_back(static_cast<float>(j.mColor.b) / 255.0f);
+        c.push_back(static_cast<float>(j.mColor.a) / 255.0f);
 
         uv.push_back(j.mUV.x);
         uv.push_back(j.mUV.y);
     }
 
-    triangleData->m_vbo.createBuffers(&el, &p, &n, &uv);
+    triangleData->m_vbo.createBuffers(&el, &p, &n, &uv, nullptr, &c);
 
     return triangleData;
 }
@@ -87,14 +87,21 @@ PhysicsDebugRenderer::DrawGeometry(JPH::RMat44Arg inModelMatrix, const JPH::AABo
                                    float inLODScaleSq,
                                    JPH::ColorArg inModelColor, const GeometryRef &inGeometry, ECullMode inCullMode,
                                    ECastShadow inCastShadow, EDrawMode inDrawMode) {
-
     if (inGeometry == nullptr) {
         return;
     }
 
+    glm::vec4 modelColor = glm::vec4(
+        static_cast<float>(inModelColor.r) / 255.0f,
+        static_cast<float>(inModelColor.g) / 255.0f,
+        static_cast<float>(inModelColor.b) / 255.0f,
+        static_cast<float>(inModelColor.a) / 255.0f
+    );
+
     auto *triangleBatch = dynamic_cast<TriangleData *>(inGeometry->mLODs[0].mTriangleBatch.GetPtr());
 
     m_shader->setUniform("modelMatrix", PhysicsTypeCast::JPHToGlm(inModelMatrix));
+    m_shader->setUniform("modelColor", modelColor);
     triangleBatch->m_vbo.draw();
 }
 
@@ -114,11 +121,9 @@ PhysicsDebugRenderer::PhysicsDebugRenderer() : DebugRenderer(), m_shader(nullptr
 }
 
 void PhysicsDebugRenderer::init() {
-
 }
 
 PhysicsDebugRenderer::~PhysicsDebugRenderer() = default;
 
 TriangleData::TriangleData() : RefTargetVirtual(), ThatIHaveToMake(), m_vbo() {
-
 }

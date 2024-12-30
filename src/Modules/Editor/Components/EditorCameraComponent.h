@@ -76,4 +76,5 @@ public:
 
     Type m_type;
     float m_orthographicScale;
+    glm::vec3 m_cameraCenter;
 };

@@ -64,6 +64,10 @@ void CameraComponent::setWorldTransform(const glm::mat4 &m) {
 }
 
 void CameraComponent::updateTransformFromParent(const glm::mat4 &parent) {
+    if (!m_isActive) {
+        return;
+    }
+
     if (m_isRelativeRotationDisabled) {
         if (m_shouldSyncWorldTransformToLocal) {
         } else {
@@ -83,6 +87,10 @@ void CameraComponent::updateTransformFromParent(const glm::mat4 &parent) {
 }
 
 void CameraComponent::updateTransformWorld() {
+    if (!m_isActive) {
+        return;
+    }
+
     if (m_shouldSyncWorldTransformToLocal) {
         m_initialTransformLocal = m_currentTransformWorld;
         m_shouldSyncWorldTransformToLocal = false;

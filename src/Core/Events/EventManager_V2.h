@@ -122,10 +122,6 @@ public:
     void registerEventReceiver(T *const instance, void (T::*function)(const EventT &)) {
         m_eventListeners[EventT::TypeId()].push_back(instance);
         instance->registerEventHandlerFunction(function);
-
-        m_tmpListenerEntitySystems[instance] = true;
-
-        // Log::write("Register ", instance, " ", EventT::TypeName());
     }
 
     template<class T, class EventT>
@@ -158,11 +154,7 @@ public:
         return *evt;
     }
 
-    void processEvents() {
-    }
-
 private:
-    std::map<EventListener*, bool> m_tmpListenerEntitySystems;
     std::map<BaseEvent::IdType, EventListenersList> m_eventListeners;
 };
 

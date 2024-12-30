@@ -6,6 +6,7 @@
 #include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
 #include "Jolt/Physics/Collision/RayCast.h"
 #include "Jolt/Physics/Collision/CastResult.h"
+#include <Jolt/Physics/Collision/PhysicsMaterialSimple.h>
 
 PhysicsCharacterComponent::PhysicsCharacterComponent() : Component(),
                                                          m_height(1.75),
@@ -40,10 +41,11 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
     float cylinderHalfHeight = (m_height - m_stepTolerance - (m_radius * 2.f)) * 0.5f;
     float cylinderOffsetY = m_height - (cylinderHalfHeight + m_radius);
 
+    const auto material = new JPH::PhysicsMaterialSimple("Material2", JPH::Color(0, 0, 255));
     auto mStandingShape = JPH::RotatedTranslatedShapeSettings(
                 JPH::Vec3(0, cylinderOffsetY, 0),
                 JPH::Quat::sIdentity(),
-                new JPH::CapsuleShape(cylinderHalfHeight, m_radius))
+                new JPH::CapsuleShape(cylinderHalfHeight, m_radius, material))
             .Create()
             .Get();
 

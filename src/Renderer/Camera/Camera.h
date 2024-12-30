@@ -40,6 +40,8 @@ public:
 
     Camera &setPosition(glm::vec3 position);
 
+    Camera &setFromViewTarget(glm::vec3 targetPosition, glm::vec3 direction, glm::vec3 up);
+
     Camera &setZFar(float);
 
     Camera &setViewMatrix(glm::mat4);

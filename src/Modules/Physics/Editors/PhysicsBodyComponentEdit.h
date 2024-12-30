@@ -2,8 +2,8 @@
 
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../Editor/Helpers/FileDialogHelper.h"
-#include "../../Editor/Helpers/TextPromptHelper.h"
 #include "../../Editor/UI/BaseComponentEdit.h"
+#include "../../Renderer/Components/StaticMeshComponent.h"
 
 class PhysicsBodyComponentEdit : public BaseComponentEdit {
 public:

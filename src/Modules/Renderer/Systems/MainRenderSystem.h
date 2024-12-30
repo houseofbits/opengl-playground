@@ -19,13 +19,17 @@ public:
 
     void process(EventManager &) override;
 
-    void initialize(ResourceManager &, EventManager&) override;
+    void initialize(ResourceManager &, EventManager &) override;
 
     void registerEventHandlers(EventManager &) override;
 
     void handleSystemEvent(const SystemEvent &);
 
     void handleEditorUIEvent(const EditorUIEvent &);
+
+    void handleCameraActivationEvent(const CameraActivationEvent &event) {
+        m_activeCameraHelper.m_activeCameraId = event.m_cameraComponentId;
+    }
 
 private:
     enum ShaderType {
@@ -45,6 +49,6 @@ private:
     ResourceHandle<EnvironmentProbesBufferResource> m_ProbesBuffer;
     ResourceHandle<EnvironmentProbesCubeMapArrayResource> m_ProbesCubeMapArray;
     ActiveCameraHelper m_activeCameraHelper;
-    RelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
-    SingleComponentRegistry<SkyComponent>* m_skyComponentRegistry;
+    RelatedComponentRegistry<TransformComponent, StaticMeshComponent> *m_meshComponentRegistry;
+    SingleComponentRegistry<SkyComponent> *m_skyComponentRegistry;
 };

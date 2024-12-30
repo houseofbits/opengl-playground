@@ -4,9 +4,8 @@
 #include "../../../Renderer/Camera/Camera.h"
 #include "../Events/CameraActivationEvent.h"
 #include "../Components/BaseCameraComponent.h"
-#include "../../Editor/Components/EditorCameraComponent.h"
 
-class ActiveCameraHelper : public EventListener {
+class ActiveCameraHelper {
 public:
     ActiveCameraHelper() : m_activeCameraId(0) {
 
@@ -37,14 +36,6 @@ public:
         }
 
         return nullptr;
-    }
-
-    void registerEventHandler(EventManager &eventManager) {
-        eventManager.registerEventReceiver(this, &ActiveCameraHelper::handleCameraActivationEvent);
-    }
-
-    void handleCameraActivationEvent(const CameraActivationEvent &event) {
-        m_activeCameraId = event.m_cameraComponentId;
     }
 
     Identity::Type m_activeCameraId;

@@ -1,4 +1,5 @@
 #include "PhysicsTriggerShapeComponent.h"
+#include <Jolt/Physics/Collision/PhysicsMaterialSimple.h>
 #include "../Helpers/PhysicsTypeCast.h"
 
 using namespace JPH;
@@ -22,7 +23,9 @@ bool PhysicsTriggerShapeComponent::isReady() {
 void PhysicsTriggerShapeComponent::create(TransformComponent &transform) {
     const glm::vec3 scale = transform.getScale();
     const JPH::Vec3 halfExtents(scale.x / 2.0f, scale.y / 2.0f, scale.z / 2.0f);
-    JPH::Ref<JPH::BoxShape> shape = new JPH::BoxShape(halfExtents);
+
+    const auto material = new JPH::PhysicsMaterialSimple("Material2", JPH::Color(255, 0, 0));
+    const Ref<JPH::BoxShape> shape = new JPH::BoxShape(halfExtents, cDefaultConvexRadius, material);
 
     JPH::BodyCreationSettings settings(
         shape,

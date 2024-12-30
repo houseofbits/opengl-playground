@@ -85,6 +85,19 @@ Camera &Camera::setView(glm::vec3 viewDirection, glm::vec3 upDirection) {
     return *this;
 }
 
+Camera &Camera::setFromViewTarget(glm::vec3 targetPosition, glm::vec3 viewDirection, glm::vec3 upDirection) {
+    direction = glm::normalize(viewDirection);
+    right = glm::normalize(glm::cross(direction, upDirection));
+    up = glm::normalize(glm::cross(right, direction));
+    position = targetPosition - viewDirection;
+
+    // Log::write(position, " t:", targetPosition, " v:", viewDirection);
+
+    calculateView();
+
+    return *this;
+}
+
 void Camera::bind(Shader &shader) {
     shader.setUniform("viewProjectionMatrix", getProjectionViewMatrix());
     shader.setUniform("viewPosition", getPosition());

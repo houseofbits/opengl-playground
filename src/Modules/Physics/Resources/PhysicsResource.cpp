@@ -112,6 +112,8 @@ void PhysicsResource::drawDebug(ShaderProgramResource &shader) {
 
     JPH::BodyManager::DrawSettings drawSettings;
 
+    drawSettings.mDrawShapeColor = BodyManager::EShapeColor::MaterialColor;
+
     m_debugRenderer->m_shader = &shader;
 
     m_PhysicsSystem.DrawBodies(drawSettings, m_debugRenderer);
