@@ -1,11 +1,7 @@
 #include "PhysicsBodyComponent.h"
 #include "../Helpers/PhysicsTypeCast.h"
 #include "Jolt/Physics/Collision/Shape/MeshShape.h"
-#include "Jolt/Physics/Collision/Shape/ConvexHullShape.h"
-#include "Jolt/Physics/Collision/PhysicsMaterialSimple.h"
-#include <Jolt/Jolt.h>
-#include <Jolt/Physics/PhysicsSystem.h>
-#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include "../Helpers/Builder/PhysicsBuilder.h"
 
 PhysicsBodyComponent::PhysicsBodyComponent() : Component(),
                                                m_BodyType(BODY_TYPE_STATIC),
@@ -14,12 +10,11 @@ PhysicsBodyComponent::PhysicsBodyComponent() : Component(),
                                                m_restitution(0.5),
                                                m_mass(0.0),
                                                m_meshResource(),
-                                               m_physicsBody(nullptr),
-                                               m_PhysicsResource() {
+                                               m_PhysicsResource(),
+                                               m_physicsBody(nullptr) {
 }
 
-PhysicsBodyComponent::~PhysicsBodyComponent() {
-}
+PhysicsBodyComponent::~PhysicsBodyComponent() = default;
 
 void PhysicsBodyComponent::serialize(nlohmann::json &j) {
     j[TYPE_KEY] = m_BodyType;
@@ -67,76 +62,30 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
 
     release();
 
-    JPH::ShapeSettings *shapeSettings = nullptr;
-    JPH::PhysicsMaterialSimple *material = nullptr;
-
-    if (m_BodyType == BODY_TYPE_STATIC) {
-        material = new JPH::PhysicsMaterialSimple("Material2", JPH::Color(128,128,128));
-    } else {
-        material = new JPH::PhysicsMaterialSimple("Material2", JPH::Color(0,255,0));
-    }
+    auto builder = PhysicsBuilder::newBody(m_PhysicsResource().getInterface())
+            .setDebugColor((m_BodyType == BODY_TYPE_STATIC)
+                               ? glm::vec3{0.5f, 0.5f, 0.5f}
+                               : glm::vec3{0, 1, 0}
+            )
+            .setEntityReference(m_EntityId.id())
+            .setTransform(transform)
+            .setMass(80)
+            .setDamping(0.7, 0.7);
 
     if (m_MeshType == MESH_TYPE_TRIANGLE) {
-        JPH::PhysicsMaterialList materials;
-        materials.push_back(material);
-        shapeSettings = new JPH::MeshShapeSettings(m_meshResource().createTriangleMeshShape(transform.getScale()),
-                                                   std::move(materials));
+        builder.addTriangleMeshShape(m_meshResource().createTriangleMeshShape(transform.getScale()));
     } else {
-        shapeSettings = new JPH::ConvexHullShapeSettings(m_meshResource().createConvexMeshShape(transform.getScale()),
-                                                         JPH::cDefaultConvexRadius, material);
+        builder.addConvexMeshShape(m_meshResource().createConvexMeshShape(transform.getScale()));
     }
 
-    JPH::EMotionType motionType = JPH::EMotionType::Dynamic;
-    JPH::ObjectLayer layer = Layers::MOVING;
     if (m_BodyType == BODY_TYPE_STATIC) {
-        motionType = JPH::EMotionType::Static;
-        layer = Layers::NON_MOVING;
+        m_physicsBody = builder.createStatic();
+    } else {
+        m_physicsBody = builder.createDynamic();
     }
-
-    auto settings = JPH::BodyCreationSettings(
-        shapeSettings,
-        PhysicsTypeCast::glmToJPH(transform.getWorldPosition()),
-        PhysicsTypeCast::glmToJPH(transform.getRotation()),
-        motionType,
-        layer);
-
-    settings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
-    settings.mMassPropertiesOverride.mMass = m_mass;
-    settings.mLinearDamping = 0.7;
-    settings.mAngularDamping = 0.7;
-
-    m_physicsBody = m_PhysicsResource().getInterface().CreateBody(settings);
 
     m_physicsBody->SetFriction(m_friction.x);
     m_physicsBody->SetRestitution(m_restitution);
-
-    auto *userData = new PhysicsUserData(m_EntityId.id());
-    m_physicsBody->SetUserData(reinterpret_cast<unsigned long>(userData));
-
-    m_PhysicsResource().getInterface().AddBody(m_physicsBody->GetID(), JPH::EActivation::Activate);
-}
-
-void PhysicsBodyComponent::createMeshShape(TransformComponent &transform) {
-    release();
-
-    if (m_BodyType == BODY_TYPE_DYNAMIC && m_MeshType == MESH_TYPE_TRIANGLE) {
-        Log::warn("PhysicsBodyComponent: Dynamic body cannot have triangle mesh shape");
-
-        return;
-    }
-
-    //    if (m_MeshType == MESH_TYPE_TRIANGLE) {
-    //        m_rigidBody->setCollisionShape(m_meshResource().createTriangleMeshShape(transform.getScale()));
-    //    } else {
-    //        m_rigidBody->setCollisionShape(m_meshResource().createConvexMeshShape(transform.getScale()));
-    //    }
-    //    updateMass();
-    //
-    //    m_rigidBody->setFriction(m_friction.x);
-    //    m_rigidBody->setRollingFriction(m_friction.y);
-    //    m_rigidBody->setRestitution(m_restitution);
-    //
-    //    m_PhysicsResource().m_dynamicsWorld->addRigidBody(m_rigidBody);
 }
 
 void PhysicsBodyComponent::release() {

@@ -1,11 +1,11 @@
 #include "PhysicsFixedJointComponent.h"
 #include "../../Editor/Systems/EditorUISystem.h"
+#include "../Helpers/Builder/PhysicsBuilder.h"
 
 PhysicsFixedJointComponent::PhysicsFixedJointComponent() : Component(),
                                                            BasePhysicsJoint(),
                                                            m_PhysicsResource(),
                                                            m_Joint(nullptr) {
-
 }
 
 void PhysicsFixedJointComponent::serialize(nlohmann::json &j) {
@@ -27,11 +27,9 @@ void PhysicsFixedJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBody
         return;
     }
 
-    JPH::FixedConstraintSettings settings;
-    settings.mAutoDetectPoint = true;
-    m_Joint = (JPH::FixedConstraint *) settings.Create(*bodyA.m_physicsBody, *bodyB.m_physicsBody);
-
-    m_PhysicsResource().getSystem().AddConstraint(m_Joint);
+    m_Joint = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
+            .setBodies(bodyA, bodyB)
+            .createFixedConstraint();
 
     bodyA.wakeUp();
     bodyB.wakeUp();
@@ -50,5 +48,4 @@ bool PhysicsFixedJointComponent::isCreated() const {
 }
 
 void PhysicsFixedJointComponent::update() {
-
 }

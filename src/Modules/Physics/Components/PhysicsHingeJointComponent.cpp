@@ -4,16 +4,16 @@
 #include <Jolt/Physics/Constraints/HingeConstraint.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/GroupFilterTable.h>
-
+#include "../Helpers/Builder/PhysicsBuilder.h"
 using namespace JPH;
 
 PhysicsHingeJointComponent::PhysicsHingeJointComponent() : Component(),
                                                            ComponentTransformEdit(),
                                                            BasePhysicsJoint(),
-                                                           m_PhysicsResource(),
-                                                           m_Joint(nullptr),
                                                            m_isLimitsEnabled(true),
                                                            m_isLockingToLimitsEnabled(true),
+                                                           m_Joint(nullptr),
+                                                           m_PhysicsResource(),
                                                            m_angularLimits(0, 1.0),
                                                            m_axisA(0, 1, 0),
                                                            m_axisB(0, 1, 0),
@@ -70,35 +70,26 @@ void PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBody
         return;
     }
 
-    JPH::HingeConstraintSettings settings;
-    settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
-    settings.mPoint1 = PhysicsTypeCast::glmToJPH(m_localAttachmentA);
-    settings.mPoint2 = PhysicsTypeCast::glmToJPH(m_localAttachmentB);
-    settings.mHingeAxis1 = PhysicsTypeCast::glmToJPH(m_axisA);
-    settings.mHingeAxis2 = PhysicsTypeCast::glmToJPH(m_axisB);
-    settings.mNormalAxis1 = JPH::Vec3::sAxisX();
-    settings.mNormalAxis2 = JPH::Vec3::sAxisX();
+    auto builder = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
+            .setPoints(m_localAttachmentA, m_localAttachmentB)
+            .setAxis(m_axisA, m_axisB)
+            .setBodies(bodyA, bodyB);
 
     if (m_isLimitsEnabled) {
-        settings.mLimitsMin = m_angularLimits.x;
-        settings.mLimitsMax = m_angularLimits.y;
+        builder.setLimits(m_angularLimits);
     }
+
+    if (m_isMotorSettingsEnabled) {
+        builder.setMotorSettings(m_motorFrequency, m_motorDamping);
+        builder.setMotorForceLimit(m_motorForceLimit);
+    }
+
+    m_Joint = builder.createHingeConstraint();
 
     auto *groupFilter = new JPH::GroupFilterTable(2);
     groupFilter->DisableCollision(0, 1);
     bodyA.m_physicsBody->SetCollisionGroup(JPH::CollisionGroup(groupFilter, 0, 0));
     bodyB.m_physicsBody->SetCollisionGroup(JPH::CollisionGroup(groupFilter, 0, 1));
-
-    m_Joint = static_cast<JPH::HingeConstraint *>(settings.Create(*bodyA.m_physicsBody, *bodyB.m_physicsBody));
-
-    m_PhysicsResource().getSystem().AddConstraint(m_Joint);
-
-    if (m_isMotorSettingsEnabled) {
-        MotorSettings &motor_settings = m_Joint->GetMotorSettings();
-        motor_settings.mSpringSettings.mFrequency = m_motorFrequency;
-        motor_settings.mSpringSettings.mDamping = m_motorDamping;
-        motor_settings.SetForceLimit(m_motorForceLimit);
-    }
 
     bodyA.wakeUp();
     bodyB.wakeUp();

@@ -172,6 +172,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Application/ApplicationModule.h
         src/Modules/Application/Resources/WindowResource.cpp
         src/Modules/Application/Resources/WindowResource.h
+        src/Modules/Physics/Helpers/Builder/PhysicsBuilder.cpp
+        src/Modules/Physics/Helpers/Builder/PhysicsBuilder.h
 )
 
 #add_compile_definitions(EVENTMANAGER_V1)

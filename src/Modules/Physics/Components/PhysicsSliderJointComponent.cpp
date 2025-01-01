@@ -1,5 +1,6 @@
 #include "PhysicsSliderJointComponent.h"
 #include "../Helpers/PhysicsTypeCast.h"
+#include "../Helpers/Builder/PhysicsBuilder.h"
 
 using namespace JPH;
 
@@ -53,24 +54,18 @@ void PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBod
         return;
     }
 
-    JPH::SliderConstraintSettings settings;
-    settings.mAutoDetectPoint = true;
-    settings.SetSliderAxis(PhysicsTypeCast::glmToJPH(m_axis));
+    auto builder = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
+            .setBodies(bodyA, bodyB);
+
     if (m_isLimitsEnabled) {
-        settings.mLimitsMin = m_limits.x;
-        settings.mLimitsMax = m_limits.y;
+        builder.setLimits(m_limits);
     }
-
-    m_Joint = dynamic_cast<JPH::SliderConstraint *>(settings.Create(*bodyA.m_physicsBody, *bodyB.m_physicsBody));
-
-    m_PhysicsResource().getSystem().AddConstraint(m_Joint);
-
     if (m_isMotorSettingsEnabled) {
-        MotorSettings &motor_settings = m_Joint->GetMotorSettings();
-        motor_settings.mSpringSettings.mFrequency = m_motorFrequency;
-        motor_settings.mSpringSettings.mDamping = m_motorDamping;
-        motor_settings.SetForceLimit(m_motorForceLimit);
+        builder.setMotorSettings(m_motorFrequency, m_motorDamping);
+        builder.setMotorForceLimit(m_motorForceLimit);
     }
+
+    m_Joint = builder.createSliderConstraint(m_axis);
 }
 
 void PhysicsSliderJointComponent::release() {

@@ -38,8 +38,6 @@ public:
 
     void create(TransformComponent &transform);
 
-    void createMeshShape(TransformComponent &transform);
-
     void update(TransformComponent &transform, bool isSimulationEnabled);
 
     [[nodiscard]] bool isCreated() const;
