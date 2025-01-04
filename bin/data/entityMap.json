@@ -157,5 +157,13 @@
                 "class": "PhysicsTriggerShapeComponent"
             }
         }
+    },
+    {
+        "name": "Composite mesh",
+        "components": {
+            "meshComp": {
+                "class": "MeshComponent"
+            }
+        }
     }
 ]

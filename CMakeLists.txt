@@ -174,6 +174,11 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Application/Resources/WindowResource.h
         src/Modules/Physics/Helpers/Builder/PhysicsBuilder.cpp
         src/Modules/Physics/Helpers/Builder/PhysicsBuilder.h
+        src/Modules/Renderer/Resources/MeshResource.cpp
+        src/Modules/Renderer/Resources/MeshResource.h
+        src/SourceLibs/FBXInfo/FBXInfo.h
+        src/SourceLibs/FBXInfo/FBXInfo.cpp
+        src/SourceLibs/FBXInfo/FBXInfo.h
 )
 
 #add_compile_definitions(EVENTMANAGER_V1)
@@ -197,12 +202,6 @@ IF (WIN32)
     include_directories(${GLEW_INCLUDE_DIRS})
     target_link_libraries(SDLWindow ${GLEW_LIBRARIES})
 
-    #    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
-    #    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
-    #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics_Debug.a)
-    #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision_Debug.a)
-    #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath_Debug.a)
-
 ELSE ()
     #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -frtti")
     #    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -frtti")
@@ -225,6 +224,9 @@ ELSE ()
 
     include_directories(${CMAKE_SOURCE_DIR}/libs/Jolt)
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/Jolt/libJolt.a)
+
+    include_directories(${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/include)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/lib/debug/libfbxsdk.so)
 ENDIF ()
 
 target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)

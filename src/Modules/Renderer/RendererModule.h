@@ -13,6 +13,8 @@
 #include "Systems/PhysicsDebugRenderSystem.h"
 #include "Editors/LightComponentEdit.h"
 #include "Editors/StaticMeshComponentEdit.h"
+#include "Editors/MeshComponentEdit.h"
+#include "Components/MeshComponent.h"
 #include "Editors/EnvironmentProbeComponentEdit.h"
 
 class RendererModule : public EntityModule {
@@ -22,6 +24,7 @@ public:
         ctx.registerComponent<LightComponent>("light");
         ctx.registerComponent<EnvironmentProbeComponent>("probe");
         ctx.registerComponent<SkyComponent>("sky");
+        ctx.registerComponent<MeshComponent>("meshComp");
     };
 
     void registerSystems(EntityContext &ctx) override {
@@ -37,6 +40,7 @@ public:
         if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
             editorSystem->registerComponentEditor<LightComponent, LightComponentEdit>();
             editorSystem->registerComponentEditor<StaticMeshComponent, StaticMeshComponentEdit>();
+            editorSystem->registerComponentEditor<MeshComponent, MeshComponentEdit>();
             editorSystem->registerComponentEditor<EnvironmentProbeComponent, EnvironmentProbeComponentEdit>();
         }
     }

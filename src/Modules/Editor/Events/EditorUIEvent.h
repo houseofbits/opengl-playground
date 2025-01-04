@@ -6,11 +6,11 @@ class EditorUIEvent : public BaseEvent {
 TYPE_DEFINITION(EditorUIEvent);
 
 public:
-
     typedef enum Type {
         UNDEFINED,
         EDITOR_ENABLED,
         EDITOR_DISABLED,
+        LOAD,
         SAVE,
         TRIGGER_PROBE_RENDER,
         TOGGLE_RENDER_SHADED,

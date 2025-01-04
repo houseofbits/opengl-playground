@@ -2,9 +2,6 @@
 
 ### Structure
 
-* bullet3 (build from source)
-  * lib 
-  * bullet (include files)
 * glew
   * lib
   * include
@@ -29,8 +26,9 @@
 `libglew-dev`
 
 ### Structure
-* bullet3 (build from source)
+* Jolt (build from source)
   * lib
   * bullet (include files)
 * tinygltf (include files, build from source)
   * build (libs)
+* libfdx

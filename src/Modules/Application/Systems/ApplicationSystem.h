@@ -2,6 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../Resources/WindowResource.h"
+#include "../../Editor/Events/EditorUIEvent.h"
 
 class ApplicationSystem : public EntitySystem {
 public:
@@ -15,9 +16,17 @@ public:
 
     void handleEntityCreationEvent(const EntityCreationEvent &);
 
+    void handleEditorUIEvent(const EditorUIEvent &event);
+
 private:
     void setTime();
 
+    void loadEntitiesFromFile(const std::string &fileName);
+
+    void saveEntitiesToFile() const;
+
     ResourceManager *m_ResourceManager;
     ResourceHandle<WindowResource> m_WindowResource;
+
+    std::string m_EntitySourceFileName;
 };
