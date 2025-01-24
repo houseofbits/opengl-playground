@@ -176,9 +176,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/Builder/PhysicsBuilder.h
         src/Modules/Renderer/Resources/MeshResource.cpp
         src/Modules/Renderer/Resources/MeshResource.h
-        src/SourceLibs/FBXInfo/FBXInfo.h
-        src/SourceLibs/FBXInfo/FBXInfo.cpp
-        src/SourceLibs/FBXInfo/FBXInfo.h
 )
 
 #add_compile_definitions(EVENTMANAGER_V1)
@@ -225,8 +222,8 @@ ELSE ()
     include_directories(${CMAKE_SOURCE_DIR}/libs/Jolt)
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/Jolt/libJolt.a)
 
-    include_directories(${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/include)
-    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/lib/debug/libfbxsdk.so)
+#    include_directories(${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/include)
+#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/lib/debug/libfbxsdk.so)
 ENDIF ()
 
 target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)

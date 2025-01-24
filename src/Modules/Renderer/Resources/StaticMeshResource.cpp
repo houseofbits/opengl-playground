@@ -56,12 +56,12 @@ Resource::Status StaticMeshResource::build() {
 
                 tinygltf::Accessor indexAccessor = model.accessors[primitive.indices];
 
-                VertexArray::Element el{};
-                el.mode = primitive.mode;
-                el.count = indexAccessor.count;
-                el.componentType = indexAccessor.componentType;
-                el.bufferOffset = indexAccessor.byteOffset;
-                el.bufferId = generatedBuffers[indexAccessor.bufferView];
+                auto el = new VertexArray::Element();// el{};
+                el->mode = primitive.mode;
+                el->count = indexAccessor.count;
+                el->componentType = indexAccessor.componentType;
+                el->bufferOffset = indexAccessor.byteOffset;
+                el->bufferId = generatedBuffers[indexAccessor.bufferView];
                 m_VertexArray.elementsArray.push_back(el);
 
                 //                std::cout<<"Prim:"<<model.meshes[node.mesh].name<<std::endl;
@@ -84,6 +84,8 @@ Resource::Status StaticMeshResource::build() {
                         vaa = 1;
                     if (attrib.first.compare("TEXCOORD_0") == 0)
                         vaa = 2;
+                    if (attrib.first.compare("TANGENT") == 0)
+                        vaa = 3;
                     if (vaa > -1) {
 
                         //                        std::cout<<"VA: "<<vaa<<", "<<size<<", "<<accessor.componentType<<std::endl;

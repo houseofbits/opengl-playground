@@ -11,6 +11,7 @@
 #include "../../Common/Events/CameraActivationEvent.h"
 #include "../../Common/Helpers/ActiveCameraHelper.h"
 #include "../Components/StaticMeshComponent.h"
+#include "../Components/MeshComponent.h"
 #include "../Components/SkyComponent.h"
 
 class MainRenderSystem : public EntitySystem {
@@ -51,4 +52,5 @@ private:
     ActiveCameraHelper m_activeCameraHelper;
     RelatedComponentRegistry<TransformComponent, StaticMeshComponent> *m_meshComponentRegistry;
     SingleComponentRegistry<SkyComponent> *m_skyComponentRegistry;
+    SingleComponentRegistry<MeshComponent> *m_compositeMeshComponentRegistry;
 };

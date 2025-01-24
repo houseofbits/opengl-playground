@@ -60,12 +60,12 @@ void Model::createFromFile(std::string filename)
 
                 tinygltf::Accessor indexAccessor = model.accessors[primitive.indices];
 
-                VertexArray::Element el{};
-                el.mode = primitive.mode;
-                el.count = indexAccessor.count;
-                el.componentType = indexAccessor.componentType;
-                el.bufferOffset = indexAccessor.byteOffset;
-                el.bufferId = generatedBuffers[indexAccessor.bufferView];
+                auto el = new VertexArray::Element(); // el{};
+                el->mode = primitive.mode;
+                el->count = indexAccessor.count;
+                el->componentType = indexAccessor.componentType;
+                el->bufferOffset = indexAccessor.byteOffset;
+                el->bufferId = generatedBuffers[indexAccessor.bufferView];
                 elementsArray.push_back(el);
 
 //                std::cout<<"Prim:"<<model.meshes[node.mesh].name<<std::endl;

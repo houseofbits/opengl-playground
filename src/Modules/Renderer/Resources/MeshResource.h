@@ -2,7 +2,9 @@
 
 #include "../../../Core/API.h"
 #include "../../../Renderer/Model/VertexArray.h"
-#include <fbxsdk.h>
+#include "../../../../libs/tinygltf/tiny_gltf.h"
+#include <GL/glew.h>
+#include "ShaderProgramResource.h"
 
 class MeshResource : public Resource {
 public:
@@ -10,10 +12,10 @@ public:
 
     class MeshInstance {
     public:
-        std::string name;
+        std::string name{};
         //material settings
-        glm::mat4 modelMatrix;
-        VertexArray vertexArray;
+        glm::mat4 modelMatrix{1.0};
+        VertexArray vertexArray{};
     };
 
     Resource::Status build() override;
@@ -22,20 +24,35 @@ public:
         //TODO Unload the mesh resource
     }
 
-    void render();
+    void render(ShaderProgramResource &) const;
 
 private:
-    FbxScene *loadFromFile() const;
+    void loadBufferData(tinygltf::Model &model);
 
-    void processMeshNode(FbxNode *node, FbxGeometryConverter &converter);
+    void loadNode(tinygltf::Model &model, const tinygltf::Node &node, const glm::mat4 &parentTransform);
 
-    void getMeshAttributes(FbxMesh *mesh,
-                           std::vector<unsigned int> &indices,
-                           std::vector<float> &vertices,
-                           std::vector<float> &normals,
-                           std::vector<float> &texCoords,
-                           std::vector<float> &tangents
-    ) const;
+    void loadMesh(const tinygltf::Model &model, const tinygltf::Mesh &mesh, glm::mat4 &transform);
 
-    std::vector<MeshInstance> m_meshes;
+    MeshInstance *createMeshInstance(std::string name, glm::mat4 modelMatrix);
+
+    VertexArray::Element *createPrimitive(
+        const tinygltf::Accessor &indexAccessor,
+        int primitiveGLMode,
+        int vertexArrayObjectId
+    );
+
+    static size_t componentTypeByteSize(int type);
+
+    static glm::mat4 getNodeTransform(const tinygltf::Node &node);
+
+    static int getGLPrimitiveMode(int gltfMode);
+
+    static int getTypeSize(int gltfType);
+
+    static int getVertexAttributeIndex(const std::string &attributeName);
+
+    static glm::mat4 convertDoubleArrayToGlmMat4(const double arr[16]);
+
+    std::vector<MeshInstance *> m_meshes{};
+    std::map<unsigned int, GLuint> m_vertexBuffers{};
 };

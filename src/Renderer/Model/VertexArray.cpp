@@ -1,5 +1,6 @@
 #include "VertexArray.h"
 #include <GL/glew.h>
+#include "../../Core//Helper/Log.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -26,14 +27,14 @@ void VertexArray::createBuffers(
 
     generateFloatBuffer(vertices);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(0);
 
     if (normals != nullptr)
     {
         generateFloatBuffer(normals);
 
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(1);
     }
 
@@ -41,7 +42,7 @@ void VertexArray::createBuffers(
     {
         generateFloatBuffer(texCoords);
 
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(2);
     }
 
@@ -49,7 +50,7 @@ void VertexArray::createBuffers(
     {
         generateFloatBuffer(tangents);
 
-        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, 0);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(3);
     }
 
@@ -57,7 +58,7 @@ void VertexArray::createBuffers(
     {
         generateFloatBuffer(colors);
 
-        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 0, 0);
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(4);
     }
 
@@ -88,12 +89,12 @@ unsigned int VertexArray::generateIndexBuffer(std::vector<unsigned int> *array)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferId);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, array->size() * sizeof(GLuint), array->data(), GL_STATIC_DRAW);
 
-    Element el{};
-    el.bufferId = bufferId;
-    el.mode = GL_TRIANGLES;
-    el.count = (int) array->size();
-    el.componentType = GL_UNSIGNED_INT;
-    el.bufferOffset = 0;
+    auto el = new Element();
+    el->bufferId = bufferId;
+    el->mode = GL_TRIANGLES;
+    el->count = static_cast<int>(array->size());
+    el->componentType = GL_UNSIGNED_INT;
+    el->bufferOffset = 0;
 
     elementsArray.push_back(el);
 
@@ -120,11 +121,11 @@ void VertexArray::draw()
 
         for (const auto &element : elementsArray)
         {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element.bufferId);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element->bufferId);
 
-            glDrawElements(element.mode, element.count,
-                           element.componentType,
-                           BUFFER_OFFSET(element.bufferOffset));
+            glDrawElements(element->mode, element->count,
+                           element->componentType,
+                           BUFFER_OFFSET(element->bufferOffset));
         }
 
         glBindVertexArray(0);

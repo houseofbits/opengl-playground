@@ -2,6 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../Resources/MeshResource.h"
+#include "../Resources/MaterialResource.h"
 
 class MeshComponent : public Component {
     TYPE_DEFINITION(MeshComponent);
@@ -16,4 +17,5 @@ public:
     void deserialize(const nlohmann::json &j, ResourceManager &) override;
 
     ResourceHandle<MeshResource> m_Mesh;
+    ResourceHandle<MaterialResource> m_Material;
 };

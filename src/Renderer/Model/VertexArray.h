@@ -12,15 +12,16 @@ public:
 
     unsigned int vertexArrayObjectId{0};
     struct Element {
-        int mode;
-        int count;
-        int componentType;
-        int bufferOffset;
-        unsigned int bufferId;
+        int mode{0};
+        unsigned int count{0};
+        int componentType{0};
+        unsigned int bufferOffset{0};
+        unsigned int bufferId{0};
+        unsigned int vaoId{0};
     };
 
-    std::vector<Element> elementsArray;
-    std::vector<unsigned int> bufferIds;
+    std::vector<Element*> elementsArray{};
+    std::vector<unsigned int> bufferIds{};
 
     void createBuffers(
             std::vector<unsigned int> *indices,
