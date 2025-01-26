@@ -39,7 +39,7 @@ void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager 
     m_MeshType = j.value(SHAPE_KEY, m_MeshType);
 }
 
-bool PhysicsBodyComponent::isReady() {
+bool PhysicsBodyComponent::areResourcesReady() const {
     return m_PhysicsResource.isReady();
 }
 

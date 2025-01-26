@@ -27,6 +27,8 @@ public:
                 } else {
                     comp->deserialize(emptyJson, resourceManager);
                 }
+
+                comp->m_Status = Component::STATUS_DESERIALIZED;
             } catch (nlohmann::detail::type_error &exception) {
                 std::cout << "JSON deserialization error " << e.m_Name << ": " << exception.what() << std::endl;
             }

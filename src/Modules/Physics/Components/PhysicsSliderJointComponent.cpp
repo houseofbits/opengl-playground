@@ -45,7 +45,7 @@ void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceM
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
-bool PhysicsSliderJointComponent::isReady() {
+bool PhysicsSliderJointComponent::areResourcesReady() const {
     return m_PhysicsResource.isReady();
 }
 

@@ -18,7 +18,7 @@ void PhysicsFixedJointComponent::deserialize(const nlohmann::json &j, ResourceMa
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
-bool PhysicsFixedJointComponent::isReady() {
+bool PhysicsFixedJointComponent::areResourcesReady() const {
     return m_PhysicsResource.isReady();
 }
 

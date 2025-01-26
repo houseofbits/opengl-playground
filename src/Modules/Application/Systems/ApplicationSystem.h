@@ -3,6 +3,7 @@
 #include "../../../Core/API.h"
 #include "../Resources/WindowResource.h"
 #include "../../Editor/Events/EditorUIEvent.h"
+#include "../Events/EntityPersistenceEvent.h"
 
 class ApplicationSystem : public EntitySystem {
 public:
@@ -18,8 +19,10 @@ public:
 
     void handleEditorUIEvent(const EditorUIEvent &event);
 
+    void handleEntityPersistenceEvent(const EntityPersistenceEvent &event);
+
 private:
-    void setTime();
+    static void setTime();
 
     void loadEntitiesFromFile(const std::string &fileName);
 

@@ -18,7 +18,7 @@ void MainApplication::initialize(const std::string &entityDefinitionFileName) {
     m_EntityContext.registerModule<BehavioursModule>();
     m_EntityContext.initializeSystems(m_ResourceManager, m_EventManager);
     m_EventManager.queueEvent<SystemEvent>(SystemEvent::ENTITY_SYSTEMS_READY);
-    m_EventManager.queueEvent<EditorUIEvent>(EditorUIEvent::LOAD);
+    m_EventManager.queueEvent<EntityPersistenceEvent>(EntityPersistenceEvent::TYPE_LOAD, "data/scenes/physics.json");
 }
 
 void MainApplication::run() {

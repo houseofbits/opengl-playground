@@ -22,18 +22,20 @@ public:
 
     void addComponent(Component &);
 
-    void removeComponent(Component &);
+    void removeComponent(const Component &);
 
     void setStatus(Status);
 
     bool isReadyToRegister();
+
+    void initializeComponents(EntityContext &) const;
 
     [[nodiscard]] std::string getListName() const {
         return m_Name; // + " (" + std::to_string(m_Id.id()) + ")";
     }
 
     template<class T>
-    bool hasComponent() {
+    bool hasComponent() const {
         for (const auto &c: m_Components) {
             if (dynamic_cast<T *>(c.get())) {
                 return true;

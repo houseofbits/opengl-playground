@@ -4,9 +4,7 @@
 Entity::Entity() : m_Id(),
                    m_Name(),
                    m_Status(CREATED),
-                   m_Components()
-{
-
+                   m_Components() {
 }
 
 void Entity::addComponent(Component &component) {
@@ -19,15 +17,24 @@ void Entity::setStatus(Status status) {
 
 bool Entity::isReadyToRegister() {
     return std::all_of(m_Components.begin(), m_Components.end(),
-                       [](const auto &component) { return component->isReady(); });
+                       [](const auto &component) { return component->isReadyToRegister(); });
 }
 
-void Entity::removeComponent(Component &c) {
+void Entity::removeComponent(const Component &c) {
     for (auto it = m_Components.begin(); it != m_Components.end(); ++it) {
         if ((*it)->m_Id == c.m_Id) {
             m_Components.erase(it);
 
             return;
+        }
+    }
+}
+
+void Entity::initializeComponents(EntityContext &ctx) const {
+    for (const auto &component: m_Components) {
+        if (component->isReadyToInitialize()) {
+            component->initialize(ctx);
+            component->m_Status = Component::STATUS_INITIALIZED;
         }
     }
 }

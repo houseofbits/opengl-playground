@@ -45,6 +45,7 @@ EntityContext::createEntityFromJson(nlohmann::json &entityJson) {
         c->m_Id = Identity::create(Identity::COMPONENT);
         c->m_Name = key;
         c->m_EntityId = e->m_Id;
+        c->m_Status = Component::STATUS_CREATED;
 
         e->addComponent(*c);
     }
@@ -66,7 +67,7 @@ void EntityContext::removeEntity(int entityId) {
     }
 }
 
-void EntityContext::serializeEntities(nlohmann::json &j) {
+void EntityContext::serializeEntities(nlohmann::json &j) const {
     for (const auto &e: m_Entities) {
         nlohmann::json entityJson;
         EntitySerializer::serialize(*e, entityJson);
@@ -85,9 +86,15 @@ void EntityContext::unregisterEntityFromSystems(Entity &entity) {
     //TODO: Handle entity removal or component change
 }
 
-void EntityContext::registerEntitiesWithSystems(EventManager &eventManager) {
+void EntityContext::initializeEntities(EventManager &eventManager) {
     for (const auto &e: m_Entities) {
-        if (e->m_Status == Entity::CREATED && e->isReadyToRegister()) {
+        if (e->m_Status == Entity::ACTIVE) {
+            continue;
+        }
+
+        e->initializeComponents(*this);
+
+        if (e->isReadyToRegister()) {
             registerEntityWithSystems(*e);
             e->setStatus(Entity::ACTIVE);
         }
@@ -116,12 +123,12 @@ void EntityContext::initializeSystems(ResourceManager &resourceManager, EventMan
 }
 
 void EntityContext::processSystems(EventManager &eventManager) {
-    registerEntitiesWithSystems(eventManager);
+    initializeEntities(eventManager);
 
     entitySystemRegistry.processMain();
 }
 
-Entity *EntityContext::getEntity(Identity::Type id) {
+Entity *EntityContext::getEntity(const Identity::Type id) {
     for (const auto &e: m_Entities) {
         if (e->m_Id.id() == id) {
             return e.get();

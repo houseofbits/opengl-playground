@@ -15,7 +15,7 @@ void PhysicsTriggerShapeComponent::deserialize(const nlohmann::json &j, Resource
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
-bool PhysicsTriggerShapeComponent::isReady() {
+bool PhysicsTriggerShapeComponent::areResourcesReady() const {
     return m_PhysicsResource.isReady();
 }
 

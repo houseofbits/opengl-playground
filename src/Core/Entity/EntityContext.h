@@ -137,9 +137,9 @@ public:
 
     void deserializeEntities(nlohmann::json &j, ResourceManager &);
 
-    void serializeEntities(nlohmann::json &j);
+    void serializeEntities(nlohmann::json &j) const;
 
-    void registerEntitiesWithSystems(EventManager &eventManager);
+    void initializeEntities(EventManager &eventManager);
 
     void registerEntityWithSystems(Entity &entity) const; //TODO: Private ???
 

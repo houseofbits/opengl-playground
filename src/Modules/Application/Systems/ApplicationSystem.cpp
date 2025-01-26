@@ -21,6 +21,7 @@ void ApplicationSystem::process(EventManager &) {
 void ApplicationSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &ApplicationSystem::handleEntityCreationEvent);
     eventManager.registerEventReceiver(this, &ApplicationSystem::handleEditorUIEvent);
+    eventManager.registerEventReceiver(this, &ApplicationSystem::handleEntityPersistenceEvent);
 }
 
 void ApplicationSystem::handleEntityCreationEvent(const EntityCreationEvent &event) {
@@ -58,6 +59,16 @@ void ApplicationSystem::handleEditorUIEvent(const EditorUIEvent &event) {
 
     if (event.m_Type == EditorUIEvent::LOAD) {
         loadEntitiesFromFile("data/scenes/physics.json");
+    }
+}
+
+void ApplicationSystem::handleEntityPersistenceEvent(const EntityPersistenceEvent &event) {
+    if (event.m_Type == EntityPersistenceEvent::TYPE_SAVE) {
+        saveEntitiesToFile();
+    }
+
+    if (event.m_Type == EntityPersistenceEvent::TYPE_LOAD) {
+        loadEntitiesFromFile(event.m_path);
     }
 }
 
