@@ -10,17 +10,13 @@ public:
 
     void process();
 
-    bool m_isEditWindowVisible;
     int m_renderShaderType;
-    bool m_isSimulationEnabled;
 
 private:
     void processViewMenu();
-    void sendUIEvent(EditorUIEvent::Type type);
-    void sendSaveEvent();
-    void sendEditorStateEvent();
-    void runSimulation();
-    void stopSimulation();
+    void sendUIEvent(EditorUIEvent::Type type) const;
+    void enableGameMode() const;
+    void enableEditorMode() const;
 
     EditorUISystem *m_EditorUISystem;
 };

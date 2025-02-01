@@ -6,7 +6,7 @@ PhysicsSystem::PhysicsSystem() : EntitySystem(),
                                  m_PhysicsResource() {
 }
 
-void PhysicsSystem::initialize(ResourceManager &resourceManager, EventManager&) {
+void PhysicsSystem::initialize(ResourceManager &resourceManager, EventManager &) {
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
@@ -27,15 +27,13 @@ void PhysicsSystem::process(EventManager &eventManager) {
 }
 
 void PhysicsSystem::registerEventHandlers(EventManager &eventManager) {
-    eventManager.registerEventReceiver(this, &PhysicsSystem::handleEditorUIEvent);
+    eventManager.registerEventReceiver(this, &PhysicsSystem::handleSystemEvent);
 }
 
-void PhysicsSystem::handleEditorUIEvent(const EditorUIEvent &event) {
-    if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
+void PhysicsSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
         m_isSimulationDisabled = false;
-    } else if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
-        m_isSimulationDisabled = true;
-    } else if (event.m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
+    } else if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
         m_isSimulationDisabled = true;
     }
 }

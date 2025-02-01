@@ -7,20 +7,18 @@
 #include "../../Common/Events/CameraActivationEvent.h"
 
 MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
-                                                       m_isEditWindowVisible(true),
-                                                       m_isSimulationEnabled(true),
                                                        m_renderShaderType(0) {
 }
 
 void MainToolbarUI::process() {
     if (ImGui::BeginMainMenuBar()) {
         ImGui::PushID(0);
-        if (!m_isSimulationEnabled) {
+        if (m_EditorUISystem->m_isEditorModeEnabled) {
             ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor(0, 200, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4) ImColor(0, 170, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4) ImColor(0, 150, 0));
             if (ImGui::Button("Run")) {
-                runSimulation();
+                enableGameMode();
             }
             ImGui::PopStyleColor(3);
         } else {
@@ -28,7 +26,7 @@ void MainToolbarUI::process() {
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4) ImColor(170, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4) ImColor(150, 0, 0));
             if (ImGui::Button("Stop")) {
-                stopSimulation();
+                enableEditorMode();
             }
             ImGui::PopStyleColor(3);
         }
@@ -36,21 +34,7 @@ void MainToolbarUI::process() {
 
         if (ImGui::BeginMenu("Edit")) {
             if (ImGui::MenuItem("Save")) {
-                sendSaveEvent();
-            }
-            if (ImGui::MenuItem("Edit components", nullptr, m_isEditWindowVisible)) {
-                m_isEditWindowVisible = !m_isEditWindowVisible;
-                sendEditorStateEvent();
-            }
-            if (ImGui::MenuItem("Simulation enabled", nullptr, m_isSimulationEnabled)) {
-                m_isSimulationEnabled = !m_isSimulationEnabled;
-                sendUIEvent(m_isSimulationEnabled
-                                ? EditorUIEvent::TOGGLE_SIMULATION_ENABLED
-                                : EditorUIEvent::TOGGLE_SIMULATION_DISABLED);
-            }
-            if (ImGui::MenuItem("Reset rigid bodies")) {
-                m_isSimulationEnabled = false;
-                sendUIEvent(EditorUIEvent::RESET_TO_INITIAL_TRANSFORM);
+                m_EditorUISystem->m_EventManager->queueEvent<EditorUIEvent>(EditorUIEvent::SAVE);
             }
             ImGui::Separator();
             if (ImGui::MenuItem("Update probes")) {
@@ -63,7 +47,7 @@ void MainToolbarUI::process() {
 
         ImGui::Spacing();
 
-        if (!m_isSimulationEnabled) {
+        if (m_EditorUISystem->m_isEditorModeEnabled) {
             m_EditorUISystem->m_transformGizmo.processToolbar(*m_EditorUISystem->m_EntityContext);
         }
 
@@ -71,16 +55,7 @@ void MainToolbarUI::process() {
     }
 }
 
-void MainToolbarUI::sendSaveEvent() {
-    m_EditorUISystem->m_EventManager->queueEvent<EditorUIEvent>(EditorUIEvent::SAVE);
-}
-
-void MainToolbarUI::sendEditorStateEvent() {
-    m_EditorUISystem->m_EventManager->queueEvent<EditorUIEvent>(
-        m_isEditWindowVisible ? EditorUIEvent::EDITOR_ENABLED : EditorUIEvent::EDITOR_DISABLED);
-}
-
-void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) {
+void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) const {
     m_EditorUISystem->m_EventManager->queueEvent<EditorUIEvent>(type);
 }
 
@@ -143,17 +118,10 @@ void MainToolbarUI::processViewMenu() {
     }
 }
 
-void MainToolbarUI::runSimulation() {
-    m_isSimulationEnabled = true;
-    sendUIEvent(EditorUIEvent::TOGGLE_SIMULATION_ENABLED);
-    m_isEditWindowVisible = false;
-    sendEditorStateEvent();
+void MainToolbarUI::enableGameMode() const {
+    m_EditorUISystem->m_EventManager->queueEvent<SystemEvent>(SystemEvent::REQUEST_GAME_MODE);
 }
 
-void MainToolbarUI::stopSimulation() {
-    m_isSimulationEnabled = false;
-    sendUIEvent(EditorUIEvent::TOGGLE_SIMULATION_DISABLED);
-    sendUIEvent(EditorUIEvent::RESET_TO_INITIAL_TRANSFORM);
-    m_isEditWindowVisible = true;
-    sendEditorStateEvent();
+void MainToolbarUI::enableEditorMode() const {
+    m_EditorUISystem->m_EventManager->queueEvent<SystemEvent>(SystemEvent::REQUEST_EDITOR_MODE);
 }

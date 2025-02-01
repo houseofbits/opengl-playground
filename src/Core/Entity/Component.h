@@ -14,11 +14,14 @@ public:
         STATUS_INITIALIZED = 2,
         STATUS_REGISTERED = 3,
         //TODO removal statuses
+
+        STATUS_INITIALIZATION_ERROR = 4,
     };
 
     Component() = default;
 
-    virtual ~Component() = default;
+    virtual ~Component() {
+    }
 
     typedef std::shared_ptr<Component> TComponentPtr;
 
@@ -31,11 +34,13 @@ public:
 
     virtual void deserialize(const nlohmann::json &, ResourceManager &resourceManager) = 0;
 
-    virtual void initialize(EntityContext& ctx) {}
+    virtual bool initialize(EntityContext& ctx) {
+        return true;
+    }
 
     // Validation to ensure the component can be initialized and has all the required resources ready
     // For example: check if all the resources have been properly loaded.
-    [[nodiscard]] virtual bool areResourcesReady() const {
+    [[nodiscard]] virtual bool isReadyToInitialize(EntityContext& ctx) const {
         return true;
     }
 
@@ -50,11 +55,15 @@ public:
     }
 
     //Called after the Component has been created and deserialized and it is ready to initialize (areResourcesReady)
-    [[nodiscard]] bool isReadyToInitialize() const {
-        return m_Status == STATUS_DESERIALIZED && areResourcesReady();
+    [[nodiscard]] bool isDeserialized() const {
+        return m_Status == STATUS_DESERIALIZED;
     }
 
     [[nodiscard]] bool isReadyToRegister() const {
+        return m_Status == STATUS_INITIALIZED;
+    }
+
+    [[nodiscard]] bool isInitialized() const {
         return m_Status == STATUS_INITIALIZED;
     }
 };

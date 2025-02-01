@@ -5,7 +5,7 @@
 #include "../Helpers/BasePhysicsJoint.h"
 #include "Jolt/Physics/Constraints/SliderConstraint.h"
 
-class PhysicsSliderJointComponent : public Component, public BasePhysicsJoint {
+class PhysicsSliderJointComponent : public BasePhysicsJoint {
     TYPE_DEFINITION(PhysicsSliderJointComponent);
 
     inline static const std::string ENTITY_KEY = "targetEntity";
@@ -24,13 +24,9 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    bool areResourcesReady() const override;
-
-    void create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) override;
+    bool create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) override;
 
     void release() override;
-
-    [[nodiscard]] bool isCreated() const override;
 
     void update() override;
 
@@ -46,7 +42,6 @@ public:
 
     void unLock() override;
 
-    ResourceHandle<PhysicsResource> m_PhysicsResource;
     JPH::SliderConstraint *m_Joint;
     bool m_isLimitsEnabled;
     glm::vec2 m_limits;

@@ -1,56 +1,44 @@
 #include "PhysicsBodyProcessingSystem.h"
 
 PhysicsBodyProcessingSystem::PhysicsBodyProcessingSystem() : EntitySystem(),
-                                                             m_PhysicsResource(),
                                                              m_isSimulationDisabled(false) {
     m_registry = useComponentsRegistry<TransformComponent, PhysicsBodyComponent>();
 }
 
-void PhysicsBodyProcessingSystem::initialize(ResourceManager &resourceManager, EventManager&) {
-    resourceManager.request(m_PhysicsResource, "physics");
+void PhysicsBodyProcessingSystem::initialize(ResourceManager &resourceManager, EventManager &) {
 }
 
 void PhysicsBodyProcessingSystem::registerEventHandlers(EventManager &eventManager) {
-    eventManager.registerEventReceiver(this, &PhysicsBodyProcessingSystem::handleEditorUIEvent);
+    eventManager.registerEventReceiver(this, &PhysicsBodyProcessingSystem::handleSystemEvent);
 }
 
 void PhysicsBodyProcessingSystem::process(EventManager &eventManager) {
-    if (!m_PhysicsResource.isReady()) {
-        return;
-    }
-
     for (const auto &[id, components]: m_registry->container()) {
         const auto &[transform, body] = components.get();
-        if (!body->isCreated()) {
-            body->create(*transform);
-        } else {
-            body->update(*transform, !m_isSimulationDisabled);
-        }
+        body->update(*transform, !m_isSimulationDisabled);
     }
 }
 
-void PhysicsBodyProcessingSystem::handleEditorUIEvent(const EditorUIEvent &event) {
-    if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
+void PhysicsBodyProcessingSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
         m_isSimulationDisabled = false;
-        wakeUpAll();
-    } else if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
+        recreateAll();
+    } else if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
         m_isSimulationDisabled = true;
-    } else if (event.m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
         resetToInitialTransform();
-        m_isSimulationDisabled = true;
     }
 }
 
-void PhysicsBodyProcessingSystem::resetToInitialTransform() {
+void PhysicsBodyProcessingSystem::resetToInitialTransform() const {
     for (const auto [id, components]: m_registry->container()) {
         const auto &[transform, body] = components.get();
         transform->m_transform = transform->m_initialTransform;
     }
 }
 
-void PhysicsBodyProcessingSystem::wakeUpAll() {
+void PhysicsBodyProcessingSystem::recreateAll() const {
     for (const auto [id, components]: m_registry->container()) {
         const auto &[transform, body] = components.get();
-        body->wakeUp();
+        body->initialize(*m_EntityContext);
     }
 }

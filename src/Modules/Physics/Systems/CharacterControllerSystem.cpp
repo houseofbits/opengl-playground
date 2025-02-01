@@ -20,15 +20,13 @@ void CharacterControllerSystem::process(EventManager &eventManager) {
 }
 
 void CharacterControllerSystem::registerEventHandlers(EventManager &eventManager) {
-    eventManager.registerEventReceiver(this, &CharacterControllerSystem::handleEditorUIEvent);
+    eventManager.registerEventReceiver(this, &CharacterControllerSystem::handleSystemEvent);
 }
 
-void CharacterControllerSystem::handleEditorUIEvent(const EditorUIEvent &event) {
-    if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
+void CharacterControllerSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
         m_isSimulationDisabled = false;
-    } else if (event.m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
-        m_isSimulationDisabled = true;
-    } else if (event.m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
+    } else if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
         resetToInitialTransform();
         m_isSimulationDisabled = true;
     }

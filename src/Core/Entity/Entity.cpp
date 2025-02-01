@@ -32,9 +32,12 @@ void Entity::removeComponent(const Component &c) {
 
 void Entity::initializeComponents(EntityContext &ctx) const {
     for (const auto &component: m_Components) {
-        if (component->isReadyToInitialize()) {
-            component->initialize(ctx);
-            component->m_Status = Component::STATUS_INITIALIZED;
+        if (component->isDeserialized() && component->isReadyToInitialize(ctx)) {
+            if (component->initialize(ctx)) {
+                component->m_Status = Component::STATUS_INITIALIZED;
+            } else {
+                component->m_Status = Component::STATUS_INITIALIZATION_ERROR;
+            }
         }
     }
 }

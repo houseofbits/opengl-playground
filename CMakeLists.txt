@@ -177,6 +177,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Resources/MeshResource.cpp
         src/Modules/Renderer/Resources/MeshResource.h
         src/Modules/Application/Events/EntityPersistenceEvent.h
+        src/Modules/Physics/Helpers/BasePhysicsJoint.cpp
 )
 
 #add_compile_definitions(EVENTMANAGER_V1)

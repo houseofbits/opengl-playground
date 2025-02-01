@@ -17,7 +17,7 @@ public:
 
     void create(TransformComponent &transform);
 
-    [[nodiscard]] bool areResourcesReady() const override;
+    [[nodiscard]] bool isReadyToInitialize(EntityContext& ctx) const override;
 
     void update(TransformComponent &transform, bool isSimulationEnabled);
 

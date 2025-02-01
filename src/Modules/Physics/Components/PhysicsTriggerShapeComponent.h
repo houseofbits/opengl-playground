@@ -13,7 +13,7 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    bool areResourcesReady() const override;
+    bool isReadyToInitialize(EntityContext& ctx) const override;
 
     void create(TransformComponent &transform);
 

@@ -20,11 +20,17 @@ public:
             return;
         }
 
-        EntityLinkedComponentEdit::process<PhysicsBodyComponent>(
-            *system.m_EventManager,
+        EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
             *system.m_EntityContext,
-            body,
-            "Attachment entity##TRANSFORM_PARENT_ENTITY_NAME"
+            body->m_targetEntityAName,
+            "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
+            "Self"
+        );
+
+        EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
+            *system.m_EntityContext,
+            body->m_targetEntityBName,
+            "Attachment entity B##TRANSFORM_PARENT_ENTITY_NAME_B"
         );
     }
 };

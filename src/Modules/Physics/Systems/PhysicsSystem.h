@@ -1,11 +1,8 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../../Common/Components/CameraComponent.h"
-#include "../../Editor/Events/EditorUIEvent.h"
-#include "../Components/PhysicsCharacterComponent.h"
+#include "../../../Modules/Application/Events/SystemEvent.h"
 #include "../Resources/PhysicsResource.h"
-#include "../../Renderer/Helpers/PhysicsDebugRenderer.h"
 
 class PhysicsSystem : public EntitySystem {
 public:
@@ -17,7 +14,7 @@ public:
 
     void registerEventHandlers(EventManager &) override;
 
-    void handleEditorUIEvent(const EditorUIEvent &);
+    void handleSystemEvent(const SystemEvent &);
 
 private:
     ResourceHandle<PhysicsResource> m_PhysicsResource;

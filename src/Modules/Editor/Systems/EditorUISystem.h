@@ -50,6 +50,7 @@ public:
     SingleComponentRegistry<EditorCameraComponent> *m_editorCameraComponentRegistry;
     SingleComponentRegistry<CameraComponent> *m_cameraComponentRegistry;
     Identity::Type m_selectedEntityId;
+    bool m_isEditorModeEnabled;
 
 private:
     void processDockSpaceWindow();

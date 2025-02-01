@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../../Editor/Events/EditorUIEvent.h"
+#include "../../../Modules/Application/Events/SystemEvent.h"
 #include "../Components/PhysicsCharacterComponent.h"
 #include "../Resources/PhysicsResource.h"
 
@@ -15,7 +15,7 @@ public:
 
     void registerEventHandlers(EventManager &) override;
 
-    void handleEditorUIEvent(const EditorUIEvent &);
+    void handleSystemEvent(const SystemEvent &);
 
 private:
     void updateCCTs() const;

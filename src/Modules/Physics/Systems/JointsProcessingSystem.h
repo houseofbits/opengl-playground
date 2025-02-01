@@ -6,6 +6,7 @@
 #include "../Components/PhysicsHingeJointComponent.h"
 #include "../Components/PhysicsFixedJointComponent.h"
 #include "../Components/PhysicsSliderJointComponent.h"
+#include "../../../Modules/Application/Events/SystemEvent.h"
 
 class EntityLinkingEvent;
 
@@ -13,20 +14,20 @@ class JointsProcessingSystem : public EntitySystem {
 public:
     JointsProcessingSystem();
 
-    void initialize(ResourceManager &, EventManager&) override;
+    void initialize(ResourceManager &, EventManager &) override;
 
     void registerEventHandlers(EventManager &) override;
 
     void process(EventManager &) override;
 
-    void handleEntityLinkingEvent(const EntityLinkingEvent&);
+    void handleSystemEvent(const SystemEvent &);
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 
 private:
-    void processJoint(Identity::Type entityId, BasePhysicsJoint* joint) const;
+    void recreateAll() const;
 
-    SingleComponentRegistry<PhysicsHingeJointComponent>* m_hingeJointComponentRegistry;
-    SingleComponentRegistry<PhysicsFixedJointComponent>* m_fixedJointComponentRegistry;
-    SingleComponentRegistry<PhysicsSliderJointComponent>* m_sliderJointComponentRegistry;
+    SingleComponentRegistry<PhysicsHingeJointComponent> *m_hingeJointComponentRegistry;
+    SingleComponentRegistry<PhysicsFixedJointComponent> *m_fixedJointComponentRegistry;
+    SingleComponentRegistry<PhysicsSliderJointComponent> *m_sliderJointComponentRegistry;
 };

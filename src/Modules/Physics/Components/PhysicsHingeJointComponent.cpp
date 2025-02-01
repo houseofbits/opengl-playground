@@ -7,13 +7,11 @@
 #include "../Helpers/Builder/PhysicsBuilder.h"
 using namespace JPH;
 
-PhysicsHingeJointComponent::PhysicsHingeJointComponent() : Component(),
-                                                           ComponentTransformEdit(),
+PhysicsHingeJointComponent::PhysicsHingeJointComponent() : ComponentTransformEdit(),
                                                            BasePhysicsJoint(),
                                                            m_isLimitsEnabled(true),
                                                            m_isLockingToLimitsEnabled(true),
                                                            m_Joint(nullptr),
-                                                           m_PhysicsResource(),
                                                            m_angularLimits(0, 1.0),
                                                            m_axisA(0, 1, 0),
                                                            m_axisB(0, 1, 0),
@@ -26,7 +24,7 @@ PhysicsHingeJointComponent::PhysicsHingeJointComponent() : Component(),
 }
 
 void PhysicsHingeJointComponent::serialize(nlohmann::json &j) {
-    serializeLinkedEntity(j);
+    BasePhysicsJoint::serialize(j);
 
     j[ARE_LIMITS_ENABLED_KEY] = m_isLimitsEnabled;
     j[ARE_LOCKING_LIMITS_ENABLED_KEY] = m_isLockingToLimitsEnabled;
@@ -44,7 +42,7 @@ void PhysicsHingeJointComponent::serialize(nlohmann::json &j) {
 }
 
 void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
-    deserializeLinkedEntity(j);
+    BasePhysicsJoint::deserialize(j, resourceManager);
 
     m_isLimitsEnabled = j.value(ARE_LIMITS_ENABLED_KEY, m_isLimitsEnabled);
     m_isLockingToLimitsEnabled = j.value(ARE_LOCKING_LIMITS_ENABLED_KEY, m_isLockingToLimitsEnabled);
@@ -57,17 +55,11 @@ void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceMa
     m_motorForceLimit = j.value(MOTOR_MAX_FORCE_KEY, m_motorForceLimit);
     m_motorDamping = j.value(MOTOR_DAMPING_KEY, m_motorDamping);
     m_motorFrequency = j.value(MOTOR_FREQUENCY_KEY, m_motorFrequency);
-
-    resourceManager.request(m_PhysicsResource, "physics");
 }
 
-bool PhysicsHingeJointComponent::areResourcesReady() const {
-    return m_PhysicsResource.isReady();
-}
-
-void PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
+bool PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
     if (!areAllowedToConnect(bodyA, bodyB)) {
-        return;
+        return false;
     }
 
     auto builder = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
@@ -88,17 +80,18 @@ void PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBody
 
     auto *groupFilter = new JPH::GroupFilterTable(2);
     groupFilter->DisableCollision(0, 1);
-    bodyA.m_physicsBody->SetCollisionGroup(JPH::CollisionGroup(groupFilter, 0, 0));
-    bodyB.m_physicsBody->SetCollisionGroup(JPH::CollisionGroup(groupFilter, 0, 1));
+    // bodyA.m_physicsBody->SetCollisionGroup(JPH::CollisionGroup(groupFilter, 0, 0));
+    // bodyB.m_physicsBody->SetCollisionGroup(JPH::CollisionGroup(groupFilter, 0, 1));
 
     bodyA.wakeUp();
     bodyB.wakeUp();
+
+    return true;
 }
 
 void PhysicsHingeJointComponent::release() {
     if (m_Joint != nullptr) {
         m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
-        delete m_Joint;
         m_Joint = nullptr;
     }
 }
@@ -109,10 +102,6 @@ void PhysicsHingeJointComponent::activate() {
 }
 
 void PhysicsHingeJointComponent::update() {
-}
-
-bool PhysicsHingeJointComponent::isCreated() const {
-    return m_Joint != nullptr;
 }
 
 void PhysicsHingeJointComponent::setMotorVelocity(float velocity) const {

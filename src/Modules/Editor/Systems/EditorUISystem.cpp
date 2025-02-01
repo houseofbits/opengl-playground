@@ -12,6 +12,7 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_EditWindowUI(this),
                                    m_MaterialEditWindowUI(this),
                                    m_selectedEntityId(0),
+                                   m_isEditorModeEnabled(false),
                                    m_componentEditors(),
                                    m_activeCameraHelper() {
     m_editorCameraComponentRegistry = useComponentRegistry<EditorCameraComponent>();
@@ -26,7 +27,7 @@ void EditorUISystem::process(EventManager &eventManager) {
     processDockSpaceWindow();
 
     m_MainToolbarUI.process();
-    if (m_MainToolbarUI.m_isEditWindowVisible) {
+    if (m_isEditorModeEnabled) {
         m_EditWindowUI.process();
     }
 
@@ -34,7 +35,7 @@ void EditorUISystem::process(EventManager &eventManager) {
 
     TexturePreviewHelper::process();
 
-    if (!m_MainToolbarUI.m_isSimulationEnabled) {
+    if (m_isEditorModeEnabled) {
         Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
         if (camera != nullptr) {
             m_transformGizmo.processGizmo(*m_EntityContext, m_selectedEntityId, *camera);
@@ -45,7 +46,7 @@ void EditorUISystem::process(EventManager &eventManager) {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void EditorUISystem::initialize(ResourceManager &manager, EventManager&) {
+void EditorUISystem::initialize(ResourceManager &manager, EventManager &) {
     m_ResourceManager = &manager;
 
 
@@ -77,6 +78,10 @@ void EditorUISystem::handleSystemEvent(const SystemEvent &event) {
         ImGui_ImplSDL2_InitForOpenGL(event.window->getSDLWindow(), event.window->getSDLContext());
         ImGui_ImplOpenGL3_Init("#version 410");
         m_isImUIInitialized = true;
+    } else if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
+        m_isEditorModeEnabled = true;
+    } else if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
+        m_isEditorModeEnabled = false;
     }
 }
 

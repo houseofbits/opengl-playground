@@ -46,6 +46,8 @@ public:
 
     JPH::BodyInterface &getInterface();
 
+    const JPH::BodyLockInterfaceLocking &getLockInterface() const;
+
     std::map<Identity::Type, std::vector<glm::vec3> > m_entityContacts;
 
     std::list<std::pair<Identity::Type, Identity::Type> > m_sensorContacts;

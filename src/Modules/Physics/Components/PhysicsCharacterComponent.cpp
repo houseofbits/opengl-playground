@@ -77,7 +77,7 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
     m_PhysicsResource().getInterface().AddBody(m_physicsBody->GetID(), JPH::EActivation::Activate);
 }
 
-bool PhysicsCharacterComponent::areResourcesReady() const {
+bool PhysicsCharacterComponent::isReadyToInitialize(EntityContext& ctx) const {
     return m_PhysicsResource.isReady();
 }
 

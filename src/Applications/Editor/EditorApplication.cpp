@@ -30,6 +30,7 @@ void EditorApplication::initialize(const std::string &entityDefinitionFileName) 
     m_EntityContext.initializeSystems(m_ResourceManager, m_EventManager);
     m_EventManager.queueEvent<SystemEvent>(SystemEvent::ENTITY_SYSTEMS_READY);
     m_EventManager.queueEvent<EntityPersistenceEvent>(EntityPersistenceEvent::TYPE_LOAD, "data/scenes/physics.json");
+    m_EventManager.queueEvent<SystemEvent>(SystemEvent::REQUEST_EDITOR_MODE);
 }
 
 void EditorApplication::run() {

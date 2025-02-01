@@ -9,9 +9,10 @@ PhysicsBodyComponent::PhysicsBodyComponent() : Component(),
                                                m_friction(0.5, 0.5),
                                                m_restitution(0.5),
                                                m_mass(0.0),
+                                               // m_physicsBody(nullptr),
                                                m_meshResource(),
                                                m_PhysicsResource(),
-                                               m_physicsBody(nullptr) {
+                                               m_physicsBodyId() {
 }
 
 PhysicsBodyComponent::~PhysicsBodyComponent() = default;
@@ -39,25 +40,43 @@ void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager 
     m_MeshType = j.value(SHAPE_KEY, m_MeshType);
 }
 
-bool PhysicsBodyComponent::areResourcesReady() const {
-    return m_PhysicsResource.isReady();
+bool PhysicsBodyComponent::isReadyToInitialize(EntityContext &ctx) const {
+    if (!m_PhysicsResource.isReady()) {
+        return false;
+    }
+
+    if (!ctx.getEntityComponent<TransformComponent>(m_EntityId.id())) {
+        return false;
+    }
+
+    return true;
 }
 
-void PhysicsBodyComponent::create(TransformComponent &transform) {
+bool PhysicsBodyComponent::initialize(EntityContext &ctx) {
+    if (const auto transformComponent = ctx.getEntityComponent<TransformComponent>(m_EntityId.id())) {
+        return create(*transformComponent);
+    }
+
+    Log::warn("PhysicsBodyComponent::initialize transform component not found");
+
+    return false;
+}
+
+bool PhysicsBodyComponent::create(TransformComponent &transform) {
     if (!m_meshResource().isReady()) {
-        return;
+        return false;
     }
 
     if (m_MeshType == MESH_TYPE_TRIANGLE && m_BodyType != BODY_TYPE_STATIC) {
         Log::warn("PhysicsBodyComponent::create: Non static body cannot have triangle mesh shape");
 
-        return;
+        return false;
     }
 
     if (m_BodyType == BODY_TYPE_DYNAMIC && m_mass < 0.0001) {
         Log::warn("PhysicsBodyComponent::create: Dynamic body should have mass");
 
-        return;
+        return false;
     }
 
     release();
@@ -79,60 +98,58 @@ void PhysicsBodyComponent::create(TransformComponent &transform) {
     }
 
     if (m_BodyType == BODY_TYPE_STATIC) {
-        m_physicsBody = builder.createStatic();
+        // m_physicsBody = builder.createStatic();
+        m_physicsBodyId = builder.createStatic()->GetID();
     } else {
-        m_physicsBody = builder.createDynamic();
+        // m_physicsBody = builder.createDynamic();
+        m_physicsBodyId = builder.createDynamic()->GetID();
     }
 
-    m_physicsBody->SetFriction(m_friction.x);
-    m_physicsBody->SetRestitution(m_restitution);
+    m_PhysicsResource().getInterface().SetFriction(m_physicsBodyId, m_friction.x);
+    m_PhysicsResource().getInterface().SetRestitution(m_physicsBodyId, m_restitution);
+
+    return true;
 }
 
 void PhysicsBodyComponent::release() {
-    if (m_physicsBody != nullptr) {
-        m_PhysicsResource().getInterface().RemoveBody(m_physicsBody->GetID());
-        m_PhysicsResource().getInterface().DestroyBody(m_physicsBody->GetID());
-
-        m_physicsBody = nullptr;
+    if (!m_physicsBodyId.IsInvalid()) {
+        // m_physicsBody = nullptr;
+        m_PhysicsResource().getInterface().RemoveBody(m_physicsBodyId);
+        m_PhysicsResource().getInterface().DestroyBody(m_physicsBodyId);
     }
 }
 
 void PhysicsBodyComponent::update(TransformComponent &transform, bool isSimulationEnabled) {
     if (isSimulationEnabled) {
-        auto t = m_physicsBody->GetWorldTransform();
+        auto t = m_PhysicsResource().getInterface().GetWorldTransform(m_physicsBodyId);
         PhysicsTypeCast::applyJPHMat44ToTransformComponent(transform, t);
     } else {
-        m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBody->GetID(),
-                                                                  PhysicsTypeCast::glmToJPH(
-                                                                      transform.getWorldPosition()),
-                                                                  PhysicsTypeCast::glmToJPH(transform.getRotation()),
-                                                                  JPH::EActivation::DontActivate);
+        if (!m_physicsBodyId.IsInvalid()) {
+            m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBodyId,
+                                                                      PhysicsTypeCast::glmToJPH(
+                                                                          transform.getWorldPosition()),
+                                                                      PhysicsTypeCast::glmToJPH(
+                                                                          transform.getRotation()),
+                                                                      JPH::EActivation::DontActivate);
+        }
     }
-}
-
-void PhysicsBodyComponent::updateMass() {
-    if (m_mass > 0) {
-        //        if (m_BodyType == BODY_TYPE_STATIC) {
-        //            Log::warn("PhysicsBodyComponent: Static body cannot have mass. Reset static body mass");
-        //            m_mass = 0;
-        //        }
-        //
-        //        btVector3 localInertia(0, 0, 0);
-        //        auto *shape = m_rigidBody->getCollisionShape();
-        //        int type = shape->getShapeType();
-        //        if (type == BroadphaseNativeTypes::CONVEX_HULL_SHAPE_PROXYTYPE && m_mass > 0) {
-        //            shape->calculateLocalInertia(m_mass, localInertia);
-        //        }
-        //        m_rigidBody->setMassProps(m_mass, localInertia);
-    }
-}
-
-bool PhysicsBodyComponent::isCreated() const {
-    return m_physicsBody != nullptr;
 }
 
 void PhysicsBodyComponent::wakeUp() {
     if (m_BodyType == BODY_TYPE_DYNAMIC) {
-        m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());
+        m_PhysicsResource().getInterface().ActivateBody(m_physicsBodyId);
     }
+}
+
+const JPH::Body *PhysicsBodyComponent::getReadableBody() {
+    if (m_physicsBodyId.IsInvalid()) {
+        return nullptr;
+    }
+
+    JPH::BodyLockRead lock(m_PhysicsResource().getLockInterface(), m_physicsBodyId);
+    if (lock.Succeeded()) {
+        return &lock.GetBody();
+    }
+
+    return nullptr;
 }

@@ -2,29 +2,13 @@
 #include "../../Editor/Systems/EditorUISystem.h"
 #include "../Helpers/Builder/PhysicsBuilder.h"
 
-PhysicsFixedJointComponent::PhysicsFixedJointComponent() : Component(),
-                                                           BasePhysicsJoint(),
-                                                           m_PhysicsResource(),
+PhysicsFixedJointComponent::PhysicsFixedJointComponent() : BasePhysicsJoint(),
                                                            m_Joint(nullptr) {
 }
 
-void PhysicsFixedJointComponent::serialize(nlohmann::json &j) {
-    serializeLinkedEntity(j);
-}
-
-void PhysicsFixedJointComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
-    deserializeLinkedEntity(j);
-
-    resourceManager.request(m_PhysicsResource, "physics");
-}
-
-bool PhysicsFixedJointComponent::areResourcesReady() const {
-    return m_PhysicsResource.isReady();
-}
-
-void PhysicsFixedJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
+bool PhysicsFixedJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
     if (!areAllowedToConnect(bodyA, bodyB)) {
-        return;
+        return false;
     }
 
     m_Joint = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
@@ -33,18 +17,15 @@ void PhysicsFixedJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBody
 
     bodyA.wakeUp();
     bodyB.wakeUp();
+
+    return true;
 }
 
 void PhysicsFixedJointComponent::release() {
     if (m_Joint != nullptr) {
         m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
-        delete m_Joint;
         m_Joint = nullptr;
     }
-}
-
-bool PhysicsFixedJointComponent::isCreated() const {
-    return m_Joint != nullptr;
 }
 
 void PhysicsFixedJointComponent::update() {

@@ -4,13 +4,11 @@
 
 using namespace JPH;
 
-PhysicsSliderJointComponent::PhysicsSliderJointComponent() : Component(),
-                                                             BasePhysicsJoint(),
+PhysicsSliderJointComponent::PhysicsSliderJointComponent() : BasePhysicsJoint(),
                                                              m_Joint(nullptr),
                                                              m_isLimitsEnabled(false),
-                                                             m_axis(1, 0, 0),
                                                              m_limits(0.0),
-                                                             m_PhysicsResource(),
+                                                             m_axis(1, 0, 0),
                                                              m_isMotorSettingsEnabled(false),
                                                              m_motorForceLimit(0),
                                                              m_motorDamping(0),
@@ -18,8 +16,10 @@ PhysicsSliderJointComponent::PhysicsSliderJointComponent() : Component(),
 }
 
 void PhysicsSliderJointComponent::serialize(nlohmann::json &j) {
-    serializeLinkedEntity(j);
+    BasePhysicsJoint::serialize(j);
 
+    j[ENTITY_KEY_A] = m_targetEntityAName;
+    j[ENTITY_KEY_B] = m_targetEntityBName;
     j[ARE_LIMITS_ENABLED_KEY] = m_isLimitsEnabled;
     j[LIMITS_KEY] = m_limits;
     j[AXIS_KEY] = m_axis;
@@ -32,7 +32,7 @@ void PhysicsSliderJointComponent::serialize(nlohmann::json &j) {
 }
 
 void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
-    deserializeLinkedEntity(j);
+    BasePhysicsJoint::deserialize(j, resourceManager);
 
     m_isLimitsEnabled = j.value(ARE_LIMITS_ENABLED_KEY, m_isLimitsEnabled);
     m_limits = j.value(LIMITS_KEY, m_limits);
@@ -41,17 +41,11 @@ void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceM
     m_motorForceLimit = j.value(MOTOR_MAX_FORCE_KEY, m_motorForceLimit);
     m_motorDamping = j.value(MOTOR_DAMPING_KEY, m_motorDamping);
     m_motorFrequency = j.value(MOTOR_FREQUENCY_KEY, m_motorFrequency);
-
-    resourceManager.request(m_PhysicsResource, "physics");
 }
 
-bool PhysicsSliderJointComponent::areResourcesReady() const {
-    return m_PhysicsResource.isReady();
-}
-
-void PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
+bool PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
     if (!areAllowedToConnect(bodyA, bodyB)) {
-        return;
+        return false;
     }
 
     auto builder = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
@@ -66,18 +60,15 @@ void PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBod
     }
 
     m_Joint = builder.createSliderConstraint(m_axis);
+
+    return true;
 }
 
 void PhysicsSliderJointComponent::release() {
     if (m_Joint != nullptr) {
         m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
-        delete m_Joint;
         m_Joint = nullptr;
     }
-}
-
-bool PhysicsSliderJointComponent::isCreated() const {
-    return m_Joint != nullptr;
 }
 
 void PhysicsSliderJointComponent::update() {

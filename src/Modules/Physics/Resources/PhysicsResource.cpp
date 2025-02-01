@@ -103,6 +103,11 @@ JPH::BodyInterface &PhysicsResource::getInterface() {
     return m_PhysicsSystem.GetBodyInterface();
 }
 
+const JPH::BodyLockInterfaceLocking &PhysicsResource::getLockInterface() const {
+    return m_PhysicsSystem.GetBodyLockInterface();
+}
+
+
 JPH::PhysicsSystem &PhysicsResource::getSystem() {
     return m_PhysicsSystem;
 }

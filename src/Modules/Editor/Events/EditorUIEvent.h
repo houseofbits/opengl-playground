@@ -17,9 +17,6 @@ public:
         TOGGLE_RENDER_PROBES,
         TOGGLE_RENDER_REFLECTIONS,
         TOGGLE_RENDER_PHYSICS,
-        TOGGLE_SIMULATION_DISABLED,
-        TOGGLE_SIMULATION_ENABLED,
-        RESET_TO_INITIAL_TRANSFORM,
     } Type;
 
     EditorUIEvent() : BaseEvent() {

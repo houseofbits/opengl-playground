@@ -142,8 +142,8 @@ class PhysicsBuilder {
 
     class PhysicsJointBuilder {
         JPH::PhysicsSystem *m_physicsSystem = nullptr;
-        JPH::Body *m_body1 = nullptr;
-        JPH::Body *m_body2 = nullptr;
+        JPH::BodyID m_bodyId1{};
+        JPH::BodyID m_bodyId2{};
         glm::vec2 m_limits;
         bool m_isLimitsEnabled = false;
         bool m_isMotorSettingsEnabled = false;
@@ -159,16 +159,16 @@ class PhysicsBuilder {
         explicit PhysicsJointBuilder(JPH::PhysicsSystem &physicsSystem): m_physicsSystem(&physicsSystem), m_limits() {
         }
 
-        PhysicsJointBuilder &setBodies(JPH::Body &body1, JPH::Body &body2) {
-            m_body1 = &body1;
-            m_body2 = &body2;
+        PhysicsJointBuilder &setBodies(const JPH::BodyID &body1, const JPH::BodyID &body2) {
+            m_bodyId1 = body1;
+            m_bodyId2 = body2;
 
             return *this;
         }
 
         PhysicsJointBuilder &setBodies(const PhysicsBodyComponent &body1, const PhysicsBodyComponent &body2) {
-            m_body1 = body1.m_physicsBody;
-            m_body2 = body2.m_physicsBody;
+            m_bodyId1 = body1.m_physicsBodyId;
+            m_bodyId2 = body2.m_physicsBodyId;
 
             return *this;
         }
@@ -210,17 +210,62 @@ class PhysicsBuilder {
         }
 
         [[nodiscard]] JPH::FixedConstraint *createFixedConstraint() const {
+            if (m_bodyId1.IsInvalid() || m_bodyId2.IsInvalid()) {
+                return nullptr;
+            }
+
+            JPH::Body *body1 = nullptr;
+            JPH::Body *body2 = nullptr;
+
+            JPH::BodyLockWrite lock1(m_physicsSystem->GetBodyLockInterface(), m_bodyId1);
+            if (lock1.Succeeded()) {
+                body1 = &lock1.GetBody();
+                lock1.ReleaseLock();
+            }
+
+            JPH::BodyLockWrite lock2(m_physicsSystem->GetBodyLockInterface(), m_bodyId2);
+            if (lock2.Succeeded()) {
+                body2 = &lock2.GetBody();
+                lock2.ReleaseLock();
+            }
+
+            if (!body1 || !body2) {
+                return nullptr;
+            }
+
             JPH::FixedConstraintSettings settings;
             settings.mAutoDetectPoint = true;
-            auto joint = dynamic_cast<JPH::FixedConstraint *>(settings.Create(
-                *m_body1, *m_body2));
+            const auto joint = settings.Create(*body1, *body2);
 
             m_physicsSystem->AddConstraint(joint);
 
-            return joint;
+            return dynamic_cast<JPH::FixedConstraint *>(joint);
         }
 
         [[nodiscard]] JPH::SliderConstraint *createSliderConstraint(const glm::vec3 axis) const {
+            if (m_bodyId1.IsInvalid() || m_bodyId2.IsInvalid()) {
+                return nullptr;
+            }
+
+            JPH::Body *body1 = nullptr;
+            JPH::Body *body2 = nullptr;
+
+            JPH::BodyLockWrite lock1(m_physicsSystem->GetBodyLockInterface(), m_bodyId1);
+            if (lock1.Succeeded()) {
+                body1 = &lock1.GetBody();
+                lock1.ReleaseLock();
+            }
+
+            JPH::BodyLockWrite lock2(m_physicsSystem->GetBodyLockInterface(), m_bodyId2);
+            if (lock2.Succeeded()) {
+                body2 = &lock2.GetBody();
+                lock2.ReleaseLock();
+            }
+
+            if (!body1 || !body2) {
+                return nullptr;
+            }
+
             JPH::SliderConstraintSettings settings;
             settings.mAutoDetectPoint = true;
             settings.SetSliderAxis(PhysicsTypeCast::glmToJPH(axis));
@@ -229,8 +274,7 @@ class PhysicsBuilder {
                 settings.mLimitsMax = m_limits.y;
             }
 
-            auto joint = dynamic_cast<JPH::SliderConstraint *>(settings.Create(
-                *m_body1, *m_body2));
+            auto joint = dynamic_cast<JPH::SliderConstraint *>(settings.Create(*body1, *body2));
 
             m_physicsSystem->AddConstraint(joint);
 
@@ -245,6 +289,10 @@ class PhysicsBuilder {
         }
 
         [[nodiscard]] JPH::HingeConstraint *createHingeConstraint() const {
+            if (m_bodyId1.IsInvalid() || m_bodyId2.IsInvalid()) {
+                return nullptr;
+            }
+
             JPH::HingeConstraintSettings settings;
             settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
             settings.mPoint1 = PhysicsTypeCast::glmToJPH(m_point1);
@@ -259,7 +307,27 @@ class PhysicsBuilder {
                 settings.mLimitsMax = m_limits.y;
             }
 
-            auto joint = dynamic_cast<JPH::HingeConstraint *>(settings.Create(*m_body1, *m_body2));
+            JPH::Body *body1 = nullptr;
+            JPH::Body *body2 = nullptr;
+
+            JPH::BodyLockWrite lock1(m_physicsSystem->GetBodyLockInterface(), m_bodyId1);
+            if (lock1.Succeeded()) {
+                body1 = &lock1.GetBody();
+                lock1.ReleaseLock();
+            }
+
+            JPH::BodyLockWrite lock2(m_physicsSystem->GetBodyLockInterface(), m_bodyId2);
+            if (lock2.Succeeded()) {
+                body2 = &lock2.GetBody();
+                lock2.ReleaseLock();
+            }
+
+
+            if (!body1 || !body2) {
+                return nullptr;
+            }
+
+            const auto joint = dynamic_cast<JPH::HingeConstraint *>(settings.Create(*body1, *body2));
 
             m_physicsSystem->AddConstraint(joint);
 

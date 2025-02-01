@@ -12,15 +12,17 @@ public:
         WINDOW_RESIZED,
         WINDOW_CONTEXT_CREATED,
         ENTITY_SYSTEMS_READY,
+        REQUEST_GAME_MODE,
+        REQUEST_EDITOR_MODE,
     } Type;
 
     SystemEvent() : BaseEvent(), eventType(WINDOW_CREATED), window(nullptr) {
     }
 
-    explicit SystemEvent(SystemEvent::Type type) : eventType(type), window(nullptr) {
+    explicit SystemEvent(const Type type) : eventType(type), window(nullptr) {
     }
 
-    SystemEvent(SystemEvent::Type type, Window *w) : eventType(type), window(w) {
+    SystemEvent(const Type type, Window *w) : eventType(type), window(w) {
     }
 
     Type eventType;

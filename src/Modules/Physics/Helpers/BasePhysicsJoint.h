@@ -2,14 +2,17 @@
 
 #include "../Components/PhysicsBodyComponent.h"
 
-class BasePhysicsJoint : public EntityLinkedComponent {
+class BasePhysicsJoint : public Component, public EntityLinkedComponent {
 public:
+    inline static const std::string ENTITY_KEY_A = "targetEntityA";
+    inline static const std::string ENTITY_KEY_B = "targetEntityB";
+
     BasePhysicsJoint() {
     }
 
     virtual ~BasePhysicsJoint() = default;
 
-    virtual void create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) = 0;
+    virtual bool create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) = 0;
 
     virtual void release() = 0;
 
@@ -34,10 +37,8 @@ public:
     virtual void unLock() {
     }
 
-    [[nodiscard]] virtual bool isCreated() const = 0;
-
     static bool areAllowedToConnect(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
-        if (!bodyA.isCreated() || !bodyB.isCreated()) {
+        if (!bodyA.isInitialized() || !bodyB.isInitialized()) {
             return false;
         }
 
@@ -52,4 +53,69 @@ public:
 
         return true;
     }
+
+   void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override {
+        deserializeLinkedEntity(j);
+
+        m_targetEntityAName = j.value(ENTITY_KEY_A, "");
+        m_targetEntityBName = j.value(ENTITY_KEY_B, getLinkedEntityName());
+
+        resourceManager.request(m_PhysicsResource, "physics");
+    }
+
+    void serialize(nlohmann::json &j) override {
+        serializeLinkedEntity(j);
+
+        j[ENTITY_KEY_A] = m_targetEntityAName;
+        j[ENTITY_KEY_B] = m_targetEntityBName;
+    }
+
+    bool isReadyToInitialize(EntityContext &ctx) const override {
+        if (!m_PhysicsResource.isReady()) {
+            return false;
+        }
+
+        const auto bodyB = ctx.findEntityComponent<PhysicsBodyComponent>(m_targetEntityBName);
+        if (!bodyB || !bodyB->isInitialized()) {
+            return false;
+        }
+
+        if (!m_targetEntityAName.empty()) {
+            const auto bodyA = ctx.findEntityComponent<PhysicsBodyComponent>(m_targetEntityAName);
+            if (!bodyA || !bodyA->isInitialized()) {
+                return false;
+            }
+        } else {
+            const auto bodyA = ctx.getEntityComponent<PhysicsBodyComponent>(m_EntityId.id());
+            if (!bodyA || !bodyA->isInitialized()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool initialize(EntityContext &ctx) override {
+        release();
+
+        PhysicsBodyComponent *bodyA = nullptr;
+        if (m_targetEntityAName.empty()) {
+            bodyA = ctx.getEntityComponent<PhysicsBodyComponent>(m_EntityId.id());
+        } else {
+            bodyA = ctx.findEntityComponent<PhysicsBodyComponent>(m_targetEntityAName);
+        }
+
+        const auto bodyB = ctx.findEntityComponent<PhysicsBodyComponent>(m_targetEntityBName);
+
+        if (bodyA && bodyB) {
+            return create(*bodyA, *bodyB);
+        }
+
+        return true;
+    }
+
+    std::string m_targetEntityAName;
+    std::string m_targetEntityBName;
+
+    ResourceHandle<PhysicsResource> m_PhysicsResource;
 };

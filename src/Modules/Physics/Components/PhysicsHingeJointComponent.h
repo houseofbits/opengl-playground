@@ -6,7 +6,7 @@
 #include "Jolt/Physics/Constraints/HingeConstraint.h"
 #include "../Helpers/BasePhysicsJoint.h"
 
-class PhysicsHingeJointComponent : public Component, public ComponentTransformEdit, public BasePhysicsJoint {
+class PhysicsHingeJointComponent : public ComponentTransformEdit, public BasePhysicsJoint {
     TYPE_DEFINITION(PhysicsHingeJointComponent);
 
 public:
@@ -29,17 +29,13 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    bool areResourcesReady() const override;
-
-    void create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) override;
+    bool create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) override;
 
     void release() override;
 
     void activate();
 
     void update() override;
-
-    [[nodiscard]] bool isCreated() const override;
 
     glm::mat4 getWorldTransform() override;
 
@@ -58,7 +54,6 @@ public:
     bool m_isLimitsEnabled;
     bool m_isLockingToLimitsEnabled;
     JPH::HingeConstraint *m_Joint;
-    ResourceHandle<PhysicsResource> m_PhysicsResource;
     glm::vec2 m_angularLimits;
     glm::vec3 m_axisA;
     glm::vec3 m_axisB;

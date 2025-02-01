@@ -12,7 +12,7 @@ void DoorBehaviourSystem::process(EventManager &) {
     for (const auto &[id, components]: m_sliderJointComponentRegistry->container()) {
         const auto &[behaviour, joint] = components.get();
 
-        if (!joint->isCreated()) {
+        if (!joint->isInitialized()) {
             continue;
         }
 
@@ -22,7 +22,7 @@ void DoorBehaviourSystem::process(EventManager &) {
     for (const auto &[id, components]: m_hingeJointComponentRegistry->container()) {
         const auto &[behaviour, joint] = components.get();
 
-        if (!joint->isCreated()) {
+        if (!joint->isInitialized()) {
             continue;
         }
 
