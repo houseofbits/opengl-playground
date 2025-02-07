@@ -1,8 +1,8 @@
 #include "DoorBehaviourSystem.h"
 
 DoorBehaviourSystem::DoorBehaviourSystem() : EntitySystem() {
-    m_sliderJointComponentRegistry = useComponentsRegistry<DoorBehaviourComponent, PhysicsSliderJointComponent>();
-    m_hingeJointComponentRegistry = useComponentsRegistry<DoorBehaviourComponent, PhysicsHingeJointComponent>();
+    m_sliderJointComponentRegistry = useEntityRelatedComponentsRegistry<DoorBehaviourComponent, PhysicsSliderJointComponent>();
+    m_hingeJointComponentRegistry = useEntityRelatedComponentsRegistry<DoorBehaviourComponent, PhysicsHingeJointComponent>();
 }
 
 void DoorBehaviourSystem::initialize(ResourceManager &, EventManager&) {

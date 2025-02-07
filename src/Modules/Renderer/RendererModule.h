@@ -11,11 +11,11 @@
 #include "Systems/StorageBufferUpdateSystem.h"
 #include "Systems/OverlayRenderSystem.h"
 #include "Systems/PhysicsDebugRenderSystem.h"
-#include "Editors/LightComponentEdit.h"
-#include "Editors/StaticMeshComponentEdit.h"
-#include "Editors/MeshComponentEdit.h"
 #include "Components/MeshComponent.h"
-#include "Editors/EnvironmentProbeComponentEdit.h"
+// #include "Editors/LightComponentEdit.h"
+// #include "Editors/StaticMeshComponentEdit.h"
+// #include "Editors/MeshComponentEdit.h"
+// #include "Editors/EnvironmentProbeComponentEdit.h"
 
 class RendererModule : public EntityModule {
 public:
@@ -37,11 +37,11 @@ public:
     };
 
     void postRegister(EntityContext &ctx) override {
-        if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
-            editorSystem->registerComponentEditor<LightComponent, LightComponentEdit>();
-            editorSystem->registerComponentEditor<StaticMeshComponent, StaticMeshComponentEdit>();
-            editorSystem->registerComponentEditor<MeshComponent, MeshComponentEdit>();
-            editorSystem->registerComponentEditor<EnvironmentProbeComponent, EnvironmentProbeComponentEdit>();
-        }
+        // if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
+        //     editorSystem->registerComponentEditor<LightComponent, LightComponentEdit>();
+        //     editorSystem->registerComponentEditor<StaticMeshComponent, StaticMeshComponentEdit>();
+        //     editorSystem->registerComponentEditor<MeshComponent, MeshComponentEdit>();
+        //     editorSystem->registerComponentEditor<EnvironmentProbeComponent, EnvironmentProbeComponentEdit>();
+        // }
     }
 };

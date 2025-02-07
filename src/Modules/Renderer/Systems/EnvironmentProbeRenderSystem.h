@@ -37,6 +37,6 @@ private:
     ResourceHandle<EnvironmentProbesCubeMapArrayResource> m_cubeMapArray;
     Camera m_Camera;
     bool m_isRenderEnabled;
-    RelatedComponentRegistry<TransformComponent, EnvironmentProbeComponent>* m_probeComponentRegistry;
-    RelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
+    EntityRelatedComponentRegistry<TransformComponent, EnvironmentProbeComponent>* m_probeComponentRegistry;
+    EntityRelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
 };

@@ -12,12 +12,12 @@
 #include "Components/PhysicsSliderJointComponent.h"
 #include "Components/PhysicsFixedJointComponent.h"
 #include "Components/PhysicsTriggerShapeComponent.h"
-#include "Editors/CharacterControllerComponentEdit.h"
-#include "Editors/PhysicsBodyComponentEdit.h"
-#include "Editors/PhysicsHingeJointComponentEdit.h"
-#include "Editors/PhysicsSliderJointComponentEdit.h"
-#include "Editors/PhysicsFixedJointComponentEdit.h"
-#include "Editors/PhysicsTriggerShapeComponentEdit.h"
+// #include "Editors/CharacterControllerComponentEdit.h"
+// #include "Editors/PhysicsBodyComponentEdit.h"
+// #include "Editors/PhysicsHingeJointComponentEdit.h"
+// #include "Editors/PhysicsSliderJointComponentEdit.h"
+// #include "Editors/PhysicsFixedJointComponentEdit.h"
+// #include "Editors/PhysicsTriggerShapeComponentEdit.h"
 
 class PhysicsModule : public EntityModule {
 public:
@@ -36,20 +36,20 @@ public:
         ctx.entitySystemRegistry.createContinuousProcess(PHYSICS_PROCESS, 16);
 
         ctx.registerEntitySystem<PhysicsSystem>(PHYSICS_PROCESS, 1);
-        ctx.registerEntitySystem<JointsProcessingSystem>(PHYSICS_PROCESS, 2);
-        ctx.registerEntitySystem<PhysicsBodyProcessingSystem>(PHYSICS_PROCESS, 3);
+        ctx.registerEntitySystem<PhysicsBodyProcessingSystem>(PHYSICS_PROCESS, 2);
+        ctx.registerEntitySystem<JointsProcessingSystem>(PHYSICS_PROCESS, 3);
         ctx.registerEntitySystem<CharacterControllerSystem>(PHYSICS_PROCESS, 4);
         ctx.registerEntitySystem<PhysicsTriggerShapeSystem>(PHYSICS_PROCESS, 5);
     };
 
     void postRegister(EntityContext &ctx) override {
-        if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
-            editorSystem->registerComponentEditor<PhysicsCharacterComponent, CharacterControllerComponentEdit>();
-            editorSystem->registerComponentEditor<PhysicsBodyComponent, PhysicsBodyComponentEdit>();
-            editorSystem->registerComponentEditor<PhysicsHingeJointComponent, PhysicsHingeJointComponentEdit>();
-            editorSystem->registerComponentEditor<PhysicsSliderJointComponent, PhysicsSliderJointComponentEdit>();
-            editorSystem->registerComponentEditor<PhysicsFixedJointComponent, PhysicsFixedJointComponentEdit>();
-            editorSystem->registerComponentEditor<PhysicsTriggerShapeComponent, PhysicsTriggerShapeComponentEdit>();
-        }
+        // if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
+        //     editorSystem->registerComponentEditor<PhysicsCharacterComponent, CharacterControllerComponentEdit>();
+        //     editorSystem->registerComponentEditor<PhysicsBodyComponent, PhysicsBodyComponentEdit>();
+        //     editorSystem->registerComponentEditor<PhysicsHingeJointComponent, PhysicsHingeJointComponentEdit>();
+        //     editorSystem->registerComponentEditor<PhysicsSliderJointComponent, PhysicsSliderJointComponentEdit>();
+        //     editorSystem->registerComponentEditor<PhysicsFixedJointComponent, PhysicsFixedJointComponentEdit>();
+        //     editorSystem->registerComponentEditor<PhysicsTriggerShapeComponent, PhysicsTriggerShapeComponentEdit>();
+        // }
     }
 };

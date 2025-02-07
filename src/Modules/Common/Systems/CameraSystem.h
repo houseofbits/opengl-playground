@@ -22,5 +22,5 @@ public:
 
 private:
     glm::ivec2 m_viewportSize;
-    SingleComponentRegistry<CameraComponent>* m_registry;
+    EntityUniqueComponentRegistry<CameraComponent>* m_registry;
 };

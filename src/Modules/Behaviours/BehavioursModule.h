@@ -4,15 +4,15 @@
 #include "Components/MainCharacterBehaviourComponent.h"
 #include "Components/GunBehaviourComponent.h"
 #include "../Editor/Systems/EditorUISystem.h"
-#include "Editors/MainCharacterBehaviourComponentEdit.h"
-#include "Editors/GunBehaviourComponentEdit.h"
+// #include "Editors/MainCharacterBehaviourComponentEdit.h"
+// #include "Editors/GunBehaviourComponentEdit.h"
+// #include "Editors/DoorBehaviourComponentEdit.h"
 #include "Systems/MainCharacterBehaviourSystem.h"
 #include "Components/DoorBehaviourComponent.h"
-#include "Editors/DoorBehaviourComponentEdit.h"
 #include "Systems/DoorBehaviourSystem.h"
 #include "Systems/GunBehaviourSystem.h"
 
-class BehavioursModule : public EntityModule {
+class BehavioursModule final : public EntityModule {
 public:
     static constexpr  EntitySystemRegistry::ProcessType BEHAVIOUR_PROCESS = 1;
 
@@ -32,10 +32,10 @@ public:
 
     void postRegister(EntityContext &ctx) override {
         if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
-            editorSystem->registerComponentEditor<MainCharacterBehaviourComponent,
-                MainCharacterBehaviourComponentEdit>();
-            editorSystem->registerComponentEditor<DoorBehaviourComponent, DoorBehaviourComponentEdit>();
-            editorSystem->registerComponentEditor<GunBehaviourComponent, GunBehaviourComponentEdit>();
+        //     editorSystem->registerComponentEditor<MainCharacterBehaviourComponent,
+        //         MainCharacterBehaviourComponentEdit>();
+        //     editorSystem->registerComponentEditor<DoorBehaviourComponent, DoorBehaviourComponentEdit>();
+        //     editorSystem->registerComponentEditor<GunBehaviourComponent, GunBehaviourComponentEdit>();
         }
     }
 };

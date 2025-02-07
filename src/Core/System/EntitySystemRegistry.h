@@ -1,7 +1,12 @@
 #pragma once
+
+#include <cassert>
 #include "BaseSystemProcess.h"
-#include "ContinuousSystemProcess.h"
-#include "EntitySystem.h"
+#include <map>
+
+class EntitySystem;
+class BaseSystemProcess;
+class ContinuousSystemProcess;
 
 class EntitySystemRegistry {
 public:
@@ -16,31 +21,11 @@ public:
         m_eventManager = &eventManager;
     }
 
-    void registerEntityWithSystems(Entity &entity) const {
-        for (const auto &[key, process]: m_systemProcesses) {
-            process->registerEntityWithSystems(entity);
-        }
-    }
+    void registerEntityWithSystems(Entity &entity) const;
 
-    BaseSystemProcess &createMainProcess() {
-        assert(m_eventManager!= nullptr);
+    BaseSystemProcess &createMainProcess();
 
-        auto p = new BaseSystemProcess(*m_eventManager);
-        m_systemProcesses[MAIN_PROCESS] = p;
-
-        return *p;
-    }
-
-    ContinuousSystemProcess &createContinuousProcess(const ProcessType type, const long frequencyMs) {
-        assert(m_eventManager!= nullptr);
-        assert(type != MAIN_PROCESS);
-        assert(m_systemProcesses.count(type) == 0);
-
-        auto p = new ContinuousSystemProcess(*m_eventManager, frequencyMs);
-        m_systemProcesses[type] = p;
-
-        return *p;
-    }
+    ContinuousSystemProcess &createContinuousProcess(const ProcessType type, const long frequencyMs);
 
     template<class T>
     T &getProcess(const ProcessType type) {
@@ -53,15 +38,9 @@ public:
         return *p;
     }
 
-    void registerEntitySystem(EntitySystem &system, const ProcessType &type) {
-        const auto process = m_systemProcesses[type];
+    void registerEntitySystem(EntitySystem &system, const ProcessType &type);
 
-        process->registerEntitySystem(system);
-    }
-
-    void processMain() {
-        m_systemProcesses[MAIN_PROCESS]->process();
-    }
+    void processMain();
 
     template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T> > >
     T *getSystem() {

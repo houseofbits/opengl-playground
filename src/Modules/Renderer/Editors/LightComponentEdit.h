@@ -6,6 +6,9 @@
 
 class LightComponentEdit : public BaseComponentEdit {
 public:
+    explicit LightComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
+
     inline static const std::map<LightComponent::Type, std::string> LIGHT_TYPE_NAME_MAP = {
             {LightComponent::SPOT, "SPOT"},
             {LightComponent::OMNI, "OMNI"},

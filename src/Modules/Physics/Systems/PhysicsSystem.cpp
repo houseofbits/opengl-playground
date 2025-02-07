@@ -3,7 +3,9 @@
 
 PhysicsSystem::PhysicsSystem() : EntitySystem(),
                                  m_isSimulationDisabled(false),
+                                 m_physicsComponentRegistry(nullptr),
                                  m_PhysicsResource() {
+    m_physicsComponentRegistry = useSameComponentRegistry<PhysicsComponent>();
 }
 
 void PhysicsSystem::initialize(ResourceManager &resourceManager, EventManager &) {
@@ -17,7 +19,9 @@ void PhysicsSystem::process(EventManager &eventManager) {
 
     m_PhysicsResource().m_sensorContacts.clear();
     m_PhysicsResource().clearEntityContacts();
+
     if (!m_isSimulationDisabled) {
+        processCreation();
         m_PhysicsResource().simulate();
     }
 
@@ -33,7 +37,24 @@ void PhysicsSystem::registerEventHandlers(EventManager &eventManager) {
 void PhysicsSystem::handleSystemEvent(const SystemEvent &event) {
     if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
         m_isSimulationDisabled = false;
+        recreateAll();
     } else if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
         m_isSimulationDisabled = true;
     }
 }
+
+void PhysicsSystem::processCreation() const {
+    for (const auto [id, component]: m_physicsComponentRegistry->container()) {
+        if (component->shouldCreatePhysics() && component->isReadyToCreate(*m_EntityContext)) {
+            component->createPhysics(*m_EntityContext);
+            component->setPhysicsCreated(true);
+        }
+    }
+}
+
+void PhysicsSystem::recreateAll() const {
+    for (const auto [id, component]: m_physicsComponentRegistry->container()) {
+        component->setPhysicsCreated(false);
+    }
+}
+

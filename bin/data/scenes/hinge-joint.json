@@ -1,0 +1,203 @@
+[
+    {
+        "EditorCameraComponent": {
+            "isActive": true,
+            "orthoScale": 7.799994945526123,
+            "position": [
+                14.851556777954102,
+                11.344747543334961,
+                12.343633651733398
+            ],
+            "type": 1,
+            "upDirection": [
+                -0.2894865572452545,
+                0.9174249172210693,
+                -0.2730000615119934
+            ],
+            "viewDirection": [
+                -0.66744464635849,
+                -0.39790892601013184,
+                -0.6294331550598145
+            ]
+        },
+        "name": "camera-orthographic"
+    },
+    {
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "mesh": {
+            "material": "data/materials/grid-gray.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "pole",
+        "transform": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.4965933859348297,
+                3.1863179206848145,
+                1.1857904195785522
+            ],
+            "translation": [
+                -5.045999526977539,
+                -0.25,
+                -5.0
+            ]
+        }
+    },
+    {
+        "light": {
+            "attenuation": 12.900012969970703,
+            "castShadows": false,
+            "color": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "intensity": 1.0,
+            "isEnabled": true,
+            "type": "OMNI"
+        },
+        "name": "omni-light",
+        "transform": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -1.45257568359375,
+                3.896820068359375,
+                -3.8037109375
+            ]
+        }
+    },
+    {
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent": {
+            "attachmentA": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "attachmentB": [
+                0.0,
+                0.0,
+                1.0
+            ],
+            "axisA": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "axisB": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "enableLimits": true,
+            "enableLockingLimits": true,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "pole"
+        },
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "swing",
+        "transform": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.37455686926841736,
+                0.48457071185112,
+                2.0423476696014404
+            ],
+            "translation": [
+                -4.318094253540039,
+                0.96240234375,
+                -4.3082275390625
+            ]
+        }
+    },
+    {
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "mesh": {
+            "material": "data/materials/solid-blue.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "swing2",
+        "transform": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.37455686926841736,
+                1.1139742136001587,
+                0.5994491577148438
+            ],
+            "translation": [
+                -4.993997573852539,
+                2.798065185546875,
+                -4.96697998046875
+            ]
+        }
+    }
+]

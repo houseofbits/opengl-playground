@@ -10,7 +10,7 @@
 MainApplication::MainApplication() : Application() {
 }
 
-void MainApplication::initialize(const std::string &entityDefinitionFileName) {
+void MainApplication::initialize(const std::string &fileName, const std::string &entityDefinitionFileName) {
     m_EntityContext.registerModule<ApplicationModule>();
     m_EntityContext.registerModule<CommonModule>();
     m_EntityContext.registerModule<RendererModule>();
@@ -18,7 +18,7 @@ void MainApplication::initialize(const std::string &entityDefinitionFileName) {
     m_EntityContext.registerModule<BehavioursModule>();
     m_EntityContext.initializeSystems(m_ResourceManager, m_EventManager);
     m_EventManager.queueEvent<SystemEvent>(SystemEvent::ENTITY_SYSTEMS_READY);
-    m_EventManager.queueEvent<EntityPersistenceEvent>(EntityPersistenceEvent::TYPE_LOAD, "data/scenes/physics.json");
+    m_EventManager.queueEvent<EntityPersistenceEvent>(EntityPersistenceEvent::TYPE_LOAD, fileName);
 }
 
 void MainApplication::run() {

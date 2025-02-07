@@ -8,6 +8,9 @@
 
 class PhysicsTriggerShapeComponentEdit : public BaseComponentEdit {
 public:
+    explicit PhysicsTriggerShapeComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
+
     std::string getName() override {
         return "Physics trigger shape";
     }

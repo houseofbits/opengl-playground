@@ -3,13 +3,12 @@
 #include "Jolt/Physics/Collision/Shape/MeshShape.h"
 #include "../Helpers/Builder/PhysicsBuilder.h"
 
-PhysicsBodyComponent::PhysicsBodyComponent() : Component(),
+PhysicsBodyComponent::PhysicsBodyComponent() : PhysicsComponent(),
                                                m_BodyType(BODY_TYPE_STATIC),
                                                m_MeshType(MESH_TYPE_TRIANGLE),
                                                m_friction(0.5, 0.5),
                                                m_restitution(0.5),
                                                m_mass(0.0),
-                                               // m_physicsBody(nullptr),
                                                m_meshResource(),
                                                m_PhysicsResource(),
                                                m_physicsBodyId() {
@@ -40,8 +39,12 @@ void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager 
     m_MeshType = j.value(SHAPE_KEY, m_MeshType);
 }
 
-bool PhysicsBodyComponent::isReadyToInitialize(EntityContext &ctx) const {
+bool PhysicsBodyComponent::isReadyToCreate(EntityContext &ctx) const {
     if (!m_PhysicsResource.isReady()) {
+        return false;
+    }
+
+    if (!m_meshResource.isReady()) {
         return false;
     }
 
@@ -52,18 +55,20 @@ bool PhysicsBodyComponent::isReadyToInitialize(EntityContext &ctx) const {
     return true;
 }
 
-bool PhysicsBodyComponent::initialize(EntityContext &ctx) {
+void PhysicsBodyComponent::createPhysics(EntityContext &ctx) {
     if (const auto transformComponent = ctx.getEntityComponent<TransformComponent>(m_EntityId.id())) {
-        return create(*transformComponent);
+        create(*transformComponent);
+
+        return;
     }
 
     Log::warn("PhysicsBodyComponent::initialize transform component not found");
-
-    return false;
 }
 
 bool PhysicsBodyComponent::create(TransformComponent &transform) {
-    if (!m_meshResource().isReady()) {
+    if (!m_meshResource.isReady()) {
+        Log::warn("PhysicsBodyComponent::create: Mesh resource not ready");
+
         return false;
     }
 
@@ -81,7 +86,7 @@ bool PhysicsBodyComponent::create(TransformComponent &transform) {
 
     release();
 
-    auto builder = PhysicsBuilder::newBody(m_PhysicsResource().getInterface())
+    auto builder = PhysicsBuilder::newBody(m_PhysicsResource().getSystem())
             .setDebugColor((m_BodyType == BODY_TYPE_STATIC)
                                ? glm::vec3{0.5f, 0.5f, 0.5f}
                                : glm::vec3{0, 1, 0}
@@ -98,10 +103,8 @@ bool PhysicsBodyComponent::create(TransformComponent &transform) {
     }
 
     if (m_BodyType == BODY_TYPE_STATIC) {
-        // m_physicsBody = builder.createStatic();
         m_physicsBodyId = builder.createStatic()->GetID();
     } else {
-        // m_physicsBody = builder.createDynamic();
         m_physicsBodyId = builder.createDynamic()->GetID();
     }
 
@@ -112,8 +115,7 @@ bool PhysicsBodyComponent::create(TransformComponent &transform) {
 }
 
 void PhysicsBodyComponent::release() {
-    if (!m_physicsBodyId.IsInvalid()) {
-        // m_physicsBody = nullptr;
+    if (isValid()) {
         m_PhysicsResource().getInterface().RemoveBody(m_physicsBodyId);
         m_PhysicsResource().getInterface().DestroyBody(m_physicsBodyId);
     }
@@ -124,14 +126,14 @@ void PhysicsBodyComponent::update(TransformComponent &transform, bool isSimulati
         auto t = m_PhysicsResource().getInterface().GetWorldTransform(m_physicsBodyId);
         PhysicsTypeCast::applyJPHMat44ToTransformComponent(transform, t);
     } else {
-        if (!m_physicsBodyId.IsInvalid()) {
-            m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBodyId,
-                                                                      PhysicsTypeCast::glmToJPH(
-                                                                          transform.getWorldPosition()),
-                                                                      PhysicsTypeCast::glmToJPH(
-                                                                          transform.getRotation()),
-                                                                      JPH::EActivation::DontActivate);
-        }
+        // if (isValid()) {
+        //     m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBodyId,
+        //                                                               PhysicsTypeCast::glmToJPH(
+        //                                                                   transform.getWorldPosition()),
+        //                                                               PhysicsTypeCast::glmToJPH(
+        //                                                                   transform.getRotation()),
+        //                                                               JPH::EActivation::DontActivate);
+        // }
     }
 }
 
@@ -152,4 +154,8 @@ const JPH::Body *PhysicsBodyComponent::getReadableBody() {
     }
 
     return nullptr;
+}
+
+bool PhysicsBodyComponent::isValid() const {
+    return !m_physicsBodyId.IsInvalid();
 }

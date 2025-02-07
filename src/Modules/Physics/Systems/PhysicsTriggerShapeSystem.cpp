@@ -3,7 +3,7 @@
 #include "../Components/PhysicsTriggerShapeComponent.h"
 
 PhysicsTriggerShapeSystem::PhysicsTriggerShapeSystem() : EntitySystem() {
-    m_registry = useComponentsRegistry<TransformComponent, PhysicsTriggerShapeComponent>();
+    m_registry = useEntityRelatedComponentsRegistry<TransformComponent, PhysicsTriggerShapeComponent>();
 }
 
 void PhysicsTriggerShapeSystem::initialize(ResourceManager &, EventManager&) {

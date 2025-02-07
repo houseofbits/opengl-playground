@@ -8,6 +8,9 @@
 
 class EnvironmentProbeComponentEdit : public BaseComponentEdit {
 public:
+    explicit EnvironmentProbeComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
+
     std::string getName() override {
         return "Environment probe";
     }

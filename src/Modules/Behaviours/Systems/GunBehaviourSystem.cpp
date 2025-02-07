@@ -4,7 +4,7 @@
 #include "../../Physics/Components/PhysicsCharacterComponent.h"
 
 GunBehaviourSystem::GunBehaviourSystem() : EntitySystem() {
-    m_registry = useComponentsRegistry<TransformComponent, GunBehaviourComponent>();
+    m_registry = useEntityRelatedComponentsRegistry<TransformComponent, GunBehaviourComponent>();
 }
 
 void GunBehaviourSystem::initialize(ResourceManager &, EventManager&) {

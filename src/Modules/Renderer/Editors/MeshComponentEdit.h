@@ -6,6 +6,8 @@
 
 class MeshComponentEdit : public BaseComponentEdit {
 public:
+    explicit MeshComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
 
     std::string getName() override {
         return "Composite render mesh";

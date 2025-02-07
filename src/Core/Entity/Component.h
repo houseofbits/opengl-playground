@@ -34,13 +34,13 @@ public:
 
     virtual void deserialize(const nlohmann::json &, ResourceManager &resourceManager) = 0;
 
-    virtual bool initialize(EntityContext& ctx) {
+    virtual bool initialize(EntityContext &ctx) {
         return true;
     }
 
     // Validation to ensure the component can be initialized and has all the required resources ready
     // For example: check if all the resources have been properly loaded.
-    [[nodiscard]] virtual bool isReadyToInitialize(EntityContext& ctx) const {
+    [[nodiscard]] virtual bool isReadyToInitialize(EntityContext &ctx) const {
         return true;
     }
 
@@ -65,5 +65,13 @@ public:
 
     [[nodiscard]] bool isInitialized() const {
         return m_Status == STATUS_INITIALIZED;
+    }
+
+    void setStatusDeserialized() {
+        m_Status = STATUS_DESERIALIZED;
+    }
+
+    Identity::Type getComponentId() const {
+        return m_Id.id();
     }
 };

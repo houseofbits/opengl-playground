@@ -18,5 +18,5 @@ public:
     void registerEntityComponents(Entity &entity) override;
 
 private:
-    SingleComponentRegistry<EntityLinkedComponent>* m_registry;
+    EntityUniqueComponentRegistry<EntityLinkedComponent>* m_registry;
 };

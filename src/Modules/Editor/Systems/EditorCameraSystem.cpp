@@ -4,7 +4,7 @@
 #include "../../Application/Events/SystemEvent.h"
 
 EditorCameraSystem::EditorCameraSystem() : EntitySystem(), m_viewportSize(0, 0) {
-    m_registry = useComponentRegistry<EditorCameraComponent>();
+    m_registry = useEntityUniqueComponentRegistry<EditorCameraComponent>();
 }
 
 void EditorCameraSystem::process(EventManager &) {

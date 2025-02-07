@@ -25,5 +25,5 @@ private:
 
     static void handleAction(const InputEvent &, PhysicsCharacterComponent *, CameraComponent *);
 
-    RelatedComponentRegistry<CameraComponent, PhysicsCharacterComponent, MainCharacterBehaviourComponent>* m_registry;
+    EntityRelatedComponentRegistry<CameraComponent, PhysicsCharacterComponent, MainCharacterBehaviourComponent>* m_registry;
 };

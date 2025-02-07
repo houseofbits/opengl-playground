@@ -4,7 +4,7 @@
 CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
                                                          m_isSimulationDisabled(false),
                                                          m_PhysicsResource() {
-    m_registry = useComponentsRegistry<TransformComponent, PhysicsCharacterComponent>();
+    m_registry = useEntityRelatedComponentsRegistry<TransformComponent, PhysicsCharacterComponent>();
 }
 
 void CharacterControllerSystem::initialize(ResourceManager &resourceManager, EventManager&) {

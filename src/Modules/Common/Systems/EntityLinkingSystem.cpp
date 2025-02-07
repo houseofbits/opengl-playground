@@ -4,7 +4,7 @@
 #include "../Helpers/EntityLinkedComponent.h"
 
 EntityLinkingSystem::EntityLinkingSystem() {
-    m_registry = useComponentRegistry<EntityLinkedComponent>();
+    m_registry = useEntityUniqueComponentRegistry<EntityLinkedComponent>();
 }
 
 void EntityLinkingSystem::process(EventManager &manager) {

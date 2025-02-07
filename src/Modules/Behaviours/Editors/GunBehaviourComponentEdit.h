@@ -6,6 +6,9 @@
 
 class GunBehaviourComponentEdit : public BaseComponentEdit {
 public:
+    explicit GunBehaviourComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
+
     std::string getName() override {
         return "Gun behaviour";
     }

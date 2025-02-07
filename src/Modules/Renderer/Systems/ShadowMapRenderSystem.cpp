@@ -4,8 +4,8 @@ ShadowMapRenderSystem::ShadowMapRenderSystem() : EntitySystem(),
                                                  m_ResourceManager(nullptr),
                                                  m_LightsBuffer(),
                                                  m_ShaderProgram() {
-    m_meshComponentRegistry = useComponentsRegistry<TransformComponent, StaticMeshComponent>();
-    m_lightComponentRegistry = useComponentsRegistry<TransformComponent, LightComponent>();
+    m_meshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, StaticMeshComponent>();
+    m_lightComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, LightComponent>();
 }
 
 void ShadowMapRenderSystem::initialize(ResourceManager &resourceManager, EventManager&) {

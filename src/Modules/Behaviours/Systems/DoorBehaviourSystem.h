@@ -26,6 +26,6 @@ private:
 
     static void handleActivation(BasePhysicsJoint *, DoorBehaviourComponent *);
 
-    RelatedComponentRegistry<DoorBehaviourComponent, PhysicsSliderJointComponent> *m_sliderJointComponentRegistry;
-    RelatedComponentRegistry<DoorBehaviourComponent, PhysicsHingeJointComponent> *m_hingeJointComponentRegistry;
+    EntityRelatedComponentRegistry<DoorBehaviourComponent, PhysicsSliderJointComponent> *m_sliderJointComponentRegistry;
+    EntityRelatedComponentRegistry<DoorBehaviourComponent, PhysicsHingeJointComponent> *m_hingeJointComponentRegistry;
 };

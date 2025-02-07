@@ -13,9 +13,9 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_LightsBuffer(),
                                        m_ProbesBuffer(),
                                        m_activeCameraHelper() {
-    m_meshComponentRegistry = useComponentsRegistry<TransformComponent, StaticMeshComponent>();
-    m_skyComponentRegistry = useComponentRegistry<SkyComponent>();
-    m_compositeMeshComponentRegistry = useComponentRegistry<MeshComponent>();
+    m_meshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, StaticMeshComponent>();
+    m_skyComponentRegistry = useEntityUniqueComponentRegistry<SkyComponent>();
+    m_compositeMeshComponentRegistry = useEntityUniqueComponentRegistry<MeshComponent>();
 }
 
 void MainRenderSystem::registerEventHandlers(EventManager &eventManager) {
@@ -65,6 +65,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
 
     glViewport(0, 0, m_viewportWidth, m_viewportHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
     Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
     if (camera == nullptr) {
@@ -104,7 +105,6 @@ void MainRenderSystem::process(EventManager &eventManager) {
 
     for (const auto &[id, components]: m_meshComponentRegistry->container()) {
         const auto &[transform, mesh] = components.get();
-
         m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getModelMatrix());
         mesh->m_Material().bind(m_ShaderPrograms[m_shaderType]());
         mesh->m_Mesh().render();

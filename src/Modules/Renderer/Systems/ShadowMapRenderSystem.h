@@ -25,6 +25,6 @@ private:
     ResourceManager *m_ResourceManager;
     ResourceHandle<ShaderProgramResource> m_ShaderProgram;
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
-    RelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
-    RelatedComponentRegistry<TransformComponent, LightComponent>* m_lightComponentRegistry;
+    EntityRelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
+    EntityRelatedComponentRegistry<TransformComponent, LightComponent>* m_lightComponentRegistry;
 };

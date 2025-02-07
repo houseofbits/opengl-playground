@@ -9,6 +9,9 @@
 
 class EditorCameraComponentEdit : public BaseComponentEdit {
 public:
+    explicit EditorCameraComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
+
     std::string getName() override {
         return "Editor camera";
     }

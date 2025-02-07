@@ -4,7 +4,7 @@
 #include "../../Application/Events/InputEvent.h"
 
 MainCharacterBehaviourSystem::MainCharacterBehaviourSystem() : EntitySystem() {
-    m_registry = useComponentsRegistry<CameraComponent, PhysicsCharacterComponent, MainCharacterBehaviourComponent>();
+    m_registry = useEntityRelatedComponentsRegistry<CameraComponent, PhysicsCharacterComponent, MainCharacterBehaviourComponent>();
 }
 
 void MainCharacterBehaviourSystem::initialize(ResourceManager &, EventManager&) {

@@ -5,9 +5,11 @@
 #include "../Events/EventManager.h"
 #include "../Events/EventManager_V2.h"
 #include "AbstractComponentRegistry.h"
-#include "RelatedComponentRegistry.h"
-#include "SingleComponentRegistry.h"
+#include "EntityRelatedComponentRegistry.h"
+#include "EntityUniqueComponentRegistry.h"
+#include "SameComponentRegistry.h"
 #include <memory>
+#include "../Entity/EntityContext.h"
 
 class EventManager;
 class EntityContext;
@@ -45,17 +47,34 @@ public:
     EventManager *m_EventManager{nullptr};
     unsigned int m_processPriority{};
 
+    /**
+     * @details Handles multiple and unique entity components indexed by entity id
+     */
     template<class... Ts>
-    RelatedComponentRegistry<Ts...> *useComponentsRegistry() {
-        auto reg = new RelatedComponentRegistry<Ts...>();
+    EntityRelatedComponentRegistry<Ts...> *useEntityRelatedComponentsRegistry() {
+        auto reg = new EntityRelatedComponentRegistry<Ts...>();
         m_registries.push_back(reg);
 
         return reg;
     }
 
+    /**
+     * @details Handles single unique entity component indexed by entity id
+     */
     template<class T>
-    SingleComponentRegistry<T> *useComponentRegistry() {
-        auto reg = new SingleComponentRegistry<T>();
+    EntityUniqueComponentRegistry<T> *useEntityUniqueComponentRegistry() {
+        auto reg = new EntityUniqueComponentRegistry<T>();
+        m_registries.push_back(reg);
+
+        return reg;
+    }
+
+    /**
+     * @details Contains non unique entity components indexed by component id
+     */
+    template<class T>
+    SameComponentRegistry<T> *useSameComponentRegistry() {
+        auto reg = new SameComponentRegistry<T>();
         m_registries.push_back(reg);
 
         return reg;
@@ -67,11 +86,7 @@ public:
         }
     }
 
-    virtual void unregisterComponents(Identity::Type entityId) {
-        for (const auto &reg: m_registries) {
-            reg->unregisterComponents(entityId);
-        }
-    }
+    virtual void unregisterComponents(Identity::Type entityId);
 
     std::list<AbstractComponentRegistry *> m_registries;
 };

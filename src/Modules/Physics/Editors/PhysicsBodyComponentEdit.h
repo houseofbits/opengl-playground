@@ -7,6 +7,9 @@
 
 class PhysicsBodyComponentEdit : public BaseComponentEdit {
 public:
+    explicit PhysicsBodyComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
+
     inline static std::map<PhysicsBodyComponent::BodyType, std::string> BodyTypeNameMap = {
             {PhysicsBodyComponent::BODY_TYPE_STATIC, "Static"},
             {PhysicsBodyComponent::BODY_TYPE_DYNAMIC, "Dynamic"},

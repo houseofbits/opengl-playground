@@ -22,26 +22,29 @@
 
 class PhysicsBuilder {
     class PhysicsBodyBuilder {
-        JPH::BodyInterface *m_bodyInterface = nullptr;
+        JPH::PhysicsSystem *m_physicsSystem = nullptr;
         Identity::Type m_entityId = 0;
         JPH::PhysicsMaterial *m_material = nullptr;
         JPH::BodyCreationSettings m_settings;
 
         [[nodiscard]] JPH::Body *createInner() const {
-            const auto physicsBody = m_bodyInterface->CreateBody(m_settings);
+            const auto physicsBody = m_physicsSystem->GetBodyInterface().CreateBody(m_settings);
 
             if (m_entityId != 0) {
                 auto *userData = new PhysicsUserData(m_entityId);
                 physicsBody->SetUserData(reinterpret_cast<unsigned long>(userData));
             }
 
-            m_bodyInterface->AddBody(physicsBody->GetID(), JPH::EActivation::Activate);
+            m_physicsSystem->GetBodyInterface().AddBody(physicsBody->GetID(), JPH::EActivation::Activate);
+            //
+            // auto body = m_physicsSystem->GetBodyLockInterface().TryGetBody(physicsBody->GetID());
+            // Log::write("Create physics body: ", physicsBody->GetID().GetIndex(), " p:", body);
 
             return physicsBody;
         }
 
     public:
-        explicit PhysicsBodyBuilder(JPH::BodyInterface &bodyInterface): m_bodyInterface(&bodyInterface), m_settings() {
+        explicit PhysicsBodyBuilder(JPH::PhysicsSystem &physicsSystem): m_physicsSystem(&physicsSystem), m_settings() {
         }
 
         PhysicsBodyBuilder &setEntityReference(const Identity::Type entityId) {
@@ -229,6 +232,8 @@ class PhysicsBuilder {
                 lock2.ReleaseLock();
             }
 
+            // Log::write("Hinge joint params: ", body1, " ,", body2);
+
             if (!body1 || !body2) {
                 return nullptr;
             }
@@ -322,7 +327,6 @@ class PhysicsBuilder {
                 lock2.ReleaseLock();
             }
 
-
             if (!body1 || !body2) {
                 return nullptr;
             }
@@ -338,6 +342,7 @@ class PhysicsBuilder {
                 motor_settings.SetForceLimit(m_motorForceLimit);
             }
 
+            // Log::write("Create hinge joint: ", body1, " ", body2);
 
             return joint;
         }
@@ -346,8 +351,8 @@ class PhysicsBuilder {
 public:
     PhysicsBuilder();
 
-    static PhysicsBodyBuilder newBody(JPH::BodyInterface &bodyInterface) {
-        return PhysicsBodyBuilder(bodyInterface);
+    static PhysicsBodyBuilder newBody(JPH::PhysicsSystem &physicsSystem) {
+        return PhysicsBodyBuilder(physicsSystem);
     }
 
     static PhysicsJointBuilder newJoint(JPH::PhysicsSystem &physicsSystem) {

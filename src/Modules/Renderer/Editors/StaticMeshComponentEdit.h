@@ -9,6 +9,8 @@
 
 class StaticMeshComponentEdit : public BaseComponentEdit {
 public:
+    explicit StaticMeshComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
 
     std::string getName() override {
         return "Render mesh";

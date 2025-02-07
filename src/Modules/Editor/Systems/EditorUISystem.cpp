@@ -5,7 +5,8 @@
 #include "../Helpers/TexturePreviewHelper.h"
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
-                                   m_transformGizmo(),
+                                   m_transformHelper(*this),
+                                   // m_transformGizmo(),
                                    m_ResourceManager(nullptr),
                                    m_isImUIInitialized(false),
                                    m_MainToolbarUI(this),
@@ -15,8 +16,8 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_isEditorModeEnabled(false),
                                    m_componentEditors(),
                                    m_activeCameraHelper() {
-    m_editorCameraComponentRegistry = useComponentRegistry<EditorCameraComponent>();
-    m_cameraComponentRegistry = useComponentRegistry<CameraComponent>();
+    m_editorCameraComponentRegistry = useEntityUniqueComponentRegistry<EditorCameraComponent>();
+    m_cameraComponentRegistry = useEntityUniqueComponentRegistry<CameraComponent>();
 }
 
 void EditorUISystem::process(EventManager &eventManager) {
@@ -35,12 +36,12 @@ void EditorUISystem::process(EventManager &eventManager) {
 
     TexturePreviewHelper::process();
 
-    if (m_isEditorModeEnabled) {
-        Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
-        if (camera != nullptr) {
-            m_transformGizmo.processGizmo(*m_EntityContext, m_selectedEntityId, *camera);
-        }
-    }
+    // if (m_isEditorModeEnabled) {
+    //     Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
+    //     if (camera != nullptr) {
+    //         m_transformGizmo.processGizmo(*m_EntityContext, m_selectedEntityId, *camera);
+    //     }
+    // }
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

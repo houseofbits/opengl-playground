@@ -4,8 +4,9 @@
 #include "../../Common/Components/TransformComponent.h"
 #include "../Resources/PhysicsMeshResource.h"
 #include "../Resources/PhysicsResource.h"
+#include "../Helpers/PhysicsComponent.h"
 
-class PhysicsBodyComponent : public Component {
+class PhysicsBodyComponent : public PhysicsComponent {
     TYPE_DEFINITION(PhysicsBodyComponent);
 
 public:
@@ -34,17 +35,17 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    bool initialize(EntityContext &ctx) override;
+    void createPhysics(EntityContext &ctx) override;
 
-    bool isReadyToInitialize(EntityContext &ctx) const override;
+    bool isReadyToCreate(EntityContext &ctx) const override;
 
     void update(TransformComponent &transform, bool isSimulationEnabled);
-
-    void release();
 
     void wakeUp();
 
     const JPH::Body *getReadableBody();
+
+    [[nodiscard]] bool isValid() const;
 
     BodyType m_BodyType;
     MeshType m_MeshType;
@@ -54,8 +55,9 @@ public:
     ResourceHandle<PhysicsMeshResource> m_meshResource;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     JPH::BodyID m_physicsBodyId;
-    // JPH::Body* m_physicsBody;
 
 private:
     bool create(TransformComponent &transform);
+
+    void release();
 };

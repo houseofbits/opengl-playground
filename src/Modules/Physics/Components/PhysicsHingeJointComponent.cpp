@@ -115,14 +115,18 @@ void PhysicsHingeJointComponent::setMotorOff() const {
 }
 
 glm::mat4 PhysicsHingeJointComponent::getWorldTransform() {
-    auto m1 = m_Joint->GetBody1()->GetWorldTransform();
-    const auto p1 = PhysicsTypeCast::glmToJPH(m_localAttachmentA);
+    if (m_Joint) {
+        auto m1 = m_Joint->GetBody1()->GetWorldTransform();
+        const auto p1 = PhysicsTypeCast::glmToJPH(m_localAttachmentA);
 
-    JPH::Vec3 currentTranslation = m1.GetTranslation();
-    currentTranslation += p1;
-    m1.SetTranslation(currentTranslation);
+        JPH::Vec3 currentTranslation = m1.GetTranslation();
+        currentTranslation += p1;
+        m1.SetTranslation(currentTranslation);
 
-    return PhysicsTypeCast::JPHToGlm(m1);
+        return PhysicsTypeCast::JPHToGlm(m1);
+    }
+
+    return glm::mat4(1.0);
 }
 
 void PhysicsHingeJointComponent::setWorldTransform(const glm::mat4 &m) {

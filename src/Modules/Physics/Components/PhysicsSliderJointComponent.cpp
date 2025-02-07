@@ -66,6 +66,8 @@ bool PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBod
 
 void PhysicsSliderJointComponent::release() {
     if (m_Joint != nullptr) {
+        // Log::write("Release slider joint ", m_Joint);
+
         m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
         m_Joint = nullptr;
     }

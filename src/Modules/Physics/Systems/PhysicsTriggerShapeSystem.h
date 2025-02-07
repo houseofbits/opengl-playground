@@ -16,5 +16,5 @@ public:
     void registerEventHandlers(EventManager &) override;
 
 private:
-    RelatedComponentRegistry<TransformComponent, PhysicsTriggerShapeComponent>* m_registry;
+    EntityRelatedComponentRegistry<TransformComponent, PhysicsTriggerShapeComponent>* m_registry;
 };

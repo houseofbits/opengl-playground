@@ -6,6 +6,9 @@
 
 class MainCharacterBehaviourComponentEdit : public BaseComponentEdit {
 public:
+    explicit MainCharacterBehaviourComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
+
     std::string getName() override {
         return "Main character behaviour";
     }

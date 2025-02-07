@@ -156,15 +156,12 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/System/ComponentsTuple.cpp
         src/Core/System/ComponentsTuple.h
         src/Core/System/AbstractComponentRegistry.h
-        src/Core/System/RelatedComponentRegistry.h
-        src/Core/System/SingleComponentRegistry.h
         src/Modules/Common/Helpers/EntityLinkedComponent.h
         src/Modules/Common/Systems/EntityLinkingSystem.cpp
         src/Modules/Common/Systems/EntityLinkingSystem.h
         src/Modules/Common/Editors/EntityLinkedComponentEdit.h
         src/Modules/Physics/Helpers/ContactListenerImpl.cpp
         src/Modules/Physics/Helpers/SensorLayerFilter.h
-        src/Core/System/EntitySystemRegistry.cpp
         src/Core/System/EntitySystemRegistry.h
         src/Core/System/BaseSystemProcess.h
         src/Core/System/ContinuousSystemProcess.cpp
@@ -178,6 +175,13 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Resources/MeshResource.h
         src/Modules/Application/Events/EntityPersistenceEvent.h
         src/Modules/Physics/Helpers/BasePhysicsJoint.cpp
+        src/Modules/Physics/Helpers/PhysicsComponent.h
+        src/Core/System/EntitySystem.cpp
+        src/Core/System/EntitySystemRegistry.cpp
+        src/Core/System/BaseSystemProcess.cpp
+        src/Modules/Common/Editors/TransformComponentEdit.cpp
+        src/Modules/Editor/Helpers/TransformHelper.cpp
+        src/Modules/Editor/Helpers/TransformHelper.h
 )
 
 #add_compile_definitions(EVENTMANAGER_V1)

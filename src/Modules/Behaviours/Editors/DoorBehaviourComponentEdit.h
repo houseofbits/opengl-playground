@@ -6,6 +6,9 @@
 
 class DoorBehaviourComponentEdit : public BaseComponentEdit {
 public:
+    explicit DoorBehaviourComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
+
     std::string getName() override {
         return "Door behaviour";
     }
@@ -21,11 +24,11 @@ public:
 
         ImGui::InputFloat("Velocity", &body->m_velocity);
 
-        EntityLinkedComponentEdit::process(
-            *system.m_EventManager,
-            *system.m_EntityContext,
-            body,
-            "Trigger entity##DOOR_TRIGGER_ENTITY_NAME"
-        );
+        // EntityLinkedComponentEdit::process(
+        //     *system.m_EventManager,
+        //     *system.m_EntityContext,
+        //     body,
+        //     "Trigger entity##DOOR_TRIGGER_ENTITY_NAME"
+        // );
     }
 };

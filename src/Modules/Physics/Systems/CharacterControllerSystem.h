@@ -24,5 +24,5 @@ private:
 
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     bool m_isSimulationDisabled;
-    RelatedComponentRegistry<TransformComponent, PhysicsCharacterComponent>* m_registry;
+    EntityRelatedComponentRegistry<TransformComponent, PhysicsCharacterComponent>* m_registry;
 };

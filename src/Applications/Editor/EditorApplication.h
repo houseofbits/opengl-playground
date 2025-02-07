@@ -8,5 +8,5 @@ public:
 
     void run() override;
 
-    void initialize(const std::string &entityDefinitionFileName);
+    void initialize(const std::string &FileName, const std::string &entityDefinitionFileName);
 };

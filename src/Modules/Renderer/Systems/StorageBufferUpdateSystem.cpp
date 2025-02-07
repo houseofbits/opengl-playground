@@ -6,8 +6,8 @@
 StorageBufferUpdateSystem::StorageBufferUpdateSystem() : EntitySystem(),
                                                          m_LightsBuffer(),
                                                          m_ProbesBuffer() {
-    m_probeComponentRegistry = useComponentsRegistry<TransformComponent, EnvironmentProbeComponent>();
-    m_lightComponentRegistry = useComponentsRegistry<TransformComponent, LightComponent>();
+    m_probeComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, EnvironmentProbeComponent>();
+    m_lightComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, LightComponent>();
 }
 
 void StorageBufferUpdateSystem::initialize(ResourceManager &resourceManager, EventManager&) {

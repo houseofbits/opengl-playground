@@ -28,8 +28,8 @@ EnvironmentProbeRenderSystem::EnvironmentProbeRenderSystem() : EntitySystem(),
                                                                m_cubeMapArray(),
                                                                m_Camera(),
                                                                m_isRenderEnabled(true) {
-    m_probeComponentRegistry = useComponentsRegistry<TransformComponent, EnvironmentProbeComponent>();
-    m_meshComponentRegistry = useComponentsRegistry<TransformComponent, StaticMeshComponent>();
+    m_probeComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, EnvironmentProbeComponent>();
+    m_meshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, StaticMeshComponent>();
 }
 
 void EnvironmentProbeRenderSystem::registerEventHandlers(EventManager &eventManager) {

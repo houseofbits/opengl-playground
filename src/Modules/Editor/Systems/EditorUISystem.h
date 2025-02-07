@@ -11,6 +11,7 @@
 #include "../Helpers/TransformGizmoHelper.h"
 #include "../../Common/Helpers/ActiveCameraHelper.h"
 #include "../Components/EditorCameraComponent.h"
+#include "../Helpers/TransformHelper.h"
 
 class EditorUISystem : public EntitySystem {
 public:
@@ -36,21 +37,23 @@ public:
 
     template<class ComponentT, class EditorT>
     void registerComponentEditor() {
-        m_componentEditors[ComponentT::TypeName()] = new EditorT();
+        m_componentEditors[ComponentT::TypeName()] = new EditorT(*this);
     }
 
     ResourceManager *m_ResourceManager;
     bool m_isImUIInitialized;
-    TransformGizmoHelper m_transformGizmo;
+    // TransformGizmoHelper m_transformGizmo;
     MainToolbarUI m_MainToolbarUI;
     EditWindowUI m_EditWindowUI;
     MaterialEditWindowUI m_MaterialEditWindowUI;
     std::map<std::string, BaseComponentEdit *> m_componentEditors;
     ActiveCameraHelper m_activeCameraHelper;
-    SingleComponentRegistry<EditorCameraComponent> *m_editorCameraComponentRegistry;
-    SingleComponentRegistry<CameraComponent> *m_cameraComponentRegistry;
+    EntityUniqueComponentRegistry<EditorCameraComponent> *m_editorCameraComponentRegistry;
+    EntityUniqueComponentRegistry<CameraComponent> *m_cameraComponentRegistry;
     Identity::Type m_selectedEntityId;
     bool m_isEditorModeEnabled;
+
+    TransformHelper m_transformHelper;
 
 private:
     void processDockSpaceWindow();

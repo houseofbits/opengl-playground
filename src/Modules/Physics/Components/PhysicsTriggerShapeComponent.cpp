@@ -20,7 +20,7 @@ bool PhysicsTriggerShapeComponent::isReadyToInitialize(EntityContext& ctx) const
 }
 
 void PhysicsTriggerShapeComponent::create(TransformComponent &transform) {
-    m_physicsBody = PhysicsBuilder::newBody(m_PhysicsResource().getInterface())
+    m_physicsBody = PhysicsBuilder::newBody(m_PhysicsResource().getSystem())
             .setDebugColor({1, 0, 0})
             .setEntityReference(m_EntityId.id())
             .setTransform(transform)

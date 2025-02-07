@@ -15,5 +15,5 @@ public:
     void registerEventHandlers(EventManager &) override;
 
 private:
-    RelatedComponentRegistry<TransformComponent, GunBehaviourComponent> *m_registry;
+    EntityRelatedComponentRegistry<TransformComponent, GunBehaviourComponent> *m_registry;
 };

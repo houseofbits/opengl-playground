@@ -3,7 +3,7 @@
 #include "../../Application/Events/SystemEvent.h"
 
 CameraSystem::CameraSystem() : EntitySystem(), m_viewportSize(0, 0) {
-    m_registry = useComponentRegistry<CameraComponent>();
+    m_registry = useEntityUniqueComponentRegistry<CameraComponent>();
 }
 
 void CameraSystem::process(EventManager &) {

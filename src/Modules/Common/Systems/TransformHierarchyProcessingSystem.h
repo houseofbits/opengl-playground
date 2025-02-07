@@ -15,6 +15,6 @@ public:
 private:
     int calculateDepth(Identity::Type entityId) const;
 
-    SingleComponentRegistry<TransformComponent>* m_transformComponentRegistry;
-    SingleComponentRegistry<CameraComponent>* m_cameraComponentRegistry;
+    EntityUniqueComponentRegistry<TransformComponent>* m_transformComponentRegistry;
+    EntityUniqueComponentRegistry<CameraComponent>* m_cameraComponentRegistry;
 };

@@ -1,8 +1,8 @@
 #include "TransformHierarchyProcessingSystem.h"
 
 TransformHierarchyProcessingSystem::TransformHierarchyProcessingSystem() : EntitySystem() {
-    m_transformComponentRegistry = useComponentRegistry<TransformComponent>();
-    m_cameraComponentRegistry = useComponentRegistry<CameraComponent>();
+    m_transformComponentRegistry = useEntityUniqueComponentRegistry<TransformComponent>();
+    m_cameraComponentRegistry = useEntityUniqueComponentRegistry<CameraComponent>();
 }
 
 void TransformHierarchyProcessingSystem::initialize(ResourceManager &, EventManager&) {

@@ -9,6 +9,9 @@
 
 class CharacterControllerComponentEdit : public BaseComponentEdit {
 public:
+    explicit CharacterControllerComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
+
     std::string getName() override {
         return "Character controller";
     }

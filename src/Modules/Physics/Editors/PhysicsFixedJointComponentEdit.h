@@ -9,6 +9,8 @@
 
 class PhysicsFixedJointComponentEdit : public BaseComponentEdit {
 public:
+    explicit PhysicsFixedJointComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
 
     std::string getName() override {
         return "Physics fixed joint";

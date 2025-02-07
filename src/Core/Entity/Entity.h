@@ -56,6 +56,18 @@ public:
         return nullptr;
     }
 
+    template<class T>
+    std::vector<T *> getAllComponents() {
+        std::vector<T *> components;
+        for (const auto &c: m_Components) {
+            if (dynamic_cast<T *>(c.get())) {
+                components.push_back(dynamic_cast<T *>(c.get()));
+            }
+        }
+
+        return components;
+    }
+
     [[nodiscard]] Component *getComponent(const std::string &className) const {
         for (const auto &c: m_Components) {
             if (c->m_Name == className || c->getTypeName() == className) {

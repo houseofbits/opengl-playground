@@ -99,6 +99,14 @@
         }
     },
     {
+        "name": "EditorCamera",
+        "components": {
+            "editorCamera": {
+                "class": "EditorCameraComponent"
+            }
+        }
+    },
+    {
         "name": "Sky",
         "components": {
             "sky": {

@@ -20,8 +20,6 @@ public:
 private:
     void resetToInitialTransform() const;
 
-    void recreateAll() const;
-
     bool m_isSimulationDisabled;
-    RelatedComponentRegistry<TransformComponent, PhysicsBodyComponent> *m_registry;
+    EntityRelatedComponentRegistry<TransformComponent, PhysicsBodyComponent> *m_registry;
 };

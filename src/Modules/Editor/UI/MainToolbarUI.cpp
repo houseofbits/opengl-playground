@@ -48,7 +48,8 @@ void MainToolbarUI::process() {
         ImGui::Spacing();
 
         if (m_EditorUISystem->m_isEditorModeEnabled) {
-            m_EditorUISystem->m_transformGizmo.processToolbar(*m_EditorUISystem->m_EntityContext);
+            // m_EditorUISystem->m_transformGizmo.processToolbar(*m_EditorUISystem->m_EntityContext);
+            m_EditorUISystem->m_transformHelper.processToolbar();
         }
 
         ImGui::EndMainMenuBar();

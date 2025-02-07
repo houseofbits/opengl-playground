@@ -50,7 +50,7 @@ private:
     ResourceHandle<EnvironmentProbesBufferResource> m_ProbesBuffer;
     ResourceHandle<EnvironmentProbesCubeMapArrayResource> m_ProbesCubeMapArray;
     ActiveCameraHelper m_activeCameraHelper;
-    RelatedComponentRegistry<TransformComponent, StaticMeshComponent> *m_meshComponentRegistry;
-    SingleComponentRegistry<SkyComponent> *m_skyComponentRegistry;
-    SingleComponentRegistry<MeshComponent> *m_compositeMeshComponentRegistry;
+    EntityRelatedComponentRegistry<TransformComponent, StaticMeshComponent> *m_meshComponentRegistry;
+    EntityUniqueComponentRegistry<SkyComponent> *m_skyComponentRegistry;
+    EntityUniqueComponentRegistry<MeshComponent> *m_compositeMeshComponentRegistry;
 };

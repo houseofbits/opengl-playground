@@ -88,9 +88,9 @@ void EntityContext::unregisterEntityFromSystems(Entity &entity) {
 
 void EntityContext::initializeEntities(EventManager &eventManager) {
     for (const auto &e: m_Entities) {
-        if (e->m_Status == Entity::ACTIVE) {
-            continue;
-        }
+         if (e->m_Status == Entity::ACTIVE) {
+             continue;
+         }
 
         e->initializeComponents(*this);
 

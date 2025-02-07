@@ -3,6 +3,7 @@
 #include "../../../Core/API.h"
 #include "../../../Modules/Application/Events/SystemEvent.h"
 #include "../Resources/PhysicsResource.h"
+#include "../Helpers/PhysicsComponent.h"
 
 class PhysicsSystem : public EntitySystem {
 public:
@@ -17,6 +18,11 @@ public:
     void handleSystemEvent(const SystemEvent &);
 
 private:
+    void processCreation() const;
+
+    void recreateAll() const;
+
     ResourceHandle<PhysicsResource> m_PhysicsResource;
+    SameComponentRegistry<PhysicsComponent> *m_physicsComponentRegistry;
     bool m_isSimulationDisabled;
 };

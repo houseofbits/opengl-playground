@@ -1,55 +1,36 @@
 #pragma once
 
-#include "EntityLinkedComponentEdit.h"
+// #include "EntityLinkedComponentEdit.h"
 #include "../Components/TransformComponent.h"
 #include "../../Editor/UI/BaseComponentEdit.h"
 
 class TransformComponentEdit : public BaseComponentEdit {
 public:
+    explicit TransformComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    }
+
     std::string getName() override {
         return "Transform";
     }
 
-    void process(Entity &entity, EditorUISystem &system) override {
-        auto *transform = entity.getComponent<TransformComponent>();
-        if (transform == nullptr) {
-            return;
-        }
+    void processEditor(Entity &e, Component *c) override;
 
-        float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-
-        ImGuizmo::DecomposeMatrixToComponents(&transform->m_transform[0][0], matrixTranslation, matrixRotation,
-                                              matrixScale);
-        if (transform->m_isTranslationEnabled) {
-            if (ImGui::InputFloat3("Translation", matrixTranslation)) {
-                updateTransform(transform, matrixTranslation, matrixRotation, matrixScale);
-            }
-        }
-        if (transform->m_isRotationEnabled) {
-            if (ImGui::InputFloat3("Rotation", matrixRotation)) {
-                updateTransform(transform, matrixTranslation, matrixRotation, matrixScale);
-            }
-        }
-        if (transform->m_isScalingEnabled) {
-            if (ImGui::InputFloat3("Scaling", matrixScale)) {
-                updateTransform(transform, matrixTranslation, matrixRotation, matrixScale);
-            }
-        }
-
-        ImGui::Checkbox("Is relative rotation disabled##TRANSFORM_REL_ROTATION", &transform->m_isRelativeRotationDisabled);
-
-        EntityLinkedComponentEdit::process<TransformComponent>(
-            *system.m_EventManager,
-            *system.m_EntityContext,
-            transform,
-            "Parent entity##TRANSFORM_PARENT_ENTITY_NAME"
-        );
+    int getNumTransformTargets() override {
+        return 1;
     }
 
-    static void updateTransform(TransformComponent* comp, float t[3], float r[3], float s[3]) {
-        glm::mat4 matrix = glm::mat4(1.0f);
-        ImGuizmo::RecomposeMatrixFromComponents(t, r, s, &matrix[0][0]);
+    TransformOption getTransformTargetOptions(int index) override;
 
-        comp->setWorldTransform(matrix);
+    glm::mat4 getWorldSpaceTransform(int index) override {
+        return m_transformComponent->getWorldTransform();
     }
+
+    void setWorldSpaceTransform(glm::mat4 m, int index) const override {
+        m_transformComponent->setWorldTransform(m);
+    }
+
+    static void updateTransform(TransformComponent *comp, float t[3], float r[3], float s[3]);
+
+private:
+    TransformComponent *m_transformComponent{nullptr};
 };
