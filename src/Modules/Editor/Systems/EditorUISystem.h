@@ -8,10 +8,12 @@
 #include "../UI/EditWindowUI.h"
 #include "../UI/MainToolbarUI.h"
 #include "../UI/MaterialEditWindowUI.h"
-#include "../Helpers/TransformGizmoHelper.h"
 #include "../../Common/Helpers/ActiveCameraHelper.h"
 #include "../Components/EditorCameraComponent.h"
 #include "../Helpers/TransformHelper.h"
+#include "../../../Renderer/Shader/WireframeRenderer.h"
+#include "../../../Renderer/Model/WireCube.h"
+#include "../../../Renderer/Model/WireSphere.h"
 
 class EditorUISystem : public EntitySystem {
 public:
@@ -40,6 +42,12 @@ public:
         m_componentEditors[ComponentT::TypeName()] = new EditorT(*this);
     }
 
+    void selectEntity(Entity &);
+
+    void clearEntitySelection();
+
+    Entity* getSelectedEntity() const;
+
     ResourceManager *m_ResourceManager;
     bool m_isImUIInitialized;
     // TransformGizmoHelper m_transformGizmo;
@@ -50,11 +58,16 @@ public:
     ActiveCameraHelper m_activeCameraHelper;
     EntityUniqueComponentRegistry<EditorCameraComponent> *m_editorCameraComponentRegistry;
     EntityUniqueComponentRegistry<CameraComponent> *m_cameraComponentRegistry;
-    Identity::Type m_selectedEntityId;
     bool m_isEditorModeEnabled;
 
     TransformHelper m_transformHelper;
 
 private:
     void processDockSpaceWindow();
+
+    Identity::Type m_selectedEntityId;
+
+    WireframeRenderer m_wireframeRenderer;
+    WireCube wfcube;
+    WireSphere wfsphere;
 };

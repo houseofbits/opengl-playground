@@ -1,29 +1,16 @@
 #pragma once
 
-#include "../../../SourceLibs/imgui/imgui.h"
-#include "../../Editor/UI/BaseComponentEdit.h"
+#include "../../Editor/UI/ComponentEdit.h"
 #include "../Components/MainCharacterBehaviourComponent.h"
 
-class MainCharacterBehaviourComponentEdit : public BaseComponentEdit {
+class MainCharacterBehaviourComponentEdit final : public ComponentEdit<MainCharacterBehaviourComponent> {
 public:
-    explicit MainCharacterBehaviourComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    explicit MainCharacterBehaviourComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
     }
 
     std::string getName() override {
         return "Main character behaviour";
     }
 
-    void process(Entity &entity, EditorUISystem &system) override {
-        auto *body = entity.getComponent<MainCharacterBehaviourComponent>();
-        if (body == nullptr) {
-            return;
-        }
-
-
-        if (ImGui::Checkbox("Active##MAIN_CHARACTER_ACTIVE", &body->m_isActive)) {
-
-        }
-    }
-
-    std::string m_meshPath;
+    void processEditor() override;
 };

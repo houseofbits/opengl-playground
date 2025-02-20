@@ -15,6 +15,7 @@ EditorUISystem::EditorUISystem() : EntitySystem(),
                                    m_selectedEntityId(0),
                                    m_isEditorModeEnabled(false),
                                    m_componentEditors(),
+                                   m_wireframeRenderer(),
                                    m_activeCameraHelper() {
     m_editorCameraComponentRegistry = useEntityUniqueComponentRegistry<EditorCameraComponent>();
     m_cameraComponentRegistry = useEntityUniqueComponentRegistry<CameraComponent>();
@@ -36,12 +37,19 @@ void EditorUISystem::process(EventManager &eventManager) {
 
     TexturePreviewHelper::process();
 
-    // if (m_isEditorModeEnabled) {
-    //     Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
-    //     if (camera != nullptr) {
-    //         m_transformGizmo.processGizmo(*m_EntityContext, m_selectedEntityId, *camera);
-    //     }
-    // }
+    if (m_isEditorModeEnabled) {
+        Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
+        if (camera != nullptr) {
+            m_wireframeRenderer.setCamera(*camera);
+
+            m_transformHelper.processGizmo(*camera);
+            m_transformHelper.processDebugHelpers(m_wireframeRenderer);
+
+            // auto transform = glm::mat4(1.0);
+            // m_wireframeRenderer.renderCube(transform, {0, 0, 1, 1});
+            // m_wireframeRenderer.renderSphere(transform, {0, 1, 0, 1});
+        }
+    }
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -49,7 +57,6 @@ void EditorUISystem::process(EventManager &eventManager) {
 
 void EditorUISystem::initialize(ResourceManager &manager, EventManager &) {
     m_ResourceManager = &manager;
-
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -66,6 +73,10 @@ void EditorUISystem::initialize(ResourceManager &manager, EventManager &) {
     //    ImGuiStyle& style = ImGui::GetStyle();
     //    style.WindowPadding.x = 0;
     //    style.WindowPadding.y = 0;
+
+    m_wireframeRenderer.initialize();
+    wfcube.create({0, 0, 1, 1});
+    wfsphere.create({0, 1, 0, 1});
 }
 
 void EditorUISystem::registerEventHandlers(EventManager &eventManager) {
@@ -121,4 +132,22 @@ void EditorUISystem::processDockSpaceWindow() {
     ImGuiID dockspaceID = ImGui::GetID("MainDockspace");
     ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
     ImGui::End();
+}
+
+void EditorUISystem::selectEntity(Entity &e) {
+    for (const auto &component: e.m_Components) {
+        if (const auto editor = m_componentEditors[component->getTypeName()]) {
+            editor->handleEntitySelection(e, component.get());
+        }
+    }
+    m_transformHelper.handleEntitySelection(e);
+    m_selectedEntityId = e.m_Id.id();
+}
+
+void EditorUISystem::clearEntitySelection() {
+    m_selectedEntityId = 0;
+}
+
+Entity *EditorUISystem::getSelectedEntity() const {
+    return m_EntityContext->getEntity(m_selectedEntityId);
 }

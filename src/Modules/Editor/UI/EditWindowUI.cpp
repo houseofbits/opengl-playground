@@ -12,20 +12,19 @@
 #include <utility>
 
 EditWindowUI::EditWindowUI(EditorUISystem *editor) : //m_selectedEntityId(0),
-                                                     m_EditorUISystem(editor),
-                                                     m_lightProjectorPath(),
-                                                     m_isBoundsTransformAllowed(false),
-                                                     m_meshModelPath(),
-                                                     m_meshMaterialPath(),
-                                                     m_selectedEntityCreationType(),
-                                                     m_selectedComponentCreationType(),
-                                                     m_isEntityCreationWindowOpen(false) {
+    m_EditorUISystem(editor),
+    m_lightProjectorPath(),
+    m_isBoundsTransformAllowed(false),
+    m_meshModelPath(),
+    m_meshMaterialPath(),
+    m_selectedEntityCreationType(),
+    m_selectedComponentCreationType(),
+    m_isEntityCreationWindowOpen(false) {
 }
 
 void EditWindowUI::process() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
     if (ImGui::Begin("Entities")) {
-
         processEntityCreation();
 
         ImGui::PushItemWidth(-FLT_MIN);
@@ -39,16 +38,22 @@ void EditWindowUI::process() {
     }
     ImGui::PopStyleVar();
 
-    Entity *e = m_EditorUISystem->m_EntityContext->getEntity(m_EditorUISystem->m_selectedEntityId);
+    Entity *e = m_EditorUISystem->getSelectedEntity();
+    //_EntityContext->getEntity(m_EditorUISystem->m_selectedEntityId);
     if (e != nullptr && ImGui::Begin("Edit entity")) {
         if (ImGui::InputText("Name", &e->m_Name)) {
             updateEntityNameReferences(e->m_Id.id(), e->m_Name);
         }
 
         for (const auto &component: e->m_Components) {
-            auto editor = m_EditorUISystem->m_componentEditors[component->getTypeName()];
-            if (editor && ImGui::CollapsingHeader(editor->getName().c_str())) {
-                editor->process(*e, *m_EditorUISystem);
+            if (auto editor = m_EditorUISystem->m_componentEditors[component->getTypeName()]) {
+                if (ImGui::CollapsingHeader(editor->getName().c_str())) {
+                    editor->processEditor();
+                }
+            } else {
+                if (ImGui::CollapsingHeader(component->getTypeName().c_str())) {
+                    ImGui::Text("Editor not registered for: %s ", component->getTypeName().c_str());
+                }
             }
         }
 
@@ -58,7 +63,6 @@ void EditWindowUI::process() {
     }
 
     if (m_isEntityCreationWindowOpen && ImGui::Begin("Create entity", &m_isEntityCreationWindowOpen)) {
-
         processEntityCreationWindow();
 
         ImGui::End();
@@ -72,8 +76,9 @@ void EditWindowUI::processEntitiesList() {
             bool isEditable =
                     m_entitiesFilterString.empty() || StringUtils::contains(entity->m_Name, m_entitiesFilterString);
 
-            if (isEditable && ImGui::Selectable(name.c_str(), m_EditorUISystem->m_selectedEntityId == entity->m_Id.id())) {
-                m_EditorUISystem->m_selectedEntityId = (int) entity->m_Id.id();
+            if (isEditable && ImGui::Selectable(name.c_str(),
+                                                m_EditorUISystem->getSelectedEntity() == entity.get())) {
+                m_EditorUISystem->selectEntity(*entity); //m_selectedEntityId = (int) entity->m_Id.id();
                 m_isEntityCreationWindowOpen = false;
             }
         }
@@ -83,11 +88,11 @@ void EditWindowUI::processEntitiesList() {
 }
 
 bool EditWindowUI::isTransformComponentSelected() {
-    if (m_EditorUISystem->m_selectedEntityId == 0) {
+    if (m_EditorUISystem->getSelectedEntity() == nullptr) {
         return false;
     }
 
-    if (!m_EditorUISystem->m_EntityContext->getEntityComponent<TransformComponent>(m_EditorUISystem->m_selectedEntityId)) {
+    if (!m_EditorUISystem->getSelectedEntity()->getComponent<TransformComponent>()) {
         return false;
     }
 
@@ -101,7 +106,8 @@ void EditWindowUI::sendEntityCreationEvent(std::string configName, std::string e
 
 void EditWindowUI::sendEntityRemovalEvent() {
     m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE,
-                                                                      m_EditorUISystem->m_selectedEntityId);
+                                                                      m_EditorUISystem->getSelectedEntity()->m_Id.id()
+    );
 }
 
 void EditWindowUI::sendEntityCloneEvent(Identity::Type entityId) {
@@ -110,39 +116,41 @@ void EditWindowUI::sendEntityCloneEvent(Identity::Type entityId) {
 
 void EditWindowUI::sendComponentCreationEvent(std::string name) {
     m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::CREATE_COMPONENT,
-                                                                      m_EditorUISystem->m_selectedEntityId, std::move(name));
+                                                                      m_EditorUISystem->getSelectedEntity()->m_Id.id(),
+                                                                      std::move(name));
 }
 
 void EditWindowUI::sendComponentRemovalEvent(std::string name) {
     m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE_COMPONENT,
-                                                                     m_EditorUISystem-> m_selectedEntityId, std::move(name));
+                                                                      m_EditorUISystem->getSelectedEntity()->m_Id.id(),
+                                                                      std::move(name));
 }
 
 void EditWindowUI::updateEntityNameReferences(Identity::Type entityId, const std::string &newName) {
     //TODO: Add event type for name changes
-//    for (const auto &transformComponent: m_EditorUISystem->getComponentContainer<TransformComponent>()) {
-//        if (transformComponent.second->m_parentEntityId == entityId) {
-//            transformComponent.second->m_parentEntityName = newName;
-//        }
-//    }
-//
-//    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsHingeJointComponent>()) {
-//        if (jointComponent.second->m_targetEntityId == entityId) {
-//            jointComponent.second->m_targetEntityName = newName;
-//        }
-//    }
-//
-//    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsFixedJointComponent>()) {
-//        if (jointComponent.second->m_targetEntityId == entityId) {
-//            jointComponent.second->m_targetEntityName = newName;
-//        }
-//    }
-//
-//    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsSliderJointComponent>()) {
-//        if (jointComponent.second->m_targetEntityId == entityId) {
-//            jointComponent.second->m_targetEntityName = newName;
-//        }
-//    }
+    //    for (const auto &transformComponent: m_EditorUISystem->getComponentContainer<TransformComponent>()) {
+    //        if (transformComponent.second->m_parentEntityId == entityId) {
+    //            transformComponent.second->m_parentEntityName = newName;
+    //        }
+    //    }
+    //
+    //    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsHingeJointComponent>()) {
+    //        if (jointComponent.second->m_targetEntityId == entityId) {
+    //            jointComponent.second->m_targetEntityName = newName;
+    //        }
+    //    }
+    //
+    //    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsFixedJointComponent>()) {
+    //        if (jointComponent.second->m_targetEntityId == entityId) {
+    //            jointComponent.second->m_targetEntityName = newName;
+    //        }
+    //    }
+    //
+    //    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsSliderJointComponent>()) {
+    //        if (jointComponent.second->m_targetEntityId == entityId) {
+    //            jointComponent.second->m_targetEntityName = newName;
+    //        }
+    //    }
 }
 
 void EditWindowUI::processComponentCreation() {
@@ -159,10 +167,10 @@ void EditWindowUI::processComponentCreation() {
 
     if (ImGui::BeginCombo("##COMPONENT_TYPE", selectedName.c_str())) {
         for (auto const &[componentTypeName, editor]: m_EditorUISystem->m_componentEditors) {
-            if (ImGui::Selectable(
-                    editor->getName().c_str(), m_selectedComponentCreationType == componentTypeName)) {
-                m_selectedComponentCreationType = componentTypeName;
-            }
+            //     if (ImGui::Selectable(
+            //         editor->getName().c_str(), m_selectedComponentCreationType == componentTypeName)) {
+            //         m_selectedComponentCreationType = componentTypeName;
+            //     }
         }
         ImGui::EndCombo();
     }
@@ -180,7 +188,6 @@ void EditWindowUI::processComponentCreation() {
 }
 
 void EditWindowUI::processEntityCreationWindow() {
-
     if (ImGui::Button("Create")) {
         sendEntityCreationEvent(m_selectedEntityCreationType,
                                 "NEW " + m_selectedEntityCreationType);
@@ -206,22 +213,23 @@ void EditWindowUI::processEntityCreationWindow() {
 }
 
 void EditWindowUI::processEntityCreation() {
-    if (m_EditorUISystem->m_selectedEntityId > 0) {
+    auto e = m_EditorUISystem->getSelectedEntity();
+    if (e) {
         if (ImGui::Button("Clone")) {
-            sendEntityCloneEvent(m_EditorUISystem->m_selectedEntityId);
+            sendEntityCloneEvent(e->m_Id.id());
         }
 
         ImGui::SameLine();
         if (ImGui::Button("Delete")) {
             sendEntityRemovalEvent();
-            m_EditorUISystem->m_selectedEntityId = 0;
+            m_EditorUISystem->clearEntitySelection();
         }
 
         ImGui::SameLine();
     }
 
     if (ImGui::Button("Create")) {
-        m_EditorUISystem->m_selectedEntityId = 0;
+        m_EditorUISystem->clearEntitySelection();
         m_isEntityCreationWindowOpen = true;
     }
 }

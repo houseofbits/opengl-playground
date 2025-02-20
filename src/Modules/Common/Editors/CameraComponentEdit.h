@@ -4,33 +4,35 @@
 #include "../Components/CameraComponent.h"
 #include "../../Editor/Helpers/FileDialogHelper.h"
 #include "../../Editor/Helpers/TextPromptHelper.h"
-#include "../../Editor/UI/BaseComponentEdit.h"
+#include "../../Editor/UI/ComponentEdit.h"
 #include "../Events/CameraActivationEvent.h"
 
-class CameraComponentEdit : public BaseComponentEdit {
+class CameraComponentEdit final : public ComponentEdit<CameraComponent> {
 public:
-    explicit CameraComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    explicit CameraComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
     }
 
     std::string getName() override {
         return "Camera";
     }
 
-    void process(Entity &entity, EditorUISystem &system) override {
-        auto *camera = entity.getComponent<CameraComponent>();
-        if (camera == nullptr) {
-            return;
-        }
+    int getNumTransformTargets() override {
+        return 1;
+    }
 
-        if (ImGui::Checkbox("Active##CAMERA_ACTIVE", &camera->m_isActive)) {
-            system.m_EventManager->queueEvent<CameraActivationEvent>(entity.m_Id.id());
-        }
+    TransformOption getTransformTargetOptions(int index) override;
 
-        ImGui::Checkbox("Is relative rotation disabled##CAMERA_REL_ROTATION", &camera->m_isRelativeRotationDisabled);
+    void processEditor() override;
 
-        float fov = camera->m_Camera.fieldOfView;
-        if (ImGui::InputFloat("FOV##CAMERA_FOV", &fov, 1.0f, 5.0f, "%.0f")) {
-            camera->m_Camera.setFieldOfView(fov);
-        }
+    glm::mat4 getWorldSpaceTransform(int index) override {
+        assert(m_component != nullptr);
+
+        return m_component->getWorldTransform();
+    }
+
+    void setWorldSpaceTransform(glm::mat4 m, int index) const override {
+        assert(m_component != nullptr);
+
+        m_component->setWorldTransform(m);
     }
 };

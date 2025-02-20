@@ -102,12 +102,12 @@ void MainToolbarUI::processViewMenu() {
                     if (ImGui::MenuItem(name.c_str())) {
                         camera->setOrthographicViewType(type);
 
-                        if (m_EditorUISystem->m_selectedEntityId > 0) {
-                            if (auto selectedTransformComponent = m_EditorUISystem->m_EntityContext->getEntityComponent<
-                                TransformComponent>(m_EditorUISystem->m_selectedEntityId)) {
-                                camera->setOrthographicViewTypeFocused(type, *selectedTransformComponent);
-                            }
-                        }
+                        // if (m_EditorUISystem->m_selectedEntityId > 0) {
+                        //     if (auto selectedTransformComponent = m_EditorUISystem->m_EntityContext->getEntityComponent<
+                        //         TransformComponent>(m_EditorUISystem->m_selectedEntityId)) {
+                        //         camera->setOrthographicViewTypeFocused(type, *selectedTransformComponent);
+                        //     }
+                        // }
                     }
                 }
 

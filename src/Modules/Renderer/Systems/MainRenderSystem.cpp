@@ -31,7 +31,7 @@ void MainRenderSystem::handleSystemEvent(const SystemEvent &event) {
     }
 }
 
-void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager&) {
+void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager &) {
     glEnable(GL_DEPTH_TEST);
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
@@ -41,18 +41,24 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
 
     resourceManager.request(m_ShaderPrograms[SHADER_SHADED],
                             "data/shaders/lighting|.vert|.frag|.geom",
-                            {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
-                             "EnvironmentProbesCubeMapArray"});
+                            {
+                                "SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
+                                "EnvironmentProbesCubeMapArray"
+                            });
 
     resourceManager.request(m_ShaderPrograms[SHADER_PROBES],
                             "data/shaders/|lighting.vert|lighting.geom|lightingProbeEdit.frag",
-                            {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
-                             "EnvironmentProbesCubeMapArray"});
+                            {
+                                "SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
+                                "EnvironmentProbesCubeMapArray"
+                            });
 
     resourceManager.request(m_ShaderPrograms[SHADER_REFLECTION],
                             "data/shaders/|lighting.vert|lighting.geom|lightingReflection.frag",
-                            {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
-                             "EnvironmentProbesCubeMapArray"});
+                            {
+                                "SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
+                                "EnvironmentProbesCubeMapArray"
+                            });
 
     resourceManager.request(m_ShaderPrograms[SHADER_SKY], "data/shaders/skybox.|vert|frag");
 
@@ -62,7 +68,6 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
 }
 
 void MainRenderSystem::process(EventManager &eventManager) {
-
     glViewport(0, 0, m_viewportWidth, m_viewportHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
@@ -72,7 +77,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
         return;
     }
 
-    const auto& sky = m_skyComponentRegistry->container().begin();
+    const auto &sky = m_skyComponentRegistry->container().begin();
     bool doesSkyComponentExist = sky != m_skyComponentRegistry->container().end();
     if (doesSkyComponentExist && sky->second->m_cubeMap().isReady()) {
         glDisable(GL_DEPTH_TEST);

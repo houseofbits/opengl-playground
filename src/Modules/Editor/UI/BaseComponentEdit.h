@@ -15,6 +15,8 @@ public:
         bool isRotationEnabled{false};
         bool isScalingEnabled{false};
         long defaultOperation{0};
+        bool isBoundsTransformEnabled{false};
+        bool isTransformCenterGizmoVisible{true};
     };
 
     explicit BaseComponentEdit(EditorUISystem &editorSystem) : m_editorSystem(&editorSystem) {
@@ -27,7 +29,11 @@ public:
     virtual void process(Entity &entity, EditorUISystem &system) {
     }
 
-    virtual void processEditor(Entity &e, Component *c) {
+    virtual void handleEntitySelection(Entity &e, Component *c) {
+
+    }
+
+    virtual void processEditor() {
     }
 
     virtual int getNumTransformTargets() {

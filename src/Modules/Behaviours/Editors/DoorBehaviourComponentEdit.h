@@ -13,22 +13,10 @@ public:
         return "Door behaviour";
     }
 
-    void process(Entity &entity, EditorUISystem &system) override {
-        auto *body = entity.getComponent<DoorBehaviourComponent>();
-        if (body == nullptr) {
-            return;
-        }
+    void processEditor() override;
 
-        ImGui::Checkbox("Is initially open", &body->m_isInitiallyOpen);
-        ImGui::Checkbox("Is fixed on final state", &body->m_isFixedOnFinalState);
+    void handleEntitySelection(Entity &e, Component *c) override;
 
-        ImGui::InputFloat("Velocity", &body->m_velocity);
-
-        // EntityLinkedComponentEdit::process(
-        //     *system.m_EventManager,
-        //     *system.m_EntityContext,
-        //     body,
-        //     "Trigger entity##DOOR_TRIGGER_ENTITY_NAME"
-        // );
-    }
+private:
+    DoorBehaviourComponent *m_component{nullptr};
 };

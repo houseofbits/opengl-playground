@@ -1,19 +1,18 @@
 #pragma once
 
-// #include "EntityLinkedComponentEdit.h"
 #include "../Components/TransformComponent.h"
-#include "../../Editor/UI/BaseComponentEdit.h"
+#include "../../Editor/UI/ComponentEdit.h"
 
-class TransformComponentEdit : public BaseComponentEdit {
+class TransformComponentEdit final : public ComponentEdit<TransformComponent> {
 public:
-    explicit TransformComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    explicit TransformComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
     }
 
     std::string getName() override {
         return "Transform";
     }
 
-    void processEditor(Entity &e, Component *c) override;
+    void processEditor() override;
 
     int getNumTransformTargets() override {
         return 1;
@@ -22,15 +21,16 @@ public:
     TransformOption getTransformTargetOptions(int index) override;
 
     glm::mat4 getWorldSpaceTransform(int index) override {
-        return m_transformComponent->getWorldTransform();
+        assert(m_component != nullptr);
+
+        return m_component->getWorldTransform();
     }
 
     void setWorldSpaceTransform(glm::mat4 m, int index) const override {
-        m_transformComponent->setWorldTransform(m);
+        assert(m_component != nullptr);
+
+        m_component->setWorldTransform(m);
     }
 
     static void updateTransform(TransformComponent *comp, float t[3], float r[3], float s[3]);
-
-private:
-    TransformComponent *m_transformComponent{nullptr};
 };

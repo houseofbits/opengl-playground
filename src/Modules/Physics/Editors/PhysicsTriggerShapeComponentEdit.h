@@ -1,23 +1,21 @@
 #pragma once
 
 #include "../../../SourceLibs/imgui/imgui.h"
-#include "../../Editor/UI/BaseComponentEdit.h"
+#include "../../Editor/UI/ComponentEdit.h"
 #include "../../Editor/Systems/EditorUISystem.h"
 #include "../Components/PhysicsTriggerShapeComponent.h"
-#include "../../Editor/Helpers/TargetEntityHelper.h"
 
-class PhysicsTriggerShapeComponentEdit : public BaseComponentEdit {
+class PhysicsTriggerShapeComponentEdit : public ComponentEdit<PhysicsTriggerShapeComponent> {
 public:
-    explicit PhysicsTriggerShapeComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    explicit PhysicsTriggerShapeComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
     }
 
     std::string getName() override {
         return "Physics trigger shape";
     }
 
-    void process(Entity &entity, EditorUISystem &system) override {
-        auto *body = entity.getComponent<PhysicsTriggerShapeComponent>();
-        if (body == nullptr) {
+    void processEditor() override {
+        if (m_component == nullptr) {
             return;
         }
 

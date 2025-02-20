@@ -1,7 +1,13 @@
 #include "TransformHelper.h"
+
+#include <GL/glew.h>
+
 #include "../Systems/EditorUISystem.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
+#include <glm/gtc/type_ptr.hpp>
+#include "../../../Core/Helper/Math.h"
+#include "../../../Renderer/Shader/WireframeRenderer.h"
 
 const std::map<long, std::string> GizmoOperationNames = {
     {ImGuizmo::TRANSLATE, "Translate"},
@@ -14,12 +20,10 @@ const std::map<long, std::string> GizmoModeNames = {
 };
 
 void TransformHelper::processToolbar() {
-    auto *e = m_UISystem->m_EntityContext->getEntity(m_UISystem->m_selectedEntityId);
+    auto *e = m_UISystem->getSelectedEntity();
     if (!e) {
         return;
     }
-
-    handleEntitySelection(*e);
 
     ImGui::SameLine();
     ImGui::PushItemWidth(150);
@@ -40,39 +44,92 @@ void TransformHelper::processToolbar() {
 }
 
 void TransformHelper::processGizmo(Camera &camera) {
+    auto *e = m_UISystem->getSelectedEntity();
+    if (!e) {
+        return;
+    }
+
+    if (m_pSelectedComponentEdit == nullptr) {
+        return;
+    }
+
+    const auto options = m_pSelectedComponentEdit->getTransformTargetOptions(m_selectedTransformTargetIndex);
+
+    static float bounds[] = {-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f};
+
+    ImGuizmo::BeginFrame();
+    ImGuizmo::SetOrthographic(camera.isOrthographic);
+    ImGuizmo::SetDrawlist(ImGui::GetBackgroundDrawList());
+    ImGuiViewport *viewport = ImGui::GetMainViewport();
+    ImGuizmo::SetRect(viewport->Pos.x, viewport->Pos.y, viewport->Size.x, viewport->Size.y);
+
+    if (ImGuizmo::Manipulate(glm::value_ptr(camera.viewMatrix),
+                             glm::value_ptr(camera.projectionMatrix),
+                             static_cast<ImGuizmo::OPERATION>(m_selectedTransformOperation),
+                             static_cast<ImGuizmo::MODE>(m_selectedTransformSpace),
+                             glm::value_ptr(m_transform),
+                             nullptr,
+                             nullptr,
+                             options.isBoundsTransformEnabled ? bounds : nullptr
+    )) {
+        m_pSelectedComponentEdit->setWorldSpaceTransform(m_transform, m_selectedTransformTargetIndex);
+    } else {
+        m_transform = m_pSelectedComponentEdit->getWorldSpaceTransform(m_selectedTransformTargetIndex);
+    }
+}
+
+void TransformHelper::processDebugHelpers(WireframeRenderer &renderer) const {
+    if (m_pSelectedComponentEdit == nullptr) {
+        return;
+    }
+
+    if (m_pSelectedComponentEdit->getNumTransformTargets() == 0) {
+        return;
+    }
+
+    for (int i = 0; i < m_pSelectedComponentEdit->getNumTransformTargets(); ++i) {
+        auto options = m_pSelectedComponentEdit->getTransformTargetOptions(i);
+        if (options.isTransformCenterGizmoVisible) {
+            glDisable(GL_DEPTH_TEST);
+
+            auto m = Math::rescaleMatrix(m_pSelectedComponentEdit->getWorldSpaceTransform(i), 0.3);
+            renderer.renderSphere(m, {0, 0, 1, 1});
+
+            glEnable(GL_DEPTH_TEST);
+        }
+    }
 }
 
 void TransformHelper::handleEntitySelection(Entity &e) {
-    if (m_selectedEntityId != m_UISystem->m_selectedEntityId) {
-        m_selectedEntityId = static_cast<int>(m_UISystem->m_selectedEntityId);
-        m_selectedTransformTargetIndex = -1;
-        m_pSelectedComponentEdit = nullptr;
-        m_selectedTransformSpace = ImGuizmo::WORLD;
-        m_selectedTransformOperation = 0;
+    m_selectedTransformTargetIndex = -1;
+    m_pSelectedComponentEdit = nullptr;
+    m_selectedTransformSpace = ImGuizmo::WORLD;
+    m_selectedTransformOperation = 0;
 
-        for (const auto &component: e.m_Components) {
-            auto editor = m_UISystem->m_componentEditors[component->getTypeName()];
-            if (editor && editor->getNumTransformTargets() > 0) {
-                m_pSelectedComponentEdit = editor;
-                m_selectedTransformTargetIndex = 0;
+    for (const auto &component: e.m_Components) {
+        auto editor = m_UISystem->m_componentEditors[component->getTypeName()];
+        if (editor && editor->getNumTransformTargets() > 0) {
+            m_pSelectedComponentEdit = editor;
+            m_selectedTransformTargetIndex = 0;
 
-                auto options = editor->getTransformTargetOptions(0);
-                if (options.isTranslationEnabled) {
-                    m_selectedTransformOperation = ImGuizmo::TRANSLATE;
-                } else if (options.isRotationEnabled) {
-                    m_selectedTransformOperation = ImGuizmo::ROTATE;
-                } else if (options.isScalingEnabled) {
-                    m_selectedTransformOperation = ImGuizmo::SCALE;
-                }
-
-                break;
+            auto options = editor->getTransformTargetOptions(0);
+            if (options.isTranslationEnabled) {
+                m_selectedTransformOperation = ImGuizmo::TRANSLATE;
+            } else if (options.isRotationEnabled) {
+                m_selectedTransformOperation = ImGuizmo::ROTATE;
+            } else if (options.isScalingEnabled) {
+                m_selectedTransformOperation = ImGuizmo::SCALE;
             }
+
+            m_transform = editor->getWorldSpaceTransform(m_selectedTransformTargetIndex);
+
+            break;
         }
     }
 }
 
 void TransformHelper::processTransformTargetDropdown(Entity &e) {
-    std::string selectedName = "";
+    std::string selectedName;
     if (m_pSelectedComponentEdit != nullptr) {
         selectedName = m_pSelectedComponentEdit->getTransformTargetOptions(m_selectedTransformTargetIndex).name;
     }

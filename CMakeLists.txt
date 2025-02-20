@@ -125,8 +125,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Helpers/PhysicsDebugRenderer.h
         src/Modules/Renderer/Systems/OverlayRenderSystem.cpp
         src/Modules/Renderer/Systems/OverlayRenderSystem.h
-        src/Modules/Editor/Helpers/TransformGizmoHelper.cpp
-        src/Modules/Editor/Helpers/TransformGizmoHelper.h
         src/Core/Helper/ComponentTransformEdit.h
         src/Modules/Common/Systems/TransformHierarchyProcessingSystem.cpp
         src/Modules/Common/Systems/TransformHierarchyProcessingSystem.h
@@ -182,6 +180,17 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Common/Editors/TransformComponentEdit.cpp
         src/Modules/Editor/Helpers/TransformHelper.cpp
         src/Modules/Editor/Helpers/TransformHelper.h
+        src/Modules/Common/Editors/CameraComponentEdit.cpp
+        src/Modules/Behaviours/Editors/MainCharacterBehaviourComponentEdit.cpp
+        src/Modules/Behaviours/Editors/DoorBehaviourComponentEdit.cpp
+        src/Modules/Physics/Editors/PhysicsFixedJointComponentEdit.cpp
+        src/Renderer/Model/WireModel.cpp
+        src/Renderer/Model/WireModel.h
+        src/Renderer/Model/WireCube.cpp
+        src/Renderer/Model/WireCube.h
+        src/Renderer/Model/WireSphere.cpp
+        src/Renderer/Model/WireSphere.h
+        src/Core/Helper/Math.h
 )
 
 #add_compile_definitions(EVENTMANAGER_V1)

@@ -3,33 +3,32 @@
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 
-void TransformComponentEdit::processEditor(Entity &entity, Component *component) {
-    auto *transform = entity.getComponent<TransformComponent>();
-    if (transform == nullptr) {
+void TransformComponentEdit::processEditor() {
+    if (m_component == nullptr) {
         return;
     }
 
     float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 
-    ImGuizmo::DecomposeMatrixToComponents(&transform->m_transform[0][0], matrixTranslation, matrixRotation,
+    ImGuizmo::DecomposeMatrixToComponents(&m_component->m_transform[0][0], matrixTranslation, matrixRotation,
                                           matrixScale);
-    if (transform->m_isTranslationEnabled) {
+    if (m_component->m_isTranslationEnabled) {
         if (ImGui::InputFloat3("Translation", matrixTranslation)) {
-            updateTransform(transform, matrixTranslation, matrixRotation, matrixScale);
+            updateTransform(m_component, matrixTranslation, matrixRotation, matrixScale);
         }
     }
-    if (transform->m_isRotationEnabled) {
+    if (m_component->m_isRotationEnabled) {
         if (ImGui::InputFloat3("Rotation", matrixRotation)) {
-            updateTransform(transform, matrixTranslation, matrixRotation, matrixScale);
+            updateTransform(m_component, matrixTranslation, matrixRotation, matrixScale);
         }
     }
-    if (transform->m_isScalingEnabled) {
+    if (m_component->m_isScalingEnabled) {
         if (ImGui::InputFloat3("Scaling", matrixScale)) {
-            updateTransform(transform, matrixTranslation, matrixRotation, matrixScale);
+            updateTransform(m_component, matrixTranslation, matrixRotation, matrixScale);
         }
     }
 
-    ImGui::Checkbox("Is relative rotation disabled##TRANSFORM_REL_ROTATION", &transform->m_isRelativeRotationDisabled);
+    ImGui::Checkbox("Is relative rotation disabled##TRANSFORM_REL_ROTATION", &m_component->m_isRelativeRotationDisabled);
 
     // EntityLinkedComponentEdit::process<TransformComponent>(
     //     *system.m_EventManager,
@@ -53,6 +52,7 @@ TransformComponentEdit::TransformOption TransformComponentEdit::getTransformTarg
         true,
         true,
         ImGuizmo::TRANSLATE,
+        false,
+        true,
     };
 }
-

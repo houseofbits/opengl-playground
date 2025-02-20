@@ -5,12 +5,12 @@
 #include "Components/TransformComponent.h"
 #include "Systems/TransformHierarchyProcessingSystem.h"
 #include "../Editor/Systems/EditorUISystem.h"
-// #include "Editors/CameraComponentEdit.h"
+#include "Editors/CameraComponentEdit.h"
 #include "Editors/TransformComponentEdit.h"
 #include "Systems/CameraSystem.h"
 #include "Systems/EntityLinkingSystem.h"
 
-class CommonModule : public EntityModule {
+class CommonModule final : public EntityModule {
 public:
     void registerComponents(EntityContext &ctx) override {
         ctx.registerComponent<TransformComponent>("transform");
@@ -25,7 +25,7 @@ public:
 
     void postRegister(EntityContext &ctx) override {
         if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
-            //     editorSystem->registerComponentEditor<CameraComponent, CameraComponentEdit>();
+            editorSystem->registerComponentEditor<CameraComponent, CameraComponentEdit>();
             editorSystem->registerComponentEditor<TransformComponent, TransformComponentEdit>();
         }
     }
