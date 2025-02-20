@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../SourceLibs/imgui/imgui.h"
+#include "../../Common/Components/TransformComponent.h"
 #include "../../Editor/Helpers/TargetEntityHelper.h"
 #include "../../Editor/UI/ComponentEdit.h"
 
@@ -18,8 +18,10 @@ public:
     void processEditor() override;
 
     int getNumTransformTargets() override {
-        return 1;
+        return 3;
     }
+
+    void handleEntitySelection(Entity &e, Component *c) override;
 
     TransformOption getTransformTargetOptions(int index) override;
 
@@ -27,5 +29,10 @@ public:
 
     void setWorldSpaceTransform(glm::mat4 m, int index) const override;
 
+private:
+    [[nodiscard]] TransformComponent* getTransformComponentByName(const std::string& name) const;
+
     glm::vec2 angularLimits{0, 0};
+    TransformComponent *m_linkedTransformA{nullptr};
+    TransformComponent *m_linkedTransformB{nullptr};
 };
