@@ -17,6 +17,7 @@
 #include "../Layers.h"
 #include "../PhysicsTypeCast.h"
 #include "../PhysicsUserData.h"
+#include "../../../../Core/Helper/Math.h"
 #include "../../../Common/Components/TransformComponent.h"
 #include "../../Components/PhysicsBodyComponent.h"
 
@@ -157,6 +158,8 @@ class PhysicsBuilder {
         glm::vec3 m_axis2{0.0f};
         glm::vec3 m_point1{0.0f};
         glm::vec3 m_point2{0.0f};
+        glm::mat4 m_attachment1{1.0};
+        glm::mat4 m_attachment2{1.0};
 
     public:
         explicit PhysicsJointBuilder(JPH::PhysicsSystem &physicsSystem): m_physicsSystem(&physicsSystem), m_limits() {
@@ -193,6 +196,13 @@ class PhysicsBuilder {
         PhysicsJointBuilder &setAxis(const glm::vec3 axis1, const glm::vec3 axis2) {
             m_axis1 = axis1;
             m_axis2 = axis2;
+
+            return *this;
+        }
+
+        PhysicsJointBuilder &setAttachments(const glm::mat4 &attachment1, const glm::mat4 &attachment2) {
+            m_attachment1 = attachment1;
+            m_attachment2 = attachment2;
 
             return *this;
         }
@@ -300,12 +310,12 @@ class PhysicsBuilder {
 
             JPH::HingeConstraintSettings settings;
             settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
-            settings.mPoint1 = PhysicsTypeCast::glmToJPH(m_point1);
-            settings.mPoint2 = PhysicsTypeCast::glmToJPH(m_point2);
-            settings.mHingeAxis1 = PhysicsTypeCast::glmToJPH(m_axis1);
-            settings.mHingeAxis2 = PhysicsTypeCast::glmToJPH(m_axis2);
-            settings.mNormalAxis1 = JPH::Vec3::sAxisX();
-            settings.mNormalAxis2 = JPH::Vec3::sAxisX();
+            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
+            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
+            settings.mHingeAxis1 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment1));
+            settings.mHingeAxis2 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment2));
+            settings.mNormalAxis1 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment1));
+            settings.mNormalAxis2 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment2));
 
             if (m_isLimitsEnabled) {
                 settings.mLimitsMin = m_limits.x;
@@ -315,17 +325,20 @@ class PhysicsBuilder {
             JPH::Body *body1 = nullptr;
             JPH::Body *body2 = nullptr;
 
-            JPH::BodyLockWrite lock1(m_physicsSystem->GetBodyLockInterface(), m_bodyId1);
-            if (lock1.Succeeded()) {
-                body1 = &lock1.GetBody();
-                lock1.ReleaseLock();
-            }
+            body1 = m_physicsSystem->GetBodyLockInterface().TryGetBody(m_bodyId1);
+            body2 = m_physicsSystem->GetBodyLockInterface().TryGetBody(m_bodyId2);
 
-            JPH::BodyLockWrite lock2(m_physicsSystem->GetBodyLockInterface(), m_bodyId2);
-            if (lock2.Succeeded()) {
-                body2 = &lock2.GetBody();
-                lock2.ReleaseLock();
-            }
+            // JPH::BodyLockWrite lock1(m_physicsSystem->GetBodyLockInterface(), m_bodyId1);
+            // if (lock1.Succeeded()) {
+            //     body1 = &lock1.GetBody();
+            //     lock1.ReleaseLock();
+            // }
+            //
+            // JPH::BodyLockWrite lock2(m_physicsSystem->GetBodyLockInterface(), m_bodyId2);
+            // if (lock2.Succeeded()) {
+            //     body2 = &lock2.GetBody();
+            //     lock2.ReleaseLock();
+            // }
 
             if (!body1 || !body2) {
                 return nullptr;

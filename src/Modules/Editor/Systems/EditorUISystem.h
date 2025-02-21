@@ -10,7 +10,7 @@
 #include "../UI/MaterialEditWindowUI.h"
 #include "../../Common/Helpers/ActiveCameraHelper.h"
 #include "../Components/EditorCameraComponent.h"
-#include "../Helpers/TransformHelper.h"
+#include "../UI/TransformEdit.h"
 #include "../../../Renderer/Shader/WireframeRenderer.h"
 #include "../../../Renderer/Model/WireCube.h"
 #include "../../../Renderer/Model/WireSphere.h"
@@ -60,7 +60,7 @@ public:
     EntityUniqueComponentRegistry<CameraComponent> *m_cameraComponentRegistry;
     bool m_isEditorModeEnabled;
 
-    TransformHelper m_transformHelper;
+    TransformEdit m_transformHelper;
 
 private:
     void processDockSpaceWindow();

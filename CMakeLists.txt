@@ -178,8 +178,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/System/EntitySystemRegistry.cpp
         src/Core/System/BaseSystemProcess.cpp
         src/Modules/Common/Editors/TransformComponentEdit.cpp
-        src/Modules/Editor/Helpers/TransformHelper.cpp
-        src/Modules/Editor/Helpers/TransformHelper.h
         src/Modules/Common/Editors/CameraComponentEdit.cpp
         src/Modules/Behaviours/Editors/MainCharacterBehaviourComponentEdit.cpp
         src/Modules/Behaviours/Editors/DoorBehaviourComponentEdit.cpp
@@ -191,6 +189,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Model/WireSphere.cpp
         src/Renderer/Model/WireSphere.h
         src/Core/Helper/Math.h
+        src/Modules/Editor/Helpers/TransformHelper.h
+        src/Modules/Editor/Helpers/TransformHelper.h
 )
 
 #add_compile_definitions(EVENTMANAGER_V1)

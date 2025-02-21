@@ -1,9 +1,12 @@
 #include "PhysicsHingeJointComponentEdit.h"
+
+#include "../../../Core/Helper/Math.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include "../../Editor/UI/BaseComponentEdit.h"
 #include "../Components/PhysicsHingeJointComponent.h"
 #include "../../Common/Editors/EntityLinkedComponentEdit.h"
+#include "../../Editor/Helpers/TransformHelper.h"
 #include "../../Editor/Systems/EditorUISystem.h"
 
 void PhysicsHingeJointComponentEdit::processEditor() {
@@ -27,11 +30,16 @@ void PhysicsHingeJointComponentEdit::processEditor() {
     )) {
         m_linkedTransformB = getTransformComponentByName(m_component->m_targetEntityBName);
     }
+    if (ImGui::TreeNode("Attachment transform A")) {
+        TransformHelper::editTransform(m_component->m_localAttachmentMatrixA, true, true, false);
 
-    ImGui::InputFloat3("Attachment A", reinterpret_cast<float *>(&m_component->m_localAttachmentA));
-    ImGui::InputFloat3("Axis A", reinterpret_cast<float *>(&m_component->m_axisA));
-    ImGui::InputFloat3("Attachment B", reinterpret_cast<float *>(&m_component->m_localAttachmentB));
-    ImGui::InputFloat3("Axis B", reinterpret_cast<float *>(&m_component->m_axisB));
+        ImGui::TreePop();
+    }
+    if (ImGui::TreeNode("Attachment transform B")) {
+        TransformHelper::editTransform(m_component->m_localAttachmentMatrixB, true, true, false);
+
+        ImGui::TreePop();
+    }
 
     ImGui::Checkbox("Angular limits", &m_component->m_isLimitsEnabled);
     ImGui::Checkbox("Lock on limits", &m_component->m_isLockingToLimitsEnabled);
@@ -88,16 +96,16 @@ glm::mat4 PhysicsHingeJointComponentEdit::getWorldSpaceTransform(int index) {
     }
 
     if (index == 2) {
-        auto m = glm::mat4(1.0);
-        m = glm::translate(m, m_component->m_localAttachmentB);
+        auto m = m_component->m_localAttachmentMatrixB;
+        const glm::mat4 transformB = Math::rescaleMatrix(m_linkedTransformB->m_transform);
 
-        return m_linkedTransformB->m_transform * m;
+        return transformB * m;
     }
 
-    auto m = glm::mat4(1.0);
-    m = glm::translate(m, m_component->m_localAttachmentA);
+    auto m = m_component->m_localAttachmentMatrixA;
+    const glm::mat4 transformA = Math::rescaleMatrix(m_linkedTransformA->m_transform);
 
-    return m_linkedTransformA->m_transform * m;
+    return transformA * m;
 }
 
 void PhysicsHingeJointComponentEdit::setWorldSpaceTransform(glm::mat4 m, int index) const {
@@ -105,25 +113,22 @@ void PhysicsHingeJointComponentEdit::setWorldSpaceTransform(glm::mat4 m, int ind
         return;
     }
 
+    const glm::mat4 transformA = glm::inverse(Math::rescaleMatrix(m_linkedTransformA->m_transform));
     if (index == 1) {
-        glm::mat4 localA = glm::inverse(m_linkedTransformA->m_transform) * m;
-        m_component->m_localAttachmentA = glm::vec3(localA[3]);
+        m_component->m_localAttachmentMatrixA = transformA * m;
 
         return;
     }
 
+    const glm::mat4 transformB = glm::inverse(Math::rescaleMatrix(m_linkedTransformB->m_transform));
     if (index == 2) {
-        glm::mat4 localB = glm::inverse(m_linkedTransformB->m_transform) * m;
-        m_component->m_localAttachmentB = glm::vec3(localB[3]);
+        m_component->m_localAttachmentMatrixB = transformB * m;
 
         return;
     }
 
-    glm::mat4 localA = glm::inverse(m_linkedTransformA->m_transform) * m;
-    glm::mat4 localB = glm::inverse(m_linkedTransformB->m_transform) * m;
-
-    m_component->m_localAttachmentA = glm::vec3(localA[3]);
-    m_component->m_localAttachmentB = glm::vec3(localB[3]);
+    m_component->m_localAttachmentMatrixA = transformA * m;;
+    m_component->m_localAttachmentMatrixB = transformB * m;
 }
 
 void PhysicsHingeJointComponentEdit::handleEntitySelection(Entity &e, Component *c) {

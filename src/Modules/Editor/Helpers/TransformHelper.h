@@ -1,38 +1,40 @@
 #pragma once
 
 #include <glm/mat4x4.hpp>
-
-class WireframeRenderer;
-class EditorUISystem;
-class BaseComponentEdit;
-class Camera;
-class Entity;
+#include "../../../SourceLibs/imgui/imgui.h"
+#include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 
 class TransformHelper {
 public:
-    explicit TransformHelper(EditorUISystem &uiSystem) : m_UISystem(&uiSystem) {
+    TransformHelper();
+
+    static bool editTransform(glm::mat4 &m, const bool allowTranslation, const bool allowRotation,
+                              const bool allowScale) {
+        bool hasChanged = false;
+        float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+
+        ImGuizmo::DecomposeMatrixToComponents(&m[0][0], matrixTranslation, matrixRotation,
+                                              matrixScale);
+
+        if (allowTranslation) {
+            if (ImGui::InputFloat3("Translation", matrixTranslation)) {
+                ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, &m[0][0]);
+                hasChanged = true;
+            }
+        }
+        if (allowRotation) {
+            if (ImGui::InputFloat3("Rotation", matrixRotation)) {
+                ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, &m[0][0]);
+                hasChanged = true;
+            }
+        }
+        if (allowScale) {
+            if (ImGui::InputFloat3("Scaling", matrixScale)) {
+                ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, &m[0][0]);
+                hasChanged = true;
+            }
+        }
+
+        return hasChanged;
     }
-
-    void processToolbar();
-
-    void processGizmo(Camera &camera);
-
-    void processDebugHelpers(WireframeRenderer& renderer) const;
-
-    void handleEntitySelection(Entity &);
-
-private:
-    void processTransformTargetDropdown(Entity &);
-
-    void processTransformOperationDropdown();
-
-    void processTransformSpaceDropdown();
-
-    EditorUISystem *m_UISystem{nullptr};
-    BaseComponentEdit *m_pSelectedComponentEdit{nullptr};
-    // int m_selectedEntityId{-1};
-    int m_selectedTransformTargetIndex{-1};
-    long m_selectedTransformOperation{0};
-    long m_selectedTransformSpace{0};
-    glm::mat4 m_transform{1.0};
 };

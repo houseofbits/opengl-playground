@@ -31,6 +31,4 @@ public:
 
         m_component->setWorldTransform(m);
     }
-
-    static void updateTransform(TransformComponent *comp, float t[3], float r[3], float s[3]);
 };
