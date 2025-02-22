@@ -25,9 +25,6 @@ public:
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 
 private:
-    void releaseAll() const;
-    void recreateAll() const;
-
     EntityUniqueComponentRegistry<PhysicsHingeJointComponent> *m_hingeJointComponentRegistry;
     EntityUniqueComponentRegistry<PhysicsFixedJointComponent> *m_fixedJointComponentRegistry;
     EntityUniqueComponentRegistry<PhysicsSliderJointComponent> *m_sliderJointComponentRegistry;

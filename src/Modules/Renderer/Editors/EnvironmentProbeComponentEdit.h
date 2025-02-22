@@ -3,24 +3,18 @@
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../Components/EnvironmentProbeComponent.h"
 #include "../../Editor/Helpers/FileDialogHelper.h"
-#include "../../Editor/Helpers/TextPromptHelper.h"
-#include "../../Editor/UI/BaseComponentEdit.h"
+#include "../../Editor/UI/ComponentEdit.h"
 
-class EnvironmentProbeComponentEdit : public BaseComponentEdit {
+class EnvironmentProbeComponentEdit : public ComponentEdit<EnvironmentProbeComponent> {
 public:
-    explicit EnvironmentProbeComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    explicit EnvironmentProbeComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
     }
 
     std::string getName() override {
         return "Environment probe";
     }
 
-    void process(Entity &entity, EditorUISystem& system) override {
-        auto *probe = entity.getComponent<EnvironmentProbeComponent>();
-        if (probe == nullptr) {
-            return;
-        }
-
-        ImGui::ColorEdit3("Debug color##PROBE_COLOR", (float *) &probe->m_DebugColor);
+    void processEditor() override {
+        ImGui::ColorEdit3("Debug color##PROBE_COLOR", reinterpret_cast<float *>(&m_component->m_DebugColor));
     }
 };

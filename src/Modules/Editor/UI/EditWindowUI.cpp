@@ -167,10 +167,10 @@ void EditWindowUI::processComponentCreation() {
 
     if (ImGui::BeginCombo("##COMPONENT_TYPE", selectedName.c_str())) {
         for (auto const &[componentTypeName, editor]: m_EditorUISystem->m_componentEditors) {
-            //     if (ImGui::Selectable(
-            //         editor->getName().c_str(), m_selectedComponentCreationType == componentTypeName)) {
-            //         m_selectedComponentCreationType = componentTypeName;
-            //     }
+            if (editor && ImGui::Selectable(
+                editor->getName().c_str(), m_selectedComponentCreationType == componentTypeName)) {
+                m_selectedComponentCreationType = componentTypeName;
+            }
         }
         ImGui::EndCombo();
     }

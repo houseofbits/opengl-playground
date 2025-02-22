@@ -32,12 +32,10 @@ void PhysicsHingeJointComponentEdit::processEditor() {
     }
     if (ImGui::TreeNode("Attachment transform A")) {
         TransformHelper::editTransform(m_component->m_localAttachmentMatrixA, true, true, false);
-
         ImGui::TreePop();
     }
     if (ImGui::TreeNode("Attachment transform B")) {
         TransformHelper::editTransform(m_component->m_localAttachmentMatrixB, true, true, false);
-
         ImGui::TreePop();
     }
 

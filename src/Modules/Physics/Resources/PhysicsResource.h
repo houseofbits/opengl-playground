@@ -30,6 +30,8 @@ public:
 
     void destroy() override;
 
+    void destroyAllBodies();
+
     void simulate();
 
     void drawDebug(ShaderProgramResource &shader);

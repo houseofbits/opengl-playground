@@ -81,6 +81,20 @@ void PhysicsResource::destroy() {
     JPH::Factory::sInstance = nullptr;
 }
 
+void PhysicsResource::destroyAllBodies() {
+    auto constraints = m_PhysicsSystem.GetConstraints();
+    for (const auto &constraint: constraints) {
+        m_PhysicsSystem.RemoveConstraint(constraint);
+    }
+
+    BodyIDVector bodyIDs;
+    m_PhysicsSystem.GetBodies(bodyIDs);
+    for (JPH::BodyID bodyID: bodyIDs) {
+        m_PhysicsSystem.GetBodyInterface().RemoveBody(bodyID);
+        m_PhysicsSystem.GetBodyInterface().DestroyBody(bodyID);
+    }
+}
+
 void PhysicsResource::addContactPoint(Identity::Type entityId, glm::vec3 point) {
     if (m_entityContacts.count(entityId) == 0) {
         m_entityContacts[entityId].reserve(16);
@@ -106,7 +120,6 @@ JPH::BodyInterface &PhysicsResource::getInterface() {
 const JPH::BodyLockInterfaceLocking &PhysicsResource::getLockInterface() const {
     return m_PhysicsSystem.GetBodyLockInterface();
 }
-
 
 JPH::PhysicsSystem &PhysicsResource::getSystem() {
     return m_PhysicsSystem;

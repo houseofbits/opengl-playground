@@ -40,6 +40,7 @@ void PhysicsSystem::handleSystemEvent(const SystemEvent &event) {
         recreateAll();
     } else if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
         m_isSimulationDisabled = true;
+        m_PhysicsResource().destroyAllBodies();
     }
 }
 

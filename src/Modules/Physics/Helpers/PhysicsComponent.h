@@ -7,14 +7,13 @@ public:
     PhysicsComponent() : Component() {
     }
 
-    virtual ~PhysicsComponent() {
-    }
+    ~PhysicsComponent() override = default;
 
-    bool isPhysicsCreated() const {
+    [[nodiscard]] bool isPhysicsCreated() const {
         return !m_shouldCreatePhysics;
     }
 
-    bool shouldCreatePhysics() const {
+    [[nodiscard]] bool shouldCreatePhysics() const {
         return m_shouldCreatePhysics;
     }
 

@@ -1,53 +1,52 @@
 #pragma once
 
 #include "../../../SourceLibs/imgui/imgui.h"
-#include "../../Editor/UI/BaseComponentEdit.h"
+#include "../../Editor/UI/ComponentEdit.h"
 #include "../../Editor/Systems/EditorUISystem.h"
 #include "../Components/PhysicsSliderJointComponent.h"
-#include "../../Editor/Helpers/TargetEntityHelper.h"
+#include "../../Common/Editors/EntityLinkedComponentEdit.h"
 
-class PhysicsSliderJointComponentEdit : public BaseComponentEdit {
+class PhysicsSliderJointComponentEdit final : public ComponentEdit<PhysicsSliderJointComponent> {
 public:
-    explicit PhysicsSliderJointComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    explicit PhysicsSliderJointComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
     }
 
     std::string getName() override {
         return "Physics slider joint";
     }
 
-    void process(Entity &entity, EditorUISystem &system) override {
-        auto *body = entity.getComponent<PhysicsSliderJointComponent>();
-        if (body == nullptr) {
+    void processEditor() override {
+        if (m_component == nullptr) {
             return;
         }
 
         EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
-            *system.m_EntityContext,
-            body->m_targetEntityAName,
+            *m_editorSystem->m_EntityContext,
+            m_component->m_targetEntityAName,
             "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
             "Self"
         );
 
         EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
-            *system.m_EntityContext,
-            body->m_targetEntityBName,
+        *m_editorSystem->m_EntityContext,
+        m_component->m_targetEntityBName,
             "Attachment entity B##TRANSFORM_PARENT_ENTITY_NAME_B"
         );
 
-        ImGui::InputFloat3("Axis", (float *) &body->m_axis);
+        ImGui::InputFloat3("Axis", reinterpret_cast<float *>(&m_component->m_axis));
 
-        ImGui::Checkbox("Limits", &body->m_isLimitsEnabled);
+        ImGui::Checkbox("Limits", &m_component->m_isLimitsEnabled);
 
-        if (body->m_isLimitsEnabled) {
-            ImGui::InputFloat2("Min/Max", (float *) &body->m_limits);
+        if (m_component->m_isLimitsEnabled) {
+            ImGui::InputFloat2("Min/Max", reinterpret_cast<float *>(&m_component->m_limits));
         }
 
-        ImGui::Checkbox("Motor", &body->m_isMotorSettingsEnabled);
+        ImGui::Checkbox("Motor", &m_component->m_isMotorSettingsEnabled);
 
-        if (body->m_isMotorSettingsEnabled) {
-            ImGui::DragFloat("Force limit", &body->m_motorForceLimit, 0.1f);
-            ImGui::DragFloat("Damping", &body->m_motorDamping, 0.1f);
-            ImGui::DragFloat("Frequency", &body->m_motorFrequency, 0.1f);
+        if (m_component->m_isMotorSettingsEnabled) {
+            ImGui::DragFloat("Force limit", &m_component->m_motorForceLimit, 0.1f);
+            ImGui::DragFloat("Damping", &m_component->m_motorDamping, 0.1f);
+            ImGui::DragFloat("Frequency", &m_component->m_motorFrequency, 0.1f);
         }
     }
 };

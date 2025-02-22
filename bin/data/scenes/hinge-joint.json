@@ -107,11 +107,6 @@
             "type": 1
         },
         "PhysicsHingeJointComponent": {
-            "attachmentA": [
-                1.811981201171875e-05,
-                -4.0531158447265625e-06,
-                -0.8519868850708008
-            ],
             "attachmentAPosition": [
                 0.0,
                 0.0,
@@ -123,11 +118,6 @@
                 0.0,
                 1.0
             ],
-            "attachmentB": [
-                0.9585142135620117,
-                2.0852925777435303,
-                -0.2637300491333008
-            ],
             "attachmentBPosition": [
                 0.95849609375,
                 2.085296630859375,
@@ -138,16 +128,6 @@
                 0.0,
                 0.0,
                 1.0
-            ],
-            "axisA": [
-                1.0,
-                0.0,
-                0.0
-            ],
-            "axisB": [
-                1.0,
-                0.0,
-                0.0
             ],
             "enableLimits": false,
             "enableLockingLimits": false,
@@ -195,6 +175,20 @@
             "restitution": 0.5,
             "shape": 0,
             "type": 1
+        },
+        "PhysicsSliderJointComponent": {
+            "axis": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "enableLimits": false,
+            "limits": [
+                0.0,
+                0.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "pole"
         },
         "mesh": {
             "material": "data/materials/solid-blue.json",

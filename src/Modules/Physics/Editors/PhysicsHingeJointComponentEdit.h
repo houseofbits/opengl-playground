@@ -6,7 +6,7 @@
 
 class PhysicsHingeJointComponent;
 
-class PhysicsHingeJointComponentEdit : public ComponentEdit<PhysicsHingeJointComponent> {
+class PhysicsHingeJointComponentEdit final : public ComponentEdit<PhysicsHingeJointComponent> {
 public:
     explicit PhysicsHingeJointComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
     }

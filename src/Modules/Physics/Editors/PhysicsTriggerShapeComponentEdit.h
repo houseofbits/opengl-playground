@@ -2,10 +2,9 @@
 
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../Editor/UI/ComponentEdit.h"
-#include "../../Editor/Systems/EditorUISystem.h"
 #include "../Components/PhysicsTriggerShapeComponent.h"
 
-class PhysicsTriggerShapeComponentEdit : public ComponentEdit<PhysicsTriggerShapeComponent> {
+class PhysicsTriggerShapeComponentEdit final : public ComponentEdit<PhysicsTriggerShapeComponent> {
 public:
     explicit PhysicsTriggerShapeComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
     }

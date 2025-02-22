@@ -15,7 +15,7 @@
 #include "Editors/CharacterControllerComponentEdit.h"
 #include "Editors/PhysicsBodyComponentEdit.h"
 #include "Editors/PhysicsHingeJointComponentEdit.h"
-// #include "Editors/PhysicsSliderJointComponentEdit.h"
+#include "Editors/PhysicsSliderJointComponentEdit.h"
 #include "Editors/PhysicsFixedJointComponentEdit.h"
 #include "Editors/PhysicsTriggerShapeComponentEdit.h"
 #include "../Editor/Systems/EditorUISystem.h"
@@ -48,7 +48,7 @@ public:
             editorSystem->registerComponentEditor<PhysicsCharacterComponent, CharacterControllerComponentEdit>();
             editorSystem->registerComponentEditor<PhysicsBodyComponent, PhysicsBodyComponentEdit>();
             editorSystem->registerComponentEditor<PhysicsHingeJointComponent, PhysicsHingeJointComponentEdit>();
-            //     editorSystem->registerComponentEditor<PhysicsSliderJointComponent, PhysicsSliderJointComponentEdit>();
+            editorSystem->registerComponentEditor<PhysicsSliderJointComponent, PhysicsSliderJointComponentEdit>();
             editorSystem->registerComponentEditor<PhysicsFixedJointComponent, PhysicsFixedJointComponentEdit>();
             editorSystem->registerComponentEditor<PhysicsTriggerShapeComponent, PhysicsTriggerShapeComponentEdit>();
         }

@@ -14,10 +14,6 @@ PhysicsHingeJointComponent::PhysicsHingeJointComponent() : BasePhysicsJoint(),
                                                            m_isLockingToLimitsEnabled(false),
                                                            m_Joint(nullptr),
                                                            m_angularLimits(0, 1.0),
-                                                           // m_axisA(0, 1, 0),
-                                                           // m_axisB(0, 1, 0),
-                                                           // m_localAttachmentA(0, 0, 0),
-                                                           // m_localAttachmentB(0, 0, 0),
                                                            m_isMotorSettingsEnabled(false),
                                                            m_motorForceLimit(0),
                                                            m_motorDamping(0),
@@ -31,10 +27,6 @@ void PhysicsHingeJointComponent::serialize(nlohmann::json &j) {
 
     j[ARE_LIMITS_ENABLED_KEY] = m_isLimitsEnabled;
     j[ARE_LOCKING_LIMITS_ENABLED_KEY] = m_isLockingToLimitsEnabled;
-    // j[AXIS_A_KEY] = m_axisA;
-    // j[AXIS_B_KEY] = m_axisB;
-    // j[ATTACHMENT_A_KEY] = m_localAttachmentA;
-    // j[ATTACHMENT_B_KEY] = m_localAttachmentB;
     j[LIMITS_KEY] = m_angularLimits;
     if (m_isMotorSettingsEnabled) {
         j[ENABLE_MOTOR_SETTINGS_KEY] = m_isMotorSettingsEnabled;
@@ -54,10 +46,6 @@ void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceMa
 
     m_isLimitsEnabled = j.value(ARE_LIMITS_ENABLED_KEY, m_isLimitsEnabled);
     m_isLockingToLimitsEnabled = j.value(ARE_LOCKING_LIMITS_ENABLED_KEY, m_isLockingToLimitsEnabled);
-    // m_axisA = j.value(AXIS_A_KEY, m_axisA);
-    // m_axisB = j.value(AXIS_B_KEY, m_axisB);
-    // m_localAttachmentA = j.value(ATTACHMENT_A_KEY, m_localAttachmentA);
-    // m_localAttachmentB = j.value(ATTACHMENT_B_KEY, m_localAttachmentB);
     m_angularLimits = j.value(LIMITS_KEY, m_angularLimits);
     m_isMotorSettingsEnabled = j.value(ENABLE_MOTOR_SETTINGS_KEY, m_isMotorSettingsEnabled);
     m_motorForceLimit = j.value(MOTOR_MAX_FORCE_KEY, m_motorForceLimit);
@@ -108,6 +96,7 @@ bool PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBody
 
 void PhysicsHingeJointComponent::release() {
     if (m_Joint != nullptr) {
+        Log::write("Delete joint from component");
         m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
         m_Joint = nullptr;
     }

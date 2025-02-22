@@ -84,8 +84,6 @@ bool PhysicsBodyComponent::create(TransformComponent &transform) {
         return false;
     }
 
-    release();
-
     auto builder = PhysicsBuilder::newBody(m_PhysicsResource().getSystem())
             .setDebugColor((m_BodyType == BODY_TYPE_STATIC)
                                ? glm::vec3{0.5f, 0.5f, 0.5f}
@@ -125,15 +123,6 @@ void PhysicsBodyComponent::update(TransformComponent &transform, bool isSimulati
     if (isSimulationEnabled) {
         auto t = m_PhysicsResource().getInterface().GetWorldTransform(m_physicsBodyId);
         PhysicsTypeCast::applyJPHMat44ToTransformComponent(transform, t);
-    } else {
-        // if (isValid()) {
-        //     m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBodyId,
-        //                                                               PhysicsTypeCast::glmToJPH(
-        //                                                                   transform.getWorldPosition()),
-        //                                                               PhysicsTypeCast::glmToJPH(
-        //                                                                   transform.getRotation()),
-        //                                                               JPH::EActivation::DontActivate);
-        // }
     }
 }
 

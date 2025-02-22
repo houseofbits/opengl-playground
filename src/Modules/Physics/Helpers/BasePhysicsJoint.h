@@ -92,8 +92,6 @@ public:
     }
 
     void createPhysics(EntityContext &ctx) override {
-        release();
-
         PhysicsBodyComponent *bodyA = nullptr;
         if (m_targetEntityAName.empty()) {
             bodyA = ctx.getEntityComponent<PhysicsBodyComponent>(m_EntityId.id());
