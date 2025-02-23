@@ -46,7 +46,7 @@ public:
 
     void clearEntitySelection();
 
-    Entity* getSelectedEntity() const;
+    [[nodiscard]] Entity* getSelectedEntity() const;
 
     ResourceManager *m_ResourceManager;
     bool m_isImUIInitialized;
@@ -68,6 +68,4 @@ private:
     Identity::Type m_selectedEntityId;
 
     WireframeRenderer m_wireframeRenderer;
-    WireCube wfcube;
-    WireSphere wfsphere;
 };

@@ -97,3 +97,8 @@ void EditorCameraComponent::setOrthographicViewTypeFocused(const OrthographicVie
     m_cameraCenter = transform.getWorldPosition() - (OrthographicViews[type].first * 20.0f);
     m_Camera.setFromViewTarget(m_cameraCenter, OrthographicViews[type].first * 10.0f, OrthographicViews[type].second);
 }
+
+void EditorCameraComponent::setViewTarget(glm::vec3 target) {
+    m_cameraCenter = target;
+    rotateView({0,0});
+}

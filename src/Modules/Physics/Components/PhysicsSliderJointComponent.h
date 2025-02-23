@@ -17,6 +17,11 @@ class PhysicsSliderJointComponent : public BasePhysicsJoint {
     inline static const std::string MOTOR_DAMPING_KEY = "motorDamping";
     inline static const std::string MOTOR_FREQUENCY_KEY = "motorFrequency";
 
+    inline static const std::string ATTACHMENT_A_POSITION_KEY = "attachmentAPosition";
+    inline static const std::string ATTACHMENT_A_ROTATION_KEY = "attachmentARotation";
+    inline static const std::string ATTACHMENT_B_POSITION_KEY = "attachmentBPosition";
+    inline static const std::string ATTACHMENT_B_ROTATION_KEY = "attachmentBRotation";
+
 public:
     PhysicsSliderJointComponent();
 
@@ -50,4 +55,7 @@ public:
     float m_motorForceLimit;
     float m_motorDamping;
     float m_motorFrequency;
+
+    glm::mat4 m_localAttachmentMatrixA{};
+    glm::mat4 m_localAttachmentMatrixB{};
 };

@@ -191,6 +191,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/Helper/Math.h
         src/Modules/Editor/Helpers/TransformHelper.h
         src/Modules/Editor/Helpers/TransformHelper.h
+        src/Modules/Physics/Editors/PhysicsSliderJointComponentEdit.cpp
 )
 
 #add_compile_definitions(EVENTMANAGER_V1)

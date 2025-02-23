@@ -29,6 +29,11 @@ void PhysicsSliderJointComponent::serialize(nlohmann::json &j) {
         j[MOTOR_DAMPING_KEY] = m_motorDamping;
         j[MOTOR_FREQUENCY_KEY] = m_motorFrequency;
     }
+
+    j[ATTACHMENT_A_POSITION_KEY] = Math::getTranslation(m_localAttachmentMatrixA);
+    j[ATTACHMENT_A_ROTATION_KEY] = Math::getRotation(m_localAttachmentMatrixA);
+    j[ATTACHMENT_B_POSITION_KEY] = Math::getTranslation(m_localAttachmentMatrixB);
+    j[ATTACHMENT_B_ROTATION_KEY] = Math::getRotation(m_localAttachmentMatrixB);
 }
 
 void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -41,6 +46,16 @@ void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceM
     m_motorForceLimit = j.value(MOTOR_MAX_FORCE_KEY, m_motorForceLimit);
     m_motorDamping = j.value(MOTOR_DAMPING_KEY, m_motorDamping);
     m_motorFrequency = j.value(MOTOR_FREQUENCY_KEY, m_motorFrequency);
+
+    m_localAttachmentMatrixA = Math::createMatrixFromTranslationAndRotation(
+        j.value(ATTACHMENT_A_POSITION_KEY, glm::vec3(0)),
+        j.value(ATTACHMENT_A_ROTATION_KEY, glm::quat(1, 0, 0, 0))
+    );
+
+    m_localAttachmentMatrixB = Math::createMatrixFromTranslationAndRotation(
+        j.value(ATTACHMENT_B_POSITION_KEY, glm::vec3(0)),
+        j.value(ATTACHMENT_B_ROTATION_KEY, glm::quat(1, 0, 0, 0))
+    );
 }
 
 bool PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
@@ -49,6 +64,7 @@ bool PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBod
     }
 
     auto builder = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
+            .setAttachments(m_localAttachmentMatrixA, m_localAttachmentMatrixB)
             .setBodies(bodyA, bodyB);
 
     if (m_isLimitsEnabled) {
@@ -59,7 +75,7 @@ bool PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBod
         builder.setMotorForceLimit(m_motorForceLimit);
     }
 
-    m_Joint = builder.createSliderConstraint(m_axis);
+    m_Joint = builder.createSliderConstraint();
 
     return true;
 }

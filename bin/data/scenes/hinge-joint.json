@@ -177,6 +177,28 @@
             "type": 1
         },
         "PhysicsSliderJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "attachmentARotation": [
+                0.0,
+                0.0,
+                -0.26345983147621155,
+                0.9646703600883484
+            ],
+            "attachmentBPosition": [
+                0.052001953125,
+                3.048065185546875,
+                0.03302001953125
+            ],
+            "attachmentBRotation": [
+                0.0,
+                0.0,
+                -0.26345983147621155,
+                0.9646703600883484
+            ],
             "axis": [
                 1.0,
                 0.0,

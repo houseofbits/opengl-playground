@@ -15,38 +15,23 @@ public:
         return "Physics slider joint";
     }
 
-    void processEditor() override {
-        if (m_component == nullptr) {
-            return;
-        }
+    void processEditor() override;
 
-        EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
-            *m_editorSystem->m_EntityContext,
-            m_component->m_targetEntityAName,
-            "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
-            "Self"
-        );
-
-        EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
-        *m_editorSystem->m_EntityContext,
-        m_component->m_targetEntityBName,
-            "Attachment entity B##TRANSFORM_PARENT_ENTITY_NAME_B"
-        );
-
-        ImGui::InputFloat3("Axis", reinterpret_cast<float *>(&m_component->m_axis));
-
-        ImGui::Checkbox("Limits", &m_component->m_isLimitsEnabled);
-
-        if (m_component->m_isLimitsEnabled) {
-            ImGui::InputFloat2("Min/Max", reinterpret_cast<float *>(&m_component->m_limits));
-        }
-
-        ImGui::Checkbox("Motor", &m_component->m_isMotorSettingsEnabled);
-
-        if (m_component->m_isMotorSettingsEnabled) {
-            ImGui::DragFloat("Force limit", &m_component->m_motorForceLimit, 0.1f);
-            ImGui::DragFloat("Damping", &m_component->m_motorDamping, 0.1f);
-            ImGui::DragFloat("Frequency", &m_component->m_motorFrequency, 0.1f);
-        }
+    int getNumTransformTargets() override {
+        return 3;
     }
+
+    void handleEntitySelection(Entity &e, Component *c) override;
+
+    TransformOption getTransformTargetOptions(int index) override;
+
+    glm::mat4 getWorldSpaceTransform(int index) override;
+
+    void setWorldSpaceTransform(glm::mat4 m, int index) const override;
+
+private:
+    [[nodiscard]] TransformComponent* getTransformComponentByName(const std::string& name) const;
+
+    TransformComponent *m_linkedTransformA{nullptr};
+    TransformComponent *m_linkedTransformB{nullptr};
 };

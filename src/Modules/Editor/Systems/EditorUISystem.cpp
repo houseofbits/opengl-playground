@@ -75,8 +75,6 @@ void EditorUISystem::initialize(ResourceManager &manager, EventManager &) {
     //    style.WindowPadding.y = 0;
 
     m_wireframeRenderer.initialize();
-    wfcube.create({0, 0, 1, 1});
-    wfsphere.create({0, 1, 0, 1});
 }
 
 void EditorUISystem::registerEventHandlers(EventManager &eventManager) {
@@ -142,6 +140,20 @@ void EditorUISystem::selectEntity(Entity &e) {
     }
     m_transformHelper.handleEntitySelection(e);
     m_selectedEntityId = e.m_Id.id();
+
+    auto cameraEntity = m_EntityContext->findEntity([](Entity *e) {
+        auto c = e->getComponent<EditorCameraComponent>();
+
+        return c != nullptr && c->m_isActive;
+    });
+
+    if (cameraEntity) {
+        if (const auto editorCamera = cameraEntity->getComponent<EditorCameraComponent>(); editorCamera != nullptr) {
+            if (const auto transform = e.getComponent<TransformComponent>()) {
+                editorCamera->setViewTarget(transform->getWorldPosition());
+            }
+        }
+    }
 }
 
 void EditorUISystem::clearEntitySelection() {

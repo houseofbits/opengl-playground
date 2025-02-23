@@ -68,6 +68,8 @@ public:
 
     void setOrthographicViewTypeFocused(OrthographicViewType, TransformComponent &transform);
 
+    void setViewTarget(glm::vec3);
+
     void setOrthographicScale(float);
 
     bool isOrthographic() const {

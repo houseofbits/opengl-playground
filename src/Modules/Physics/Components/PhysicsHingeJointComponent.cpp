@@ -3,7 +3,6 @@
 #include <Jolt/Physics/Constraints/HingeConstraint.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/GroupFilterTable.h>
-
 #include "../../../Core/Helper/Math.h"
 #include "../Helpers/Builder/PhysicsBuilder.h"
 

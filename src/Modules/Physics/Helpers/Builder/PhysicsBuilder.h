@@ -257,7 +257,7 @@ class PhysicsBuilder {
             return dynamic_cast<JPH::FixedConstraint *>(joint);
         }
 
-        [[nodiscard]] JPH::SliderConstraint *createSliderConstraint(const glm::vec3 axis) const {
+        [[nodiscard]] JPH::SliderConstraint *createSliderConstraint() const {
             if (m_bodyId1.IsInvalid() || m_bodyId2.IsInvalid()) {
                 return nullptr;
             }
@@ -283,7 +283,14 @@ class PhysicsBuilder {
 
             JPH::SliderConstraintSettings settings;
             settings.mAutoDetectPoint = true;
-            settings.SetSliderAxis(PhysicsTypeCast::glmToJPH(axis));
+            settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
+            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
+            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
+            settings.mSliderAxis1 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment1));
+            settings.mSliderAxis2 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment2));
+            settings.mNormalAxis1 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment1));
+            settings.mNormalAxis2 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment2));
+
             if (m_isLimitsEnabled) {
                 settings.mLimitsMin = m_limits.x;
                 settings.mLimitsMax = m_limits.y;
