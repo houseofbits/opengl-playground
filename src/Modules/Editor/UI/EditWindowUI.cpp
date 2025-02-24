@@ -45,16 +45,20 @@ void EditWindowUI::process() {
             updateEntityNameReferences(e->m_Id.id(), e->m_Name);
         }
 
+        int headerId = 1;
         for (const auto &component: e->m_Components) {
-            if (auto editor = m_EditorUISystem->m_componentEditors[component->getTypeName()]) {
-                if (ImGui::CollapsingHeader(editor->getName().c_str())) {
+            if (const auto editor = m_EditorUISystem->m_componentEditors[component->getTypeName()]) {
+                std::string headerText = editor->getName() + "##COMPONENT_HEADER_" + std::to_string(headerId);
+                if (ImGui::CollapsingHeader(headerText.c_str())) {
                     editor->processEditor();
                 }
             } else {
-                if (ImGui::CollapsingHeader(component->getTypeName().c_str())) {
+                std::string headerText = component->getTypeName() + "##COMPONENT_HEADER_" + std::to_string(headerId);
+                if (ImGui::CollapsingHeader(headerText.c_str())) {
                     ImGui::Text("Editor not registered for: %s ", component->getTypeName().c_str());
                 }
             }
+            headerId++;
         }
 
         processComponentCreation();
@@ -87,7 +91,7 @@ void EditWindowUI::processEntitiesList() {
     }
 }
 
-bool EditWindowUI::isTransformComponentSelected() {
+bool EditWindowUI::isTransformComponentSelected() const {
     if (m_EditorUISystem->getSelectedEntity() == nullptr) {
         return false;
     }
@@ -168,7 +172,7 @@ void EditWindowUI::processComponentCreation() {
     if (ImGui::BeginCombo("##COMPONENT_TYPE", selectedName.c_str())) {
         for (auto const &[componentTypeName, editor]: m_EditorUISystem->m_componentEditors) {
             if (editor && ImGui::Selectable(
-                editor->getName().c_str(), m_selectedComponentCreationType == componentTypeName)) {
+                    editor->getName().c_str(), m_selectedComponentCreationType == componentTypeName)) {
                 m_selectedComponentCreationType = componentTypeName;
             }
         }

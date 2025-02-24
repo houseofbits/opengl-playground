@@ -133,27 +133,9 @@ void EditorUISystem::processDockSpaceWindow() {
 }
 
 void EditorUISystem::selectEntity(Entity &e) {
-    for (const auto &component: e.m_Components) {
-        if (const auto editor = m_componentEditors[component->getTypeName()]) {
-            editor->handleEntitySelection(e, component.get());
-        }
-    }
+    updateEditorCameraTarget(e);
     m_transformHelper.handleEntitySelection(e);
     m_selectedEntityId = e.m_Id.id();
-
-    auto cameraEntity = m_EntityContext->findEntity([](Entity *e) {
-        auto c = e->getComponent<EditorCameraComponent>();
-
-        return c != nullptr && c->m_isActive;
-    });
-
-    if (cameraEntity) {
-        if (const auto editorCamera = cameraEntity->getComponent<EditorCameraComponent>(); editorCamera != nullptr) {
-            if (const auto transform = e.getComponent<TransformComponent>()) {
-                editorCamera->setViewTarget(transform->getWorldPosition());
-            }
-        }
-    }
 }
 
 void EditorUISystem::clearEntitySelection() {
@@ -162,4 +144,20 @@ void EditorUISystem::clearEntitySelection() {
 
 Entity *EditorUISystem::getSelectedEntity() const {
     return m_EntityContext->getEntity(m_selectedEntityId);
+}
+
+void EditorUISystem::updateEditorCameraTarget(Entity &selectedEntity) const {
+    auto cameraEntity = m_EntityContext->findEntity([](Entity *e) {
+        auto c = e->getComponent<EditorCameraComponent>();
+
+        return c != nullptr && c->m_isActive;
+    });
+
+    if (cameraEntity) {
+        if (const auto editorCamera = cameraEntity->getComponent<EditorCameraComponent>(); editorCamera != nullptr) {
+            if (const auto transform = selectedEntity.getComponent<TransformComponent>()) {
+                editorCamera->setViewTarget(transform->getWorldPosition());
+            }
+        }
+    }
 }

@@ -12,7 +12,7 @@ public:
     explicit EditWindowUI(EditorUISystem *);
 
     void process();
-    bool isTransformComponentSelected();
+    bool isTransformComponentSelected() const;
 
     bool m_isBoundsTransformAllowed;
     bool m_isEntityCreationWindowOpen;

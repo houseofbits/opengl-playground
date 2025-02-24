@@ -2,6 +2,8 @@
 
 #include <glm/mat4x4.hpp>
 
+#include "../../../Core/Reflection/Identity.h"
+
 class WireframeRenderer;
 class EditorUISystem;
 class BaseComponentEdit;
@@ -17,11 +19,13 @@ public:
 
     void processGizmo(Camera &camera);
 
-    void processDebugHelpers(WireframeRenderer& renderer) const;
+    void processDebugHelpers(WireframeRenderer &renderer) const;
 
     void handleEntitySelection(Entity &);
 
 private:
+    void processTransformComponentDropdown(Entity &);
+
     void processTransformTargetDropdown(Entity &);
 
     void processTransformOperationDropdown();
@@ -30,6 +34,8 @@ private:
 
     EditorUISystem *m_UISystem{nullptr};
     BaseComponentEdit *m_pSelectedComponentEdit{nullptr};
+
+    Identity::Type m_selectedComponentId{0};
     // int m_selectedEntityId{-1};
     int m_selectedTransformTargetIndex{-1};
     long m_selectedTransformOperation{0};

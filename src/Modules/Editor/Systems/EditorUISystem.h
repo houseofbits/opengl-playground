@@ -46,7 +46,7 @@ public:
 
     void clearEntitySelection();
 
-    [[nodiscard]] Entity* getSelectedEntity() const;
+    [[nodiscard]] Entity *getSelectedEntity() const;
 
     ResourceManager *m_ResourceManager;
     bool m_isImUIInitialized;
@@ -64,6 +64,8 @@ public:
 
 private:
     void processDockSpaceWindow();
+
+    void updateEditorCameraTarget(Entity &) const;
 
     Identity::Type m_selectedEntityId;
 

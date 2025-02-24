@@ -2,22 +2,22 @@
     {
         "EditorCameraComponent": {
             "isActive": true,
-            "orthoScale": 7.799994945526123,
+            "orthoScale": 7.499995231628418,
             "position": [
-                15.105165481567383,
-                13.346053123474121,
-                7.3618316650390625
+                2.9105000495910645,
+                3.230473518371582,
+                1.877026081085205
             ],
             "type": 1,
             "upDirection": [
-                -0.3953498899936676,
-                0.879490852355957,
-                -0.26494213938713074
+                -0.08313349634408951,
+                0.9931336641311646,
+                -0.0823063999414444
             ],
             "viewDirection": [
-                -0.7306053042411804,
-                -0.4759158194065094,
-                -0.4896121919155121
+                -0.7057536244392395,
+                -0.11698514223098755,
+                -0.6987319588661194
             ]
         },
         "name": "camera-orthographic"
@@ -189,8 +189,8 @@
                 0.9646703600883484
             ],
             "attachmentBPosition": [
-                0.052001953125,
-                3.048065185546875,
+                0.9068603515625,
+                3.287445068359375,
                 0.03302001953125
             ],
             "attachmentBRotation": [
@@ -207,7 +207,7 @@
             "enableLimits": false,
             "limits": [
                 0.0,
-                0.0
+                10.0
             ],
             "targetEntityA": "",
             "targetEntityB": "pole"
@@ -235,6 +235,76 @@
                 -4.993997573852539,
                 2.798065185546875,
                 -4.96697998046875
+            ]
+        }
+    },
+    {
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                -1.0433349609375
+            ],
+            "attachmentARotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "attachmentBPosition": [
+                0.0,
+                0.016252517700195313,
+                1.0813941955566406
+            ],
+            "attachmentBRotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "swing"
+        },
+        "mesh": {
+            "material": "data/materials/solid-red.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "name": "swing-COPY",
+        "transform": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.37455686926841736,
+                0.48457071185112,
+                2.0423476696014404
+            ],
+            "translation": [
+                -4.087503433227539,
+                1.8515491485595703,
+                -2.2870140075683594
             ]
         }
     }

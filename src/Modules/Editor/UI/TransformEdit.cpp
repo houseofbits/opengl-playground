@@ -28,6 +28,8 @@ void TransformEdit::processToolbar() {
     ImGui::SameLine();
     ImGui::PushItemWidth(150);
 
+    processTransformComponentDropdown(*e);
+
     processTransformTargetDropdown(*e);
 
     if (m_pSelectedComponentEdit != nullptr) {
@@ -101,55 +103,95 @@ void TransformEdit::processDebugHelpers(WireframeRenderer &renderer) const {
 }
 
 void TransformEdit::handleEntitySelection(Entity &e) {
+    m_selectedComponentId = 0;
     m_selectedTransformTargetIndex = -1;
     m_pSelectedComponentEdit = nullptr;
     m_selectedTransformSpace = ImGuizmo::WORLD;
     m_selectedTransformOperation = 0;
 
-    for (const auto &component: e.m_Components) {
-        auto editor = m_UISystem->m_componentEditors[component->getTypeName()];
-        if (editor && editor->getNumTransformTargets() > 0) {
+    //Try to select TransformComponent first
+    if (const auto transformComponent = e.getComponent<TransformComponent>()) {
+        if (const auto editor = m_UISystem->m_componentEditors[transformComponent->getTypeName()]) {
+            m_selectedComponentId = transformComponent->m_Id.id();
             m_pSelectedComponentEdit = editor;
             m_selectedTransformTargetIndex = 0;
-
-            auto options = editor->getTransformTargetOptions(0);
-            if (options.isTranslationEnabled) {
-                m_selectedTransformOperation = ImGuizmo::TRANSLATE;
-            } else if (options.isRotationEnabled) {
-                m_selectedTransformOperation = ImGuizmo::ROTATE;
-            } else if (options.isScalingEnabled) {
-                m_selectedTransformOperation = ImGuizmo::SCALE;
-            }
-
-            m_transform = editor->getWorldSpaceTransform(m_selectedTransformTargetIndex);
-
-            break;
+            m_pSelectedComponentEdit->handleEntitySelection(e, transformComponent);
         }
     }
-}
 
-void TransformEdit::processTransformTargetDropdown(Entity &e) {
-    std::string selectedName;
-    if (m_pSelectedComponentEdit != nullptr) {
-        selectedName = m_pSelectedComponentEdit->getTransformTargetOptions(m_selectedTransformTargetIndex).name;
-    }
-
-    if (ImGui::BeginCombo("##TRANSFORM_TYPE", selectedName.c_str())) {
+    //If entity does not have transform component the try to find other transformable component
+    if (!m_pSelectedComponentEdit) {
         for (const auto &component: e.m_Components) {
             auto editor = m_UISystem->m_componentEditors[component->getTypeName()];
             if (editor && editor->getNumTransformTargets() > 0) {
-                for (int i = 0; i < editor->getNumTransformTargets(); ++i) {
-                    bool isSelected = m_pSelectedComponentEdit == editor && i == m_selectedTransformTargetIndex;
+                m_selectedComponentId = component->m_Id.id();
+                m_pSelectedComponentEdit = editor;
+                m_selectedTransformTargetIndex = 0;
+                m_pSelectedComponentEdit->handleEntitySelection(e, component.get());
+                break;
+            }
+        }
+    }
 
-                    if (ImGui::Selectable(editor->getTransformTargetOptions(i).name.c_str(), isSelected)) {
-                        m_selectedTransformTargetIndex = i;
-                        m_pSelectedComponentEdit = editor;
-                    }
+    if (m_pSelectedComponentEdit) {
+        if (const auto options = m_pSelectedComponentEdit->getTransformTargetOptions(0);
+            options.isTranslationEnabled) {
+            m_selectedTransformOperation = ImGuizmo::TRANSLATE;
+        } else if (options.isRotationEnabled) {
+            m_selectedTransformOperation = ImGuizmo::ROTATE;
+        } else if (options.isScalingEnabled) {
+            m_selectedTransformOperation = ImGuizmo::SCALE;
+        }
+
+        m_transform = m_pSelectedComponentEdit->getWorldSpaceTransform(m_selectedTransformTargetIndex);
+    }
+}
+
+void TransformEdit::processTransformComponentDropdown(Entity &e) {
+    std::string selectedName;
+    if (auto c = e.getComponent(m_selectedComponentId); c != nullptr) {
+        selectedName = c->getTypeName();
+    }
+
+    if (ImGui::BeginCombo("##TRANSFORM_COMPONENT", selectedName.c_str())) {
+        for (const auto &component: e.m_Components) {
+            if (auto editor = m_UISystem->m_componentEditors[component->getTypeName()];
+                editor && editor->getNumTransformTargets() > 0) {
+                if (bool isSelected = m_selectedComponentId == component->m_Id.id();
+                    ImGui::Selectable(component->getTypeName().c_str(), isSelected)) {
+                    m_selectedComponentId = component->m_Id.id();
+                    m_pSelectedComponentEdit = editor;
+                    editor->handleEntitySelection(e, component.get());
+                    m_selectedTransformTargetIndex = 0;
                 }
             }
         }
 
         ImGui::EndCombo();
+    }
+}
+
+void TransformEdit::processTransformTargetDropdown(Entity &e) {
+    if (!m_pSelectedComponentEdit) {
+        return;
+    }
+
+    if (m_pSelectedComponentEdit->getNumTransformTargets() > 1) {
+        const std::string selectedName = m_pSelectedComponentEdit->getTransformTargetOptions(
+            m_selectedTransformTargetIndex).name;
+        if (ImGui::BeginCombo("##TRANSFORM_TARGET", selectedName.c_str())) {
+            for (int i = 0; i < m_pSelectedComponentEdit->getNumTransformTargets(); ++i) {
+                if (bool isSelected = i == m_selectedTransformTargetIndex;
+                    ImGui::Selectable(m_pSelectedComponentEdit->getTransformTargetOptions(i).name.c_str(),
+                                      isSelected)) {
+                    m_selectedTransformTargetIndex = i;
+                }
+            }
+
+            ImGui::EndCombo();
+        }
+    } else {
+        m_selectedTransformTargetIndex = 0;
     }
 }
 

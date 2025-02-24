@@ -156,20 +156,17 @@ void EntityContext::createComponentInplace(Identity::Type entityId, const std::s
             return;
         }
 
-        if (e->getComponent(componentName) != nullptr) {
-            delete c;
-            Log::error("Entity already has component " + componentName);
-
-            return;
-        }
+        //TODO: Add is-unique check
+        // if (e->getComponent(componentName) != nullptr) {
+        //     delete c;
+        //     Log::error("Entity already has component " + componentName);
+        //
+        //     return;
+        // }
 
         c->m_Id = Identity::create(Identity::COMPONENT);
         c->m_Name = componentName;
         c->m_EntityId = e->m_Id;
-
-        //TODO: register with systems
-        // 1) unregister entity from systems
-        // 2) register to systems again
 
         unregisterEntityFromSystems(*e);
         e->addComponent(*c);
