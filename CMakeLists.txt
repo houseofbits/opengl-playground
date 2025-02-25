@@ -183,9 +183,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/Helper/Math.h
         src/Modules/Editor/Helpers/TransformHelper.h
         src/Modules/Editor/Helpers/TransformHelper.h
-        src/Modules/Physics/Editors/PhysicsSliderJointComponentEdit.cpp
         src/Modules/Common/Editors/TransformComponentEdit.h
         src/Modules/Common/Editors/CameraComponentEdit.h
+        src/Modules/Physics/Editors/PhysicsSliderJointComponentTransformEdit.cpp
+        src/Modules/Physics/Editors/PhysicsSliderJointComponentTransformEdit.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

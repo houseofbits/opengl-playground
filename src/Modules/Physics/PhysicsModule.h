@@ -19,10 +19,10 @@
 #include "Editors/PhysicsFixedJointComponentEdit.h"
 #include "Editors/PhysicsTriggerShapeComponentEdit.h"
 #include "../Editor/Systems/EditorUISystem.h"
-#include "Editors/PhysicsBodyComponentEdit.h"
 #include "Editors/PhysicsHingeJointComponentTransformEdit.h"
+#include "Editors/PhysicsSliderJointComponentTransformEdit.h"
 
-class PhysicsModule : public EntityModule {
+class PhysicsModule final : public EntityModule {
 public:
     static constexpr EntitySystemRegistry::ProcessType PHYSICS_PROCESS = 2;
 
@@ -43,16 +43,14 @@ public:
         ctx.registerEntitySystem<JointsProcessingSystem>(PHYSICS_PROCESS, 3);
         ctx.registerEntitySystem<CharacterControllerSystem>(PHYSICS_PROCESS, 4);
         ctx.registerEntitySystem<PhysicsTriggerShapeSystem>(PHYSICS_PROCESS, 5);
-    };
+    }
 
     void postRegister(EntityContext &ctx) override {
         if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
-            // editorSystem->registerTransformComponentEditor<PhysicsCharacterComponent, CharacterControllerComponentEdit>();
-            // editorSystem->registerTransformComponentEditor<PhysicsBodyComponent, PhysicsBodyComponentEdit>();
-            editorSystem->registerTransformComponentEditor<PhysicsHingeJointComponent, PhysicsHingeJointComponentTransformEdit>();
-            // editorSystem->registerTransformComponentEditor<PhysicsSliderJointComponent, PhysicsSliderJointComponentEdit>();
-            // editorSystem->registerTransformComponentEditor<PhysicsFixedJointComponent, PhysicsFixedJointComponentEdit>();
-            // editorSystem->registerTransformComponentEditor<PhysicsTriggerShapeComponent, PhysicsTriggerShapeComponentEdit>();
+            editorSystem->registerTransformComponentEditor<PhysicsHingeJointComponent,
+                PhysicsHingeJointComponentTransformEdit>();
+            editorSystem->registerTransformComponentEditor<PhysicsSliderJointComponent,
+                PhysicsSliderJointComponentTransformEdit>();
 
             editorSystem->registerComponentEditor<PhysicsBodyComponent>(processPhysicsBodyComponentEditor);
             editorSystem->registerComponentEditor<PhysicsCharacterComponent>(

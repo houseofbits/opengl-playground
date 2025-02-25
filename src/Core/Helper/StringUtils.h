@@ -38,4 +38,24 @@ namespace StringUtils {
         return StringUtils::toLowerCase(source).find(StringUtils::toLowerCase(needle)) !=
                std::string::npos;
     }
-}// namespace StringUtils
+
+    inline std::string capitalizeFirstLetter(const std::string& input) {
+        if (input.empty()) return input;
+
+        std::string result = input;
+        result[0] = std::toupper(static_cast<unsigned char>(result[0]));
+        return result;
+    }
+
+    inline std::string pascalCaseToHumanReadable(const std::string text) {
+        std::string result;
+        for (size_t i = 0; i < text.size(); i++) {
+            if (i > 0 && std::isupper(text[i]) && (std::islower(text[i - 1]) || std::isdigit(text[i - 1]))) {
+                result += ' ';
+            }
+            result += text[i];
+        }
+
+        return result;
+    }
+} // namespace StringUtils

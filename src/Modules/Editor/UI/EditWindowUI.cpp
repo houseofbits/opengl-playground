@@ -47,7 +47,9 @@ void EditWindowUI::process() {
 
         int headerId = 1;
         for (const auto &component: e->m_Components) {
-            std::string headerText = component->getTypeName() + "##COMPONENT_HEADER_" + std::to_string(headerId);
+            std::string headerText = StringUtils::pascalCaseToHumanReadable(component->getTypeName()) +
+                                     "##COMPONENT_HEADER_" + std::to_string(headerId);
+
             if (ImGui::CollapsingHeader(headerText.c_str())) {
                 m_EditorUISystem->runProcessComponentEditor(e, component.get());
             }

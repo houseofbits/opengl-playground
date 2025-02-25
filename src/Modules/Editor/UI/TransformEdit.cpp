@@ -7,6 +7,7 @@
 #include "../../../SourceLibs/imgui/ImGuizmo.h"//Note: Order dependent include. Should be after ImGui
 #include <glm/gtc/type_ptr.hpp>
 #include "../../../Core/Helper/Math.h"
+#include "../../../Core/Helper/StringUtils.h"
 #include "../../../Renderer/Shader/WireframeRenderer.h"
 
 const std::map<long, std::string> GizmoOperationNames = {
@@ -150,15 +151,17 @@ void TransformEdit::handleEntitySelection(Entity &e) {
 void TransformEdit::processTransformComponentDropdown(Entity &e) {
     std::string selectedName;
     if (auto c = e.getComponent(m_selectedComponentId); c != nullptr) {
-        selectedName = c->getTypeName();
+        selectedName = StringUtils::pascalCaseToHumanReadable(c->getTypeName());
     }
 
     if (ImGui::BeginCombo("##TRANSFORM_COMPONENT", selectedName.c_str())) {
         for (const auto &component: e.m_Components) {
             if (auto editor = m_UISystem->m_componentEditors[component->getTypeName()];
                 editor && editor->getNumTransformTargets() > 0) {
+                std::string componentTypeName = StringUtils::pascalCaseToHumanReadable(component->getTypeName());
+
                 if (bool isSelected = m_selectedComponentId == component->m_Id.id();
-                    ImGui::Selectable(component->getTypeName().c_str(), isSelected)) {
+                    ImGui::Selectable(componentTypeName.c_str(), isSelected)) {
                     m_selectedComponentId = component->m_Id.id();
                     m_pSelectedComponentEdit = editor;
                     editor->handleEntitySelection(e, component.get());
