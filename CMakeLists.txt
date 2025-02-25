@@ -93,8 +93,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Editor/Helpers/TextPromptHelper.h
         src/Modules/Physics/Systems/PhysicsSystem.cpp
         src/Modules/Physics/Systems/PhysicsSystem.h
-        src/Modules/Editor/UI/BaseComponentEdit.h
-        src/Modules/Common/Editors/TransformComponentEdit.h
         src/Modules/Physics/Components/PhysicsCharacterComponent.cpp
         src/Modules/Physics/Components/PhysicsCharacterComponent.h
         src/Core/Helper/Types.h
@@ -125,7 +123,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Helpers/PhysicsDebugRenderer.h
         src/Modules/Renderer/Systems/OverlayRenderSystem.cpp
         src/Modules/Renderer/Systems/OverlayRenderSystem.h
-        src/Core/Helper/ComponentTransformEdit.h
         src/Modules/Common/Systems/TransformHierarchyProcessingSystem.cpp
         src/Modules/Common/Systems/TransformHierarchyProcessingSystem.h
         src/Modules/Physics/Components/PhysicsFixedJointComponent.cpp
@@ -177,11 +174,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/System/EntitySystem.cpp
         src/Core/System/EntitySystemRegistry.cpp
         src/Core/System/BaseSystemProcess.cpp
-        src/Modules/Common/Editors/TransformComponentEdit.cpp
-        src/Modules/Common/Editors/CameraComponentEdit.cpp
-        src/Modules/Behaviours/Editors/MainCharacterBehaviourComponentEdit.cpp
-        src/Modules/Behaviours/Editors/DoorBehaviourComponentEdit.cpp
-        src/Modules/Physics/Editors/PhysicsFixedJointComponentEdit.cpp
         src/Renderer/Model/WireModel.cpp
         src/Renderer/Model/WireModel.h
         src/Renderer/Model/WireCube.cpp
@@ -192,9 +184,9 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Editor/Helpers/TransformHelper.h
         src/Modules/Editor/Helpers/TransformHelper.h
         src/Modules/Physics/Editors/PhysicsSliderJointComponentEdit.cpp
+        src/Modules/Common/Editors/TransformComponentEdit.h
+        src/Modules/Common/Editors/CameraComponentEdit.h
 )
-
-#add_compile_definitions(EVENTMANAGER_V1)
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 

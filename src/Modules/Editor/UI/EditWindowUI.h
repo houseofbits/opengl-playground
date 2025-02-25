@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BaseComponentEdit.h"
+#include "BaseComponentTransformEdit.h"
 #include "../../../Core/Entity/Entity.h"
 #include <string>
 #include <map>

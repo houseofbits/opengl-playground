@@ -3,7 +3,7 @@
 #include "../../Core/API.h"
 #include "Systems/EditorUISystem.h"
 #include "Components/EditorCameraComponent.h"
-// #include "Editors/EditorCameraComponentEdit.h"
+#include "Editors/EditorCameraComponentEdit.h"
 #include "Systems/EditorCameraSystem.h"
 
 class EditorUIModule : public EntityModule {
@@ -18,8 +18,8 @@ public:
     };
 
     void postRegister(EntityContext &ctx) override {
-        // if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
-        //     editorSystem->registerComponentEditor<EditorCameraComponent, EditorCameraComponentEdit>();
-        // }
+        if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
+            editorSystem->registerComponentEditor<EditorCameraComponent>(processEditorCameraComponentEditor);
+        }
     }
 };

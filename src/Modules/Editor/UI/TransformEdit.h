@@ -6,7 +6,7 @@
 
 class WireframeRenderer;
 class EditorUISystem;
-class BaseComponentEdit;
+class BaseComponentTransformEdit;
 class Camera;
 class Entity;
 
@@ -33,7 +33,7 @@ private:
     void processTransformSpaceDropdown();
 
     EditorUISystem *m_UISystem{nullptr};
-    BaseComponentEdit *m_pSelectedComponentEdit{nullptr};
+    BaseComponentTransformEdit *m_pSelectedComponentEdit{nullptr};
 
     Identity::Type m_selectedComponentId{0};
     // int m_selectedEntityId{-1};

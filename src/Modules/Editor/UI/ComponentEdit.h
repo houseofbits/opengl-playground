@@ -1,11 +1,11 @@
 #pragma once
 
-#include "./BaseComponentEdit.h"
+#include "./BaseComponentTransformEdit.h"
 
 template<class ComponentT>
-class ComponentEdit : public BaseComponentEdit {
+class ComponentEdit : public BaseComponentTransformEdit {
 public:
-    explicit ComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
+    explicit ComponentEdit(EditorUISystem &editorSystem) : BaseComponentTransformEdit(editorSystem) {
     }
 
     void handleEntitySelection(Entity &e, Component *c) override {

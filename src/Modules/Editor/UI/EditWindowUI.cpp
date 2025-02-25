@@ -47,17 +47,11 @@ void EditWindowUI::process() {
 
         int headerId = 1;
         for (const auto &component: e->m_Components) {
-            if (const auto editor = m_EditorUISystem->m_componentEditors[component->getTypeName()]) {
-                std::string headerText = editor->getName() + "##COMPONENT_HEADER_" + std::to_string(headerId);
-                if (ImGui::CollapsingHeader(headerText.c_str())) {
-                    editor->processEditor();
-                }
-            } else {
-                std::string headerText = component->getTypeName() + "##COMPONENT_HEADER_" + std::to_string(headerId);
-                if (ImGui::CollapsingHeader(headerText.c_str())) {
-                    ImGui::Text("Editor not registered for: %s ", component->getTypeName().c_str());
-                }
+            std::string headerText = component->getTypeName() + "##COMPONENT_HEADER_" + std::to_string(headerId);
+            if (ImGui::CollapsingHeader(headerText.c_str())) {
+                m_EditorUISystem->runProcessComponentEditor(e, component.get());
             }
+
             headerId++;
         }
 
@@ -166,13 +160,13 @@ void EditWindowUI::processComponentCreation() {
 
     if (m_EditorUISystem->m_componentEditors.find(m_selectedComponentCreationType) !=
         m_EditorUISystem->m_componentEditors.end()) {
-        selectedName = m_EditorUISystem->m_componentEditors[m_selectedComponentCreationType]->getName();
+        selectedName = m_selectedComponentCreationType;
     }
 
     if (ImGui::BeginCombo("##COMPONENT_TYPE", selectedName.c_str())) {
         for (auto const &[componentTypeName, editor]: m_EditorUISystem->m_componentEditors) {
             if (editor && ImGui::Selectable(
-                    editor->getName().c_str(), m_selectedComponentCreationType == componentTypeName)) {
+                    componentTypeName.c_str(), m_selectedComponentCreationType == componentTypeName)) {
                 m_selectedComponentCreationType = componentTypeName;
             }
         }

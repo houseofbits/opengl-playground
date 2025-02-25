@@ -1,16 +1,12 @@
 #pragma once
 
-#include "../../Editor/UI/ComponentEdit.h"
 #include "../Components/MainCharacterBehaviourComponent.h"
+#include "../../../SourceLibs/imgui/imgui.h"
 
-class MainCharacterBehaviourComponentEdit final : public ComponentEdit<MainCharacterBehaviourComponent> {
-public:
-    explicit MainCharacterBehaviourComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
+inline void processMainCharacterBehaviourComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
+    auto component = dynamic_cast<MainCharacterBehaviourComponent *>(c);
+
+    if (ImGui::Checkbox("Active##MAIN_CHARACTER_ACTIVE", &component->m_isActive)) {
+
     }
-
-    std::string getName() override {
-        return "Main character behaviour";
-    }
-
-    void processEditor() override;
-};
+}

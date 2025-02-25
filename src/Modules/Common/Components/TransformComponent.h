@@ -3,14 +3,13 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "../../../Core/API.h"
-#include "../../../Core/Helper/ComponentTransformEdit.h"
 #include "../Helpers/EntityLinkedComponent.h"
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
-class TransformComponent : public Component, public ComponentTransformEdit, public EntityLinkedComponent {
+class TransformComponent : public Component, public EntityLinkedComponent {
     TYPE_DEFINITION(TransformComponent);
     inline static const std::string TRANSLATION_KEY = "translation";
     inline static const std::string ROTATION_KEY = "rotation";
@@ -58,9 +57,9 @@ public:
 
     glm::quat getInitialRotation();
 
-    glm::mat4 getWorldTransform() override;
+    glm::mat4 getWorldTransform();
 
-    void setWorldTransform(const glm::mat4 &) override;
+    void setWorldTransform(const glm::mat4 &);
 
     void setWorldRotation(const glm::mat4 &);
     void setLocalRotation(const glm::mat4 &);

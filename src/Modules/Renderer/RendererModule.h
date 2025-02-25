@@ -38,10 +38,10 @@ public:
 
     void postRegister(EntityContext &ctx) override {
         if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
-            editorSystem->registerComponentEditor<LightComponent, LightComponentEdit>();
-            editorSystem->registerComponentEditor<StaticMeshComponent, StaticMeshComponentEdit>();
-            editorSystem->registerComponentEditor<MeshComponent, MeshComponentEdit>();
-            editorSystem->registerComponentEditor<EnvironmentProbeComponent, EnvironmentProbeComponentEdit>();
+            editorSystem->registerComponentEditor<EnvironmentProbeComponent>(processEnvironmentProbeComponentEditor);
+            editorSystem->registerComponentEditor<StaticMeshComponent>(processStaticMeshComponentEditor);
+            editorSystem->registerComponentEditor<MeshComponent>(processMeshComponentEditor);
+            editorSystem->registerComponentEditor<LightComponent>(processLightComponentEditor);
         }
     }
 };

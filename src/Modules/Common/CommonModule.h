@@ -6,7 +6,9 @@
 #include "Systems/TransformHierarchyProcessingSystem.h"
 #include "../Editor/Systems/EditorUISystem.h"
 #include "Editors/CameraComponentEdit.h"
+#include "Editors/CameraComponentTransformEdit.h"
 #include "Editors/TransformComponentEdit.h"
+#include "Editors/TransformComponentTransformEdit.h"
 #include "Systems/CameraSystem.h"
 #include "Systems/EntityLinkingSystem.h"
 
@@ -25,8 +27,11 @@ public:
 
     void postRegister(EntityContext &ctx) override {
         if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
-            editorSystem->registerComponentEditor<CameraComponent, CameraComponentEdit>();
-            editorSystem->registerComponentEditor<TransformComponent, TransformComponentEdit>();
+            editorSystem->registerTransformComponentEditor<CameraComponent, CameraComponentTransformEdit>();
+            editorSystem->registerTransformComponentEditor<TransformComponent, TransformComponentTransformEdit>();
+
+            editorSystem->registerComponentEditor<TransformComponent>(processTransformComponentEditor);
+            editorSystem->registerComponentEditor<CameraComponent>(processCameraComponentEditor);
         }
     }
 };

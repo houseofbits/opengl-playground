@@ -5,24 +5,12 @@
 #include "../../Editor/Helpers/FileDialogHelper.h"
 #include "../../Editor/UI/ComponentEdit.h"
 
-class CharacterControllerComponentEdit : public ComponentEdit<PhysicsCharacterComponent> {
-public:
-    explicit CharacterControllerComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
+inline void processPhysicsCharacterControllerComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
+    auto component = dynamic_cast<PhysicsCharacterComponent *>(c);
+
+    if (ImGui::InputFloat("Height##CTT-HEIGHT", &component->m_height, 0.1f, 0.2f, "%.2f")) {
     }
 
-    std::string getName() override {
-        return "Character controller";
-    }
-
-    void processEditor() override {
-        if (m_component == nullptr) {
-            return;
-        }
-
-        if (ImGui::InputFloat("Height##CTT-HEIGHT", &m_component->m_height, 0.1f, 0.2f, "%.2f")) {
-        }
-
-        if (ImGui::InputFloat("Radius##CTT-RADIUS", &m_component->m_radius, 0.1f, 0.2f, "%.2f")) {
-        }
+    if (ImGui::InputFloat("Radius##CTT-RADIUS", &component->m_radius, 0.1f, 0.2f, "%.2f")) {
     }
 };

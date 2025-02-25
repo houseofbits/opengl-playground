@@ -2,7 +2,6 @@
 #include "../../Editor/Systems/EditorUISystem.h"
 
 CameraComponent::CameraComponent() : Component(),
-                                     ComponentTransformEdit(),
                                      BaseCameraComponent(),
                                      m_initialTransformLocal(1.0),
                                      m_currentTransformWorld(1.0),

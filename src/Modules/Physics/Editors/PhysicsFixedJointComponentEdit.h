@@ -1,18 +1,21 @@
 #pragma once
 
 #include "../../Editor/Helpers/TextPromptHelper.h"
-#include "../../Editor/UI/ComponentEdit.h"
 #include "../Components/PhysicsFixedJointComponent.h"
 
+inline void processPhysicsFixedJointComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
+    auto component = dynamic_cast<PhysicsFixedJointComponent *>(c);
 
-class PhysicsFixedJointComponentEdit : public ComponentEdit<PhysicsFixedJointComponent> {
-public:
-    explicit PhysicsFixedJointComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
-    }
+    EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
+        *system.m_EntityContext,
+        component->m_targetEntityAName,
+        "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
+        "Self"
+    );
 
-    std::string getName() override {
-        return "Physics fixed joint";
-    }
-
-    void processEditor() override;
-};
+    EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
+        *system.m_EntityContext,
+        component->m_targetEntityBName,
+        "Attachment entity B##TRANSFORM_PARENT_ENTITY_NAME_B"
+    );
+}

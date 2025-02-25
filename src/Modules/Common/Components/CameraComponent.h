@@ -2,11 +2,10 @@
 
 #include "../../../Core/API.h"
 #include "../../../Renderer/Camera/Camera.h"
-#include "../../../Core/Helper/ComponentTransformEdit.h"
 #include "BaseCameraComponent.h"
 
-class CameraComponent : public Component, public ComponentTransformEdit, public BaseCameraComponent {
-    friend class CameraComponentEdit;
+class CameraComponent : public Component, public BaseCameraComponent {
+    friend class CameraComponentTransformEdit;
 
     TYPE_DEFINITION(CameraComponent);
     inline static const std::string POSITION_KEY = "position";
@@ -26,9 +25,9 @@ public:
 
     void moveView(glm::vec3 direction);
 
-    glm::mat4 getWorldTransform() override;
+    glm::mat4 getWorldTransform();
 
-    void setWorldTransform(const glm::mat4 &) override;
+    void setWorldTransform(const glm::mat4 &);
 
     void updateTransformFromParent(const glm::mat4 &parent);
 
@@ -38,9 +37,10 @@ public:
         return m_currentTransformWorld[3];
     }
 
+    bool m_isRelativeRotationDisabled;;
+
 private:
     glm::mat4 m_initialTransformLocal;
     glm::mat4 m_currentTransformWorld;
     bool m_shouldSyncWorldTransformToLocal;
-    bool m_isRelativeRotationDisabled;;
 };

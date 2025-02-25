@@ -3,18 +3,17 @@
 #include "../../Editor/Systems/EditorUISystem.h"
 
 TransformComponent::TransformComponent() : Component(),
-                                           ComponentTransformEdit(),
-                                           m_transform(1.0),
-                                           m_initialTransform(1.0),
                                            m_isTranslationEnabled(true),
                                            m_isRotationEnabled(true),
                                            m_isScalingEnabled(true),
+                                           m_transform(1.0),
+                                           m_initialTransform(1.0),
                                            // m_parentEntityId(0),
                                            // m_parentEntityName(),
                                            // m_shouldUpdateParentEntityId(false),
+                                           m_shouldSyncWorldTransformToLocal(false),
                                            m_isRelativeRotationDisabled(false),
-                                           m_isTransformInSync(false),
-                                           m_shouldSyncWorldTransformToLocal(false) {
+                                           m_isTransformInSync(false) {
 }
 
 void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat &rotation, glm::vec3 &scale) {

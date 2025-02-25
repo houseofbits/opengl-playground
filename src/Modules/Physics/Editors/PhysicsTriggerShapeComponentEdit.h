@@ -4,20 +4,8 @@
 #include "../../Editor/UI/ComponentEdit.h"
 #include "../Components/PhysicsTriggerShapeComponent.h"
 
-class PhysicsTriggerShapeComponentEdit final : public ComponentEdit<PhysicsTriggerShapeComponent> {
-public:
-    explicit PhysicsTriggerShapeComponentEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
-    }
+inline void processPhysicsTriggerShapeComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
+    const auto component = dynamic_cast<PhysicsTriggerShapeComponent *>(c);
 
-    std::string getName() override {
-        return "Physics trigger shape";
-    }
-
-    void processEditor() override {
-        if (m_component == nullptr) {
-            return;
-        }
-
-        ImGui::Text("Box shape physics sensor");
-    }
-};
+    ImGui::Text("Box shape physics sensor");
+}

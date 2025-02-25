@@ -19,6 +19,8 @@
 #include "Editors/PhysicsFixedJointComponentEdit.h"
 #include "Editors/PhysicsTriggerShapeComponentEdit.h"
 #include "../Editor/Systems/EditorUISystem.h"
+#include "Editors/PhysicsBodyComponentEdit.h"
+#include "Editors/PhysicsHingeJointComponentTransformEdit.h"
 
 class PhysicsModule : public EntityModule {
 public:
@@ -45,12 +47,22 @@ public:
 
     void postRegister(EntityContext &ctx) override {
         if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
-            editorSystem->registerComponentEditor<PhysicsCharacterComponent, CharacterControllerComponentEdit>();
-            editorSystem->registerComponentEditor<PhysicsBodyComponent, PhysicsBodyComponentEdit>();
-            editorSystem->registerComponentEditor<PhysicsHingeJointComponent, PhysicsHingeJointComponentEdit>();
-            editorSystem->registerComponentEditor<PhysicsSliderJointComponent, PhysicsSliderJointComponentEdit>();
-            editorSystem->registerComponentEditor<PhysicsFixedJointComponent, PhysicsFixedJointComponentEdit>();
-            editorSystem->registerComponentEditor<PhysicsTriggerShapeComponent, PhysicsTriggerShapeComponentEdit>();
+            // editorSystem->registerTransformComponentEditor<PhysicsCharacterComponent, CharacterControllerComponentEdit>();
+            // editorSystem->registerTransformComponentEditor<PhysicsBodyComponent, PhysicsBodyComponentEdit>();
+            editorSystem->registerTransformComponentEditor<PhysicsHingeJointComponent, PhysicsHingeJointComponentTransformEdit>();
+            // editorSystem->registerTransformComponentEditor<PhysicsSliderJointComponent, PhysicsSliderJointComponentEdit>();
+            // editorSystem->registerTransformComponentEditor<PhysicsFixedJointComponent, PhysicsFixedJointComponentEdit>();
+            // editorSystem->registerTransformComponentEditor<PhysicsTriggerShapeComponent, PhysicsTriggerShapeComponentEdit>();
+
+            editorSystem->registerComponentEditor<PhysicsBodyComponent>(processPhysicsBodyComponentEditor);
+            editorSystem->registerComponentEditor<PhysicsCharacterComponent>(
+                processPhysicsCharacterControllerComponentEditor);
+            editorSystem->registerComponentEditor<PhysicsFixedJointComponent>(processPhysicsFixedJointComponentEditor);
+            editorSystem->registerComponentEditor<PhysicsHingeJointComponent>(processPhysicsHingeJointComponentEditor);
+            editorSystem->registerComponentEditor<
+                PhysicsSliderJointComponent>(processPhysicsSliderJointComponentEditor);
+            editorSystem->registerComponentEditor<PhysicsTriggerShapeComponent>(
+                processPhysicsTriggerShapeComponentEditor);
         }
     }
 };

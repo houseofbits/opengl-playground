@@ -5,7 +5,7 @@
 #include "Components/GunBehaviourComponent.h"
 #include "../Editor/Systems/EditorUISystem.h"
 #include "Editors/MainCharacterBehaviourComponentEdit.h"
-// #include "Editors/GunBehaviourComponentEdit.h"
+#include "Editors/GunBehaviourComponentEdit.h"
 #include "Editors/DoorBehaviourComponentEdit.h"
 #include "Systems/MainCharacterBehaviourSystem.h"
 #include "Components/DoorBehaviourComponent.h"
@@ -32,10 +32,10 @@ public:
 
     void postRegister(EntityContext &ctx) override {
         if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
-            editorSystem->registerComponentEditor<MainCharacterBehaviourComponent,
-                MainCharacterBehaviourComponentEdit>();
-            editorSystem->registerComponentEditor<DoorBehaviourComponent, DoorBehaviourComponentEdit>();
-            //     editorSystem->registerComponentEditor<GunBehaviourComponent, GunBehaviourComponentEdit>();
+            editorSystem->registerComponentEditor<MainCharacterBehaviourComponent>(
+                processMainCharacterBehaviourComponentEditor);
+            editorSystem->registerComponentEditor<DoorBehaviourComponent>(processDoorBehaviourComponentEditor);
+            editorSystem->registerComponentEditor<GunBehaviourComponent>(processGunBehaviourComponentEditor);
         }
     }
 };

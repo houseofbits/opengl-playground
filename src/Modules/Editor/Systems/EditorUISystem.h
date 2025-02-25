@@ -15,8 +15,10 @@
 #include "../../../Renderer/Model/WireCube.h"
 #include "../../../Renderer/Model/WireSphere.h"
 
-class EditorUISystem : public EntitySystem {
+class EditorUISystem final : public EntitySystem {
 public:
+    using TComponentEditorProcessFunction = void (*)(Component *, Entity *, EditorUISystem &);
+
     EditorUISystem();
 
     void process(EventManager &) override;
@@ -38,7 +40,7 @@ public:
     void openMaterialEditor(ResourceHandle<MaterialResource> &handle);
 
     template<class ComponentT, class EditorT>
-    void registerComponentEditor() {
+    void registerTransformComponentEditor() {
         m_componentEditors[ComponentT::TypeName()] = new EditorT(*this);
     }
 
@@ -54,13 +56,26 @@ public:
     MainToolbarUI m_MainToolbarUI;
     EditWindowUI m_EditWindowUI;
     MaterialEditWindowUI m_MaterialEditWindowUI;
-    std::map<std::string, BaseComponentEdit *> m_componentEditors;
+    std::map<std::string, BaseComponentTransformEdit *> m_componentEditors;
     ActiveCameraHelper m_activeCameraHelper;
     EntityUniqueComponentRegistry<EditorCameraComponent> *m_editorCameraComponentRegistry;
     EntityUniqueComponentRegistry<CameraComponent> *m_cameraComponentRegistry;
     bool m_isEditorModeEnabled;
 
     TransformEdit m_transformHelper;
+
+    template<class ComponentT>
+    void registerComponentEditor(TComponentEditorProcessFunction func) {
+        m_componentEditProcessors[ComponentT::TypeName()] = func;
+    }
+
+    void runProcessComponentEditor(Entity *e, Component *c) {
+        if (auto editor = m_componentEditProcessors.find(c->getTypeName()); editor != m_componentEditProcessors.end()) {
+            editor->second(c, e, *this);
+        }
+    }
+
+    std::map<std::string, TComponentEditorProcessFunction> m_componentEditProcessors;
 
 private:
     void processDockSpaceWindow();

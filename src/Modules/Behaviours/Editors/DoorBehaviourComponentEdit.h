@@ -1,22 +1,20 @@
 #pragma once
 
 #include "../../../SourceLibs/imgui/imgui.h"
-#include "../../Editor/UI/BaseComponentEdit.h"
 #include "../Components/DoorBehaviourComponent.h"
 
-class DoorBehaviourComponentEdit : public BaseComponentEdit {
-public:
-    explicit DoorBehaviourComponentEdit(EditorUISystem &editorSystem) : BaseComponentEdit(editorSystem) {
-    }
+inline void processDoorBehaviourComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
+    auto component = dynamic_cast<DoorBehaviourComponent *>(c);
 
-    std::string getName() override {
-        return "Door behaviour";
-    }
+    ImGui::Checkbox("Is initially open", &component->m_isInitiallyOpen);
+    ImGui::Checkbox("Is fixed on final state", &component->m_isFixedOnFinalState);
 
-    void processEditor() override;
+    ImGui::InputFloat("Velocity", &component->m_velocity);
 
-    void handleEntitySelection(Entity &e, Component *c) override;
-
-private:
-    DoorBehaviourComponent *m_component{nullptr};
-};
+    // EntityLinkedComponentEdit::process(
+    //     *system.m_EventManager,
+    //     *system.m_EntityContext,
+    //     body,
+    //     "Trigger entity##DOOR_TRIGGER_ENTITY_NAME"
+    // );
+}
