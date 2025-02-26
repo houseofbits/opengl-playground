@@ -12,23 +12,36 @@ public:
     explicit EditWindowUI(EditorUISystem *);
 
     void process();
+
     bool isTransformComponentSelected() const;
 
     bool m_isBoundsTransformAllowed;
     bool m_isEntityCreationWindowOpen;
-private:
 
+private:
     void processEntitiesList();
+
     void sendEntityCreationEvent(std::string, std::string);
+
     void sendComponentCreationEvent(std::string);
-    void sendComponentRemovalEvent(std::string);
+
+    void sendComponentRemovalEvent(int componentId) const;
+
     void sendEntityCloneEvent(Identity::Type entityId);
+
     void sendEntityRemovalEvent();
-    void updateEntityNameReferences(Identity::Type, const std::string&);
+
+    void updateEntityNameReferences(Identity::Type, const std::string &);
 
     void processEntityCreation();
+
     void processEntityCreationWindow();
-    void processComponentCreation();
+
+    void processComponentEditors(Entity *e) const;
+
+    void processComponentCreation(Entity *e);
+
+    void clearComponentSelection();
 
     EditorUISystem *m_EditorUISystem;
     std::string m_lightProjectorPath;
@@ -38,4 +51,6 @@ private:
     std::string m_selectedComponentCreationType;
     std::string m_entitiesFilterString;
     std::string m_templatesFilterString;
+    bool m_isComponentCreationOpen;
+    bool m_selectedComponents[30];
 };

@@ -48,7 +48,7 @@ void ApplicationSystem::handleEntityCreationEvent(const EntityCreationEvent &eve
         m_EntityContext->createComponentInplace(event.m_entityId, event.m_name);
     }
     if (event.m_Type == EntityCreationEvent::REMOVE_COMPONENT) {
-        m_EntityContext->removeComponent(event.m_entityId, event.m_name);
+        m_EntityContext->removeComponent(event.m_entityId, event.m_componentId);
     }
 }
 

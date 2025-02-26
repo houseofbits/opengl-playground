@@ -146,9 +146,11 @@ public:
 
     void createComponentInplace(Identity::Type entityId, const std::string &componentName);
 
-    void removeComponent(Identity::Type entityId, const std::string &componentName);
+    void removeComponent(Identity::Type entityId, Identity::Type componentId);
 
     std::vector<std::string> getAllConfigurationNames();
+
+    std::vector<std::string> getAllComponentTypeNames();
 
     EntitySystemRegistry entitySystemRegistry;
 };

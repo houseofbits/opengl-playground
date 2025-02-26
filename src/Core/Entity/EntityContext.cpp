@@ -176,10 +176,10 @@ void EntityContext::createComponentInplace(Identity::Type entityId, const std::s
     }
 }
 
-void EntityContext::removeComponent(Identity::Type entityId, const std::string &componentName) {
+void EntityContext::removeComponent(const Identity::Type entityId, const Identity::Type componentId) {
     Entity *e = getEntity(entityId);
     if (e != nullptr) {
-        auto *c = e->getComponent(componentName);
+        auto *c = e->getComponent(componentId);
         if (c != nullptr) {
             unregisterEntityFromSystems(*e);
             e->removeComponent(*c);
@@ -194,6 +194,10 @@ void EntityContext::removeComponent(Identity::Type entityId, const std::string &
 
 std::vector<std::string> EntityContext::getAllConfigurationNames() {
     return m_EntityConfiguration.getAllConfigurationNames();
+}
+
+std::vector<std::string> EntityContext::getAllComponentTypeNames() {
+    return m_ComponentFactory.getNames();
 }
 
 Entity *EntityContext::findEntity(std::function<bool(Entity *)> functor) {

@@ -250,7 +250,7 @@
             "shape": 0,
             "type": 1
         },
-        "PhysicsHingeJointComponent": {
+        "PhysicsHingeJointComponent#Hinge1": {
             "attachmentAPosition": [
                 0.0,
                 0.0,
@@ -281,6 +281,38 @@
             ],
             "targetEntityA": "",
             "targetEntityB": "swing"
+        },
+        "PhysicsHingeJointComponent#Hinge2": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.84893798828125
+            ],
+            "attachmentARotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "attachmentBPosition": [
+                0.95849609375,
+                2.1015491485595703,
+                3.5619239807128906
+            ],
+            "attachmentBRotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "pole"
         },
         "StaticMeshComponent": {
             "material": "data/materials/solid-red.json",
