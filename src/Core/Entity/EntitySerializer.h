@@ -3,6 +3,7 @@
 #include "../../../libs/tinygltf/json.hpp"
 #include "Component.h"
 #include "Entity.h"
+#include "../Helper/StringUtils.h"
 
 class EntitySerializer {
 public:
@@ -11,7 +12,7 @@ public:
         for (auto const &comp: e.m_Components) {
             nlohmann::json compJson;
             comp->serialize(compJson);
-            json[comp->m_Name] = compJson;
+            json[comp->getNameKey()] = compJson;
         }
     }
 
@@ -22,8 +23,8 @@ public:
         auto emptyJson = nlohmann::json({});
         for (auto const &comp: e.m_Components) {
             try {
-                if (json.contains(comp->m_Name)) {
-                    comp->deserialize(json[comp->m_Name], resourceManager);
+                if (json.contains(comp->getNameKey())) {
+                    comp->deserialize(json[comp->getNameKey()], resourceManager);
                 } else {
                     comp->deserialize(emptyJson, resourceManager);
                 }
@@ -33,5 +34,28 @@ public:
                 std::cout << "JSON deserialization error " << e.m_Name << ": " << exception.what() << std::endl;
             }
         }
+    }
+
+    static std::string getComponentNameFromNameKey(const std::string &nameKey) {
+        auto tokens = StringUtils::splitString(nameKey, '#');
+
+        if (tokens.size() > 1) {
+            return tokens[1];
+        }
+
+        return "";
+    }
+
+    static std::string getComponentTypeFromNameKey(const std::string &nameKey) {
+        auto tokens = StringUtils::splitString(nameKey, '#');
+
+        return tokens[0];
+    }
+
+    static std::pair<std::string, std::string> getComponentTypeAndNameFromNameKey(const std::string &nameKey) {
+        return {
+            getComponentTypeFromNameKey(nameKey),
+            getComponentNameFromNameKey(nameKey),
+        };
     }
 };

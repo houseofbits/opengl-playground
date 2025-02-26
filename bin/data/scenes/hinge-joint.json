@@ -4,9 +4,9 @@
             "isActive": true,
             "orthoScale": 7.499995231628418,
             "position": [
-                2.9105000495910645,
-                3.230473518371582,
-                1.877026081085205
+                2.9700326919555664,
+                3.0214004516601563,
+                4.700305461883545
             ],
             "type": 1,
             "upDirection": [
@@ -34,13 +34,12 @@
             "shape": 1,
             "type": 0
         },
-        "mesh": {
+        "StaticMeshComponent": {
             "material": "data/materials/grid-gray.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
-        "name": "pole",
-        "transform": {
+        "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
                 0.0,
@@ -58,10 +57,11 @@
                 -0.25,
                 -5.0
             ]
-        }
+        },
+        "name": "pole"
     },
     {
-        "light": {
+        "LightComponent": {
             "attenuation": 12.900012969970703,
             "castShadows": false,
             "color": [
@@ -73,8 +73,7 @@
             "isEnabled": true,
             "type": "OMNI"
         },
-        "name": "omni-light",
-        "transform": {
+        "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
                 0.0,
@@ -92,7 +91,8 @@
                 3.896820068359375,
                 -3.8037109375
             ]
-        }
+        },
+        "name": "omni-light"
     },
     {
         "PhysicsBodyComponent": {
@@ -138,13 +138,12 @@
             "targetEntityA": "",
             "targetEntityB": "pole"
         },
-        "mesh": {
+        "StaticMeshComponent": {
             "material": "data/materials/solid-red.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
-        "name": "swing",
-        "transform": {
+        "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
                 0.0,
@@ -162,7 +161,8 @@
                 1.835296630859375,
                 -4.4117431640625
             ]
-        }
+        },
+        "name": "swing"
     },
     {
         "PhysicsBodyComponent": {
@@ -212,13 +212,12 @@
             "targetEntityA": "",
             "targetEntityB": "pole"
         },
-        "mesh": {
+        "StaticMeshComponent": {
             "material": "data/materials/solid-blue.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
-        "name": "swing2",
-        "transform": {
+        "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
                 0.0,
@@ -236,7 +235,8 @@
                 2.798065185546875,
                 -4.96697998046875
             ]
-        }
+        },
+        "name": "swing2"
     },
     {
         "PhysicsBodyComponent": {
@@ -254,7 +254,7 @@
             "attachmentAPosition": [
                 0.0,
                 0.0,
-                -1.0433349609375
+                -1.06182861328125
             ],
             "attachmentARotation": [
                 0.0,
@@ -265,7 +265,7 @@
             "attachmentBPosition": [
                 0.0,
                 0.016252517700195313,
-                1.0813941955566406
+                1.0629005432128906
             ],
             "attachmentBRotation": [
                 0.0,
@@ -282,13 +282,12 @@
             "targetEntityA": "",
             "targetEntityB": "swing"
         },
-        "mesh": {
+        "StaticMeshComponent": {
             "material": "data/materials/solid-red.json",
             "model": "resources/BoxTextured.gltf",
             "renderer": "SOLID"
         },
-        "name": "swing-COPY",
-        "transform": {
+        "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
                 0.0,
@@ -306,6 +305,7 @@
                 1.8515491485595703,
                 -2.2870140075683594
             ]
-        }
+        },
+        "name": "swing-COPY"
     }
 ]

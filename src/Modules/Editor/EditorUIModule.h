@@ -9,7 +9,7 @@
 class EditorUIModule : public EntityModule {
 public:
     void registerComponents(EntityContext &ctx) override {
-        ctx.registerComponent<EditorCameraComponent>("editorCamera");
+        ctx.registerComponent<EditorCameraComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {

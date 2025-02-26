@@ -20,11 +20,11 @@
 class RendererModule : public EntityModule {
 public:
     void registerComponents(EntityContext &ctx) override {
-        ctx.registerComponent<StaticMeshComponent>("mesh");
-        ctx.registerComponent<LightComponent>("light");
-        ctx.registerComponent<EnvironmentProbeComponent>("probe");
-        ctx.registerComponent<SkyComponent>("sky");
-        ctx.registerComponent<MeshComponent>("meshComp");
+        ctx.registerComponent<StaticMeshComponent>();
+        ctx.registerComponent<LightComponent>();
+        ctx.registerComponent<EnvironmentProbeComponent>();
+        ctx.registerComponent<SkyComponent>();
+        ctx.registerComponent<MeshComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {

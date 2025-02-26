@@ -47,7 +47,7 @@ void EditWindowUI::process() {
 
         int headerId = 1;
         for (const auto &component: e->m_Components) {
-            std::string headerText = StringUtils::pascalCaseToHumanReadable(component->getTypeName()) +
+            std::string headerText = component->getHumanReadableTypeName() +
                                      "##COMPONENT_HEADER_" + std::to_string(headerId);
 
             if (ImGui::CollapsingHeader(headerText.c_str())) {
@@ -162,13 +162,14 @@ void EditWindowUI::processComponentCreation() {
 
     if (m_EditorUISystem->m_componentEditors.find(m_selectedComponentCreationType) !=
         m_EditorUISystem->m_componentEditors.end()) {
-        selectedName = m_selectedComponentCreationType;
+        selectedName = StringUtils::pascalCaseToHumanReadable(m_selectedComponentCreationType);
     }
 
     if (ImGui::BeginCombo("##COMPONENT_TYPE", selectedName.c_str())) {
         for (auto const &[componentTypeName, editor]: m_EditorUISystem->m_componentEditors) {
+            std::string typeName = StringUtils::pascalCaseToHumanReadable(componentTypeName);
             if (editor && ImGui::Selectable(
-                    componentTypeName.c_str(), m_selectedComponentCreationType == componentTypeName)) {
+                    typeName.c_str(), m_selectedComponentCreationType == componentTypeName)) {
                 m_selectedComponentCreationType = componentTypeName;
             }
         }

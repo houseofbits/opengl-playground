@@ -17,9 +17,9 @@ public:
     static constexpr EntitySystemRegistry::ProcessType BEHAVIOUR_PROCESS = 1;
 
     void registerComponents(EntityContext &ctx) override {
-        ctx.registerComponent<MainCharacterBehaviourComponent>("mainCharacterBehaviour");
-        ctx.registerComponent<DoorBehaviourComponent>("doorBehaviour");
-        ctx.registerComponent<GunBehaviourComponent>("gunBehaviour");
+        ctx.registerComponent<MainCharacterBehaviourComponent>();
+        ctx.registerComponent<DoorBehaviourComponent>();
+        ctx.registerComponent<GunBehaviourComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {

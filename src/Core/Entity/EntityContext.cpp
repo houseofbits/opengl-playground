@@ -36,16 +36,18 @@ EntityContext::createEntityFromJson(nlohmann::json &entityJson) {
             continue;
         }
 
-        Component *c = m_ComponentFactory.createInstance(key);
+        const auto [type, name] = EntitySerializer::getComponentTypeAndNameFromNameKey(key);
+
+        Component *c = m_ComponentFactory.createInstance(type);
         if (c == nullptr) {
             Log::error("Component class not found " + key);
             continue;
         }
 
         c->m_Id = Identity::create(Identity::COMPONENT);
-        c->m_Name = key;
         c->m_EntityId = e->m_Id;
         c->m_Status = Component::STATUS_CREATED;
+        c->m_Name = name;
 
         e->addComponent(*c);
     }
@@ -88,9 +90,9 @@ void EntityContext::unregisterEntityFromSystems(Entity &entity) {
 
 void EntityContext::initializeEntities(EventManager &eventManager) {
     for (const auto &e: m_Entities) {
-         if (e->m_Status == Entity::ACTIVE) {
-             continue;
-         }
+        if (e->m_Status == Entity::ACTIVE) {
+            continue;
+        }
 
         e->initializeComponents(*this);
 
@@ -165,7 +167,7 @@ void EntityContext::createComponentInplace(Identity::Type entityId, const std::s
         // }
 
         c->m_Id = Identity::create(Identity::COMPONENT);
-        c->m_Name = componentName;
+        // c->m_Name = componentName;
         c->m_EntityId = e->m_Id;
 
         unregisterEntityFromSystems(*e);

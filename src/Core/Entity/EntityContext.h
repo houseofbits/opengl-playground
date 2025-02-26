@@ -35,11 +35,8 @@ public:
     }
 
     template<class T>
-    void registerComponent(const std::string alias = "") {
+    void registerComponent() {
         m_ComponentFactory.registerName<T>(T::TypeName());
-        if (!alias.empty()) {
-            m_ComponentFactory.registerName<T>(alias);
-        }
     }
 
     template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T> > >

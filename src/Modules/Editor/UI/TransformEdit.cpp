@@ -158,7 +158,7 @@ void TransformEdit::processTransformComponentDropdown(Entity &e) {
         for (const auto &component: e.m_Components) {
             if (auto editor = m_UISystem->m_componentEditors[component->getTypeName()];
                 editor && editor->getNumTransformTargets() > 0) {
-                std::string componentTypeName = StringUtils::pascalCaseToHumanReadable(component->getTypeName());
+                std::string componentTypeName = component->getHumanReadableTypeName();
 
                 if (bool isSelected = m_selectedComponentId == component->m_Id.id();
                     ImGui::Selectable(componentTypeName.c_str(), isSelected)) {

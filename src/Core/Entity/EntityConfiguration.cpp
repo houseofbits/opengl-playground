@@ -1,9 +1,10 @@
 #include "EntityConfiguration.h"
 #include "../../Core/Helper/Log.h"
 #include "Entity.h"
+#include "EntitySerializer.h"
 
 EntityConfiguration::EntityConfiguration(Factory<Component> &factory)
-        : m_EntityConfiguration(), m_ComponentFactory(factory) {
+    : m_EntityConfiguration(), m_ComponentFactory(factory) {
 }
 
 void EntityConfiguration::buildEntity(Entity &entity, const std::string &configurationName,
@@ -14,19 +15,19 @@ void EntityConfiguration::buildEntity(Entity &entity, const std::string &configu
         return;
     }
 
-    for (auto const &componentConfig: (*it).second) {
-        Component *c = m_ComponentFactory.createInstance(componentConfig.second.m_ClassName);
+    for (const auto &[fst, snd]: (*it).second) {
+        Component *c = m_ComponentFactory.createInstance(snd.m_ClassName);
         if (c == nullptr) {
             Log::error("EntityConfiguration::buildEntity: Component constructor not found " +
-                       componentConfig.second.m_ClassName);
+                       snd.m_ClassName);
             break;
         }
         c->m_Id = Identity::create(Identity::COMPONENT);
-        c->m_Name = componentConfig.second.m_Name;
         c->m_EntityId = entity.m_Id;
+        c->m_Name = snd.m_Name;
 
-        if (!componentConfig.second.m_DefaultJson.empty()) {
-            c->deserialize(componentConfig.second.m_DefaultJson, resourceManager);
+        if (!snd.m_DefaultJson.empty()) {
+            c->deserialize(snd.m_DefaultJson, resourceManager);
         }
 
         entity.addComponent(*c);
@@ -47,8 +48,11 @@ void EntityConfiguration::deserialize(nlohmann::json &json) {
                 Log::error("EntityConfiguration::deserialize: class is undefined");
                 return;
             }
+
+            const auto [type, name] = EntitySerializer::getComponentTypeAndNameFromNameKey(comp.key());
+
             ComponentRecord componentRecord;
-            componentRecord.m_Name = comp.key();
+            componentRecord.m_Name = name;
             componentRecord.m_ClassName = comp.value().at("class");
 
             if (comp.value().contains("default")) {

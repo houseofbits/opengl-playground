@@ -15,8 +15,8 @@
 class CommonModule final : public EntityModule {
 public:
     void registerComponents(EntityContext &ctx) override {
-        ctx.registerComponent<TransformComponent>("transform");
-        ctx.registerComponent<CameraComponent>("camera");
+        ctx.registerComponent<TransformComponent>();
+        ctx.registerComponent<CameraComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {

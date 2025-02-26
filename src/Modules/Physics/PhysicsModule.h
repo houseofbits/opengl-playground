@@ -27,12 +27,12 @@ public:
     static constexpr EntitySystemRegistry::ProcessType PHYSICS_PROCESS = 2;
 
     void registerComponents(EntityContext &ctx) override {
-        ctx.registerComponent<PhysicsCharacterComponent>("cct");
-        ctx.registerComponent<PhysicsBodyComponent>("physicsBody");
-        ctx.registerComponent<PhysicsHingeJointComponent>("physicsHingeJoint");
-        ctx.registerComponent<PhysicsSliderJointComponent>("physicsSliderJoint");
-        ctx.registerComponent<PhysicsFixedJointComponent>("physicsFixedJoint");
-        ctx.registerComponent<PhysicsTriggerShapeComponent>("physicsTriggerShape");
+        ctx.registerComponent<PhysicsCharacterComponent>();
+        ctx.registerComponent<PhysicsBodyComponent>();
+        ctx.registerComponent<PhysicsHingeJointComponent>();
+        ctx.registerComponent<PhysicsSliderJointComponent>();
+        ctx.registerComponent<PhysicsFixedJointComponent>();
+        ctx.registerComponent<PhysicsTriggerShapeComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {

@@ -70,7 +70,7 @@ public:
 
     [[nodiscard]] Component *getComponent(const std::string &className) const {
         for (const auto &c: m_Components) {
-            if (c->m_Name == className || c->getTypeName() == className) {
+            if (c->getTypeName() == className) {
                 return c.get();
             }
         }

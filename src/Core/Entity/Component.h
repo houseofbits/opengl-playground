@@ -1,8 +1,11 @@
 #pragma once
+#include <utility>
+
 #include "../../../libs/tinygltf/json.hpp"
 #include "../Reflection/Identity.h"
 #include "../Reflection/TypedClass.h"
 #include "../Resources/ResourceManager.h"
+#include "../Helper/StringUtils.h"
 
 class EntityContext;
 
@@ -20,8 +23,7 @@ public:
 
     Component() = default;
 
-    virtual ~Component() {
-    }
+    ~Component() override = default;
 
     typedef std::shared_ptr<Component> TComponentPtr;
 
@@ -36,6 +38,15 @@ public:
 
     virtual bool initialize(EntityContext &ctx) {
         return true;
+    }
+
+    std::string getNameKey() {
+        std::string key = getTypeName();
+        if (!m_Name.empty()) {
+            key += "#" + m_Name;
+        }
+
+        return key;
     }
 
     // Validation to ensure the component can be initialized and has all the required resources ready
@@ -71,7 +82,16 @@ public:
         m_Status = STATUS_DESERIALIZED;
     }
 
-    Identity::Type getComponentId() const {
+    [[nodiscard]] Identity::Type getComponentId() const {
         return m_Id.id();
+    }
+
+    std::string getHumanReadableTypeName() {
+        std::string componentName;
+        if (!m_Name.empty()) {
+            componentName = " (" + m_Name + ")";
+        }
+
+        return StringUtils::pascalCaseToHumanReadable(getTypeName()) + componentName;
     }
 };
