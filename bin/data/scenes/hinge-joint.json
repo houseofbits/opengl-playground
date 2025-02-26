@@ -4,20 +4,20 @@
             "isActive": true,
             "orthoScale": 7.499995231628418,
             "position": [
-                2.9700326919555664,
-                3.0214004516601563,
-                4.700305461883545
+                2.380211353302002,
+                2.7676820755004883,
+                0.9997463226318359
             ],
             "type": 1,
             "upDirection": [
-                -0.08313349634408951,
-                0.9931336641311646,
-                -0.0823063999414444
+                -0.20027416944503784,
+                0.9620037078857422,
+                -0.18557800352573395
             ],
             "viewDirection": [
-                -0.7057536244392395,
-                -0.11698514223098755,
-                -0.6987319588661194
+                -0.7056363224983215,
+                -0.27303650975227356,
+                -0.6538565754890442
             ]
         },
         "name": "camera-orthographic"
@@ -108,26 +108,26 @@
         },
         "PhysicsHingeJointComponent": {
             "attachmentAPosition": [
-                0.0,
-                0.0,
-                -0.76898193359375
+                4.76837158203125e-07,
+                0.9593938589096069,
+                0.005462169647216797
             ],
             "attachmentARotation": [
-                0.0,
+                8.94067397894105e-08,
                 0.0,
                 0.0,
                 1.0
             ],
             "attachmentBPosition": [
-                0.95849609375,
-                2.085296630859375,
-                -0.18072509765625
+                0.62060546875,
+                1.32061767578125,
+                -0.2546381950378418
             ],
             "attachmentBRotation": [
+                0.1684211641550064,
                 0.0,
                 0.0,
-                0.0,
-                1.0
+                0.9857151508331299
             ],
             "enableLimits": false,
             "enableLockingLimits": false,
@@ -146,23 +146,23 @@
         "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
+                0.16842108964920044,
                 0.0,
                 0.0,
-                0.0,
-                1.0
+                0.9857151508331299
             ],
             "scale": [
                 0.37455686926841736,
-                0.48457071185112,
-                2.0423476696014404
+                2.042598247528076,
+                0.3616599142551422
             ],
             "translation": [
-                -4.087503433227539,
-                1.835296630859375,
-                -4.4117431640625
+                -4.425394058227539,
+                0.1674651801586151,
+                -5.578338623046875
             ]
         },
-        "name": "swing"
+        "name": "joint-1"
     },
     {
         "PhysicsBodyComponent": {
@@ -253,8 +253,8 @@
         "PhysicsHingeJointComponent#Hinge1": {
             "attachmentAPosition": [
                 0.0,
-                0.0,
-                -1.06182861328125
+                0.042266845703125,
+                -0.5826511383056641
             ],
             "attachmentARotation": [
                 0.0,
@@ -263,15 +263,15 @@
                 1.0
             ],
             "attachmentBPosition": [
-                0.0,
-                0.016252517700195313,
-                1.0629005432128906
+                0.018488407135009766,
+                -1.1952770948410034,
+                0.05046701431274414
             ],
             "attachmentBRotation": [
+                -0.16842107474803925,
                 0.0,
                 0.0,
-                0.0,
-                1.0
+                0.9857151508331299
             ],
             "enableLimits": false,
             "enableLockingLimits": false,
@@ -280,13 +280,13 @@
                 1.0
             ],
             "targetEntityA": "",
-            "targetEntityB": "swing"
+            "targetEntityB": "joint-1"
         },
         "PhysicsHingeJointComponent#Hinge2": {
             "attachmentAPosition": [
                 0.0,
-                0.0,
-                0.84893798828125
+                0.0960693359375,
+                0.33483123779296875
             ],
             "attachmentARotation": [
                 0.0,
@@ -295,15 +295,85 @@
                 1.0
             ],
             "attachmentBPosition": [
-                0.95849609375,
-                2.1015491485595703,
-                3.5619239807128906
+                0.018487930297851563,
+                -1.137210488319397,
+                0.053388118743896484
             ],
             "attachmentBRotation": [
+                -0.16842110455036163,
+                0.0,
+                0.0,
+                0.9857151508331299
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "joint-2"
+        },
+        "StaticMeshComponent": {
+            "material": "data/materials/solid-red.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
                 0.0,
                 0.0,
                 0.0,
                 1.0
+            ],
+            "scale": [
+                0.5598288774490356,
+                0.17173418402671814,
+                2.9911954402923584
+            ],
+            "translation": [
+                -4.4069061279296875,
+                -1.0190258026123047,
+                -5.344951629638672
+            ]
+        },
+        "name": "foot"
+    },
+    {
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.9977141618728638,
+                0.028802871704101563
+            ],
+            "attachmentARotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "attachmentBPosition": [
+                0.62060546875,
+                1.3490142822265625,
+                0.6755490303039551
+            ],
+            "attachmentBRotation": [
+                0.16842110455036163,
+                0.0,
+                0.0,
+                0.9857151508331299
             ],
             "enableLimits": false,
             "enableLockingLimits": false,
@@ -322,22 +392,22 @@
         "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
+                0.16842110455036163,
                 0.0,
                 0.0,
-                0.0,
-                1.0
+                0.9857151508331299
             ],
             "scale": [
                 0.37455686926841736,
-                0.48457071185112,
-                2.0423476696014404
+                2.042598247528076,
+                0.3616599142551422
             ],
             "translation": [
-                -4.087503433227539,
-                1.8515491485595703,
-                -2.2870140075683594
+                -4.425394058227539,
+                0.1674651801586151,
+                -4.682891845703125
             ]
         },
-        "name": "swing-COPY"
+        "name": "joint-2"
     }
 ]
