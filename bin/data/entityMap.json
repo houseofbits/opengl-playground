@@ -1,6 +1,6 @@
 [
     {
-        "name": "RenderMesh",
+        "name": "Render Mesh",
         "components": {
             "transform": {
                 "class": "TransformComponent"
@@ -11,7 +11,7 @@
         }
     },
     {
-        "name": "RigidBody",
+        "name": "Rigid Body",
         "components": {
             "transform": {
                 "class": "TransformComponent"
@@ -25,7 +25,7 @@
         }
     },
     {
-        "name": "SpotLight",
+        "name": "Spot Light",
         "components": {
             "transform": {
                 "class": "TransformComponent",
@@ -42,7 +42,7 @@
         }
     },
     {
-        "name": "DirectLight",
+        "name": "Direct Light",
         "components": {
             "transform": {
                 "class": "TransformComponent",
@@ -59,7 +59,7 @@
         }
     },
     {
-        "name": "OmniLight",
+        "name": "Omni Light",
         "components": {
             "transform": {
                 "class": "TransformComponent",
@@ -77,7 +77,7 @@
         }
     },
     {
-        "name": "EnvironmentProbe",
+        "name": "Environment Probe",
         "components": {
             "probe": {
                 "class": "EnvironmentProbeComponent"
@@ -99,7 +99,7 @@
         }
     },
     {
-        "name": "EditorCamera",
+        "name": "Editor Camera",
         "components": {
             "editorCamera": {
                 "class": "EditorCameraComponent"
@@ -110,12 +110,12 @@
         "name": "Sky",
         "components": {
             "sky": {
-                "class": "SkyComponent"
+                "class": "Sky Component"
             }
         }
     },
     {
-        "name": "CharacterController",
+        "name": "Character Controller",
         "components": {
             "transform": {
                 "class": "TransformComponent",
@@ -167,10 +167,88 @@
         }
     },
     {
-        "name": "Composite mesh",
+        "name": "Composite Mesh",
         "components": {
             "meshComp": {
                 "class": "MeshComponent"
+            }
+        }
+    },
+    {
+        "name": "Physics Box",
+        "components": {
+            "transform": {
+                "class": "TransformComponent"
+            },
+            "mesh": {
+                "class": "StaticMeshComponent",
+                "default": {
+                    "material": "data/materials/grid-gray.json",
+                    "model": "resources/BoxTextured.gltf",
+                    "renderer": "SOLID"
+                }
+            },
+            "physicsBody": {
+                "class": "PhysicsBodyComponent",
+                "default": {
+                    "friction": [
+                        0.5,
+                        0.5
+                    ],
+                    "mass": 0.0,
+                    "model": "resources/BoxTextured.gltf",
+                    "restitution": 0.5,
+                    "shape": 1,
+                    "type": 0
+                }
+            }
+        }
+    },
+    {
+        "name": "Physics floor",
+        "components": {
+            "transform": {
+                "class": "TransformComponent",
+                "default": {
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        10.0,
+                        0.1,
+                        10.0
+                    ],
+                    "translation": [
+                        -0.0,
+                        -0.05,
+                        -0.0
+                    ]
+                }
+            },
+            "mesh": {
+                "class": "StaticMeshComponent",
+                "default": {
+                    "material": "data/materials/grid-gray.json",
+                    "model": "resources/BoxTextured.gltf",
+                    "renderer": "SOLID"
+                }
+            },
+            "physicsBody": {
+                "class": "PhysicsBodyComponent",
+                "default": {
+                    "friction": [
+                        0.5,
+                        0.5
+                    ],
+                    "mass": 0.0,
+                    "model": "resources/BoxTextured.gltf",
+                    "restitution": 0.5,
+                    "shape": 1,
+                    "type": 0
+                }
             }
         }
     }
