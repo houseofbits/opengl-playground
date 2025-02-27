@@ -24,9 +24,10 @@ public:
         m_container[id] = component;
     }
 
-    //TODO: Unregister all entity comps
-    void unregisterComponents(Identity::Type componentId) override {
-        m_container.erase(componentId);
+    void unregisterComponents(Entity &entity) override {
+        for (const auto &comp: entity.m_Components) {
+            m_container.erase(comp->m_Id.id());
+        }
     }
 
     ContainerType &container() {

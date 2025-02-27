@@ -23,6 +23,8 @@ public:
 
     void registerEntityWithSystems(Entity &entity) const;
 
+    void unregisterEntityFromSystems(Entity &entity) const;
+
     BaseSystemProcess &createMainProcess();
 
     ContinuousSystemProcess &createContinuousProcess(const ProcessType type, const long frequencyMs);

@@ -18,6 +18,12 @@ void EntitySystemRegistry::registerEntityWithSystems(Entity &entity) const {
     }
 }
 
+void EntitySystemRegistry::unregisterEntityFromSystems(Entity &entity) const {
+    for (const auto &[key, process]: m_systemProcesses) {
+        process->unregisterEntityFromSystems(entity);
+    }
+}
+
 BaseSystemProcess &EntitySystemRegistry::createMainProcess() {
     assert(m_eventManager!= nullptr);
 

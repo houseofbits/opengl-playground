@@ -122,7 +122,7 @@ public:
 
     Entity *findEntity(std::function<bool(Entity *)> functor);
 
-    void unregisterEntityFromSystems(Entity &);
+    void unregisterEntityFromSystems(Entity &) const;
 
     void deserializeEntityMap(nlohmann::json &j);
 

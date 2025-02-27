@@ -84,8 +84,8 @@ void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager &reso
     }
 }
 
-void EntityContext::unregisterEntityFromSystems(Entity &entity) {
-    //TODO: Handle entity removal or component change
+void EntityContext::unregisterEntityFromSystems(Entity &entity) const {
+    entitySystemRegistry.unregisterEntityFromSystems(entity);
 }
 
 void EntityContext::initializeEntities(EventManager &eventManager) {
@@ -167,7 +167,6 @@ void EntityContext::createComponentInplace(Identity::Type entityId, const std::s
         // }
 
         c->m_Id = Identity::create(Identity::COMPONENT);
-        // c->m_Name = componentName;
         c->m_EntityId = e->m_Id;
 
         unregisterEntityFromSystems(*e);
@@ -185,9 +184,6 @@ void EntityContext::removeComponent(const Identity::Type entityId, const Identit
             e->removeComponent(*c);
             e->setStatus(Entity::CREATED);
             //            delete c;
-            //TODO: register with systems
-            // 1) unregister entity from systems
-            // 2) register to systems again
         }
     }
 }

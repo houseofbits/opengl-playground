@@ -16,6 +16,12 @@ void BaseSystemProcess::registerEntityWithSystems(Entity &entity) const {
     }
 }
 
+void BaseSystemProcess::unregisterEntityFromSystems(Entity &entity) const {
+    for (const auto &system: m_Systems) {
+        system->unregisterEntityComponents(entity);
+    }
+}
+
 void BaseSystemProcess::process() {
     processAllSystems();
 }

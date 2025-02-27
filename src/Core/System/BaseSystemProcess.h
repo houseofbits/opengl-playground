@@ -18,6 +18,8 @@ public:
 
     void registerEntityWithSystems(Entity &entity) const;
 
+    void unregisterEntityFromSystems(Entity &entity) const;
+
     virtual void process();
 
     template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T>> >

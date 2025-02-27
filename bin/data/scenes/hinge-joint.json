@@ -4,9 +4,9 @@
             "isActive": true,
             "orthoScale": 7.499995231628418,
             "position": [
-                2.380211353302002,
-                2.7676820755004883,
-                0.9997463226318359
+                2.0103635787963867,
+                2.480365037918091,
+                1.5385656356811523
             ],
             "type": 1,
             "upDirection": [
@@ -124,10 +124,10 @@
                 -0.2546381950378418
             ],
             "attachmentBRotation": [
-                0.1684211641550064,
+                0.1684211790561676,
                 0.0,
                 0.0,
-                0.9857151508331299
+                0.9857150912284851
             ],
             "enableLimits": false,
             "enableLockingLimits": false,
@@ -146,7 +146,7 @@
         "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
-                0.16842108964920044,
+                0.16842110455036163,
                 0.0,
                 0.0,
                 0.9857151508331299
@@ -163,80 +163,6 @@
             ]
         },
         "name": "joint-1"
-    },
-    {
-        "PhysicsBodyComponent": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 1.0,
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5,
-            "shape": 0,
-            "type": 1
-        },
-        "PhysicsSliderJointComponent": {
-            "attachmentAPosition": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "attachmentARotation": [
-                0.0,
-                0.0,
-                -0.26345983147621155,
-                0.9646703600883484
-            ],
-            "attachmentBPosition": [
-                0.9068603515625,
-                3.287445068359375,
-                0.03302001953125
-            ],
-            "attachmentBRotation": [
-                0.0,
-                0.0,
-                -0.26345983147621155,
-                0.9646703600883484
-            ],
-            "axis": [
-                1.0,
-                0.0,
-                0.0
-            ],
-            "enableLimits": false,
-            "limits": [
-                0.0,
-                10.0
-            ],
-            "targetEntityA": "",
-            "targetEntityB": "pole"
-        },
-        "StaticMeshComponent": {
-            "material": "data/materials/solid-blue.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "TransformComponent": {
-            "disableRelRotation": false,
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                0.37455686926841736,
-                1.1139742136001587,
-                0.5994491577148438
-            ],
-            "translation": [
-                -4.993997573852539,
-                2.798065185546875,
-                -4.96697998046875
-            ]
-        },
-        "name": "swing2"
     },
     {
         "PhysicsBodyComponent": {
@@ -268,7 +194,7 @@
                 0.05046701431274414
             ],
             "attachmentBRotation": [
-                -0.16842107474803925,
+                -0.16842108964920044,
                 0.0,
                 0.0,
                 0.9857151508331299
@@ -300,7 +226,7 @@
                 0.053388118743896484
             ],
             "attachmentBRotation": [
-                -0.16842110455036163,
+                -0.16842111945152283,
                 0.0,
                 0.0,
                 0.9857151508331299
@@ -370,7 +296,7 @@
                 0.6755490303039551
             ],
             "attachmentBRotation": [
-                0.16842110455036163,
+                0.16842111945152283,
                 0.0,
                 0.0,
                 0.9857151508331299
@@ -392,7 +318,7 @@
         "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
-                0.16842110455036163,
+                0.16842111945152283,
                 0.0,
                 0.0,
                 0.9857151508331299
@@ -400,7 +326,7 @@
             "scale": [
                 0.37455686926841736,
                 2.042598247528076,
-                0.3616599142551422
+                0.3616599440574646
             ],
             "translation": [
                 -4.425394058227539,

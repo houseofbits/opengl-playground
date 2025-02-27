@@ -19,8 +19,8 @@ public:
         m_container[entity.m_Id.id()].registerComponents(entity);
     }
 
-    void unregisterComponents(Identity::Type entityId) override {
-        m_container.erase(entityId);
+    void unregisterComponents(Entity &entity) override {
+        m_container.erase(entity.m_Id.id());
     }
 
     bool contains(Identity::Type id) override {
