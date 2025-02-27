@@ -4,7 +4,7 @@
 
 EditorCameraComponent::EditorCameraComponent() : Component(),
                                                  BaseCameraComponent(),
-                                                 m_type(TYPE_PERSPECTIVE),
+                                                 m_type(TYPE_ORTHOGRAPHIC),
                                                  m_orthographicScale(1.0),
                                                  m_cameraCenter(0, 0, 0) {
 }

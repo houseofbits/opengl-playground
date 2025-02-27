@@ -125,13 +125,25 @@
                 }
             },
             "mesh": {
-                "class": "StaticMeshComponent"
+                "class": "StaticMeshComponent",
+                "default": {
+                    "material": "data/materials/character.json",
+                    "model": "data/models/character-capsule.gltf",
+                    "renderer": "SOLID"
+                }
             },
             "cct": {
-                "class": "CharacterControllerComponent"
+                "class": "PhysicsCharacterComponent",
+                "default": {
+                    "height": 1.75,
+                    "radius": 0.25
+                }
             },
             "camera": {
                 "class": "CameraComponent"
+            },
+            "characterBehaviour": {
+                "class": "MainCharacterBehaviourComponent"
             }
         }
     },
@@ -205,7 +217,7 @@
         }
     },
     {
-        "name": "Physics floor",
+        "name": "Physics Floor",
         "components": {
             "transform": {
                 "class": "TransformComponent",

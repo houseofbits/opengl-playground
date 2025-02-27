@@ -32,6 +32,7 @@ void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager 
     m_friction = j.value(FRICTION_KEY, m_friction);
     m_mass = j.value(MASS_KEY, m_mass);
 
+
     std::string path = j.value(MODEL_KEY, m_meshResource().m_Path);
     resourceManager.request(m_meshResource, path);
 

@@ -30,6 +30,8 @@ void EntityConfiguration::buildEntity(Entity &entity, const std::string &configu
             c->deserialize(snd.m_DefaultJson, resourceManager);
         }
 
+        c->m_Status = Component::STATUS_DESERIALIZED;
+
         entity.addComponent(*c);
     }
 }

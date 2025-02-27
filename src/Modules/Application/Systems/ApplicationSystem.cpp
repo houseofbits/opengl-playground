@@ -29,7 +29,7 @@ void ApplicationSystem::handleEntityCreationEvent(const EntityCreationEvent &eve
         auto e = m_EntityContext->createEntityFromTemplate(event.m_ConfigurationName, *m_ResourceManager);
         e->m_Name = event.m_name;
         nlohmann::basic_json json;
-        EntitySerializer::deserialize(*e, json, *m_ResourceManager);
+        // EntitySerializer::deserialize(*e, json, *m_ResourceManager);
     }
     if (event.m_Type == EntityCreationEvent::CLONE) {
         auto existingEntity = m_EntityContext->getEntity(event.m_entityId);

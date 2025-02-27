@@ -154,9 +154,17 @@ void TransformEdit::processTransformComponentDropdown(Entity &e) {
         selectedName = StringUtils::pascalCaseToHumanReadable(c->getTypeName());
     }
 
-    if (ImGui::BeginCombo("##TRANSFORM_COMPONENT", selectedName.c_str())) {
+    int transformComponentCount = 0;
+    for (const auto &component: e.m_Components) {
+        if (const auto editor = m_UISystem->m_componentEditors[component->getTypeName()];
+            editor && editor->getNumTransformTargets() > 0) {
+            transformComponentCount++;
+        }
+    }
+
+    if (transformComponentCount > 1 && ImGui::BeginCombo("##TRANSFORM_COMPONENT", selectedName.c_str())) {
         for (const auto &component: e.m_Components) {
-            if (auto editor = m_UISystem->m_componentEditors[component->getTypeName()];
+            if (const auto editor = m_UISystem->m_componentEditors[component->getTypeName()];
                 editor && editor->getNumTransformTargets() > 0) {
                 std::string componentTypeName = component->getHumanReadableTypeName();
 

@@ -16,7 +16,7 @@ public:
 
     typedef T TYPE;
 
-    bool isValid() const {
+    [[nodiscard]] bool isValid() const {
         return m_ResourceManager != nullptr && m_Resource != nullptr;
     }
 
