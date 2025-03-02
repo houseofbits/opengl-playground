@@ -8,7 +8,7 @@
 #include "Jolt/Physics/Collision/CastResult.h"
 #include <Jolt/Physics/Collision/PhysicsMaterialSimple.h>
 
-PhysicsCharacterComponent::PhysicsCharacterComponent() : Component(),
+PhysicsCharacterComponent::PhysicsCharacterComponent() : PhysicsComponent(),
                                                          m_height(1.75),
                                                          m_radius(0.25),
                                                          m_PhysicsResource(),
@@ -17,7 +17,7 @@ PhysicsCharacterComponent::PhysicsCharacterComponent() : Component(),
                                                          m_physicsBody(nullptr),
                                                          m_haveGroundDetected(false),
                                                          m_minDistanceToGround(1000),
-                                                         m_lookingDirection(0, 0, 1),
+                                                         m_moveDirection(0, 0, 1),
                                                          m_groundSpringForce(100000.f),
                                                          m_groundSpringDamping(2000.f),
                                                          m_freeFallForce(50000.f),
@@ -77,8 +77,26 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
     m_PhysicsResource().getInterface().AddBody(m_physicsBody->GetID(), JPH::EActivation::Activate);
 }
 
-bool PhysicsCharacterComponent::isReadyToInitialize(EntityContext& ctx) const {
-    return m_PhysicsResource.isReady();
+bool PhysicsCharacterComponent::isReadyToCreate(EntityContext &ctx) const {
+    if (!m_PhysicsResource.isReady()) {
+        return false;
+    }
+
+    if (!ctx.getEntityComponent<TransformComponent>(m_EntityId.id())) {
+        return false;
+    }
+
+    return true;
+}
+
+void PhysicsCharacterComponent::createPhysics(EntityContext &ctx) {
+    if (const auto transformComponent = ctx.getEntityComponent<TransformComponent>(m_EntityId.id())) {
+        create(*transformComponent);
+
+        return;
+    }
+
+    Log::warn("PhysicsCharacterComponent::initialize transform component not found");
 }
 
 void PhysicsCharacterComponent::update(TransformComponent &transform, bool isSimulationEnabled) {
@@ -87,7 +105,7 @@ void PhysicsCharacterComponent::update(TransformComponent &transform, bool isSim
 
         //Rotation from look-at direction
         constexpr glm::vec3 yAxis(0.0f, 1.0f, 0.0f);
-        const glm::vec3 zAxis = glm::normalize(glm::vec3(m_lookingDirection.x, 0, m_lookingDirection.z));
+        const glm::vec3 zAxis = glm::normalize(glm::vec3(m_moveDirection.x, 0, m_moveDirection.z));
         const glm::vec3 xAxis = glm::cross(yAxis, zAxis);
         const glm::mat4 rotationMatrix(
             glm::vec4(xAxis, 1),
@@ -116,14 +134,14 @@ void PhysicsCharacterComponent::update(TransformComponent &transform, bool isSim
         //
         // updateMove();
     } else {
-        m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBody->GetID(),
-                                                                  PhysicsTypeCast::glmToJPH(
-                                                                      transform.getWorldPosition() +
-                                                                      glm::vec3(0,
-                                                                          m_stepTolerance,
-                                                                          0)),
-                                                                  PhysicsTypeCast::glmToJPH(transform.getRotation()),
-                                                                  JPH::EActivation::DontActivate);
+        // m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBody->GetID(),
+        //                                                           PhysicsTypeCast::glmToJPH(
+        //                                                               transform.getWorldPosition() +
+        //                                                               glm::vec3(0,
+        //                                                                   m_stepTolerance,
+        //                                                                   0)),
+        //                                                           PhysicsTypeCast::glmToJPH(transform.getRotation()),
+        //                                                           JPH::EActivation::DontActivate);
     }
 }
 
@@ -173,7 +191,7 @@ void PhysicsCharacterComponent::castRayForGroundReference(const glm::vec3 &point
     }
 
     //Forward
-    glm::vec3 fw = glm::vec3(m_lookingDirection.x, 0, m_lookingDirection.z) * radiusFactor;
+    glm::vec3 fw = glm::vec3(m_moveDirection.x, 0, m_moveDirection.z) * radiusFactor;
     p = point + fw;
     if (rayCast(p + glm::vec3(0, rayCastStart, 0), direction, rayCastResult)
         && rayCastResult.m_distance < prevDist) {
@@ -233,8 +251,8 @@ glm::vec3 PhysicsCharacterComponent::getVelocity() const {
     return PhysicsTypeCast::JPHToGlm(m_physicsBody->GetLinearVelocity());
 }
 
-void PhysicsCharacterComponent::setLookingDirection(const glm::vec3 &direction) {
-    m_lookingDirection = direction;
+void PhysicsCharacterComponent::setMoveDirection(const glm::vec3 &direction) {
+    m_moveDirection = direction;
 }
 
 void PhysicsCharacterComponent::updateMove() {
@@ -242,7 +260,7 @@ void PhysicsCharacterComponent::updateMove() {
         return;
     }
 
-    float speed = 10.0f;
+    constexpr float speed = 10.0f;
 
     JPH::Vec3 movementDirection = PhysicsTypeCast::glmToJPH(m_movementDirection);
 
@@ -252,7 +270,7 @@ void PhysicsCharacterComponent::updateMove() {
         desiredVelocity.SetY(currentVelocity.GetY());
     }
 
-    JPH::Vec3 newVelocity = 0.75f * currentVelocity + 0.25f * desiredVelocity;
+    const JPH::Vec3 newVelocity = 0.75f * currentVelocity + 0.25f * desiredVelocity;
 
     m_physicsBody->SetLinearVelocity(newVelocity);
     m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());

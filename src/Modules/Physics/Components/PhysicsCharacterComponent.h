@@ -5,8 +5,9 @@
 #include "../Resources/PhysicsResource.h"
 #include <Jolt/Physics/Character/Character.h>
 #include <Jolt/Physics/Character/CharacterVirtual.h>
+#include "../Helpers/PhysicsComponent.h"
 
-class PhysicsCharacterComponent : public Component {
+class PhysicsCharacterComponent : public PhysicsComponent {
 TYPE_DEFINITION(PhysicsCharacterComponent);
 public:
     PhysicsCharacterComponent();
@@ -16,8 +17,6 @@ public:
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
     void create(TransformComponent &transform);
-
-    [[nodiscard]] bool isReadyToInitialize(EntityContext& ctx) const override;
 
     void update(TransformComponent &transform, bool isSimulationEnabled);
 
@@ -29,7 +28,11 @@ public:
 
     [[nodiscard]] glm::vec3 getVelocity() const;
 
-    void setLookingDirection(const glm::vec3 &direction);
+    void setMoveDirection(const glm::vec3 &direction);
+
+    void createPhysics(EntityContext &ctx) override;
+
+    bool isReadyToCreate(EntityContext &ctx) const override;
 
     float m_height;
     float m_radius;
@@ -39,7 +42,7 @@ public:
     JPH::Body *m_physicsBody;
     bool m_haveGroundDetected;
     float m_minDistanceToGround;
-    glm::vec3 m_lookingDirection;
+    glm::vec3 m_moveDirection;
 
 private:
     void updateMove();

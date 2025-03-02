@@ -2,12 +2,14 @@
 #include "../../../Core/Helper/Time.h"
 #include "../../Physics/Events/PhysicsPickingEvent.h"
 #include "../../Application/Events/InputEvent.h"
+#include "../../../Modules/Application/Events/SystemEvent.h"
 
-MainCharacterBehaviourSystem::MainCharacterBehaviourSystem() : EntitySystem() {
-    m_registry = useEntityRelatedComponentsRegistry<CameraComponent, PhysicsCharacterComponent, MainCharacterBehaviourComponent>();
+MainCharacterBehaviourSystem::MainCharacterBehaviourSystem() : EntitySystem(), m_isEditorModeEnabled(false) {
+    m_registry = useEntityRelatedComponentsRegistry<TransformComponent, PhysicsCharacterComponent,
+        MainCharacterBehaviourComponent>();
 }
 
-void MainCharacterBehaviourSystem::initialize(ResourceManager &, EventManager&) {
+void MainCharacterBehaviourSystem::initialize(ResourceManager &, EventManager &) {
 }
 
 void MainCharacterBehaviourSystem::process(EventManager &) {
@@ -15,36 +17,49 @@ void MainCharacterBehaviourSystem::process(EventManager &) {
 
 void MainCharacterBehaviourSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &MainCharacterBehaviourSystem::handleInputEvent);
+    eventManager.registerEventReceiver(this, &MainCharacterBehaviourSystem::handleSystemEvent);
+}
+
+void MainCharacterBehaviourSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
+        m_isEditorModeEnabled = true;
+    } else if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
+        m_isEditorModeEnabled = false;
+    }
 }
 
 void MainCharacterBehaviourSystem::handleInputEvent(const InputEvent &event) {
     for (const auto &[id, components]: m_registry->container()) {
-        const auto &[camera, character, behaviour] = components.get();
+        const auto &[transform, character, behaviour] = components.get();
 
-        if (camera->m_isActive && behaviour->m_isActive) {
-            handleMouseLook(event, character, camera);
-            handleMovement(event, character, camera);
-            handleAction(event, character, camera);
+        if (behaviour->m_isActive && !m_isEditorModeEnabled) {
+            handleMouseLook(event, behaviour, character);
+            handleMovement(event, behaviour, character);
+
+            const glm::vec3 worldPosition = transform->getWorldTransform() * glm::vec4(
+                                                behaviour->m_cameraAttachmentPosition, 1.0);
+
+            handleAction(event, character, worldPosition, behaviour->m_lookingDirection);
+
+            updateCamera(behaviour, worldPosition);
         }
     }
 }
 
 void MainCharacterBehaviourSystem::handleMouseLook(const InputEvent &event,
-                                                   PhysicsCharacterComponent *characterComponent,
-                                                   CameraComponent *cameraComponent) {
+                                                   MainCharacterBehaviourComponent *behaviour,
+                                                   PhysicsCharacterComponent *physics) {
     if (event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) {
-        float lookSpeed = 0.15;
-        cameraComponent->rotateView(-event.mouseMotion * lookSpeed * Time::frameTime);
-
-        characterComponent->setLookingDirection(cameraComponent->m_Camera.getViewDirection());
+        behaviour->adjustLookingDirection(-event.mouseMotion * behaviour->m_mouseLookSpeed * Time::frameTime);
+        physics->setMoveDirection(behaviour->m_lookingDirection);
     }
 }
 
 void MainCharacterBehaviourSystem::handleMovement(const InputEvent &event,
-                                                  PhysicsCharacterComponent *characterComponent,
-                                                  CameraComponent *cameraComponent) {
+                                                  const MainCharacterBehaviourComponent *behaviour,
+                                                  PhysicsCharacterComponent *characterComponent) {
     if (event.type == InputEvent::KEYPRESS) {
-        glm::vec3 forwardDirection = cameraComponent->m_Camera.getViewDirection();
+        glm::vec3 forwardDirection = behaviour->m_lookingDirection;
         forwardDirection.y = 0;
         forwardDirection = glm::normalize(forwardDirection);
         glm::vec3 rightDirection = glm::normalize(glm::cross(forwardDirection, glm::vec3(0, 1, 0)));
@@ -84,12 +99,13 @@ void MainCharacterBehaviourSystem::handleMovement(const InputEvent &event,
 
 void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
                                                 PhysicsCharacterComponent *characterComponent,
-                                                CameraComponent *cameraComponent) {
+                                                glm::vec3 viewPosition,
+                                                glm::vec3 viewDirection) {
     if ((event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) ||
         (event.type == InputEvent::MOUSEUP && event.mouseButtonRight)) {
         PhysicsRayCastResult hit;
-        if (characterComponent->rayCast(cameraComponent->m_Camera.position,
-                                        cameraComponent->m_Camera.getViewDirection() * 10.f, hit)) {
+        if (characterComponent->rayCast(viewPosition,
+                                        viewDirection * 10.f, hit)) {
             event.m_EventManager->queueEvent<PhysicsPickingEvent>(
                 hit.m_entityId,
                 hit.m_distance,
@@ -97,5 +113,21 @@ void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
                 event.mouseButtonRight
             );
         }
+    }
+}
+
+void MainCharacterBehaviourSystem::updateCamera(const MainCharacterBehaviourComponent *behaviour,
+                                                const glm::vec3 viewPosition) const {
+    CameraComponent *camera = nullptr;
+    if (behaviour->m_cameraEntityId == 0) {
+        //Try to get camera component from Self
+        camera = m_EntityContext->getEntityComponent<CameraComponent>(behaviour->m_EntityId.id());
+    } else {
+        //Detached camera component
+        camera = m_EntityContext->getEntityComponent<CameraComponent>(behaviour->m_cameraEntityId);
+    }
+
+    if (camera && camera->m_isActive) {
+        camera->setPositionAndDirection(viewPosition, behaviour->m_lookingDirection, glm::vec3(0, 1, 0));
     }
 }

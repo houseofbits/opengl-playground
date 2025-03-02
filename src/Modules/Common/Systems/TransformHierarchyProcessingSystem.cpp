@@ -42,14 +42,14 @@ void TransformHierarchyProcessingSystem::process(EventManager &) {
         }
     }
 
-    for (const auto [id, component]: m_cameraComponentRegistry->container()) {
-        auto *transformComponent = m_transformComponentRegistry->get(id);
-        if (transformComponent != nullptr) {
-            component->updateTransformFromParent(transformComponent->m_transform);
-        } else {
-            component->updateTransformWorld();
-        }
-    }
+    // for (const auto [id, component]: m_cameraComponentRegistry->container()) {
+    //     auto *transformComponent = m_transformComponentRegistry->get(id);
+    //     if (transformComponent != nullptr) {
+    //         component->updateTransformFromParent(transformComponent->m_transform);
+    //     } else {
+    //         component->updateTransformWorld();
+    //     }
+    // }
 }
 
 int TransformHierarchyProcessingSystem::calculateDepth(Identity::Type entityId) const {

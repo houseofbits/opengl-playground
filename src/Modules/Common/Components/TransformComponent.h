@@ -78,7 +78,7 @@ public:
         m_isTransformInSync = false;
     }
 
-    bool isInSync() const {
+    [[nodiscard]] bool isInSync() const {
         return m_isTransformInSync;
     }
 

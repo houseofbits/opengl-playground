@@ -12,8 +12,6 @@
 #include "../Components/EditorCameraComponent.h"
 #include "../UI/TransformEdit.h"
 #include "../../../Renderer/Shader/WireframeRenderer.h"
-#include "../../../Renderer/Model/WireCube.h"
-#include "../../../Renderer/Model/WireSphere.h"
 
 class EditorUISystem final : public EntitySystem {
 public:

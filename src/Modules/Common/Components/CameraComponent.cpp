@@ -110,3 +110,8 @@ void CameraComponent::moveView(glm::vec3 direction) {
 
     m_initialTransformLocal[3] = glm::vec4(position, 1.0);
 }
+
+void CameraComponent::setPositionAndDirection(glm::vec3 position, glm::vec3 direction, glm::vec3 up) {
+    m_Camera.setPosition(position);
+    m_Camera.setView(direction, up);
+}

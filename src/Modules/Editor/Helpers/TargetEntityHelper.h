@@ -18,6 +18,6 @@ bool TargetEntityHelper(EntityContext *ctx, std::string &name, const std::string
         }
         ImGui::EndCombo();
     }
-    
+
     return select;
 }

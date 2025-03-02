@@ -37,6 +37,8 @@ public:
         return m_currentTransformWorld[3];
     }
 
+    void setPositionAndDirection(glm::vec3 position, glm::vec3 direction, glm::vec3 up);
+
     bool m_isRelativeRotationDisabled;;
 
 private:

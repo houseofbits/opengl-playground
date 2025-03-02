@@ -2,6 +2,7 @@
 
 #include "../../Common/Components/CameraComponent.h"
 #include "../../Physics/Components/PhysicsCharacterComponent.h"
+#include "../../Behaviours/Components/MainCharacterBehaviourComponent.h"
 
 GunBehaviourSystem::GunBehaviourSystem() : EntitySystem() {
     m_registry = useEntityRelatedComponentsRegistry<TransformComponent, GunBehaviourComponent>();
@@ -19,24 +20,25 @@ void GunBehaviourSystem::process(EventManager &) {
                 auto characterComponent = parentEntity->getComponent<PhysicsCharacterComponent>();
                 auto cameraComponent = parentEntity->getComponent<CameraComponent>();
                 auto transformComponent = parentEntity->getComponent<TransformComponent>();
+                auto characterBehaviour = parentEntity->getComponent<MainCharacterBehaviourComponent>();
 
-                if (cameraComponent == nullptr || transformComponent == nullptr || !cameraComponent->m_isActive) {
+                if (characterBehaviour == nullptr || transformComponent == nullptr || !characterBehaviour->m_isActive) {
                     return;
                 }
 
-                auto eyePosition = cameraComponent->getWorldPosition();
-
-                glm::vec3 target = eyePosition + characterComponent->m_lookingDirection * 2.0f;
-
-                auto localTarget = inverse(transformComponent->getWorldTransform()) * glm::vec4(target, 1.0);
-
-                auto lookAtM = lookAt(
-                    transform->getLocalPosition(),
-                    glm::vec3(localTarget),
-                    glm::vec3(0, 1, 0)
-                    );
-
-                transform->setLocalRotation(lookAtM);
+                // auto eyePosition = characterBehaviour->m_cameraAttachmentPosition; //Get world position
+                //
+                // glm::vec3 target = eyePosition + characterBehaviour->m_lookingDirection * 2.0f;
+                //
+                // auto localTarget = inverse(transformComponent->getWorldTransform()) * glm::vec4(target, 1.0);
+                //
+                // auto lookAtM = lookAt(
+                //     transform->getLocalPosition(),
+                //     glm::vec3(localTarget),
+                //     glm::vec3(0, 1, 0)
+                //     );
+                //
+                // transform->setLocalRotation(lookAtM);
             }
         }
     }

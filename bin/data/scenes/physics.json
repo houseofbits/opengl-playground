@@ -2,25 +2,25 @@
     {
         "EditorCameraComponent": {
             "isActive": true,
-            "orthoScale": 7.199995517730713,
+            "orthoScale": 7.499995231628418,
             "position": [
-                -6.051963806152344,
-                4.773258209228516,
-                7.261263847351074
+                -4.96081018447876,
+                5.9646172523498535,
+                8.59835147857666
             ],
             "type": 1,
             "upDirection": [
-                0.20891685783863068,
-                0.9452630281448364,
-                -0.2506624758243561
+                0.13954687118530273,
+                0.8685559034347534,
+                -0.475538969039917
             ],
             "viewDirection": [
-                0.6051963567733765,
-                -0.32630953192710876,
-                -0.7261263132095337
+                0.2445649951696396,
+                -0.4955912232398987,
+                -0.8334130644798279
             ]
         },
-        "name": "Editor Camera"
+        "name": "EditorCamera"
     },
     {
         "PhysicsBodyComponent": {
@@ -48,9 +48,9 @@
                 1.0
             ],
             "scale": [
-                10.0,
+                20.0,
                 0.10000000149011612,
-                10.0
+                20.0
             ],
             "translation": [
                 0.0,
@@ -92,29 +92,25 @@
                 0.0
             ]
         },
-        "name": "Center Light"
+        "name": "CenterLight"
     },
     {
-        "CameraComponent": {
-            "disableRelRotation": true,
-            "isActive": false,
-            "position": [
+        "MainCharacterBehaviourComponent": {
+            "active": true,
+            "cameraAttachment": [
                 0.0,
-                0.0,
+                1.7000000476837158,
                 0.0
             ],
-            "upDirection": [
-                0.06441865861415863,
-                0.9764980673789978,
-                0.2056744247674942
+            "cameraName": "CharacterCamera",
+            "lookDirection": [
+                -0.9837459921836853,
+                -0.17153841257095337,
+                0.05308815836906433
             ],
-            "viewDirection": [
-                0.2918650209903717,
-                -0.21552661061286926,
-                0.9318599700927734
-            ]
+            "mlookSpeed": 0.15000000596046448,
+            "moveSpeed": 10.0
         },
-        "MainCharacterBehaviourComponent": null,
         "PhysicsCharacterComponent": {
             "height": 1.75,
             "radius": 0.25
@@ -125,7 +121,7 @@
             "renderer": "SOLID"
         },
         "TransformComponent": {
-            "disableRelRotation": false,
+            "disableRelRotation": true,
             "rotation": [
                 0.0,
                 0.0,
@@ -139,10 +135,32 @@
             ],
             "translation": [
                 0.0,
-                1.510162353515625,
+                1.474853515625,
                 0.0
             ]
         },
-        "name": "Character Controller"
+        "name": "CharacterController"
+    },
+    {
+        "CameraComponent": {
+            "disableRelRotation": false,
+            "isActive": false,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "upDirection": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "viewDirection": [
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "name": "CharacterCamera"
     }
 ]

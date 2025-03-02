@@ -2,8 +2,8 @@
 #include "CharacterControllerSystem.h"
 
 CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
-                                                         m_isSimulationDisabled(false),
-                                                         m_PhysicsResource() {
+                                                         m_PhysicsResource(),
+                                                         m_isSimulationDisabled(true) {
     m_registry = useEntityRelatedComponentsRegistry<TransformComponent, PhysicsCharacterComponent>();
 }
 
@@ -43,9 +43,7 @@ void CharacterControllerSystem::updateCCTs() const {
     for (const auto [id, components]: m_registry->container()) {
         const auto &[transform, cct] = components.get();
 
-        if (!cct->isCreated()) {
-            cct->create(*transform);
-        } else {
+        if (cct->isPhysicsCreated()) {
             cct->update(*transform, !m_isSimulationDisabled);
         }
     }
