@@ -14,64 +14,64 @@ MaterialEditWindowUI::MaterialEditWindowUI(EditorUISystem *editor) : m_EditorUIS
     m_texturePaths["NormalsTexturePicker"] = "";
     m_texturePaths["RoughnessTexturePicker"] = "";
 
-    m_textureWrappingNames = {
-            {MaterialResource::WRAPPING_UV1, "UV1"},
-            {MaterialResource::WRAPPING_TRIPLANAR, "Triplanar"}
-    };
+    // m_textureWrappingNames = {
+    //         {MaterialResource::WRAPPING_UV1, "UV1"},
+    //         {MaterialResource::WRAPPING_TRIPLANAR, "Triplanar"}
+    // };
 }
 
 void MaterialEditWindowUI::process() {
-    if (m_material.isValid()) {
-        std::string title = "Edit material: " + m_material().m_Path;
-
-        ImGui::SetNextWindowSize(ImVec2(450, 600));
-        if (ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_NoCollapse)) {
-            ImGui::ColorEdit3("Diffuse color##MATERIAL_COLOR", (float *) &m_material().m_DiffuseColor);
-            ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-            ImGui::Text("Diffuse texture");
-            processTexture("DiffuseTexturePicker", m_material().m_Diffuse);
-            ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-            ImGui::Text("Normals texture");
-            processTexture("NormalsTexturePicker", m_material().m_Normal);
-            ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-            ImGui::Text("Roughness texture");
-            processTexture("RoughnessTexturePicker", m_material().m_Roughness);
-
-            ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-            ImGui::SliderFloat("Self illumination", &m_material().m_selfIllumination, 0.0f, 1.0f, "%.3f");
-
-            ImGui::Checkbox("Does cast shadows", &m_material().m_doesCastShadows);
-            ImGui::Checkbox("Does receive shadows", &m_material().m_doesReceiveShadows);
-
-            if (ImGui::BeginCombo("Texture wrapping##WRAPPING_TYPE", m_textureWrappingNames[m_material().m_textureWrappingType].c_str())) {
-                for (const auto &wrappingType: m_textureWrappingNames) {
-                    if (ImGui::Selectable(wrappingType.second.c_str(), m_material().m_textureWrappingType == wrappingType.first)) {
-                        m_material().m_textureWrappingType = wrappingType.first;
-                    }
-                }
-                ImGui::EndCombo();
-            }
-
-            ImGui::Dummy(ImVec2(0.0f, 20.0f));
-
-            ImGui::Separator();
-
-            if (ImGui::Button("Close")) {
-                m_material.invalidate();
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("Save")) {
-                m_material().write();
-                m_material.invalidate();
-            }
-
-            ImGui::End();
-        }
-    }
+    // if (m_material.isValid()) {
+    //     std::string title = "Edit material: " + m_material().m_Path;
+    //
+    //     ImGui::SetNextWindowSize(ImVec2(450, 600));
+    //     if (ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_NoCollapse)) {
+    //         ImGui::ColorEdit3("Diffuse color##MATERIAL_COLOR", (float *) &m_material().m_DiffuseColor);
+    //         ImGui::Dummy(ImVec2(0.0f, 10.0f));
+    //
+    //         ImGui::Text("Diffuse texture");
+    //         processTexture("DiffuseTexturePicker", m_material().m_Diffuse);
+    //         ImGui::Dummy(ImVec2(0.0f, 10.0f));
+    //
+    //         ImGui::Text("Normals texture");
+    //         processTexture("NormalsTexturePicker", m_material().m_Normal);
+    //         ImGui::Dummy(ImVec2(0.0f, 10.0f));
+    //
+    //         ImGui::Text("Roughness texture");
+    //         processTexture("RoughnessTexturePicker", m_material().m_Roughness);
+    //
+    //         ImGui::Dummy(ImVec2(0.0f, 10.0f));
+    //
+    //         ImGui::SliderFloat("Self illumination", &m_material().m_selfIllumination, 0.0f, 1.0f, "%.3f");
+    //
+    //         ImGui::Checkbox("Does cast shadows", &m_material().m_doesCastShadows);
+    //         ImGui::Checkbox("Does receive shadows", &m_material().m_doesReceiveShadows);
+    //
+    //         if (ImGui::BeginCombo("Texture wrapping##WRAPPING_TYPE", m_textureWrappingNames[m_material().m_textureWrappingType].c_str())) {
+    //             for (const auto &wrappingType: m_textureWrappingNames) {
+    //                 if (ImGui::Selectable(wrappingType.second.c_str(), m_material().m_textureWrappingType == wrappingType.first)) {
+    //                     m_material().m_textureWrappingType = wrappingType.first;
+    //                 }
+    //             }
+    //             ImGui::EndCombo();
+    //         }
+    //
+    //         ImGui::Dummy(ImVec2(0.0f, 20.0f));
+    //
+    //         ImGui::Separator();
+    //
+    //         if (ImGui::Button("Close")) {
+    //             m_material.invalidate();
+    //         }
+    //         ImGui::SameLine();
+    //         if (ImGui::Button("Save")) {
+    //             m_material().write();
+    //             m_material.invalidate();
+    //         }
+    //
+    //         ImGui::End();
+    //     }
+    // }
 }
 
 void MaterialEditWindowUI::processTexture(const std::string &name, ResourceHandle<TextureResource> &handle) const {

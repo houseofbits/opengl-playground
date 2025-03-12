@@ -2,74 +2,36 @@
     {
         "EditorCameraComponent": {
             "isActive": true,
-            "orthoScale": 7.499995231628418,
+            "orthoScale": 3.7999987602233887,
             "position": [
-                -4.96081018447876,
-                5.9646172523498535,
-                8.59835147857666
+                -7.049607276916504,
+                7.3308000564575195,
+                -5.886502742767334
             ],
             "type": 1,
             "upDirection": [
-                0.13954687118530273,
-                0.8685559034347534,
-                -0.475538969039917
+                0.45545274019241333,
+                0.8232907652854919,
+                0.33875519037246704
             ],
             "viewDirection": [
-                0.2445649951696396,
-                -0.4955912232398987,
-                -0.8334130644798279
+                0.6606007814407349,
+                -0.5676198601722717,
+                0.49133941531181335
             ]
         },
         "name": "EditorCamera"
     },
     {
-        "PhysicsBodyComponent": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "StaticMeshComponent": {
-            "material": "data/materials/grid-gray.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "TransformComponent": {
-            "disableRelRotation": false,
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                20.0,
-                0.10000000149011612,
-                20.0
-            ],
-            "translation": [
-                0.0,
-                -0.05000000074505806,
-                0.0
-            ]
-        },
-        "name": "Floor"
-    },
-    {
         "LightComponent": {
-            "attenuation": 12.600011825561523,
+            "attenuation": 14.800020217895508,
             "castShadows": false,
             "color": [
                 1.0,
                 1.0,
                 1.0
             ],
-            "intensity": 1.5000001192092896,
+            "intensity": 1.4000000953674316,
             "isEnabled": true,
             "type": "OMNI"
         },
@@ -87,80 +49,18 @@
                 1.0
             ],
             "translation": [
-                0.0,
+                -1.60272216796875,
                 3.01318359375,
-                0.0
+                -0.1120605617761612
             ]
         },
         "name": "CenterLight"
     },
     {
-        "MainCharacterBehaviourComponent": {
-            "active": true,
-            "cameraAttachment": [
-                0.0,
-                1.7000000476837158,
-                0.0
-            ],
-            "cameraName": "CharacterCamera",
-            "lookDirection": [
-                -0.9837459921836853,
-                -0.17153841257095337,
-                0.05308815836906433
-            ],
-            "mlookSpeed": 0.15000000596046448,
-            "moveSpeed": 10.0
+        "MeshComponent": {
+            "material": "data/materials/grid-gray.json",
+            "model": "data/models/material-spheres.gltf"
         },
-        "PhysicsCharacterComponent": {
-            "height": 1.75,
-            "radius": 0.25
-        },
-        "StaticMeshComponent": {
-            "material": "data/materials/character.json",
-            "model": "data/models/character-capsule.gltf",
-            "renderer": "SOLID"
-        },
-        "TransformComponent": {
-            "disableRelRotation": true,
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                1.474853515625,
-                0.0
-            ]
-        },
-        "name": "CharacterController"
-    },
-    {
-        "CameraComponent": {
-            "disableRelRotation": false,
-            "isActive": false,
-            "position": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "upDirection": [
-                0.0,
-                1.0,
-                0.0
-            ],
-            "viewDirection": [
-                0.0,
-                0.0,
-                1.0
-            ]
-        },
-        "name": "CharacterCamera"
+        "name": "NEW Composite Mesh"
     }
 ]

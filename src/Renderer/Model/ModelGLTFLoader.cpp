@@ -1,0 +1,309 @@
+#include "ModelGLTFLoader.h"
+#include "../../Core/Helper/Log.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+
+#define BUFFER_OFFSET(i) ((char *) NULL + (i))
+
+ModelGLTFLoader::ModelGLTFLoader() = default;
+
+void ModelGLTFLoader::createFromGLTFModel(tinygltf::Model &modelIn, Model &modelOut) {
+    const auto buffers = loadBuffers(modelIn);
+
+    for (const auto &node: modelIn.nodes) {
+        auto modelMatrix = glm::mat4(1.0f);
+        loadNode(modelIn, node, modelMatrix, buffers, modelOut);
+    }
+}
+
+ModelGLTFLoader::BufferMap ModelGLTFLoader::loadBuffers(const tinygltf::Model &modelIn) {
+    BufferMap vertexBuffers;
+
+    for (size_t i = 0; i < modelIn.bufferViews.size(); i++) {
+        const tinygltf::BufferView &bufferView = modelIn.bufferViews[i];
+        if (bufferView.target == 0) {
+            Log::warn("bufferView.target is zero");
+
+            continue;
+        }
+
+        int sparse_accessor = -1;
+        for (size_t a_i = 0; a_i < modelIn.accessors.size(); ++a_i) {
+            const auto &accessor = modelIn.accessors[a_i];
+            if (accessor.bufferView == i) {
+                if (accessor.sparse.isSparse) {
+                    Log::warn(
+                        "WARN: this bufferView has at least one sparse accessor to it. We are going to load the data as patched by this sparse accessor, not the original data");
+                    sparse_accessor = static_cast<int>(a_i);
+
+                    break;
+                }
+            }
+        }
+
+        const tinygltf::Buffer &buffer = modelIn.buffers[bufferView.buffer];
+        GLuint vbId;
+        glGenBuffers(1, &vbId);
+        glBindBuffer(bufferView.target, vbId);
+
+        if (sparse_accessor < 0) {
+            glBufferData(bufferView.target, static_cast<GLsizeiptr>(bufferView.byteLength),
+                         &buffer.data.at(0) + bufferView.byteOffset,
+                         GL_STATIC_DRAW);
+        } else {
+            const auto accessor = modelIn.accessors[sparse_accessor];
+            auto *tmp_buffer = new unsigned char[bufferView.byteLength];
+            memcpy(tmp_buffer, buffer.data.data() + bufferView.byteOffset,
+                   bufferView.byteLength);
+
+            const size_t size_of_object_in_buffer =
+                    componentTypeByteSize(accessor.componentType);
+            const size_t size_of_sparse_indices =
+                    componentTypeByteSize(accessor.sparse.indices.componentType);
+
+            const auto &indices_buffer_view =
+                    modelIn.bufferViews[accessor.sparse.indices.bufferView];
+            const auto &indices_buffer = modelIn.buffers[indices_buffer_view.buffer];
+
+            const auto &values_buffer_view =
+                    modelIn.bufferViews[accessor.sparse.values.bufferView];
+            const auto &values_buffer = modelIn.buffers[values_buffer_view.buffer];
+
+            for (size_t sparse_index = 0; sparse_index < accessor.sparse.count; ++sparse_index) {
+                int index = 0;
+                switch (accessor.sparse.indices.componentType) {
+                    case TINYGLTF_COMPONENT_TYPE_BYTE:
+                    case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
+                        index = static_cast<int>(*const_cast<unsigned char *>(indices_buffer.data.data() +
+                                                                              indices_buffer_view.byteOffset +
+                                                                              accessor.sparse.indices.byteOffset +
+                                                                              (sparse_index * size_of_sparse_indices)));
+                        break;
+                    case TINYGLTF_COMPONENT_TYPE_SHORT:
+                    case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
+                        index = static_cast<int>(*(
+                            unsigned short *) (indices_buffer.data.data() +
+                                               indices_buffer_view.byteOffset +
+                                               accessor.sparse.indices.byteOffset +
+                                               (sparse_index * size_of_sparse_indices)));
+                        break;
+                    case TINYGLTF_COMPONENT_TYPE_INT:
+                    case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
+                        index = static_cast<int>(*(
+                            unsigned int *) (indices_buffer.data.data() +
+                                             indices_buffer_view.byteOffset +
+                                             accessor.sparse.indices.byteOffset +
+                                             (sparse_index * size_of_sparse_indices)));
+                        break;
+                    default: continue;
+                }
+
+                const unsigned char *read_from =
+                        values_buffer.data.data() +
+                        (values_buffer_view.byteOffset +
+                         accessor.sparse.values.byteOffset) +
+                        (sparse_index * (size_of_object_in_buffer * accessor.type));
+
+                unsigned char *write_to =
+                        tmp_buffer + index * (size_of_object_in_buffer * accessor.type);
+
+                memcpy(write_to, read_from, size_of_object_in_buffer * accessor.type);
+
+                glBufferData(bufferView.target, static_cast<GLsizeiptr>(bufferView.byteLength), tmp_buffer,
+                             GL_STATIC_DRAW);
+                delete[] tmp_buffer;
+            }
+        }
+
+        glBindBuffer(bufferView.target, 0);
+
+        vertexBuffers[i] = vbId;
+    }
+
+    return vertexBuffers;
+}
+
+void ModelGLTFLoader::loadNode(tinygltf::Model &model,
+                               const tinygltf::Node &node,
+                               const glm::mat4 &parentTransform,
+                               const BufferMap &vertexBuffers,
+                               Model &modelOut) {
+    glm::mat4 transform = getNodeTransform(node) * parentTransform;
+
+    if (node.mesh > -1) {
+        assert(node.mesh < model.meshes.size());
+
+        const auto mesh = model.meshes[node.mesh];
+        if (!mesh.primitives.empty()) {
+            modelOut.m_meshes.push_back(new Model::MeshInstance());
+            const auto meshInstance = modelOut.m_meshes.back();
+            meshInstance->name = mesh.name;
+            meshInstance->modelMatrix = transform;
+
+            loadMesh(model, mesh, transform, vertexBuffers, *meshInstance);
+        }
+    }
+
+    for (int i: node.children) {
+        assert(i < model.nodes.size());
+        loadNode(model, model.nodes[i], transform, vertexBuffers, modelOut);
+    }
+}
+
+void ModelGLTFLoader::loadMesh(const tinygltf::Model &model,
+                               const tinygltf::Mesh &mesh,
+                               glm::mat4 &transform,
+                               const BufferMap &vertexBuffers,
+                               Model::MeshInstance &instanceOut) {
+    for (const auto &primitive: mesh.primitives) {
+        if (primitive.indices < 0) continue;
+
+        if (primitive.material >= 0) {
+            instanceOut.materialIndex = primitive.material;
+        }
+
+        unsigned int vao = 0;
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+
+        auto it(primitive.attributes.begin());
+        for (auto itEnd(primitive.attributes.end()); it != itEnd; ++it) {
+            assert(it->second >= 0);
+            const tinygltf::Accessor &accessor = model.accessors[it->second];
+
+            glBindBuffer(GL_ARRAY_BUFFER, vertexBuffers.find(accessor.bufferView)->second);
+
+            if (const int vaa = getVertexAttributeIndex(it->first); vaa > -1) {
+                const int byteStride = accessor.ByteStride(model.bufferViews[accessor.bufferView]);
+                assert(byteStride != -1);
+
+                glVertexAttribPointer(vaa,
+                                      getTypeSize(accessor.type),
+                                      accessor.componentType,
+                                      accessor.normalized ? GL_TRUE : GL_FALSE,
+                                      byteStride, BUFFER_OFFSET(accessor.byteOffset));
+                glEnableVertexAttribArray(vaa);
+            }
+        }
+
+        const tinygltf::Accessor &indexAccessor = model.accessors[primitive.indices];
+
+        instanceOut.vertexArray.elementsArray.push_back(
+            createPrimitive(indexAccessor, getGLPrimitiveMode(primitive.mode), vao, vertexBuffers));
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBuffers.find(indexAccessor.bufferView)->second);
+    }
+
+    glBindVertexArray(0);
+}
+
+glm::mat4 ModelGLTFLoader::getNodeTransform(const tinygltf::Node &node) {
+    if (node.matrix.size() == 16) {
+        return convertDoubleArrayToGlmMat4(node.matrix.data());
+    }
+
+    auto transform = glm::mat4(1.0f);
+    if (node.translation.size() == 3) {
+        transform = glm::translate(transform, {
+                                       node.translation[0], node.translation[1], node.translation[2]
+                                   });
+    }
+    if (node.rotation.size() == 4) {
+        const auto rotation = glm::quat(static_cast<float>(node.rotation[3]),
+                                        static_cast<float>(node.rotation[0]),
+                                        static_cast<float>(node.rotation[1]),
+                                        static_cast<float>(node.rotation[2])
+        );
+        transform *= glm::mat4_cast(rotation);
+    }
+    if (node.scale.size() == 3) {
+        transform = glm::scale(transform, {
+                                   node.scale[0], node.scale[1], node.scale[2]
+                               });
+    }
+    return transform;
+}
+
+glm::mat4 ModelGLTFLoader::convertDoubleArrayToGlmMat4(const double arr[16]) {
+    glm::mat4 glmMatrix;
+    for (int col = 0; col < 4; ++col) {
+        for (int row = 0; row < 4; ++row) {
+            glmMatrix[col][row] = static_cast<float>(arr[col * 4 + row]);
+        }
+    }
+
+    return glmMatrix;
+}
+
+size_t ModelGLTFLoader::componentTypeByteSize(const int type) {
+    switch (type) {
+        case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
+        case TINYGLTF_COMPONENT_TYPE_BYTE:
+            return sizeof(char);
+        case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
+        case TINYGLTF_COMPONENT_TYPE_SHORT:
+            return sizeof(short);
+        case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
+        case TINYGLTF_COMPONENT_TYPE_INT:
+            return sizeof(int);
+        case TINYGLTF_COMPONENT_TYPE_FLOAT:
+            return sizeof(float);
+        case TINYGLTF_COMPONENT_TYPE_DOUBLE:
+            return sizeof(double);
+        default:
+            return 0;
+    }
+}
+
+int ModelGLTFLoader::getGLPrimitiveMode(const int gltfMode) {
+    switch (gltfMode) {
+        case TINYGLTF_MODE_TRIANGLES: return GL_TRIANGLES;
+        case TINYGLTF_MODE_TRIANGLE_STRIP: return GL_TRIANGLE_STRIP;
+        case TINYGLTF_MODE_TRIANGLE_FAN: return GL_TRIANGLE_FAN;
+        case TINYGLTF_MODE_POINTS: return GL_POINTS;
+        case TINYGLTF_MODE_LINE: return GL_LINES;
+        case TINYGLTF_MODE_LINE_LOOP: return GL_LINE_LOOP;
+        default: assert(0);
+    }
+}
+
+int ModelGLTFLoader::getTypeSize(int gltfType) {
+    switch (gltfType) {
+        case TINYGLTF_TYPE_SCALAR: return 1;
+        case TINYGLTF_TYPE_VEC2: return 2;
+        case TINYGLTF_TYPE_VEC3: return 3;
+        case TINYGLTF_TYPE_VEC4: return 4;
+        default: assert(0);
+    }
+}
+
+int ModelGLTFLoader::getVertexAttributeIndex(const std::string &attributeName) {
+    if (attributeName == "POSITION")
+        return 0;
+    if (attributeName == "NORMAL")
+        return 1;
+    if (attributeName == "TEXCOORD_0")
+        return 2;
+    if (attributeName == "TANGENT")
+        return 3;
+
+    return -1;
+}
+
+VertexArray::Element *ModelGLTFLoader::createPrimitive(
+    const tinygltf::Accessor &indexAccessor,
+    const int primitiveGLMode,
+    const unsigned int vertexArrayObjectId,
+    const BufferMap &vertexBuffers
+) {
+    const auto el = new VertexArray::Element();
+    el->mode = primitiveGLMode;
+    el->count = indexAccessor.count;
+    el->componentType = indexAccessor.componentType;
+    el->bufferOffset = indexAccessor.byteOffset;
+    el->bufferId = vertexBuffers.find(indexAccessor.bufferView)->second;
+    el->vaoId = vertexArrayObjectId;
+
+    return el;
+}

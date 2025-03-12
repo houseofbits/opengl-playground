@@ -1,14 +1,18 @@
 #pragma once
-#include "../../../libs/tinygltf/tiny_gltf.h"
-#include "VertexArray.h"
-#include <GL/glew.h>
-#include <list>
-#include <map>
-#include <string>
-#include <utility>
 
-class Model : public VertexArray
-{
+#include "VertexArray.h"
+#include <string>
+#include <glm/mat4x4.hpp>
+
+class Model final : public VertexArray {
 public:
-    void createFromFile(std::string filename);
+    class MeshInstance {
+    public:
+        std::string name{};
+        int materialIndex{-1};
+        glm::mat4 modelMatrix{1.0};
+        VertexArray vertexArray{};
+    };
+
+    std::vector<MeshInstance *> m_meshes{};
 };

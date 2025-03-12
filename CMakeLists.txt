@@ -187,6 +187,11 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Common/Editors/CameraComponentEdit.h
         src/Modules/Physics/Editors/PhysicsSliderJointComponentTransformEdit.cpp
         src/Modules/Physics/Editors/PhysicsSliderJointComponentTransformEdit.h
+        src/Renderer/Material/MaterialConfiguration.h
+        src/Renderer/Model/ModelGLTFLoader.cpp
+        src/Renderer/Model/ModelGLTFLoader.h
+        src/Renderer/Model/GLTFFileLoader.cpp
+        src/Renderer/Model/GLTFFileLoader.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
@@ -231,11 +236,11 @@ ELSE ()
     include_directories(${CMAKE_SOURCE_DIR}/libs/Jolt)
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/Jolt/libJolt.a)
 
-#    include_directories(${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/include)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/cmake-build-release/libtinygltf.a)
+
+    #    include_directories(${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/include)
 #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/lib/debug/libfbxsdk.so)
 ENDIF ()
-
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

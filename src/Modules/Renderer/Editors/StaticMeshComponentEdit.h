@@ -28,21 +28,21 @@ inline void processStaticMeshComponentEditor(Component *c, Entity *e, EditorUISy
         component->m_Mesh.invalidate();
         system.m_ResourceManager->request(component->m_Mesh, m_meshPath);
     }
-
-    if (FileInput("ChooseMaterialFile", "Choose JSON Material file", ".json", "Material", m_materialPath,
-                  component->m_Material().m_Path)) {
-        component->m_Material.invalidate();
-        system.m_ResourceManager->request(component->m_Material, m_materialPath);
-    }
-
-    if (component->m_Material.isValid()) {
-        if (ImGui::Button("Edit material")) {
-            system.openMaterialEditor(component->m_Material);
-        }
-    }
-
-    if (TextPromptHelper::textPrompt("New material", "New material", "Filename")) {
-        system.m_ResourceManager->request(component->m_Material,
-                                          "data/materials/" + TextPromptHelper::m_InputValue);
-    }
+    //
+    // if (FileInput("ChooseMaterialFile", "Choose JSON Material file", ".json", "Material", m_materialPath,
+    //               component->m_Material().m_Path)) {
+    //     component->m_Material.invalidate();
+    //     system.m_ResourceManager->request(component->m_Material, m_materialPath);
+    // }
+    //
+    // if (component->m_Material.isValid()) {
+    //     if (ImGui::Button("Edit material")) {
+    //         system.openMaterialEditor(component->m_Material);
+    //     }
+    // }
+    //
+    // if (TextPromptHelper::textPrompt("New material", "New material", "Filename")) {
+    //     system.m_ResourceManager->request(component->m_Material,
+    //                                       "data/materials/" + TextPromptHelper::m_InputValue);
+    // }
 }

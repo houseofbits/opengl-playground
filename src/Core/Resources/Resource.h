@@ -38,6 +38,10 @@ public:
 
     }
 
+    void setDataReady() {
+        m_Status = STATUS_DATA_READY;
+    }
+
     [[nodiscard]] bool isReady() const {
         return m_Status == STATUS_READY;
     }

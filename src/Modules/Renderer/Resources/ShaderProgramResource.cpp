@@ -15,6 +15,7 @@ Resource::Status ShaderProgramResource::fetchData(ResourceManager& manager) {
         return STATUS_FETCH_ERROR;
     }
 
+    m_ShaderHandles.reserve(paths.size());
     for (const auto &path: paths) {
         addDependency(path);
         m_ShaderHandles.emplace_back();

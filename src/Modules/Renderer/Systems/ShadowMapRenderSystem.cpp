@@ -59,7 +59,7 @@ void ShadowMapRenderSystem::renderGeometry(int lightIndex) {
     m_ShaderProgram().setUniform("lightIndex", lightIndex);
     for (const auto &[id, components]: m_meshComponentRegistry->container()) {
         const auto &[transform, mesh] = components.get();
-        if (mesh->m_Material.isReady() && mesh->m_Material().m_doesCastShadows) {
+        if (mesh->m_Material.isReady() && mesh->m_Material().m_materialConfiguration.doesCastShadows) {
             m_ShaderProgram().setUniform("modelMatrix", transform->getModelMatrix());
             mesh->m_Mesh().render();
         }

@@ -10,6 +10,7 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_viewportWidth(1024),
                                        m_viewportHeight(768),
                                        m_ShaderPrograms(),
+                                       m_defaultMaterial(),
                                        m_LightsBuffer(),
                                        m_ProbesBuffer(),
                                        m_activeCameraHelper() {
@@ -65,6 +66,11 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
     resourceManager.request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager.request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
     resourceManager.request(m_ProbesCubeMapArray, "EnvironmentProbesCubeMapArray");
+
+    resourceManager.requestWith(m_defaultMaterial, "defaultMaterial",
+                                [&](MaterialResource &resource) {
+                                    resource.fetchDefault(resourceManager);
+                                });
 }
 
 void MainRenderSystem::process(EventManager &eventManager) {
@@ -117,9 +123,10 @@ void MainRenderSystem::process(EventManager &eventManager) {
         }
     }
 
-    for (const auto &component: m_compositeMeshComponentRegistry->container()) {
-        component.second->m_Material().bind(m_ShaderPrograms[m_shaderType]());
-        component.second->m_Mesh().render(m_ShaderPrograms[m_shaderType]());
+    for (const auto &[id, mesh]: m_compositeMeshComponentRegistry->container()) {
+        if (mesh->m_Material().isReady() && mesh->m_Mesh().isReady()) {
+            mesh->m_Mesh().render(m_ShaderPrograms[m_shaderType](), m_defaultMaterial.get());
+        }
     }
 }
 

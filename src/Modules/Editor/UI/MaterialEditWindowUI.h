@@ -15,5 +15,5 @@ public:
     EditorUISystem *m_EditorUISystem;
     ResourceHandle<MaterialResource> m_material;
     std::map<std::string, std::string> m_texturePaths;
-    std::map<MaterialResource::TextureWrappingType, std::string> m_textureWrappingNames;
+    std::map<MaterialConfiguration::TextureWrappingType, std::string> m_textureWrappingNames;
 };

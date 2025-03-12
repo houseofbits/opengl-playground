@@ -33,7 +33,7 @@ void EditorUISystem::process(EventManager &eventManager) {
         m_EditWindowUI.process();
     }
 
-    m_MaterialEditWindowUI.process();
+    // m_MaterialEditWindowUI.process();
 
     TexturePreviewHelper::process();
 

@@ -168,6 +168,7 @@ void EntityContext::createComponentInplace(Identity::Type entityId, const std::s
 
         c->m_Id = Identity::create(Identity::COMPONENT);
         c->m_EntityId = e->m_Id;
+        c->m_Status = Component::STATUS_DESERIALIZED;
 
         unregisterEntityFromSystems(*e);
         e->addComponent(*c);
