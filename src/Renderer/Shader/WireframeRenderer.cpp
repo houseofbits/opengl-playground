@@ -7,7 +7,7 @@ WireframeRenderer::WireframeRenderer() : m_shader(), m_wireCube(), m_wireSphere(
 }
 
 void WireframeRenderer::initialize() {
-    std::string vertexShader = "#version 410\n"
+    const std::string vertexShader = "#version 410\n"
             "layout (location=0) in vec3 VertexPosition;\n"
             "layout (location=1) in vec4 VertexColor;\n"
             "uniform mat4 viewProjectionMatrix;\n"
@@ -18,7 +18,7 @@ void WireframeRenderer::initialize() {
             "gl_Position = viewProjectionMatrix * modelMatrix * vec4(VertexPosition,1.0);\n"
             "}";
 
-    std::string fragmentShader = "#version 410\n"
+    const std::string fragmentShader = "#version 410\n"
             "layout (location=0) out vec4 FragColor;\n"
             "in vec4 vsColor;\n"
             "uniform vec4 color;\n"
@@ -33,6 +33,8 @@ void WireframeRenderer::initialize() {
 
 void WireframeRenderer::render(const glm::mat4 &transform, const WireModel &model,
                                const glm::vec4 color) {
+    assert(m_pCamera != nullptr);
+
     m_shader.use();
     m_shader.setUniform("modelMatrix", transform);
     m_shader.setUniform("color", color);

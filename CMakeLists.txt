@@ -192,6 +192,9 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Model/ModelGLTFLoader.h
         src/Renderer/Model/GLTFFileLoader.cpp
         src/Renderer/Model/GLTFFileLoader.h
+        src/Core/Helper/File.h
+        src/Renderer/Model/RenderModelBuilder.cpp
+        src/Renderer/Model/RenderModelBuilder.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

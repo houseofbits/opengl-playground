@@ -198,6 +198,69 @@ void ModelGLTFLoader::loadMesh(const tinygltf::Model &model,
     glBindVertexArray(0);
 }
 
+void ModelGLTFLoader::loadMeshWithRebuild(const tinygltf::Model &model,
+                                          const tinygltf::Mesh &mesh,
+                                          glm::mat4 &transform,
+                                          Model::MeshInstance &instanceOut) {
+    std::vector<VertexArray::Vertex> vertices;
+    std::vector<unsigned long> indices;
+    unsigned long vertexCountOffset = 0;
+    for (const auto &primitive: mesh.primitives) {
+        if (primitive.indices < 0 || primitive.mode != TINYGLTF_MODE_TRIANGLES) {
+            continue;
+        }
+
+        if (primitive.material >= 0) {
+            instanceOut.materialIndex = primitive.material;
+        }
+
+        tinygltf::Accessor indexAccessor = model.accessors[primitive.indices];
+        unsigned long numIndices = indexAccessor.count;
+
+        const tinygltf::BufferView &bufferView = model.bufferViews[indexAccessor.bufferView];
+        const auto idx = (short *) (&model.buffers[bufferView.buffer].data.at(0) + bufferView.byteOffset);
+        for (int i = 0; i < numIndices; ++i) {
+            indices.push_back(idx[i] + vertexCountOffset);
+        }
+
+        const int positionAttributeIndex = getPrimitiveAttributeIndex(primitive, "POSITION");
+        if (positionAttributeIndex < 0) {
+            continue;
+        }
+
+        const auto numVertices = model.accessors[positionAttributeIndex].count;
+        const auto verticesData = getBufferData<glm::vec3>(model, primitive, "POSITION");
+        const auto texCoordsData = getBufferData<glm::vec2>(model, primitive, "TEXCOORD_0");
+        const auto normalsData = getBufferData<glm::vec3>(model, primitive, "NORMAL");
+
+        for (int i = 0; i < numVertices; ++i) {
+            VertexArray::Vertex vertex{};
+
+            vertex.position = verticesData[i];
+            vertex.texCoord = texCoordsData[i];
+            vertex.normal = normalsData[i];
+
+            vertices.push_back(vertex);
+        }
+
+        vertexCountOffset += numVertices;
+    }
+
+    //1. Create tangents
+    //2. Create mesh instance
+}
+
+int ModelGLTFLoader::getPrimitiveAttributeIndex(const tinygltf::Primitive &primitive,
+                                                const std::string &attributeName) {
+    for (auto &attrib: primitive.attributes) {
+        if (attrib.first == attributeName && attrib.second >= 0) {
+            return attrib.second;
+        }
+    }
+
+    return -1;
+}
+
 glm::mat4 ModelGLTFLoader::getNodeTransform(const tinygltf::Node &node) {
     if (node.matrix.size() == 16) {
         return convertDoubleArrayToGlmMat4(node.matrix.data());

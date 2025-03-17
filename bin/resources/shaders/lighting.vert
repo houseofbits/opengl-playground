@@ -3,6 +3,8 @@
 layout (location=0) in vec3 VertexPosition;
 layout (location=1) in vec3 VertexNormal;
 layout (location=2) in vec2 TexCoord;
+layout (location=3) in vec3 Tangent;
+layout (location=4) in vec3 BiTangent;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewProjectionMatrix;

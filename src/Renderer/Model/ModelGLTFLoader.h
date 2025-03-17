@@ -26,6 +26,28 @@ private:
                          const BufferMap &vertexBuffers,
                          Model::MeshInstance &instanceOut);
 
+    static void loadMeshWithRebuild(const tinygltf::Model &model,
+                                    const tinygltf::Mesh &mesh,
+                                    glm::mat4 &transform,
+                                    Model::MeshInstance &instanceOut);
+
+    static int getPrimitiveAttributeIndex(const tinygltf::Primitive &primitive, const std::string &attributeName);
+
+    template<class T>
+    static T *getBufferData(const tinygltf::Model &model, const tinygltf::Primitive &primitive,
+                            const std::string &attributeName) {
+        const int index = getPrimitiveAttributeIndex(primitive, attributeName);
+        if (index >= 0) {
+            const tinygltf::Accessor accessor = model.accessors[index];
+
+            const tinygltf::BufferView &vertexBufferView = model.bufferViews[accessor.bufferView];
+            return (T *)(&model.buffers[vertexBufferView.buffer].data.at(0) +
+                                    accessor.byteOffset + vertexBufferView.byteOffset);
+        }
+
+        return nullptr;
+    }
+
     static glm::mat4 getNodeTransform(const tinygltf::Node &node);
 
     static glm::mat4 convertDoubleArrayToGlmMat4(const double arr[16]);

@@ -101,9 +101,10 @@
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"TANGENT":3
 					},
-					"indices":3,
+					"indices":4,
 					"material":0
 				}
 			]
@@ -113,11 +114,12 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"TANGENT":8
 					},
-					"indices":7,
+					"indices":9,
 					"material":1
 				}
 			]
@@ -127,11 +129,12 @@
 			"primitives":[
 				{
 					"attributes":{
-						"POSITION":8,
-						"NORMAL":9,
-						"TEXCOORD_0":10
+						"POSITION":10,
+						"NORMAL":11,
+						"TEXCOORD_0":12,
+						"TANGENT":13
 					},
-					"indices":11,
+					"indices":14,
 					"material":2
 				}
 			]
@@ -178,47 +181,47 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"sloppy-mortar-stone-wall_normal-ogl.png",
+			"name":"sloppy-mortar-stone-wall_normal-ogl",
 			"uri":"data/textures/sloppy-mortar-stone-wall_normal-ogl.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"sloppy-mortar-stone-wall_albedo.png",
+			"name":"sloppy-mortar-stone-wall_albedo",
 			"uri":"data/textures/sloppy-mortar-stone-wall_albedo.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"sloppy-mortar-stone-wall_roughness.png",
+			"name":"sloppy-mortar-stone-wall_roughness",
 			"uri":"data/textures/sloppy-mortar-stone-wall_roughness.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"diamond-inlay-tile1_normal-ogl.png",
+			"name":"diamond-inlay-tile1_normal-ogl",
 			"uri":"data/textures/diamond-inlay-tile1_normal-ogl.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"diamond-inlay-tile1_albedo.png",
+			"name":"diamond-inlay-tile1_albedo",
 			"uri":"data/textures/diamond-inlay-tile1_albedo.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"diamond-inlay-tile1_roughness.png",
+			"name":"diamond-inlay-tile1_roughness",
 			"uri":"data/textures/diamond-inlay-tile1_roughness.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"broken_down_concrete2_Normal-ogl.png",
+			"name":"broken_down_concrete2_Normal-ogl",
 			"uri":"data/textures/broken_down_concrete2_Normal-ogl.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"broken_down_concrete2_albedo.png",
+			"name":"broken_down_concrete2_albedo",
 			"uri":"data/textures/broken_down_concrete2_albedo.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"broken_down_concrete2_Roughness.png",
+			"name":"broken_down_concrete2_Roughness",
 			"uri":"data/textures/broken_down_concrete2_Roughness.png"
 		}
 	],
@@ -253,12 +256,18 @@
 		},
 		{
 			"bufferView":3,
+			"componentType":5126,
+			"count":1984,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":4,
 			"componentType":5123,
 			"count":2880,
 			"type":"SCALAR"
 		},
 		{
-			"bufferView":4,
+			"bufferView":5,
 			"componentType":5126,
 			"count":1984,
 			"max":[
@@ -274,25 +283,31 @@
 			"type":"VEC3"
 		},
 		{
-			"bufferView":5,
+			"bufferView":6,
 			"componentType":5126,
 			"count":1984,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":6,
+			"bufferView":7,
 			"componentType":5126,
 			"count":1984,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":7,
+			"bufferView":8,
+			"componentType":5126,
+			"count":1984,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":9,
 			"componentType":5123,
 			"count":2880,
 			"type":"SCALAR"
 		},
 		{
-			"bufferView":8,
+			"bufferView":10,
 			"componentType":5126,
 			"count":1984,
 			"max":[
@@ -308,19 +323,25 @@
 			"type":"VEC3"
 		},
 		{
-			"bufferView":9,
+			"bufferView":11,
 			"componentType":5126,
 			"count":1984,
 			"type":"VEC3"
 		},
 		{
-			"bufferView":10,
+			"bufferView":12,
 			"componentType":5126,
 			"count":1984,
 			"type":"VEC2"
 		},
 		{
-			"bufferView":11,
+			"bufferView":13,
+			"componentType":5126,
+			"count":1984,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":14,
 			"componentType":5123,
 			"count":2880,
 			"type":"SCALAR"
@@ -347,56 +368,74 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":5760,
+			"byteLength":31744,
 			"byteOffset":63488,
-			"target":34963
-		},
-		{
-			"buffer":0,
-			"byteLength":23808,
-			"byteOffset":69248,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":23808,
-			"byteOffset":93056,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":15872,
-			"byteOffset":116864,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":5760,
-			"byteOffset":132736,
+			"byteOffset":95232,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":23808,
-			"byteOffset":138496,
+			"byteOffset":100992,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":23808,
-			"byteOffset":162304,
+			"byteOffset":124800,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":15872,
-			"byteOffset":186112,
+			"byteOffset":148608,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":31744,
+			"byteOffset":164480,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":5760,
+			"byteOffset":196224,
+			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":23808,
 			"byteOffset":201984,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":23808,
+			"byteOffset":225792,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":15872,
+			"byteOffset":249600,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":31744,
+			"byteOffset":265472,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":5760,
+			"byteOffset":297216,
 			"target":34963
 		}
 	],
@@ -408,7 +447,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":207744,
+			"byteLength":302976,
 			"uri":"material-spheres.bin"
 		}
 	]

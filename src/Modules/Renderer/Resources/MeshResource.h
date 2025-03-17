@@ -4,9 +4,9 @@
 #include "../../../Renderer/Model/VertexArray.h"
 #include "../../../Renderer/Model/Model.h"
 #include "../../../../libs/tinygltf/tiny_gltf.h"
-#include <GL/glew.h>
 #include "MaterialResource.h"
 #include "ShaderProgramResource.h"
+#include "../../../Renderer/Model/ModelConfigurationLoader.h"
 
 class MeshResource : public Resource {
 public:
@@ -23,9 +23,10 @@ public:
     void render(ShaderProgramResource &, MaterialResource &);
 
 private:
-    void preloadMaterials(ResourceManager &resourceManager);
+    void preloadMaterials(tinygltf::Model& model, ResourceManager &resourceManager);
 
     std::vector<ResourceHandle<MaterialResource> > m_materials;
-    tinygltf::Model *m_temporaryModel;
     Model m_model;
+
+    ModelConfigurationLoader::ModelConfiguration m_modelConfig;
 };

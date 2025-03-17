@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 class VertexArray {
 public:
@@ -9,6 +11,14 @@ public:
     virtual ~VertexArray();
 
     virtual void draw();
+
+    struct Vertex {
+        glm::vec3 position{1.0};
+        glm::vec3 normal{0.0};
+        glm::vec2 texCoord{0.0};
+        glm::vec3 tangent{0.0};
+        glm::vec3 biTangent{0.0};
+    };
 
     unsigned int vertexArrayObjectId{0};
     struct Element {

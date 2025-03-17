@@ -2,6 +2,7 @@
 #include <fstream>
 #include "../../Core/Json/Json.h"
 #include "MaterialConfiguration.h"
+#include "../../Core/Helper/File.h"
 
 MaterialConfigurationGLTFLoader::MaterialConfigurationGLTFLoader() = default;
 
@@ -31,6 +32,12 @@ MaterialConfiguration MaterialConfigurationGLTFLoader::createFromGLTFMaterial(
 
 std::string MaterialConfigurationGLTFLoader::getTextureUri(const tinygltf::Model &model, int textureIndex) {
     if (const auto source = model.textures[textureIndex].source; source >= 0) {
+        if (model.images.size() <= source) {
+            return "";
+        }
+        if (!File::exists(model.images[source].uri)) {
+            return "";
+        }
         return model.images[source].uri;
     }
 

@@ -1,5 +1,7 @@
 #include "Applications/Editor/EditorApplication.h"
 #include "Applications/Main/MainApplication.h"
+#include "Renderer/Model/GLTFFileLoader.h"
+#include "Renderer/Model/ModelConfigurationLoader.h"
 
 int main(int argc, char *argv[]) {
     // std::string filename(argv[1]);
