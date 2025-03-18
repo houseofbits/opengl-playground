@@ -7,6 +7,7 @@ class ModelConfigurationLoader {
     inline static const std::string POSITION_ATTRIB_NAME = "POSITION";
     inline static const std::string TEXCOORD_ATTRIB_NAME = "TEXCOORD_0";
     inline static const std::string NORMAL_ATTRIB_NAME = "NORMAL";
+    inline static const std::string TANGENT_ATTRIB_NAME = "TANGENT";
 
 public:
     class ModelConfiguration {
@@ -14,6 +15,9 @@ public:
         std::vector<VertexArray::Vertex> vertices;
         std::vector<unsigned int> indices;
         std::vector<Model::MeshNode> nodes;
+        bool hasTexCoords{true};
+        bool hasNormals{true};
+        bool hasTangents{true};
     };
 
     class LoaderConfiguration {
@@ -37,6 +41,13 @@ private:
                          glm::mat4 &transform,
                          ModelConfiguration &configuration,
                          Model::MeshNode &meshNode);
+
+    static int loadMeshIndices(const tinygltf::Model &model,
+                               int indicesAccessor,
+                               int vertexOffset,
+                               ModelConfiguration &configuration);
+
+    static void generateTangents(ModelConfiguration &configuration);
 
     static int getPrimitiveAttributeIndex(const tinygltf::Primitive &primitive, const std::string &attributeName);
 

@@ -20,6 +20,8 @@ void ModelConfigurationLoader::createFromGLTFModel(tinygltf::Model &modelIn, Mod
             loadNode(modelIn, modelIn.nodes[node], modelMatrix, modelOut);
         }
     }
+
+    generateTangents(modelOut);
 }
 
 void ModelConfigurationLoader::loadNode(tinygltf::Model &model,
@@ -57,6 +59,7 @@ void ModelConfigurationLoader::loadMesh(const tinygltf::Model &model,
 
     for (const auto &primitive: mesh.primitives) {
         if (primitive.indices < 0 || primitive.mode != TINYGLTF_MODE_TRIANGLES) {
+            Log::warn("Mesh is not triangulated ", meshNode.name);
             continue;
         }
 
@@ -64,19 +67,7 @@ void ModelConfigurationLoader::loadMesh(const tinygltf::Model &model,
             meshNode.materialIndex = primitive.material;
         }
 
-        const tinygltf::Accessor indexAccessor = model.accessors[primitive.indices];
-        const unsigned long numIndices = indexAccessor.count;
-
-        const tinygltf::BufferView &indexBufferView = model.bufferViews[indexAccessor.bufferView];
-        const unsigned char *indexDataPtr = model.buffers[indexBufferView.buffer].data.data() + indexBufferView.
-                                            byteOffset + indexAccessor.byteOffset;
-
-        configuration.indices.reserve(configuration.indices.size() + numIndices);
-        for (int i = 0; i < numIndices; ++i) {
-            const uint32_t index = *(reinterpret_cast<const uint16_t *>(indexDataPtr) + i);
-            configuration.indices.push_back(index + vertexOffset);
-        }
-        indicesSize += numIndices;
+        indicesSize += loadMeshIndices(model, primitive.indices, vertexOffset, configuration);
 
         const int positionAttributeIndex = getPrimitiveAttributeIndex(primitive, POSITION_ATTRIB_NAME);
         if (positionAttributeIndex < 0) {
@@ -87,6 +78,19 @@ void ModelConfigurationLoader::loadMesh(const tinygltf::Model &model,
         const auto verticesData = getBufferData<glm::vec3>(model, primitive, POSITION_ATTRIB_NAME);
         const auto texCoordsData = getBufferData<glm::vec2>(model, primitive, TEXCOORD_ATTRIB_NAME);
         const auto normalsData = getBufferData<glm::vec3>(model, primitive, NORMAL_ATTRIB_NAME);
+        const auto tangentsData = getBufferData<glm::vec3>(model, primitive, TANGENT_ATTRIB_NAME);
+
+        if (texCoordsData == nullptr) {
+            configuration.hasTexCoords = false;
+        }
+
+        if (tangentsData == nullptr) {
+            configuration.hasTangents = false;
+        }
+
+        if (normalsData == nullptr) {
+            configuration.hasNormals = false;
+        }
 
         configuration.vertices.reserve(configuration.vertices.size() + numVertices);
         for (int i = 0; i < numVertices; ++i) {
@@ -101,11 +105,80 @@ void ModelConfigurationLoader::loadMesh(const tinygltf::Model &model,
                 vertex.normal = normalsData[i];
             }
 
+            if (tangentsData != nullptr) {
+                vertex.tangent = tangentsData[i];
+            }
+
             configuration.vertices.push_back(vertex);
         }
     }
 
     meshNode.size += static_cast<int>(indicesSize);
+}
+
+int ModelConfigurationLoader::loadMeshIndices(const tinygltf::Model &model,
+                                              int indicesAccessor,
+                                              int vertexOffset,
+                                              ModelConfiguration &configuration) {
+    const tinygltf::Accessor indexAccessor = model.accessors[indicesAccessor];
+    const unsigned long numIndices = indexAccessor.count;
+
+    const tinygltf::BufferView &indexBufferView = model.bufferViews[indexAccessor.bufferView];
+    const unsigned char *indexDataPtr = model.buffers[indexBufferView.buffer].data.data() + indexBufferView.
+                                        byteOffset + indexAccessor.byteOffset;
+
+    configuration.indices.reserve(configuration.indices.size() + numIndices);
+    for (int i = 0; i < numIndices; ++i) {
+        const uint32_t index = *(reinterpret_cast<const uint16_t *>(indexDataPtr) + i);
+        configuration.indices.push_back(index + vertexOffset);
+    }
+
+    return numIndices;
+}
+
+void ModelConfigurationLoader::generateTangents(ModelConfiguration &configuration) {
+    for (size_t i = 0; i < configuration.indices.size(); i += 3) {
+        unsigned int i0 = configuration.indices[i];
+        unsigned int i1 = configuration.indices[i + 1];
+        unsigned int i2 = configuration.indices[i + 2];
+
+        auto& v0 = configuration.vertices[i0];
+        auto& v1 = configuration.vertices[i1];
+        auto& v2 = configuration.vertices[i2];
+
+        glm::vec3 edge1 = v1.position - v0.position;
+        glm::vec3 edge2 = v2.position - v0.position;
+
+        glm::vec2 deltaUV1 = v1.texCoord - v0.texCoord;
+        glm::vec2 deltaUV2 = v2.texCoord - v0.texCoord;
+
+        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+        glm::vec3 tangent;
+        tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+        tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+        tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+        tangent = glm::normalize(tangent);
+
+        glm::vec3 biTangent;
+        biTangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+        biTangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+        biTangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+        biTangent = glm::normalize(biTangent);
+
+        v0.tangent += tangent;
+        v1.tangent += tangent;
+        v2.tangent += tangent;
+
+        v0.biTangent += biTangent;
+        v1.biTangent += biTangent;
+        v2.biTangent += biTangent;
+    }
+
+    for (auto& vertex : configuration.vertices) {
+        vertex.tangent = glm::normalize(vertex.tangent);
+        vertex.biTangent = glm::normalize(vertex.biTangent);
+    }
 }
 
 int ModelConfigurationLoader::getPrimitiveAttributeIndex(const tinygltf::Primitive &primitive,

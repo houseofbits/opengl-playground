@@ -41,21 +41,21 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
     glEnable(GL_CULL_FACE);
 
     resourceManager.request(m_ShaderPrograms[SHADER_SHADED],
-                            "data/shaders/lighting|.vert|.frag|.geom",
+                            "data/shaders/lighting|.vert|.frag",
                             {
                                 "SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
                                 "EnvironmentProbesCubeMapArray"
                             });
 
     resourceManager.request(m_ShaderPrograms[SHADER_PROBES],
-                            "data/shaders/|lighting.vert|lighting.geom|lightingProbeEdit.frag",
+                            "data/shaders/|lighting.vert|lightingProbeEdit.frag",
                             {
                                 "SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
                                 "EnvironmentProbesCubeMapArray"
                             });
 
     resourceManager.request(m_ShaderPrograms[SHADER_REFLECTION],
-                            "data/shaders/|lighting.vert|lighting.geom|lightingReflection.frag",
+                            "data/shaders/|lighting.vert|lightingReflection.frag",
                             {
                                 "SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
                                 "EnvironmentProbesCubeMapArray"
@@ -124,7 +124,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
     }
 
     for (const auto &[id, mesh]: m_compositeMeshComponentRegistry->container()) {
-        if (mesh->m_Material().isReady() && mesh->m_Mesh().isReady()) {
+        if (mesh->m_Mesh().isReady()) {
             mesh->m_Mesh().render(m_ShaderPrograms[m_shaderType](), m_defaultMaterial.get());
         }
     }

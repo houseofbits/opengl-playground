@@ -150,7 +150,7 @@ void EditorUISystem::updateEditorCameraTarget(Entity &selectedEntity) const {
     auto cameraEntity = m_EntityContext->findEntity([](Entity *e) {
         auto c = e->getComponent<EditorCameraComponent>();
 
-        return c != nullptr && c->m_isActive;
+        return c != nullptr && (c->m_isActive && c->m_positionOnSelection);
     });
 
     if (cameraEntity) {

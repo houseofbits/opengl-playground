@@ -37,8 +37,20 @@ Resource::Status MeshResource::build() {
     return STATUS_READY;
 }
 
+void MeshResource::render(ShaderProgramResource &shader) {
+    glBindVertexArray(m_model.m_vertexArrayObject);
+
+    for (auto &mesh: m_model.m_meshNodes) {
+        shader.setUniform("modelMatrix", mesh.modelMatrix);
+        glDrawElements(GL_TRIANGLES, mesh.size, GL_UNSIGNED_INT, (void *) (mesh.offset * sizeof(GLuint)));
+    }
+
+    glBindVertexArray(0);
+}
+
 void MeshResource::render(ShaderProgramResource &shader, MaterialResource &defaultMaterial) {
     glBindVertexArray(m_model.m_vertexArrayObject);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_model.m_elementBufferObject);
 
     for (auto &mesh: m_model.m_meshNodes) {
         if (mesh.materialIndex >= 0 && m_materials[mesh.materialIndex].isReady()) {
@@ -48,7 +60,7 @@ void MeshResource::render(ShaderProgramResource &shader, MaterialResource &defau
         }
 
         shader.setUniform("modelMatrix", mesh.modelMatrix);
-        glDrawElements(GL_TRIANGLES, mesh.size, GL_UNSIGNED_INT, (void*)(mesh.offset * sizeof(GLuint)));
+        glDrawElements(GL_TRIANGLES, mesh.size, GL_UNSIGNED_INT, (void *) (mesh.offset * sizeof(GLuint)));
     }
 
     glBindVertexArray(0);

@@ -1,23 +1,27 @@
 [
     {
         "EditorCameraComponent": {
-            "isActive": true,
-            "orthoScale": 4.899997711181641,
+            "firstPersonCtrl": false,
+            "isActive": false,
+            "mouseLookSpeed": 0.11999999731779099,
+            "moveSpeed": 0.5600000023841858,
+            "orthoScale": 82.83997344970703,
             "position": [
-                -9.121920585632324,
-                8.977132797241211,
-                -2.921502113342285
+                -47.37065887451172,
+                24.55068588256836,
+                14.477592468261719
             ],
+            "reposition": true,
             "type": 1,
             "upDirection": [
-                0.5586721897125244,
-                0.8026912212371826,
-                0.20873993635177612
+                0.34838220477104187,
+                0.9349576830863953,
+                0.06696293503046036
             ],
             "viewDirection": [
-                0.7519198656082153,
-                -0.596394956111908,
-                0.28094416856765747
+                0.9181509017944336,
+                -0.3547593653202057,
+                0.1764788180589676
             ]
         },
         "name": "EditorCamera"
@@ -25,7 +29,7 @@
     {
         "LightComponent": {
             "attenuation": 14.800020217895508,
-            "castShadows": false,
+            "castShadows": true,
             "color": [
                 1.0,
                 1.0,
@@ -33,6 +37,8 @@
             ],
             "intensity": 1.4000000953674316,
             "isEnabled": true,
+            "shadowBias": 1.9999999494757503e-05,
+            "shadowResolution": 512,
             "type": "OMNI"
         },
         "TransformComponent": {
@@ -51,7 +57,7 @@
             "translation": [
                 -1.60272216796875,
                 3.01318359375,
-                -0.1120605617761612
+                -7.697297096252441
             ]
         },
         "name": "CenterLight"
@@ -59,8 +65,80 @@
     {
         "MeshComponent": {
             "material": "data/materials/grid-gray.json",
-            "model": "data/models/material-spheres.gltf"
+            "model": "data/models/scene1.gltf"
         },
         "name": "CompositeMesh"
+    },
+    {
+        "EditorCameraComponent": {
+            "firstPersonCtrl": true,
+            "isActive": true,
+            "mouseLookSpeed": 0.1599999964237213,
+            "moveSpeed": 10.0,
+            "orthoScale": 48.49983215332031,
+            "position": [
+                19.416759490966797,
+                2.2306110858917236,
+                -6.030827045440674
+            ],
+            "reposition": false,
+            "type": 0,
+            "upDirection": [
+                -0.1317349523305893,
+                0.9910871386528015,
+                -0.019806524738669395
+            ],
+            "viewDirection": [
+                -0.9800715446472168,
+                -0.13321559131145477,
+                -0.14735504984855652
+            ]
+        },
+        "name": "PerspectiveEditorCamera"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 100.0,
+            "castShadows": true,
+            "color": [
+                1.0,
+                0.9717416167259216,
+                0.7598038911819458
+            ],
+            "intensity": 4.199998378753662,
+            "isEnabled": true,
+            "projectionTexture": "resources/textures/spot-clouds.png",
+            "radius": 70.0,
+            "shadowBias": 0.007020000368356705,
+            "shadowResolution": 2048,
+            "type": "DIRECT"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.8723203539848328,
+                0.23914416134357452,
+                -0.04342973232269287,
+                -0.4242418110370636
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -32.99006271362305,
+                22.343955993652344,
+                -8.111132621765137
+            ]
+        },
+        "name": "SunDirectLight"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/shadow-mask.gltf"
+        },
+        "name": "ShadowMaskMesh"
     }
 ]

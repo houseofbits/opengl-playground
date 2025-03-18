@@ -41,7 +41,7 @@ void EnvironmentProbeRenderSystem::initialize(ResourceManager &resourceManager, 
     resourceManager.request(m_cubeMapArray, "EnvironmentProbesCubeMapArray");
 
     resourceManager.request(m_ShaderProgram,
-                            "data/shaders/|lighting.vert|lighting.geom|lightingEnvProbe.frag",
+                            "data/shaders/|lighting.vert|lightingEnvProbe.frag",
                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer"});
 
     m_Camera.setFieldOfView(90.0);

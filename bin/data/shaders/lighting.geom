@@ -8,6 +8,7 @@ uniform mat4 viewProjectionMatrix;
 in vec4 vsPosition[];
 in vec3 vsNormal[];
 in vec2 vsTexcoord[];
+in mat3 vsInvTBN[];
 
 out vec3 gsNormal;
 out vec4 gsPosition;
@@ -30,13 +31,14 @@ void main()
     B = normalize(-B);
     vec3 N = normalize(cross(edge1, edge2));
 
-    gsInvTBN = inverse(transpose(mat3(T, B, N)));
+//    gsInvTBN = inverse(transpose(mat3(T, B, N)));
 
     for (int i = 0; i < 3; ++i)
     {
         gsNormal = vsNormal[i];
         gsTexcoord = vsTexcoord[i];
         gsPosition = vsPosition[i];
+        gsInvTBN = vsInvTBN[i];
         gl_Position = viewProjectionMatrix * vsPosition[i];
         gsScreenPosition = (gl_Position.xyz / gl_Position.w) * 0.5 + 0.5;;
 

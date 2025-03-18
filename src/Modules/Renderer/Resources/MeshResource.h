@@ -21,6 +21,7 @@ public:
     }
 
     void render(ShaderProgramResource &, MaterialResource &);
+    void render(ShaderProgramResource &);
 
 private:
     void preloadMaterials(tinygltf::Model& model, ResourceManager &resourceManager);

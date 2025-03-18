@@ -48,15 +48,5 @@ void RenderModelBuilder::buildFromModelConfiguration(
 
     glBindVertexArray(0);
 
-    // Log::write(modelConfigurationIn.indices.size(), " ", modelConfigurationIn.vertices.size());
-    // for (const auto& node: modelConfigurationIn.nodes) {
-    //     Log::write(node.name, ", ", node.offset, ", ", node.size);
-    // }
-    //
-    // for (const auto& index: modelConfigurationIn.indices) {
-    //     auto& vertex = modelConfigurationIn.vertices[index];
-    //     Log::write(index, " ", vertex.position, "   ", vertex.normal);
-    // }
-
     modelOut.m_meshNodes = modelConfigurationIn.nodes;
 }

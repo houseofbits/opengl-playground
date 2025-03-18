@@ -4,6 +4,7 @@
 #include "../../Editor/Events/EditorUIEvent.h"
 #include "../Resources/LightsBufferResource.h"
 #include "../Components/StaticMeshComponent.h"
+#include "../Components/MeshComponent.h"
 
 class ShadowMapRenderSystem : public EntitySystem {
 public:
@@ -20,11 +21,12 @@ public:
 private:
     void renderGeometry(int lightIndex);
 
-    void prepareShadowMapResources();
+    void prepareShadowMapResources() const;
 
     ResourceManager *m_ResourceManager;
     ResourceHandle<ShaderProgramResource> m_ShaderProgram;
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
     EntityRelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
     EntityRelatedComponentRegistry<TransformComponent, LightComponent>* m_lightComponentRegistry;
+    EntityUniqueComponentRegistry<MeshComponent> *m_compositeMeshComponentRegistry;
 };

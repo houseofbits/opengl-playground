@@ -16,10 +16,10 @@ layout(bindless_sampler) uniform sampler2D normalSampler;
 layout(bindless_sampler) uniform sampler2D roughnessSampler;
 layout(bindless_sampler) uniform samplerCube environmentSampler;
 
-in vec3 gsNormal;
-in vec4 gsPosition;
-in vec2 gsTexcoord;
-in mat3 gsInvTBN;
+in vec3 vsNormal;
+in vec4 vsPosition;
+in vec2 vsTexcoord;
+in mat3 vsInvTBN;
 
 vec3 calculateProjectedCoords(vec4 lightSpacePos)
 {
@@ -46,23 +46,23 @@ void main()
 {
     vec3 diffuse = vec3(0.7);
     if (hasDiffuseSampler == 1) {
-        diffuse = texture(diffuseSampler, gsTexcoord).xyz;
+        diffuse = texture(diffuseSampler, vsTexcoord).xyz;
     }
 
-    vec3 normal = gsNormal;
+    vec3 normal = vsNormal;
     if (hasNormalSampler == 1) {
-        normal = texture(normalSampler, gsTexcoord).xyz;
-        normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
+        normal = texture(normalSampler, vsTexcoord).xyz;
+        normal = vsInvTBN * normalize(normal * 2.0 - 1.0);
     }
 
     vec3 roughness = vec3(0.0);
     if (hasRoughnessSampler == 1) {
-        roughness = texture(roughnessSampler, gsTexcoord).xyz;
+        roughness = texture(roughnessSampler, vsTexcoord).xyz;
     }
 
-    vec3 view = normalize(gsPosition.xyz - viewPosition);
+    vec3 view = normalize(vsPosition.xyz - viewPosition);
     vec3 viewReflection = reflect(view, normal);
-    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness, normal, environmentSampler);
+    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(vsPosition.xyz, viewReflection, roughness, normal, environmentSampler);
 
     fragColor = vec4(reflectionColor, 1.0);
 }

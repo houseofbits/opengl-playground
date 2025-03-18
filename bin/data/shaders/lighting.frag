@@ -40,11 +40,10 @@ layout(bindless_sampler) uniform sampler2D normalSampler;
 layout(bindless_sampler) uniform sampler2D roughnessSampler;
 layout(bindless_sampler) uniform samplerCube environmentSampler;
 
-in vec3 gsNormal;
-in vec4 gsPosition;
-in vec3 gsScreenPosition;
-in vec2 gsTexcoord;
-in mat3 gsInvTBN;
+in vec3 vsNormal;
+in vec4 vsPosition;
+in vec2 vsTexcoord;
+in mat3 vsInvTBN;
 
 bool isSamplerHandleValid(uvec2 handle) {
     return (handle.x != 0 || handle.y != 0);
@@ -108,9 +107,9 @@ vec3 triplanarDiffuseTexture(in sampler2D diffuseSampler, vec3 surfaceNormal)
     vec3 blendWeights = abs(surfaceNormal);
     blendWeights /= (blendWeights.x + blendWeights.y + blendWeights.z);
 
-    vec3 xaxis = texture2D( diffuseSampler, gsPosition.yz).rgb;
-    vec3 yaxis = texture2D( diffuseSampler, gsPosition.xz).rgb;
-    vec3 zaxis = texture2D( diffuseSampler, gsPosition.xy).rgb;
+    vec3 xaxis = texture2D( diffuseSampler, vsPosition.yz).rgb;
+    vec3 yaxis = texture2D( diffuseSampler, vsPosition.xz).rgb;
+    vec3 zaxis = texture2D( diffuseSampler, vsPosition.xy).rgb;
 
     return xaxis * blendWeights.x + yaxis * blendWeights.y + zaxis * blendWeights.z;
 }
@@ -124,9 +123,9 @@ void main()
     vec3 diffuse = diffuseColor;
     if (hasDiffuseSampler == 1) {
         if (wrappingType == 0) {
-            diffuse = texture(diffuseSampler, gsTexcoord).xyz;
+            diffuse = texture(diffuseSampler, vsTexcoord).xyz;
         } else {
-            diffuse = triplanarDiffuseTexture(diffuseSampler, gsNormal);
+            diffuse = triplanarDiffuseTexture(diffuseSampler, vsNormal);
         }
     }
 
@@ -135,22 +134,22 @@ void main()
         return;
     }
 
-    vec3 normal = normalize(gsNormal);
+    vec3 normal = normalize(vsNormal);
     if (hasNormalSampler == 1) {
-        normal = texture(normalSampler, gsTexcoord).xyz;
-        normal = gsInvTBN * normalize(normal * 2.0 - 1.0);
+        normal = texture(normalSampler, vsTexcoord).xyz;
+        normal = vsInvTBN * normalize(normal * 2.0 - 1.0);
     }
 
     vec3 roughness = vec3(1.0);
     if (hasRoughnessSampler == 1) {
-        roughness = texture(roughnessSampler, gsTexcoord).xyz;
+        roughness = texture(roughnessSampler, vsTexcoord).xyz;
     }
 
-    vec3 view = normalize(gsPosition.xyz - viewPosition);
+    vec3 view = normalize(vsPosition.xyz - viewPosition);
     vec3 viewReflection = reflect(view, normal);
     float frensnel = pow(1.0 - dot(normal, -view), 2);
 
-    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(gsPosition.xyz, viewReflection, roughness, normal, environmentSampler)
+    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(vsPosition.xyz, viewReflection, roughness, normal, environmentSampler)
      * (1.0 - roughness)
      * frensnel;
 
@@ -163,19 +162,19 @@ void main()
     for (int lightIndex = 0; lightIndex < SpotLightStorageBuffer_size; lightIndex++) {
         SpotLightStructure light = spotLights[lightIndex];
 
-        vec4 lightSpacePosition = light.projectionViewMatrix * gsPosition;
+        vec4 lightSpacePosition = light.projectionViewMatrix * vsPosition;
         vec3 lightProjectedPosition = calculateProjectedCoords(lightSpacePosition);
         if (isProjCoordsClipping(lightProjectedPosition.xy) && lightProjectedPosition.z > 0.0 && lightProjectedPosition.z < 1.0) {
             if (light.isPointSource == 1) {
-                vec3 toLight = light.position - gsPosition.xyz;
+                vec3 toLight = light.position - vsPosition.xyz;
                 distToLight = length(toLight);
                 lightDir = normalize(toLight);
             } else {
-                distToLight = dot(normalize(light.direction), light.position - gsPosition.xyz);
+                distToLight = dot(normalize(light.direction), light.position - vsPosition.xyz);
                 lightDir = normalize(light.direction);
             }
 
-            float ndotlSurf = dot(lightDir, gsNormal);
+            float ndotlSurf = dot(lightDir, vsNormal);
 
             if (ndotlSurf < 0) {
                 continue;
@@ -192,7 +191,7 @@ void main()
 
             float shadow = 1.0;
             if (doesReceiveShadows == 1 && isSamplerHandleValid(light.shadowSamplerHandle)) {
-                shadow = pcfShadowCalculation(light, lightProjectedPosition, dot(lightDir, gsNormal)); //depth > lightProjectedPosition.z;
+                shadow = pcfShadowCalculation(light, lightProjectedPosition, dot(lightDir, vsNormal)); //depth > lightProjectedPosition.z;
             }
 
             vec3 diffuseLight = diffuse.rgb

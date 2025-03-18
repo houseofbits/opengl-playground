@@ -6,6 +6,7 @@ ShadowMapRenderSystem::ShadowMapRenderSystem() : EntitySystem(),
                                                  m_ShaderProgram() {
     m_meshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, StaticMeshComponent>();
     m_lightComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, LightComponent>();
+    m_compositeMeshComponentRegistry = useEntityUniqueComponentRegistry<MeshComponent>();
 }
 
 void ShadowMapRenderSystem::initialize(ResourceManager &resourceManager, EventManager&) {
@@ -43,8 +44,8 @@ void ShadowMapRenderSystem::process(EventManager &eventManager) {
             light->m_ShadowMaps[i]->get().bindRenderTarget();
             glViewport(0,
                        0,
-                       (int) light->m_ShadowMaps[i]->get().m_textureRenderTarget.width,
-                       (int) light->m_ShadowMaps[i]->get().m_textureRenderTarget.height);
+                       static_cast<int>(light->m_ShadowMaps[i]->get().m_textureRenderTarget.width),
+                       static_cast<int>(light->m_ShadowMaps[i]->get().m_textureRenderTarget.height));
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             renderGeometry(index);
@@ -64,9 +65,14 @@ void ShadowMapRenderSystem::renderGeometry(int lightIndex) {
             mesh->m_Mesh().render();
         }
     }
+    for (const auto &[id, mesh]: m_compositeMeshComponentRegistry->container()) {
+        if (mesh->m_Mesh().isReady()) {
+            mesh->m_Mesh().render(m_ShaderProgram());
+        }
+    }
 }
 
-void ShadowMapRenderSystem::prepareShadowMapResources() {
+void ShadowMapRenderSystem::prepareShadowMapResources() const {
     for (const auto &[id, components]: m_lightComponentRegistry->container()) {
         const auto &[transform, light] = components.get();
         light->prepareShadowMapResources(*m_ResourceManager);

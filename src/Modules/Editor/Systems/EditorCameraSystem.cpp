@@ -30,7 +30,7 @@ void EditorCameraSystem::handleInputEvent(const InputEvent &event) {
         }
 
         if (event.type == InputEvent::MOUSEWHEEL && cameraComponent->isOrthographic()) {
-            float scale = cameraComponent->m_orthographicScale += event.mouseWheel.y * 0.1;
+            float scale = cameraComponent->m_orthographicScale += event.mouseWheel.y * cameraComponent->m_movementSpeed;
             if (scale < 0.2) {
                 scale = 0.2;
             }
@@ -38,13 +38,12 @@ void EditorCameraSystem::handleInputEvent(const InputEvent &event) {
         }
 
         if (event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) {
-            const float lookSpeed = 0.15;
-            cameraComponent->rotateView(-event.mouseMotion * lookSpeed * Time::frameTime);
+            cameraComponent->rotateView(-event.mouseMotion * cameraComponent->m_mouseLookSpeed * Time::frameTime);
         }
 
-        float moveSpeed = 3;
+        float moveSpeed = cameraComponent->m_movementSpeed;
         if (cameraComponent->isOrthographic()) {
-            moveSpeed = cameraComponent->m_orthographicScale * 0.1;
+            moveSpeed = cameraComponent->m_orthographicScale * cameraComponent->m_movementSpeed;
         }
 
         glm::vec3 direction(0.0);
