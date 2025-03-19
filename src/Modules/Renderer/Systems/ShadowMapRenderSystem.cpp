@@ -6,10 +6,10 @@ ShadowMapRenderSystem::ShadowMapRenderSystem() : EntitySystem(),
                                                  m_ShaderProgram() {
     m_meshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, StaticMeshComponent>();
     m_lightComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, LightComponent>();
-    m_compositeMeshComponentRegistry = useEntityUniqueComponentRegistry<MeshComponent>();
+    m_compositeMeshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, MeshComponent>();
 }
 
-void ShadowMapRenderSystem::initialize(ResourceManager &resourceManager, EventManager&) {
+void ShadowMapRenderSystem::initialize(ResourceManager &resourceManager, EventManager &) {
     m_ResourceManager = &resourceManager;
     resourceManager.request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager.request(m_ShaderProgram, "data/shaders/shadowMap|.vert|.frag", {"SpotLightStorageBuffer"});
@@ -19,11 +19,10 @@ void ShadowMapRenderSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &ShadowMapRenderSystem::handleEditorUIEvent);
 }
 
-void ShadowMapRenderSystem::handleEditorUIEvent(const EditorUIEvent & event) {
+void ShadowMapRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {
 }
 
 void ShadowMapRenderSystem::process(EventManager &eventManager) {
-
     prepareShadowMapResources();
 
     m_ShaderProgram().use();
@@ -65,8 +64,11 @@ void ShadowMapRenderSystem::renderGeometry(int lightIndex) {
             mesh->m_Mesh().render();
         }
     }
-    for (const auto &[id, mesh]: m_compositeMeshComponentRegistry->container()) {
+
+    for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
+        const auto &[transform, mesh] = components.get();
         if (mesh->m_Mesh().isReady()) {
+            m_ShaderProgram().setUniform("modelMatrix", transform->getModelMatrix());
             mesh->m_Mesh().render(m_ShaderProgram());
         }
     }

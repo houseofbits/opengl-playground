@@ -8,6 +8,11 @@ ModelConfigurationLoader::ModelConfigurationLoader()
 = default;
 
 void ModelConfigurationLoader::createFromGLTFModel(tinygltf::Model &modelIn, ModelConfiguration &modelOut) {
+    createFromGLTFModel(modelIn, modelOut, {});
+}
+
+void ModelConfigurationLoader::createFromGLTFModel(tinygltf::Model &modelIn, ModelConfiguration &modelOut,
+                                                   LoaderConfiguration configuration) {
     modelOut.indices.clear();
     modelOut.vertices.clear();
     modelOut.nodes.clear();
@@ -17,44 +22,52 @@ void ModelConfigurationLoader::createFromGLTFModel(tinygltf::Model &modelIn, Mod
     for (const auto &scene: modelIn.scenes) {
         for (const auto &node: scene.nodes) {
             auto modelMatrix = glm::mat4(1.0f);
-            loadNode(modelIn, modelIn.nodes[node], modelMatrix, modelOut);
+            loadNode(modelIn, modelIn.nodes[node], modelMatrix, modelOut, configuration);
         }
     }
 
-    generateTangents(modelOut);
+    if (configuration.generateTangents) {
+        generateTangents(modelOut);
+    }
 }
 
 void ModelConfigurationLoader::loadNode(tinygltf::Model &model,
                                         const tinygltf::Node &node,
                                         const glm::mat4 &parentTransform,
-                                        ModelConfiguration &configuration) {
+                                        ModelConfiguration &modelOut,
+                                        const LoaderConfiguration &configuration) {
     glm::mat4 transform = getNodeTransform(node) * parentTransform;
 
     if (node.mesh > -1) {
         assert(node.mesh < model.meshes.size());
 
         if (const auto mesh = model.meshes[node.mesh]; !mesh.primitives.empty()) {
-            auto &meshNode = configuration.nodes.emplace_back();
+            auto &meshNode = modelOut.nodes.emplace_back();
             meshNode.name = node.name;
             meshNode.modelMatrix = transform;
 
-            loadMesh(model, mesh, transform, configuration, meshNode);
+            if (configuration.bakeTransforms) {
+                meshNode.modelMatrix = glm::mat4(1.0f);
+            }
+
+            loadMesh(model, mesh, transform, modelOut, meshNode, configuration);
         }
     }
 
     for (int i: node.children) {
         assert(i < model.nodes.size());
-        loadNode(model, model.nodes[i], transform, configuration);
+        loadNode(model, model.nodes[i], transform, modelOut, configuration);
     }
 }
 
 void ModelConfigurationLoader::loadMesh(const tinygltf::Model &model,
                                         const tinygltf::Mesh &mesh,
                                         glm::mat4 &transform,
-                                        ModelConfiguration &configuration,
-                                        Model::MeshNode &meshNode) {
-    meshNode.offset = static_cast<int>(configuration.indices.size());
-    const unsigned long vertexOffset = configuration.vertices.size();
+                                        ModelConfiguration &modelOut,
+                                        Model::MeshNode &meshNode,
+                                        const LoaderConfiguration &configuration) {
+    meshNode.offset = static_cast<int>(modelOut.indices.size());
+    const unsigned long vertexOffset = modelOut.vertices.size();
     unsigned long indicesSize = 0;
 
     for (const auto &primitive: mesh.primitives) {
@@ -67,7 +80,7 @@ void ModelConfigurationLoader::loadMesh(const tinygltf::Model &model,
             meshNode.materialIndex = primitive.material;
         }
 
-        indicesSize += loadMeshIndices(model, primitive.indices, vertexOffset, configuration);
+        indicesSize += loadMeshIndices(model, primitive.indices, vertexOffset, modelOut);
 
         const int positionAttributeIndex = getPrimitiveAttributeIndex(primitive, POSITION_ATTRIB_NAME);
         if (positionAttributeIndex < 0) {
@@ -81,22 +94,27 @@ void ModelConfigurationLoader::loadMesh(const tinygltf::Model &model,
         const auto tangentsData = getBufferData<glm::vec3>(model, primitive, TANGENT_ATTRIB_NAME);
 
         if (texCoordsData == nullptr) {
-            configuration.hasTexCoords = false;
+            modelOut.hasTexCoords = false;
         }
 
         if (tangentsData == nullptr) {
-            configuration.hasTangents = false;
+            modelOut.hasTangents = false;
         }
 
         if (normalsData == nullptr) {
-            configuration.hasNormals = false;
+            modelOut.hasNormals = false;
         }
 
-        configuration.vertices.reserve(configuration.vertices.size() + numVertices);
+        modelOut.vertices.reserve(modelOut.vertices.size() + numVertices);
         for (int i = 0; i < numVertices; ++i) {
             VertexArray::Vertex vertex{};
 
             vertex.position = verticesData[i];
+
+            if (configuration.bakeTransforms) {
+                vertex.position = transform * glm::vec4(vertex.position, 1.0);
+            }
+
             if (texCoordsData != nullptr) {
                 vertex.texCoord = texCoordsData[i];
             }
@@ -109,7 +127,7 @@ void ModelConfigurationLoader::loadMesh(const tinygltf::Model &model,
                 vertex.tangent = tangentsData[i];
             }
 
-            configuration.vertices.push_back(vertex);
+            modelOut.vertices.push_back(vertex);
         }
     }
 
@@ -142,9 +160,9 @@ void ModelConfigurationLoader::generateTangents(ModelConfiguration &configuratio
         unsigned int i1 = configuration.indices[i + 1];
         unsigned int i2 = configuration.indices[i + 2];
 
-        auto& v0 = configuration.vertices[i0];
-        auto& v1 = configuration.vertices[i1];
-        auto& v2 = configuration.vertices[i2];
+        auto &v0 = configuration.vertices[i0];
+        auto &v1 = configuration.vertices[i1];
+        auto &v2 = configuration.vertices[i2];
 
         glm::vec3 edge1 = v1.position - v0.position;
         glm::vec3 edge2 = v2.position - v0.position;
@@ -175,9 +193,16 @@ void ModelConfigurationLoader::generateTangents(ModelConfiguration &configuratio
         v2.biTangent += biTangent;
     }
 
-    for (auto& vertex : configuration.vertices) {
+    for (auto &vertex: configuration.vertices) {
         vertex.tangent = glm::normalize(vertex.tangent);
         vertex.biTangent = glm::normalize(vertex.biTangent);
+    }
+}
+
+void ModelConfigurationLoader::bakeNodes(ModelConfiguration &configuration) {
+    for (const auto &node: configuration.nodes) {
+        for (int i = 0; i < node.size; ++i) {
+        }
     }
 }
 

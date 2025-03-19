@@ -23,29 +23,36 @@ public:
     class LoaderConfiguration {
     public:
         bool generateTangents{true};
-        bool bakeNodes{false};
+        bool bakeTransforms{false};
     };
 
     ModelConfigurationLoader();
 
     static void createFromGLTFModel(tinygltf::Model &modelIn, ModelConfiguration &modelOut);
 
+    static void createFromGLTFModel(tinygltf::Model &modelIn, ModelConfiguration &modelOut,
+                                    LoaderConfiguration configuration);
+
 private:
     static void loadNode(tinygltf::Model &model,
                          const tinygltf::Node &node,
                          const glm::mat4 &parentTransform,
-                         ModelConfiguration &configuration);
+                         ModelConfiguration &modelOut,
+                         const LoaderConfiguration& configuration);
 
     static void loadMesh(const tinygltf::Model &model,
                          const tinygltf::Mesh &mesh,
                          glm::mat4 &transform,
-                         ModelConfiguration &configuration,
-                         Model::MeshNode &meshNode);
+                         ModelConfiguration &modelOut,
+                         Model::MeshNode &meshNode,
+                         const LoaderConfiguration& configuration);
 
     static int loadMeshIndices(const tinygltf::Model &model,
                                int indicesAccessor,
                                int vertexOffset,
                                ModelConfiguration &configuration);
+
+    static void bakeNodes(ModelConfiguration &configuration);
 
     static void generateTangents(ModelConfiguration &configuration);
 

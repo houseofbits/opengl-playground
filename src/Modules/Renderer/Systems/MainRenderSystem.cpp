@@ -16,7 +16,7 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_activeCameraHelper() {
     m_meshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, StaticMeshComponent>();
     m_skyComponentRegistry = useEntityUniqueComponentRegistry<SkyComponent>();
-    m_compositeMeshComponentRegistry = useEntityUniqueComponentRegistry<MeshComponent>();
+    m_compositeMeshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, MeshComponent>();
 }
 
 void MainRenderSystem::registerEventHandlers(EventManager &eventManager) {
@@ -123,8 +123,10 @@ void MainRenderSystem::process(EventManager &eventManager) {
         }
     }
 
-    for (const auto &[id, mesh]: m_compositeMeshComponentRegistry->container()) {
+    for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
+        const auto &[transform, mesh] = components.get();
         if (mesh->m_Mesh().isReady()) {
+            m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getModelMatrix());
             mesh->m_Mesh().render(m_ShaderPrograms[m_shaderType](), m_defaultMaterial.get());
         }
     }

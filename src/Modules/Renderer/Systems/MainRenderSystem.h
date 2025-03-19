@@ -52,6 +52,6 @@ private:
     ActiveCameraHelper m_activeCameraHelper;
     EntityRelatedComponentRegistry<TransformComponent, StaticMeshComponent> *m_meshComponentRegistry;
     EntityUniqueComponentRegistry<SkyComponent> *m_skyComponentRegistry;
-    EntityUniqueComponentRegistry<MeshComponent> *m_compositeMeshComponentRegistry;
+    EntityRelatedComponentRegistry<TransformComponent, MeshComponent> *m_compositeMeshComponentRegistry;
     ResourceHandle<MaterialResource> m_defaultMaterial;
 };

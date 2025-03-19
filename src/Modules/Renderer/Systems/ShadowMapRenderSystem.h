@@ -28,5 +28,5 @@ private:
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
     EntityRelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
     EntityRelatedComponentRegistry<TransformComponent, LightComponent>* m_lightComponentRegistry;
-    EntityUniqueComponentRegistry<MeshComponent> *m_compositeMeshComponentRegistry;
+    EntityRelatedComponentRegistry<TransformComponent, MeshComponent> *m_compositeMeshComponentRegistry;
 };
