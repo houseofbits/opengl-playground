@@ -145,7 +145,8 @@ void main()
         roughness = texture(roughnessSampler, vsTexcoord).xyz;
     }
 
-    vec3 view = normalize(vsPosition.xyz - viewPosition);
+    vec3 viewDepth = vsPosition.xyz - viewPosition;
+    vec3 view = normalize(viewDepth);
     vec3 viewReflection = reflect(view, normal);
     float frensnel = pow(1.0 - dot(normal, -view), 2);
 
@@ -206,10 +207,12 @@ void main()
         }
     }
 
-    fragColor = vec4(mix(lightColor, diffuse, selfIllumination), 1.0);
+    vec3 lightedColor = mix(lightColor, diffuse, selfIllumination);
 
-//    if (gl_FragCoord.y > 0.49 && gl_FragCoord.y < 0.51) {
-//        fragColor = gl_FragCoord;
-//    }
+    //Add fog
+    vec3 fog = textureLod(environmentSampler, view, 5).rgb;
+    float zd = min(1.0, length(viewDepth) / 60.0);
+    vec3 lightFogColor = lightedColor + (fog * (zd * zd));
 
+    fragColor = vec4(lightFogColor, 1.0);
 }

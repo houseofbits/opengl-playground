@@ -39,6 +39,8 @@ void MainCharacterBehaviourSystem::handleInputEvent(const InputEvent &event) {
             const glm::vec3 worldPosition = transform->getWorldTransform() * glm::vec4(
                                                 behaviour->m_cameraAttachmentPosition, 1.0);
 
+            // Log::write(character->m_);
+
             handleAction(event, character, worldPosition, behaviour->m_lookingDirection);
 
             updateCamera(behaviour, worldPosition);
@@ -99,8 +101,8 @@ void MainCharacterBehaviourSystem::handleMovement(const InputEvent &event,
 
 void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
                                                 PhysicsCharacterComponent *characterComponent,
-                                                glm::vec3 viewPosition,
-                                                glm::vec3 viewDirection) {
+                                                const glm::vec3 viewPosition,
+                                                const glm::vec3 viewDirection) {
     if ((event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) ||
         (event.type == InputEvent::MOUSEUP && event.mouseButtonRight)) {
         PhysicsRayCastResult hit;

@@ -6,7 +6,7 @@
                 "class": "TransformComponent"
             },
             "mesh": {
-                "class": "StaticMeshComponent"
+                "class": "MeshComponent"
             }
         }
     },
@@ -125,11 +125,9 @@
                 }
             },
             "mesh": {
-                "class": "StaticMeshComponent",
+                "class": "MeshComponent",
                 "default": {
-                    "material": "data/materials/character.json",
-                    "model": "data/models/character-capsule.gltf",
-                    "renderer": "SOLID"
+                    "model": "data/models/character-capsule.gltf"
                 }
             },
             "cct": {
@@ -143,7 +141,20 @@
                 "class": "CameraComponent"
             },
             "characterBehaviour": {
-                "class": "MainCharacterBehaviourComponent"
+                "class": "MainCharacterBehaviourComponent",
+                "default": {
+                    "cameraAttachment": [
+                        0.0,
+                        1.7,
+                        0.0
+                    ],
+                    "cameraName": "",
+                    "lookDirection": [
+                        1,
+                        0,
+                        0
+                    ]
+                }
             }
         }
     },

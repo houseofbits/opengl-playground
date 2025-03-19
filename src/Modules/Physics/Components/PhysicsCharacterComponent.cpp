@@ -38,11 +38,12 @@ void PhysicsCharacterComponent::deserialize(const nlohmann::json &j, ResourceMan
 }
 
 void PhysicsCharacterComponent::create(TransformComponent &transform) {
-    float cylinderHalfHeight = (m_height - m_stepTolerance - (m_radius * 2.f)) * 0.5f;
-    float cylinderOffsetY = m_height - (cylinderHalfHeight + m_radius);
+    const float cylinderHalfHeight = (m_height - m_stepTolerance - (m_radius * 2.f)) * 0.5f;
+    Log::write("st:", m_stepTolerance, ", chh:", cylinderHalfHeight, ", h:", m_height, ", r: ", m_radius);
+    const float cylinderOffsetY = m_height - (cylinderHalfHeight + m_radius);
 
     const auto material = new JPH::PhysicsMaterialSimple("Material2", JPH::Color(0, 0, 255));
-    auto mStandingShape = JPH::RotatedTranslatedShapeSettings(
+    const auto mStandingShape = JPH::RotatedTranslatedShapeSettings(
                 JPH::Vec3(0, cylinderOffsetY, 0),
                 JPH::Quat::sIdentity(),
                 new JPH::CapsuleShape(cylinderHalfHeight, m_radius, material))
@@ -159,12 +160,12 @@ void PhysicsCharacterComponent::updateGroundSpring(const glm::vec3 &kneePosition
     }
 
     m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());
-    JPH::Vec3 currentVelocity = m_physicsBody->GetLinearVelocity();
-    float velAlongSpring = currentVelocity.Dot({0, 1, 0});
-    float positionDifference = m_stepTolerance - m_minDistanceToGround;
-    float springForce = m_groundSpringForce * positionDifference;
-    float dampingForce = -m_groundSpringDamping * velAlongSpring;
-    JPH::Vec3 totalForce = JPH::Vec3(0, 1, 0) * (springForce + dampingForce);
+    const JPH::Vec3 currentVelocity = m_physicsBody->GetLinearVelocity();
+    const float velAlongSpring = currentVelocity.Dot({0, 1, 0});
+    const float positionDifference = m_stepTolerance - m_minDistanceToGround;
+    const float springForce = m_groundSpringForce * positionDifference;
+    const float dampingForce = -m_groundSpringDamping * velAlongSpring;
+    const JPH::Vec3 totalForce = JPH::Vec3(0, 1, 0) * (springForce + dampingForce);
 
     m_physicsBody->AddForce(totalForce);
 

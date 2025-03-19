@@ -5,23 +5,23 @@
             "isActive": false,
             "mouseLookSpeed": 0.11999999731779099,
             "moveSpeed": 0.5600000023841858,
-            "orthoScale": 60.44004440307617,
+            "orthoScale": 79.47998809814453,
             "position": [
-                -60.05126953125,
-                34.33566665649414,
-                18.36178207397461
+                -56.97936248779297,
+                29.674060821533203,
+                49.41023254394531
             ],
             "reposition": true,
             "type": 1,
             "upDirection": [
-                0.4537939429283142,
-                0.8834429383277893,
-                0.11661779880523682
+                0.5159133076667786,
+                0.849329948425293,
+                -0.11167807877063751
             ],
             "viewDirection": [
-                0.8556410074234009,
-                -0.4685388207435608,
-                0.21988609433174133
+                0.8301042318344116,
+                -0.5278622508049011,
+                -0.17968997359275818
             ]
         },
         "name": "EditorCamera"
@@ -103,9 +103,9 @@
             "reposition": false,
             "type": 0,
             "upDirection": [
-                -0.005003876518458128,
+                -0.005003876052796841,
                 0.9999858140945435,
-                0.0018721342785283923
+                0.0018721349770203233
             ],
             "viewDirection": [
                 0.9365813732147217,
@@ -249,7 +249,7 @@
                 43.990299224853516
             ]
         },
-        "name": "InteriorOmniLight-COPY"
+        "name": "InteriorOmniLight"
     },
     {
         "SkyComponent": {
@@ -319,9 +319,9 @@
             ],
             "cameraName": "",
             "lookDirection": [
-                0.9458574652671814,
-                -0.0027695568278431892,
-                -0.32457056641578674
+                -0.8369730114936829,
+                -0.17311236262321472,
+                -0.5191419720649719
             ],
             "mlookSpeed": 0.15000000596046448,
             "moveSpeed": 10.0
@@ -348,11 +348,49 @@
                 1.0
             ],
             "translation": [
-                -28.17285919189453,
-                5.2044782638549805,
-                27.257137298583984
+                -25.083189010620117,
+                4.095703125,
+                23.80348014831543
             ]
         },
         "name": "CharacterController"
+    },
+    {
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1000.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "StaticMeshComponent": {
+            "material": "data/materials/grid-gray.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -29.103490829467773,
+                0.9713807106018066,
+                31.214595794677734
+            ]
+        },
+        "name": "NEW Physics Box"
     }
 ]

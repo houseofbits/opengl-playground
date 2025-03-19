@@ -30,7 +30,6 @@ void PhysicsMeshResource::destroy() {
 }
 
 JPH::TriangleList PhysicsMeshResource::createTriangleMeshShape(glm::vec3 scale) const {
-    Log::write("Create mesh ", m_model.indices.size());
     JPH::TriangleList triangles;
     for (int i = 0; i < m_model.indices.size(); i += 3) {
         JPH::Vec3 pv[3];
