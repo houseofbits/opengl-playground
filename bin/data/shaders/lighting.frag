@@ -148,11 +148,13 @@ void main()
     vec3 viewDepth = vsPosition.xyz - viewPosition;
     vec3 view = normalize(viewDepth);
     vec3 viewReflection = reflect(view, normal);
-    float frensnel = pow(1.0 - dot(normal, -view), 2);
+    float frensnel = pow(1.0 - dot(normal, -view), 4);
 
     vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(vsPosition.xyz, viewReflection, roughness, normal, environmentSampler)
-     * (1.0 - roughness)
+     * (roughness)
      * frensnel;
+
+    reflectionColor = reflectionColor + reflectionColor;
 
     vec3 color = vec3(0.0);
     vec3 falloff;

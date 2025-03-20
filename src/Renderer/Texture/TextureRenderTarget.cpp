@@ -7,7 +7,7 @@ TextureRenderTarget::TextureRenderTarget() : Texture(), framebufferId(0), render
 
 }
 
-void TextureRenderTarget::create(unsigned int width, unsigned int height, Texture::Type type)
+void TextureRenderTarget::create(const unsigned int width, const unsigned int height, const Texture::Type type)
 {
     glGenFramebuffers(1, &framebufferId);
 

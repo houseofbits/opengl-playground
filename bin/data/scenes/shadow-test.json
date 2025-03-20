@@ -1,0 +1,118 @@
+[
+    {
+        "EditorCameraComponent": {
+            "firstPersonCtrl": false,
+            "isActive": true,
+            "mouseLookSpeed": 0.15000000596046448,
+            "moveSpeed": 3.0,
+            "orthoScale": 9.200000762939453,
+            "position": [
+                5.577650547027588,
+                7.349573135375977,
+                -4.600301742553711
+            ],
+            "reposition": false,
+            "type": 0,
+            "upDirection": [
+                -0.5329605340957642,
+                0.7230004072189331,
+                0.4395720064640045
+            ],
+            "viewDirection": [
+                -0.557765007019043,
+                -0.690847635269165,
+                0.46003013849258423
+            ]
+        },
+        "name": "EditorCamera"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "resources/BoxTextured.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                10.0,
+                0.10000000149011612,
+                10.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "name": "GroundMesh"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/stair-5.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.4120092391967773,
+                1.0,
+                3.1079845428466797
+            ],
+            "translation": [
+                0.0,
+                0.44109654426574707,
+                0.0
+            ]
+        },
+        "name": "StairMesh"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 11.900009155273438,
+            "beamAngle": 80.5,
+            "castShadows": true,
+            "color": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "intensity": 4.899997711181641,
+            "isEnabled": true,
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 512,
+            "type": "SPOT"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -0.642339825630188,
+                -0.022105516865849495,
+                0.002532397862523794,
+                0.7660968899726868
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999999403953552,
+                1.0
+            ],
+            "translation": [
+                -0.4817312955856323,
+                3.9563870429992676,
+                1.703417420387268
+            ]
+        },
+        "name": "SpotLight"
+    }
+]
