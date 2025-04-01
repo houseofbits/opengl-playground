@@ -149,12 +149,14 @@ public:
     }
 
     bool areDependenciesReady(Resource *resource) const {
+        // Log::write("Check resource ", resource->m_Path);
         if (!resource->m_Dependencies.empty()) {
             for (const auto &dependencyPath: resource->m_Dependencies) {
-                Resource *r = findResource(dependencyPath);
+                const Resource *r = findResource(dependencyPath);
                 if (r == nullptr) {
                     return false;
                 }
+
                 if (!r->isReady()) {
                     return false;
                 }

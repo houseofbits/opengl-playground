@@ -3,6 +3,10 @@
 #include "../../../Core/API.h"
 #include "../../Editor/Events/EditorUIEvent.h"
 #include "../../Application/Events/SystemEvent.h"
+#include "../Resources/ShaderProgramResource.h"
+#include <GL/glew.h>
+#include "../Resources/TextureResource.h"
+#include "../Components/LightComponent.h"
 
 class OverlayRenderSystem : public EntitySystem {
 public:
@@ -17,4 +21,12 @@ public:
     void handleSystemEvent(const SystemEvent &);
 
     void handleEditorUIEvent(const EditorUIEvent &);
+
+private:
+    ResourceHandle<ShaderProgramResource> m_ShaderProgram;
+    GLuint VAO{0};
+    GLuint texture{0};
+    ResourceHandle<ShaderProgramResource> m_computeTestShader;
+    ResourceHandle<TextureResource> m_textureResource;
+    EntityUniqueComponentRegistry<LightComponent>* m_lights;
 };

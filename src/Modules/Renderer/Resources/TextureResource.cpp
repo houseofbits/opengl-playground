@@ -3,6 +3,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
+#include "ShaderResource.h"
 #include "../../../../libs/tinygltf/stb_image.h"
 
 TextureResource::TextureResource() : Resource(), m_textureId(), m_handleId(), m_width(0), m_height(0), m_data(nullptr) {
@@ -47,7 +48,7 @@ Resource::Status TextureResource::build() {
     glTextureParameteri(m_textureId, GL_TEXTURE_MAX_LEVEL, maxMipMapLevels);
     glTextureParameteri(m_textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTextureParameteri(m_textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTextureStorage2D(m_textureId, maxMipMapLevels, GL_RGB8, m_width, m_height);
+    glTextureStorage2D(m_textureId, maxMipMapLevels, GL_RGBA8, m_width, m_height);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -77,4 +78,14 @@ void TextureResource::destroy() {
     if (glIsTexture(m_textureId)) {
         glDeleteTextures(1, &m_textureId);
     }
+}
+
+void TextureResource::bind(ShaderProgramResource& shader, const int unit) const {
+    shader.setUniform("screenTexture", unit);
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(GL_TEXTURE_2D, m_textureId);
+}
+
+void TextureResource::bindImageTexture(const unsigned int unit) const {
+    glBindImageTexture(unit, m_textureId, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
 }

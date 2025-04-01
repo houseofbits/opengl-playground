@@ -54,4 +54,6 @@ private:
     EntityUniqueComponentRegistry<SkyComponent> *m_skyComponentRegistry;
     EntityRelatedComponentRegistry<TransformComponent, MeshComponent> *m_compositeMeshComponentRegistry;
     ResourceHandle<MaterialResource> m_defaultMaterial;
+
+    ResourceHandle<ShaderProgramResource> m_computeTestShader;
 };

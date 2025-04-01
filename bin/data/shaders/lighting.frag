@@ -6,6 +6,26 @@
 
 layout (location=0) out vec4 fragColor;
 
+const int NUM_PCF_SAMPLES = 16;
+const vec2 poissonDisk[NUM_PCF_SAMPLES] = {
+    vec2(-0.94201624, -0.39906216),
+    vec2(0.94558609, -0.76890725),
+    vec2(-0.094184101, -0.92938870),
+    vec2(0.34495938, 0.29387760),
+    vec2(-0.91588581, 0.45771432),
+    vec2(-0.81544232, -0.87912464),
+    vec2(-0.38277543, 0.27676845),
+    vec2(0.97484398, 0.75648379),
+    vec2(0.44323325, -0.97511554),
+    vec2(0.53742981, -0.47373420),
+    vec2(-0.26496911, -0.41893023),
+    vec2(0.79197514, 0.19090188),
+    vec2(-0.24188840, 0.99706507),
+    vec2(-0.81409955, 0.91437590),
+    vec2(0.19984126, 0.78641367),
+    vec2(0.14383161, -0.14100790)
+};
+
 struct SpotLightStructure {
     vec3 color;
     float intensity;
@@ -72,7 +92,7 @@ bool isProjCoordsClipping(vec2 uv)
 
 float sampleShadow(in sampler2D shadowMap, vec2 uv, float bias, float fragmentDepth)
 {
-    float depth = texture(shadowMap, uv).z;
+    float depth = texture(shadowMap, uv).x;
     return ((fragmentDepth - bias) > depth) ? 0.0 : 1.0;
 }
 
@@ -80,13 +100,13 @@ float pcfShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndot
 {
     sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
     float bias = light.bias;    //0.0001 + (ndotl * 0.0001);
-    float blurFactor = (1.0 / 800.0); //textureSize(shadowDepthAtlas, 0).x;  //
+    float blurFactor = 0.001;
     float shadow = 0;
     vec2 uv;
     int div=0;
-    for (int x = -2; x <= 2; ++x)
+    for (int x = -3; x <= 3; ++x)
     {
-        for (int y = -2; y <= 2; ++y)
+        for (int y = -3; y <= 3; ++y)
         {
             uv = projCoords.xy + vec2(x, y) * blurFactor;
             if (isProjCoordsClipping(uv))
@@ -100,6 +120,24 @@ float pcfShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndot
     shadow /= div;
 
     return shadow;
+}
+
+//https://developer.download.nvidia.com/whitepapers/2008/PCSS_Integration.pdf
+float pcssShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
+{
+    sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
+    vec2 size = textureSize(shadowMap, 0);
+    vec2 filterRadiusUV = 2.0 / size;
+
+    float shadow = 0;
+    vec2 uv;
+    for (int i = 0; i < NUM_PCF_SAMPLES; ++i)
+    {
+        uv = projCoords.xy + poissonDisk[i] * filterRadiusUV;
+        shadow += sampleShadow(shadowMap, uv, light.bias, projCoords.z);
+    }
+
+    return shadow / NUM_PCF_SAMPLES;
 }
 
 vec3 triplanarDiffuseTexture(in sampler2D diffuseSampler, vec3 surfaceNormal)
@@ -154,7 +192,7 @@ void main()
      * (roughness)
      * frensnel;
 
-    reflectionColor = reflectionColor + reflectionColor;
+    reflectionColor = reflectionColor + reflectionColor + reflectionColor + reflectionColor;
 
     vec3 color = vec3(0.0);
     vec3 falloff;
@@ -194,7 +232,7 @@ void main()
 
             float shadow = 1.0;
             if (doesReceiveShadows == 1 && isSamplerHandleValid(light.shadowSamplerHandle)) {
-                shadow = pcfShadowCalculation(light, lightProjectedPosition, dot(lightDir, vsNormal)); //depth > lightProjectedPosition.z;
+                shadow = pcssShadowCalculation(light, lightProjectedPosition, dot(lightDir, vsNormal)); //depth > lightProjectedPosition.z;
             }
 
             vec3 diffuseLight = diffuse.rgb

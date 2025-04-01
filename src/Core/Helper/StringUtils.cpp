@@ -30,6 +30,10 @@ namespace StringUtils {
 
         std::sort(result.begin(), result.end());
 
+        if (result.empty()) {
+            result.push_back(input);
+        }
+
         return result;
     }
 };// namespace StringUtils

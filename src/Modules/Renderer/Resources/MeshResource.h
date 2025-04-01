@@ -21,13 +21,14 @@ public:
     }
 
     void render(ShaderProgramResource &, MaterialResource &);
+
     void render(ShaderProgramResource &);
 
-private:
-    void preloadMaterials(tinygltf::Model& model, ResourceManager &resourceManager);
-
     std::vector<ResourceHandle<MaterialResource> > m_materials;
-    Model m_model;
 
+private:
+    void preloadMaterials(tinygltf::Model &model, ResourceManager &resourceManager);
+
+    Model m_model;
     ModelConfigurationLoader::ModelConfiguration m_modelConfig;
 };

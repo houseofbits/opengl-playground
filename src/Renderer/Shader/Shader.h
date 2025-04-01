@@ -9,29 +9,18 @@
 #include <glm/vec4.hpp>
 
 class Shader {
-private:
-    unsigned int programId = 0;
-    std::map<std::string, int> uniformLocations;
-
-    unsigned int loadShader(const std::string &filename);
-
-    unsigned int loadShaderSource(unsigned int type, const std::string &source, const std::string &filename = "SOURCE");
-
-    unsigned int getShaderType(const std::string& filename);
-
-    void checkCompileError(unsigned int shader, std::string name, std::string source);
-
-    void checkLinkingError(unsigned int shader);
-
-    void linkProgram(unsigned int vertexShaderId, unsigned int fragmentShaderId, unsigned int geometryShaderId);
-
 public:
-    void loadProgram(const std::string &vertexProgramFileName, const std::string &fragmentProgramFileName,
-                     const std::string &geometryProgramFileName = "");
+    ~Shader();
 
-    void loadProgramSource(const std::string &vertexProgram, const std::string &fragmentProgram);
+    void loadFromFile(const std::string &filepath);
+
+    void loadFromString(unsigned int shaderGLType, const std::string &source);
+
+    void compileAndLink();
 
     void use() const;
+
+    void dispatchCompute(unsigned int workGroupWidth = 16, unsigned int workGroupHeight = 16);
 
     void setUniform(const char *name, float x, float y, float z);
 
@@ -57,5 +46,19 @@ public:
 
     int getUniformLocation(const char *name);
 
-    unsigned int getProgramId() const { return programId; }
+    [[nodiscard]] unsigned int getProgramId() const { return programId; }
+
+private:
+    unsigned int programId = 0;
+    std::map<std::string, int> uniformLocations;
+    std::map<unsigned int, std::pair<std::string, std::string> > m_source;
+
+    static unsigned int loadShaderSource(unsigned int type, const std::string &source,
+                                         const std::string &filename = "SOURCE");
+
+    static unsigned int getShaderType(const std::string &filename);
+
+    static bool checkCompileError(unsigned int shader, const std::string &name, const std::string &source);
+
+    static void checkLinkingError(unsigned int shader);
 };

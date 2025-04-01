@@ -30,6 +30,10 @@ void LightsBufferResource::destroy() {
 
 void LightsBufferResource::appendLight(TransformComponent &transform, LightComponent &light) {
 
+    if (!light.m_isEnabled) {
+        return;
+    }
+
     light.m_lightBufferIndices.clear();
     for (int i = 0; i < light.getNumberOfBufferLights(); i++) {
         LightStructure structure;

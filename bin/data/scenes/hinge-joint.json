@@ -1,23 +1,27 @@
 [
     {
         "EditorCameraComponent": {
+            "firstPersonCtrl": false,
             "isActive": true,
-            "orthoScale": 7.499995231628418,
+            "mouseLookSpeed": 0.15000000596046448,
+            "moveSpeed": 3.0,
+            "orthoScale": 6.200000762939453,
             "position": [
-                2.0876407623291016,
-                4.232142925262451,
-                0.1546931266784668
+                5.222638130187988,
+                1.5664254426956177,
+                -3.259861946105957
             ],
+            "reposition": true,
             "type": 1,
             "upDirection": [
-                -0.40073734521865845,
-                0.8510301113128662,
-                -0.3393482565879822
+                -0.16234999895095825,
+                0.9865114688873291,
+                -0.020918436348438263
             ],
             "viewDirection": [
-                -0.6494547128677368,
-                -0.5251168608665466,
-                -0.5499644875526428
+                -0.9784231781959534,
+                -0.16369210183620453,
+                -0.1260676234960556
             ]
         },
         "name": "camera-orthographic"
@@ -48,26 +52,340 @@
                 1.0
             ],
             "scale": [
-                0.4965933859348297,
-                3.1863179206848145,
-                1.1857904195785522
+                20.0,
+                0.09990968555212021,
+                20.0
             ],
             "translation": [
                 -5.045999526977539,
-                -0.25,
+                -2.3619308471679688,
                 -5.0
             ]
         },
-        "name": "pole"
+        "name": "ground"
     },
     {
         "LightComponent": {
-            "attenuation": 12.900012969970703,
-            "castShadows": true,
+            "attenuation": 26.000062942504883,
+            "castShadows": false,
             "color": [
+                0.6410034894943237,
+                0.593137264251709,
+                1.0
+            ],
+            "intensity": 0.6999999284744263,
+            "isEnabled": true,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
                 1.0,
                 1.0,
                 1.0
+            ],
+            "translation": [
+                -1.29827880859375,
+                7.756378173828125,
+                6.40673828125
+            ]
+        },
+        "name": "omni-light"
+    },
+    {
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent#arm-1": {
+            "attachmentAPosition": [
+                4.76837158203125e-07,
+                1.3037723302841187,
+                0.024879932403564453
+            ],
+            "attachmentARotation": [
+                1.043081283569336e-07,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "attachmentBPosition": [
+                0.41635560989379883,
+                -0.4378643035888672,
+                -0.00751042366027832
+            ],
+            "attachmentBRotation": [
+                0.742693305015564,
+                0.0,
+                0.0,
+                -0.6696317791938782
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "arm-joint-1"
+        },
+        "PhysicsHingeJointComponent#arm-2": {
+            "attachmentAPosition": [
+                0.0,
+                -0.11429309844970703,
+                -0.0118560791015625
+            ],
+            "attachmentARotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "attachmentBPosition": [
+                0.4075660705566406,
+                -0.4588766098022461,
+                0.025718212127685547
+            ],
+            "attachmentBRotation": [
+                0.7426933646202087,
+                0.0,
+                0.0,
+                -0.6696317195892334
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "arm-joint-2"
+        },
+        "StaticMeshComponent": {
+            "material": "data/materials/solid-red.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -0.051662422716617584,
+                0.0,
+                0.0,
+                0.9986646175384521
+            ],
+            "scale": [
+                0.37455686926841736,
+                2.9880642890930176,
+                0.6647582650184631
+            ],
+            "translation": [
+                -4.154027938842773,
+                0.01869247294962406,
+                -4.9794158935546875
+            ]
+        },
+        "name": "leg-joint-1"
+    },
+    {
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent#leg-1": {
+            "attachmentAPosition": [
+                1.0415878295898438,
+                0.042266845703125,
+                -0.03135108947753906
+            ],
+            "attachmentARotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "attachmentBPosition": [
+                -0.03295326232910156,
+                -1.671825885772705,
+                -0.04140281677246094
+            ],
+            "attachmentBRotation": [
+                0.05166242644190788,
+                0.0,
+                0.0,
+                0.9986646175384521
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "leg-joint-1"
+        },
+        "StaticMeshComponent": {
+            "material": "data/materials/solid-blue.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                2.4879202842712402,
+                0.3276350200176239,
+                4.506812572479248
+            ],
+            "translation": [
+                -5.228569030761719,
+                -1.6907482147216797,
+                -4.816736221313477
+            ]
+        },
+        "name": "foot"
+    },
+    {
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 1.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.6254673004150391,
+                0.01635599136352539
+            ],
+            "attachmentARotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "attachmentBPosition": [
+                1.145050048828125,
+                0.7186979055404663,
+                0.5406589508056641
+            ],
+            "attachmentBRotation": [
+                0.7071066498756409,
+                0.0,
+                0.0,
+                0.70710688829422
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "static-body"
+        },
+        "StaticMeshComponent": {
+            "material": "data/materials/solid-red.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.7071066498756409,
+                0.0,
+                0.0,
+                0.70710688829422
+            ],
+            "scale": [
+                0.29791224002838135,
+                1.5673824548721313,
+                0.3616597652435303
+            ],
+            "translation": [
+                -4.570383071899414,
+                1.3105621337890625,
+                -4.651336669921875
+            ]
+        },
+        "name": "arm-joint-1"
+    },
+    {
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 10.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 0,
+            "type": 0
+        },
+        "StaticMeshComponent": {
+            "material": "data/materials/grid-gray.json",
+            "model": "resources/BoxTextured.gltf",
+            "renderer": "SOLID"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.7701016664505005,
+                2.7575790882110596,
+                3.010077953338623
+            ],
+            "translation": [
+                -5.715433120727539,
+                0.5755081176757813,
+                -4.5665283203125
+            ]
+        },
+        "name": "static-body"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 26.000062942504883,
+            "castShadows": true,
+            "color": [
+                0.9740484356880188,
+                1.0,
+                0.8529411554336548
             ],
             "intensity": 1.0,
             "isEnabled": true,
@@ -89,184 +407,12 @@
                 1.0
             ],
             "translation": [
-                -1.45257568359375,
-                3.896820068359375,
-                -3.8037109375
+                0.01416015625,
+                7.756378173828125,
+                -3.8787841796875
             ]
         },
-        "name": "omni-light"
-    },
-    {
-        "PhysicsBodyComponent": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 1.0,
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5,
-            "shape": 0,
-            "type": 1
-        },
-        "PhysicsHingeJointComponent": {
-            "attachmentAPosition": [
-                4.76837158203125e-07,
-                0.9593938589096069,
-                0.005462169647216797
-            ],
-            "attachmentARotation": [
-                8.94067397894105e-08,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "attachmentBPosition": [
-                0.62060546875,
-                1.32061767578125,
-                -0.2546381950378418
-            ],
-            "attachmentBRotation": [
-                0.1684211790561676,
-                0.0,
-                0.0,
-                0.9857150912284851
-            ],
-            "enableLimits": false,
-            "enableLockingLimits": false,
-            "limits": [
-                0.0,
-                1.0
-            ],
-            "targetEntityA": "",
-            "targetEntityB": "pole"
-        },
-        "StaticMeshComponent": {
-            "material": "data/materials/solid-red.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "TransformComponent": {
-            "disableRelRotation": false,
-            "rotation": [
-                0.16842111945152283,
-                0.0,
-                0.0,
-                0.9857151508331299
-            ],
-            "scale": [
-                0.37455686926841736,
-                2.042598247528076,
-                0.3616599440574646
-            ],
-            "translation": [
-                -4.425394058227539,
-                0.1674651801586151,
-                -5.578338623046875
-            ]
-        },
-        "name": "joint-1"
-    },
-    {
-        "PhysicsBodyComponent": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 1.0,
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5,
-            "shape": 0,
-            "type": 1
-        },
-        "PhysicsHingeJointComponent#Hinge1": {
-            "attachmentAPosition": [
-                0.0,
-                0.042266845703125,
-                -0.5826511383056641
-            ],
-            "attachmentARotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "attachmentBPosition": [
-                0.018488407135009766,
-                -1.1952770948410034,
-                0.05046701431274414
-            ],
-            "attachmentBRotation": [
-                -0.16842110455036163,
-                0.0,
-                0.0,
-                0.9857151508331299
-            ],
-            "enableLimits": false,
-            "enableLockingLimits": false,
-            "limits": [
-                0.0,
-                1.0
-            ],
-            "targetEntityA": "",
-            "targetEntityB": "joint-1"
-        },
-        "PhysicsHingeJointComponent#Hinge2": {
-            "attachmentAPosition": [
-                0.0,
-                0.0960693359375,
-                0.33483123779296875
-            ],
-            "attachmentARotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "attachmentBPosition": [
-                0.018487930297851563,
-                -1.137210488319397,
-                0.053388118743896484
-            ],
-            "attachmentBRotation": [
-                -0.16842113435268402,
-                0.0,
-                0.0,
-                0.9857151508331299
-            ],
-            "enableLimits": false,
-            "enableLockingLimits": false,
-            "limits": [
-                0.0,
-                1.0
-            ],
-            "targetEntityA": "",
-            "targetEntityB": "joint-2"
-        },
-        "StaticMeshComponent": {
-            "material": "data/materials/solid-blue.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "TransformComponent": {
-            "disableRelRotation": false,
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                0.5598288774490356,
-                0.17173418402671814,
-                2.9911954402923584
-            ],
-            "translation": [
-                -4.4069061279296875,
-                -1.0190258026123047,
-                -5.344951629638672
-            ]
-        },
-        "name": "foot"
+        "name": "omni-light-COPY"
     },
     {
         "PhysicsBodyComponent": {
@@ -283,8 +429,8 @@
         "PhysicsHingeJointComponent": {
             "attachmentAPosition": [
                 0.0,
-                0.9977141618728638,
-                0.028802871704101563
+                0.5154809951782227,
+                0.016358323395252228
             ],
             "attachmentARotation": [
                 0.0,
@@ -293,15 +439,15 @@
                 1.0
             ],
             "attachmentBPosition": [
-                0.62060546875,
-                1.3490142822265625,
-                0.6755490303039551
+                1.153839111328125,
+                -0.6623618602752686,
+                0.5614709854125977
             ],
             "attachmentBRotation": [
-                0.16842113435268402,
+                0.7071066498756409,
                 0.0,
                 0.0,
-                0.9857151508331299
+                0.70710688829422
             ],
             "enableLimits": false,
             "enableLockingLimits": false,
@@ -310,7 +456,7 @@
                 1.0
             ],
             "targetEntityA": "",
-            "targetEntityB": "pole"
+            "targetEntityB": "static-body"
         },
         "StaticMeshComponent": {
             "material": "data/materials/solid-red.json",
@@ -320,22 +466,22 @@
         "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
-                0.16842113435268402,
+                0.7071066498756409,
                 0.0,
                 0.0,
-                0.9857151508331299
+                0.70710688829422
             ],
             "scale": [
-                0.37455686926841736,
-                2.042598247528076,
-                0.3616599440574646
+                0.29791224002838135,
+                1.3542896509170532,
+                0.4756404459476471
             ],
             "translation": [
-                -4.425394058227539,
-                0.1674651801586151,
-                -4.682891845703125
+                -4.561594009399414,
+                -0.07049560546875,
+                -4.520538330078125
             ]
         },
-        "name": "joint-2"
+        "name": "arm-joint-2"
     }
 ]

@@ -41,6 +41,7 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
     glEnable(GL_CULL_FACE);
 
     resourceManager.request(m_ShaderPrograms[SHADER_SHADED],
+                            // "data/shaders/|lighting.vert|lighting-shadow-test.frag",
                             "data/shaders/lighting|.vert|.frag",
                             {
                                 "SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
@@ -71,6 +72,8 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
                                 [&](MaterialResource &resource) {
                                     resource.fetchDefault(resourceManager);
                                 });
+
+    // resourceManager.request(m_computeTestShader, "data/shaders/compute/test.cs");
 }
 
 void MainRenderSystem::process(EventManager &eventManager) {
@@ -130,6 +133,25 @@ void MainRenderSystem::process(EventManager &eventManager) {
             mesh->m_Mesh().render(m_ShaderPrograms[m_shaderType](), m_defaultMaterial.get());
         }
     }
+
+    // if (m_computeTestShader().isReady()) {
+    //     for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
+    //         const auto &[transform, mesh] = components.get();
+    //
+    //         for (auto material: mesh->m_Mesh().m_materials) {
+    //             if (material().isReady() && material().m_Diffuse().isReady()) {
+    //                 // glMakeTextureHandleNonResidentARB(material().m_Diffuse().m_handleId);
+    //                 m_computeTestShader().use();
+    //
+    //                 material().m_Diffuse().bindImageTexture(0);
+    //
+    //                 m_computeTestShader().dispatchCompute(8,8);
+    //
+    //                 // glMakeTextureHandleResidentARB(material().m_Diffuse().m_handleId);
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {

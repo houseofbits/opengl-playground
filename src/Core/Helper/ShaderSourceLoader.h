@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iostream>
 #include <list>
-#include <sstream>
 #include <string>
 
 class ShaderSourceLoader {
@@ -14,7 +13,7 @@ public:
     inline static int bindingIndexCounter = 0;
     inline static const std::string INCLUDE_IDENTIFIER = "#include ";
 
-    static std::string load(std::string path) {
+    static std::string load(const std::string &path) {
         std::string fullSourceCode = loadRecursive(path);
 
         fullSourceCode = replaceGlobals(fullSourceCode);
@@ -25,10 +24,10 @@ public:
         return fullSourceCode;
     }
 
-    static std::string loadRecursive(std::string path) {
+    static std::string loadRecursive(const std::string& path) {
         static bool isRecursiveCall = false;
 
-        std::string fullSourceCode = "";
+        std::string fullSourceCode;
         std::ifstream file(path);
 
         if (!file.is_open()) {
@@ -39,7 +38,7 @@ public:
 
         std::string lineBuffer;
         while (std::getline(file, lineBuffer)) {
-            if (lineBuffer.find(INCLUDE_IDENTIFIER) != lineBuffer.npos) {
+            if (lineBuffer.find(INCLUDE_IDENTIFIER) != std::string::npos) {
                 lineBuffer.erase(0, INCLUDE_IDENTIFIER.size());
 
                 std::string pathOfThisFile;
@@ -63,19 +62,19 @@ public:
         return fullSourceCode;
     }
 
-    static void registerGlobal(std::string name, std::string value) {
-        globals.push_back(NameValuePair(name, value));
+    static void registerGlobal(const std::string& name, const std::string& value) {
+        globals.emplace_back(name, value);
     }
 
-    static void registerGlobal(std::string name, int value) {
+    static void registerGlobal(const std::string& name, int value) {
         registerGlobal(name, std::to_string(value));
     }
 
-    static void registerGlobal(std::string name, unsigned int value) {
+    static void registerGlobal(const std::string& name, unsigned int value) {
         registerGlobal(name, std::to_string(value));
     }
 
-    static void registerGlobal(std::string name, float value) {
+    static void registerGlobal(const std::string& name, float value) {
         registerGlobal(name, std::to_string(value));
     }
 

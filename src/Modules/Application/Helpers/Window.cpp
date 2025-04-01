@@ -48,8 +48,8 @@ void Window::create(EventManager &eventManager) {
     // contextFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
     // SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, contextFlags);
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3); //3
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2); //2
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     //    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);  //MacOS
     //    SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );    //MacOS
 
@@ -63,7 +63,7 @@ void Window::create(EventManager &eventManager) {
     }
 
     //    SDL_GL_MakeCurrent(sdlWindow, sdlGlContext);
-
+    //
     // glEnable(GL_DEBUG_OUTPUT);
     // glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     // glDebugMessageCallback(GLDebugMessageCallback, nullptr);    //Supported only on gl >=4.3 (Not on MacOS)
@@ -72,7 +72,6 @@ void Window::create(EventManager &eventManager) {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     glEnable(GL_MULTISAMPLE);
     //    glDisable(GL_MULTISAMPLE);
-
 
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
     //    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
@@ -87,6 +86,16 @@ void Window::create(EventManager &eventManager) {
     eventManager.queueEvent<SystemEvent>(SystemEvent::Type::WINDOW_CONTEXT_CREATED, this);
 
     // std::cout<<"Window created"<<std::endl;
+
+    // GLint workGroupSize[3];
+    // glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &workGroupSize[0]); // X-dimension
+    // glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &workGroupSize[1]); // Y-dimension
+    // glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &workGroupSize[2]); // Z-dimension
+    //
+    // std::cout << "Max Compute Work Group Size: "
+    //           << workGroupSize[0] << " x "
+    //           << workGroupSize[1] << " x "
+    //           << workGroupSize[2] << std::endl;
 }
 
 void Window::destroy() const {

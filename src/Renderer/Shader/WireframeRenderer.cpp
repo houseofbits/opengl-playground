@@ -2,6 +2,7 @@
 #include "../Camera/Camera.h"
 #include "../Model/WireModel.h"
 #include "Shader.h"
+#include <GL/glew.h>
 
 WireframeRenderer::WireframeRenderer() : m_shader(), m_wireCube(), m_wireSphere(), m_pCamera(nullptr) {
 }
@@ -26,7 +27,10 @@ void WireframeRenderer::initialize() {
             "FragColor = vsColor * color;\n"
             "}";
 
-    m_shader.loadProgramSource(vertexShader, fragmentShader);
+    m_shader.loadFromString(GL_VERTEX_SHADER, vertexShader);
+    m_shader.loadFromString(GL_FRAGMENT_SHADER, fragmentShader);
+    m_shader.compileAndLink();
+
     m_wireCube.create({1, 1, 1, 1});
     m_wireSphere.create({1, 1, 1, 1});
 }

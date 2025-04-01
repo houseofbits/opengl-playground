@@ -30,10 +30,12 @@ public:
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<StorageBufferUpdateSystem>(EntitySystemRegistry::MAIN_PROCESS, 1);
         ctx.registerEntitySystem<ShadowMapRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 2);
+
         ctx.registerEntitySystem<EnvironmentProbeRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 3);
         ctx.registerEntitySystem<MainRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 5);
         ctx.registerEntitySystem<PhysicsDebugRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 6);
-        ctx.registerEntitySystem<OverlayRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 10);
+
+        ctx.registerEntitySystem<OverlayRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 7);
     };
 
     void postRegister(EntityContext &ctx) override {
