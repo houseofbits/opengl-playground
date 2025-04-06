@@ -120,10 +120,14 @@ void PhysicsBodyComponent::release() {
     }
 }
 
-void PhysicsBodyComponent::update(TransformComponent &transform, bool isSimulationEnabled) {
+void PhysicsBodyComponent::update(TransformComponent &transform, const bool isSimulationEnabled) {
     if (isSimulationEnabled) {
         auto t = m_PhysicsResource().getInterface().GetWorldTransform(m_physicsBodyId);
-        PhysicsTypeCast::applyJPHMat44ToTransformComponent(transform, t);
+        glm::vec3 scale = transform.getScale();
+        auto m = PhysicsTypeCast::JPHToGlm(t);
+        m = glm::scale(m, scale);
+
+        transform.setWorldTransform(m);
     }
 }
 

@@ -60,7 +60,7 @@ void ShadowMapRenderSystem::renderGeometry(int lightIndex) {
     for (const auto &[id, components]: m_meshComponentRegistry->container()) {
         const auto &[transform, mesh] = components.get();
         if (mesh->m_Material.isReady() && mesh->m_Material().m_materialConfiguration.doesCastShadows) {
-            m_ShaderProgram().setUniform("modelMatrix", transform->getModelMatrix());
+            m_ShaderProgram().setUniform("modelMatrix", transform->getWorldTransform());
             mesh->m_Mesh().render();
         }
     }
@@ -68,7 +68,7 @@ void ShadowMapRenderSystem::renderGeometry(int lightIndex) {
     for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
         const auto &[transform, mesh] = components.get();
         if (mesh->m_Mesh().isReady()) {
-            m_ShaderProgram().setUniform("modelMatrix", transform->getModelMatrix());
+            m_ShaderProgram().setUniform("modelMatrix", transform->getWorldTransform());
             mesh->m_Mesh().render(m_ShaderProgram());
         }
     }

@@ -195,6 +195,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/Helper/File.h
         src/Renderer/Model/RenderModelBuilder.cpp
         src/Renderer/Model/RenderModelBuilder.h
+        src/Core/Helper/DoubleBuffer.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

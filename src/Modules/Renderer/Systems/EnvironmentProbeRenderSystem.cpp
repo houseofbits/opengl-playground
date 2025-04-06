@@ -104,7 +104,7 @@ void EnvironmentProbeRenderSystem::renderGeometry() {
     for (const auto &[id, components]: m_meshComponentRegistry->container()) {
         const auto &[transform, mesh] = components.get();
 
-        m_ShaderProgram().setUniform("modelMatrix", transform->getModelMatrix());
+        m_ShaderProgram().setUniform("modelMatrix", transform->getWorldTransform());
         mesh->m_Material().bind(m_ShaderProgram());
         mesh->m_Mesh().render();
     }

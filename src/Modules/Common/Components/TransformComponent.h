@@ -3,6 +3,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "../../../Core/API.h"
+#include "../../../Core/Helper/DoubleBuffer.h"
 #include "../Helpers/EntityLinkedComponent.h"
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
@@ -27,17 +28,9 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    void resetTransform();
+    void resetToInitialTransform();
 
-    void setTranslation(glm::vec3 pos);
-
-    void setScale(glm::vec3 scale);
-
-    void setRotation(glm::quat rotation);
-
-    glm::mat4 &getModelMatrix();
-
-    [[nodiscard]] glm::mat4 getInverseModelMatrix() const;
+    [[nodiscard]] glm::mat4 getInverseModelMatrix();
 
     glm::vec3 getWorldPosition();
 
@@ -47,7 +40,7 @@ public:
 
     glm::quat getRotation();
 
-    [[nodiscard]] glm::vec3 getDirection() const;
+    [[nodiscard]] glm::vec3 getDirection();
 
     void decomposeModelMatrix(glm::vec3 &, glm::quat &, glm::vec3 &);
 
@@ -57,11 +50,12 @@ public:
 
     glm::quat getInitialRotation();
 
-    glm::mat4 getWorldTransform();
+    const glm::mat4 &getWorldTransform();
 
-    void setWorldTransform(const glm::mat4 &);
+    void setWorldTransform(const glm::mat4 &, bool updateLocal = false);
 
     void setWorldRotation(const glm::mat4 &);
+
     void setLocalRotation(const glm::mat4 &);
 
     void updateTransformFromParent(const glm::mat4 &);
@@ -85,12 +79,17 @@ public:
     bool m_isTranslationEnabled;
     bool m_isRotationEnabled;
     bool m_isScalingEnabled;
-    glm::mat4 m_transform;
-    glm::mat4 m_initialTransform;
-    bool m_shouldSyncWorldTransformToLocal;
+
     bool m_isRelativeRotationDisabled;
 
 private:
+    static glm::mat4 mat4FromTRS(const glm::vec3 &, const glm::quat &, const glm::vec3 &);
+
+    DoubleBuffer<glm::mat4> m_bufferedTransform;
+
     //Are the local and world transforms in sync - TransformHierarchyProcessingSystem has recalculated either one
     bool m_isTransformInSync;
+    glm::mat4 m_initialTransform;
+    bool m_shouldSyncWorldTransformToLocal;
+
 };

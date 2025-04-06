@@ -51,4 +51,11 @@ inline void processPhysicsHingeJointComponentEditor(Component *c, Entity *e, Edi
             angularLimits.y = glm::degrees(component->m_angularLimits.y);
         }
     }
+
+    ImGui::Checkbox("Motor settings", &component->m_isMotorSettingsEnabled);
+    if (component->m_isMotorSettingsEnabled) {
+        ImGui::InputFloat("Force limit", &component->m_motorForceLimit);
+        ImGui::InputFloat("Damping", &component->m_motorDamping);
+        ImGui::InputFloat("Frequency", &component->m_motorFrequency);
+    }
 }

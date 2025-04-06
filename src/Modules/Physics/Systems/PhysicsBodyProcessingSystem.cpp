@@ -31,6 +31,6 @@ void PhysicsBodyProcessingSystem::handleSystemEvent(const SystemEvent &event) {
 void PhysicsBodyProcessingSystem::resetToInitialTransform() const {
     for (const auto [id, components]: m_registry->container()) {
         const auto &[transform, body] = components.get();
-        transform->m_transform = transform->m_initialTransform;
+        transform->resetToInitialTransform();
     }
 }

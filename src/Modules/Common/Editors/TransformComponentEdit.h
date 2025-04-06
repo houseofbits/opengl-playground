@@ -7,7 +7,7 @@
 inline void processTransformComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
     auto component = dynamic_cast<TransformComponent *>(c);
 
-    if (glm::mat4 m = component->m_transform;
+    if (glm::mat4 m = component->getWorldTransform();
         TransformHelper::editTransform(m,
                                        component->m_isTranslationEnabled,
                                        component->m_isRotationEnabled,

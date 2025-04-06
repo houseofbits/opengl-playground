@@ -36,7 +36,7 @@ void TransformHierarchyProcessingSystem::process(EventManager &) {
 
         if (auto *parentTransformComponent = m_transformComponentRegistry->get(transformComponent->getLinkedEntityId());
             parentTransformComponent != nullptr) {
-            transformComponent->updateTransformFromParent(parentTransformComponent->getModelMatrix());
+            transformComponent->updateTransformFromParent(parentTransformComponent->getWorldTransform());
         } else {
             transformComponent->updateTransformWorld();
         }

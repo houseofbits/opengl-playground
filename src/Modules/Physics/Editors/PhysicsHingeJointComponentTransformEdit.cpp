@@ -48,13 +48,13 @@ glm::mat4 PhysicsHingeJointComponentTransformEdit::getWorldSpaceTransform(int in
 
     if (index == 2) {
         auto m = m_component->m_localAttachmentMatrixB;
-        const glm::mat4 transformB = Math::rescaleMatrix(m_linkedTransformB->m_transform);
+        const glm::mat4 transformB = Math::rescaleMatrix(m_linkedTransformB->getWorldTransform());
 
         return transformB * m;
     }
 
     auto m = m_component->m_localAttachmentMatrixA;
-    const glm::mat4 transformA = Math::rescaleMatrix(m_linkedTransformA->m_transform);
+    const glm::mat4 transformA = Math::rescaleMatrix(m_linkedTransformA->getWorldTransform());
 
     return transformA * m;
 }
@@ -64,14 +64,14 @@ void PhysicsHingeJointComponentTransformEdit::setWorldSpaceTransform(glm::mat4 m
         return;
     }
 
-    const glm::mat4 transformA = glm::inverse(Math::rescaleMatrix(m_linkedTransformA->m_transform));
+    const glm::mat4 transformA = glm::inverse(Math::rescaleMatrix(m_linkedTransformA->getWorldTransform()));
     if (index == 1) {
         m_component->m_localAttachmentMatrixA = transformA * m;
 
         return;
     }
 
-    const glm::mat4 transformB = glm::inverse(Math::rescaleMatrix(m_linkedTransformB->m_transform));
+    const glm::mat4 transformB = glm::inverse(Math::rescaleMatrix(m_linkedTransformB->getWorldTransform()));
     if (index == 2) {
         m_component->m_localAttachmentMatrixB = transformB * m;
 

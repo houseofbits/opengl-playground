@@ -9,8 +9,10 @@
 #include "Editors/DoorBehaviourComponentEdit.h"
 #include "Systems/MainCharacterBehaviourSystem.h"
 #include "Components/DoorBehaviourComponent.h"
+#include "Components/MotorBehaviourComponent.h"
 #include "Systems/DoorBehaviourSystem.h"
 #include "Systems/GunBehaviourSystem.h"
+#include "Systems/MotorBehaviourSystem.h"
 
 class BehavioursModule final : public EntityModule {
 public:
@@ -20,6 +22,7 @@ public:
         ctx.registerComponent<MainCharacterBehaviourComponent>();
         ctx.registerComponent<DoorBehaviourComponent>();
         ctx.registerComponent<GunBehaviourComponent>();
+        ctx.registerComponent<MotorBehaviourComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {
@@ -28,6 +31,7 @@ public:
         ctx.registerEntitySystem<MainCharacterBehaviourSystem>(BEHAVIOUR_PROCESS, 1);
         ctx.registerEntitySystem<DoorBehaviourSystem>(BEHAVIOUR_PROCESS, 2);
         ctx.registerEntitySystem<GunBehaviourSystem>(BEHAVIOUR_PROCESS, 3);
+        ctx.registerEntitySystem<MotorBehaviourSystem>(BEHAVIOUR_PROCESS, 4);
     };
 
     void postRegister(EntityContext &ctx) override {

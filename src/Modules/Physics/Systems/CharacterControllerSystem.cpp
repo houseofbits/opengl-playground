@@ -35,7 +35,7 @@ void CharacterControllerSystem::handleSystemEvent(const SystemEvent &event) {
 void CharacterControllerSystem::resetToInitialTransform() const {
     for (const auto [id, components]: m_registry->container()) {
         const auto &[transform, cct] = components.get();
-        transform->m_transform = transform->m_initialTransform;
+        transform->resetToInitialTransform();
     }
 }
 

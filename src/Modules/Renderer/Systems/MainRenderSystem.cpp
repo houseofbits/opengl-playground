@@ -119,7 +119,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
 
     for (const auto &[id, components]: m_meshComponentRegistry->container()) {
         const auto &[transform, mesh] = components.get();
-        m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getModelMatrix());
+        m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getWorldTransform());
         if (mesh->m_Material().isReady() && mesh->m_Mesh().isReady()) {
             mesh->m_Material().bind(m_ShaderPrograms[m_shaderType]());
             mesh->m_Mesh().render();
@@ -129,7 +129,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
     for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
         const auto &[transform, mesh] = components.get();
         if (mesh->m_Mesh().isReady()) {
-            m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getModelMatrix());
+            m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getWorldTransform());
             mesh->m_Mesh().render(m_ShaderPrograms[m_shaderType](), m_defaultMaterial.get());
         }
     }

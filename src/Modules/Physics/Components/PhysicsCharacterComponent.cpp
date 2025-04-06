@@ -116,9 +116,17 @@ void PhysicsCharacterComponent::update(TransformComponent &transform, bool isSim
 
         const auto capsulePosition = PhysicsTypeCast::JPHToGlm(t.GetTranslation());
 
-        transform.resetTransform();
-        transform.setTranslation(capsulePosition - glm::vec3(0, m_stepTolerance, 0));
-        transform.setRotation(glm::quat_cast(rotationMatrix));
+        auto transformMatrix = glm::mat4(1.0);
+        transformMatrix = glm::translate(transformMatrix, capsulePosition - glm::vec3(0, m_stepTolerance, 0));
+        transformMatrix *= rotationMatrix;
+        transform.setWorldTransform(transformMatrix);
+
+        //
+        // // glm::mat4 rotationMatrix = glm::mat4_cast(glm::quat_cast(rotationMatrix));
+        //
+        // transform.resetTransform();
+        // transform.setTranslation(capsulePosition - glm::vec3(0, m_stepTolerance, 0));
+        // transform.setRotation(glm::quat_cast(rotationMatrix));
 
         castRayForGroundReference(capsulePosition);
         updateGroundSpring(capsulePosition);
