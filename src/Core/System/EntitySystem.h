@@ -2,7 +2,7 @@
 
 #include "../Entity/Component.h"
 #include "../Reflection/Type.h"
-#include "../Events/EventManager.h"
+// #include "../Events/EventManager.h"
 #include "../Events/EventManager_V2.h"
 #include "AbstractComponentRegistry.h"
 #include "EntityRelatedComponentRegistry.h"

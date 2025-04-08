@@ -11,9 +11,12 @@
 #include "Editors/TransformComponentTransformEdit.h"
 #include "Systems/CameraSystem.h"
 #include "Systems/EntityLinkingSystem.h"
+#include "Systems/ScriptingEventsSystem.h"
 
 class CommonModule final : public EntityModule {
 public:
+    static constexpr EntitySystemRegistry::ProcessType BEHAVIOUR_PROCESS = 1;
+
     void registerComponents(EntityContext &ctx) override {
         ctx.registerComponent<TransformComponent>();
         ctx.registerComponent<CameraComponent>();
@@ -23,6 +26,7 @@ public:
         ctx.registerEntitySystem<TransformHierarchyProcessingSystem>(EntitySystemRegistry::MAIN_PROCESS, 10);
         ctx.registerEntitySystem<CameraSystem>(EntitySystemRegistry::MAIN_PROCESS, 1);
         ctx.registerEntitySystem<EntityLinkingSystem>(EntitySystemRegistry::MAIN_PROCESS, 2);
+        ctx.registerEntitySystem<ScriptingEventsSystem>(BEHAVIOUR_PROCESS, 0);
     }
 
     void postRegister(EntityContext &ctx) override {

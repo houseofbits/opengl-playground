@@ -25,7 +25,7 @@ void Texture::create(unsigned int textureWidth, unsigned int textureHeight, Type
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     } else if (type == TYPE_RGBA) {
-        int maxLevels = 7;//1 + (int)floor(log2(std::max(width, height))); //TODO: What should be the right thing to do?
+        constexpr int maxLevels = 7;//1 + (int)floor(log2(std::max(width, height))); //TODO: What should be the right thing to do?
 
         glTextureParameteri(textureId, GL_TEXTURE_MAX_LEVEL, maxMipMapLevels);
         glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

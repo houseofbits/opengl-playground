@@ -124,7 +124,7 @@ float pcfShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndot
 float pcssShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
 {
     sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
-    float filterRadiusUV = 2.0 / 2048;
+    float filterRadiusUV = 8.0 / 2048;
 
     float shadow = 0;
     vec2 uv;

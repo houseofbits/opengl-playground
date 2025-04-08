@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Entity/EntityContext.h"
-#include "../Events/EventManager.h"
+// #include "../Events/EventManager.h"
 #include "../Events/EventManager_V2.h"
 #include "../Resources/ResourceManager.h"
 #include <string>

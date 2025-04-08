@@ -1,5 +1,13 @@
 [
     {
+        "name": "Script",
+        "components": {
+            "ScriptingComponent": {
+                "class": "ScriptingComponent"
+            }
+        }
+    },
+    {
         "name": "Render Mesh",
         "components": {
             "transform": {

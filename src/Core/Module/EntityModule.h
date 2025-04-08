@@ -1,4 +1,5 @@
 #pragma once
+#include "../Scripting/ScriptingManager.h"
 
 class EntityContext;
 
@@ -11,6 +12,8 @@ public:
     virtual void registerComponents(EntityContext &) {};
 
     virtual void registerSystems(EntityContext &) {};
+
+    virtual void registerScriptableTypes(ScriptingManager &) {};
 
     virtual void postRegister(EntityContext &) {};
 };

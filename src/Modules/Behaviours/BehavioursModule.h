@@ -7,9 +7,11 @@
 #include "Editors/MainCharacterBehaviourComponentEdit.h"
 #include "Editors/GunBehaviourComponentEdit.h"
 #include "Editors/DoorBehaviourComponentEdit.h"
+#include "Editors/ScriptingComponentEdit.h"
 #include "Systems/MainCharacterBehaviourSystem.h"
 #include "Components/DoorBehaviourComponent.h"
 #include "Components/MotorBehaviourComponent.h"
+#include "Components/ScriptingComponent.h"
 #include "Systems/DoorBehaviourSystem.h"
 #include "Systems/GunBehaviourSystem.h"
 #include "Systems/MotorBehaviourSystem.h"
@@ -23,6 +25,7 @@ public:
         ctx.registerComponent<DoorBehaviourComponent>();
         ctx.registerComponent<GunBehaviourComponent>();
         ctx.registerComponent<MotorBehaviourComponent>();
+        ctx.registerComponent<ScriptingComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {
@@ -40,6 +43,7 @@ public:
                 processMainCharacterBehaviourComponentEditor);
             editorSystem->registerComponentEditor<DoorBehaviourComponent>(processDoorBehaviourComponentEditor);
             editorSystem->registerComponentEditor<GunBehaviourComponent>(processGunBehaviourComponentEditor);
+            editorSystem->registerComponentEditor<ScriptingComponent>(processScriptingComponentEditor);
         }
     }
 };

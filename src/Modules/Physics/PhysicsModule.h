@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../../Core/API.h"
 #include "Components/PhysicsCharacterComponent.h"
 #include "Components/PhysicsBodyComponent.h"
 #include "Components/PhysicsHingeJointComponent.h"
@@ -43,6 +42,11 @@ public:
         ctx.registerEntitySystem<JointsProcessingSystem>(PHYSICS_PROCESS, 3);
         ctx.registerEntitySystem<CharacterControllerSystem>(PHYSICS_PROCESS, 4);
         ctx.registerEntitySystem<PhysicsTriggerShapeSystem>(PHYSICS_PROCESS, 5);
+    }
+
+    void registerScriptableTypes(ScriptingManager &scriptingManager) override {
+        scriptingManager.registerEventType<PhysicsPickingEvent>("PhysicsPickingEvent");
+        scriptingManager.registerEventType<PhysicsTriggerShapeEvent>("PhysicsTriggerShapeEvent");
     }
 
     void postRegister(EntityContext &ctx) override {

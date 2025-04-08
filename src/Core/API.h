@@ -7,7 +7,7 @@
 #include "System/EntitySystemRegistry.h"
 #include "Events/EntityCreationEvent.h"
 #include "Events/Event.h"
-#include "Events/EventManager.h"
+// #include "Events/EventManager.h"
 #include "Events/EventManager_V2.h"
 #include "Reflection/Type.h"
 #include "Reflection/TypedClass.h"

@@ -41,8 +41,8 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
     glEnable(GL_CULL_FACE);
 
     resourceManager.request(m_ShaderPrograms[SHADER_SHADED],
-                            // "data/shaders/|lighting.vert|lighting-shadow-test.frag",
-                            "data/shaders/lighting|.vert|.frag",
+                            "data/shaders/|lighting.vert|lighting-shadow-test.frag",
+                            // "data/shaders/lighting|.vert|.frag",
                             {
                                 "SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
                                 "EnvironmentProbesCubeMapArray"

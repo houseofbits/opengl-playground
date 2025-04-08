@@ -8,6 +8,7 @@
 #include "../System/EntitySystem.h"
 #include "../System/EntitySystemRegistry.h"
 #include <memory>
+#include "../Scripting/ScriptingManager.h"
 
 //0. add empty entity
 //1. buildEntity - populate with components
@@ -54,6 +55,7 @@ public:
         m_Modules.push_back(p);
         m_Modules.back()->registerComponents(*this);
         m_Modules.back()->registerSystems(*this);
+        m_Modules.back()->registerScriptableTypes(scriptingManager);
 
         return p;
     }
@@ -153,4 +155,6 @@ public:
     std::vector<std::string> getAllComponentTypeNames();
 
     EntitySystemRegistry entitySystemRegistry;
+
+    ScriptingManager scriptingManager;
 };

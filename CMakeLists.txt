@@ -196,6 +196,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Model/RenderModelBuilder.cpp
         src/Renderer/Model/RenderModelBuilder.h
         src/Core/Helper/DoubleBuffer.h
+        src/Core/Scripting/ScriptingManager.cpp
+        src/Core/Scripting/ScriptingManager.h
+        src/Modules/Common/Systems/ScriptingEventsSystem.cpp
+        src/Modules/Common/Systems/ScriptingEventsSystem.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
@@ -241,6 +245,11 @@ ELSE ()
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/Jolt/libJolt.a)
 
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/cmake-build-release/libtinygltf.a)
+
+    include_directories(${CMAKE_SOURCE_DIR}/libs/lua/lua)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/sol2/include)
+
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/sol2/liblua-5.4.4.so)
 
     #    include_directories(${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/include)
 #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/lib/debug/libfbxsdk.so)
