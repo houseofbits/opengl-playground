@@ -23,7 +23,7 @@ void main()
     vsPosition = modelMatrix * vec4(vertexPosition,1.0);
 
     vec3 T = normalize(vec3(modelMatrix * vec4(tangent,   0.0)));
-    vec3 B = normalize(vec3(modelMatrix * vec4(biTangent, 0.0)));
+    vec3 B = normalize(vec3(modelMatrix * vec4(-biTangent, 0.0)));
     vec3 N = normalize(vec3(modelMatrix * vec4(vertexNormal,    0.0)));
 
     vsInvTBN = mat3(T, B, N);

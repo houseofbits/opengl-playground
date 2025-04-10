@@ -27,7 +27,7 @@ public:
 
         std::uint64_t shadowSamplerHandle{0};
         float bias{0.0001};
-        float _PLACEHOLDER2{0};
+        float blurRadius{1.0};
     };
 
     LightsBufferResource();

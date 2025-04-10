@@ -23,6 +23,6 @@ public:
     void setWorldSpaceTransform(glm::mat4 m, int index) const override {
         assert(m_component != nullptr);
 
-        m_component->setWorldTransform(m);
+        m_component->setWorldTransform(m, true);
     }
 };

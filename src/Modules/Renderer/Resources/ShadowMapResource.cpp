@@ -51,7 +51,8 @@ void ShadowMapResource::resize() {
         return;
     }
 
-    m_textureRenderTarget.create(m_Resolution, m_Resolution, Texture::TYPE_RGBA32);
+    m_textureRenderTarget.create(m_Resolution, m_Resolution, Texture::TYPE_DEPTH);
+    // m_textureRenderTarget.create(m_Resolution, m_Resolution, Texture::TYPE_RGBA32);
 
     m_handleId = glGetTextureHandleARB(m_textureRenderTarget.textureId);
     if (m_handleId == 0) {

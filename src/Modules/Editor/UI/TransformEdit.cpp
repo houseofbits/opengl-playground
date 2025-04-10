@@ -103,12 +103,16 @@ void TransformEdit::processDebugHelpers(WireframeRenderer &renderer) const {
     }
 }
 
-void TransformEdit::handleEntitySelection(Entity &e) {
+void TransformEdit::handleEntityDeselection() {
     m_selectedComponentId = 0;
     m_selectedTransformTargetIndex = -1;
     m_pSelectedComponentEdit = nullptr;
     m_selectedTransformSpace = ImGuizmo::WORLD;
     m_selectedTransformOperation = 0;
+}
+
+void TransformEdit::handleEntitySelection(Entity &e) {
+    handleEntityDeselection();
 
     //Try to select TransformComponent first
     if (const auto transformComponent = e.getComponent<TransformComponent>()) {

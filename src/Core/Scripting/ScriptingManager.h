@@ -3,45 +3,50 @@
 #include <sol/sol.hpp>
 #include <map>
 #include "../Events/Event.h"
-#include "../Helper/Log.h"
+#include "ScriptingEventCallback.h"
+#include "../Entity/Component.h"
 
-class BaseEventCallback {
+class BaseScriptingComponentBuilder {
 public:
-    virtual ~BaseEventCallback() = default;
-    virtual void setCallback(const sol::function &func) = 0;
-    virtual void call(const BaseEvent &event) = 0;
+    virtual ~BaseScriptingComponentBuilder() = default;
+
+    virtual sol::object make(sol::state &state, const Component &component) = 0;
 };
 
-template<class EventT>
-class EventCallback final : public BaseEventCallback {
+template<class ComponentT>
+class ScriptingComponentBuilder final : public BaseScriptingComponentBuilder {
 public:
-    EventCallback() = default;
+    sol::object make(sol::state &state, const Component &component) override {
+        const auto comp = dynamic_cast<const ComponentT *>(&component);
+        if (comp) return sol::make_object(state.lua_state(), comp);
 
-    void setCallback(const sol::function &func) override {
-        m_callback = func;
+        return sol::nil;
     }
-
-    void call(const BaseEvent &event) override {
-        if (m_callback) {
-            auto concreteEvent = static_cast<const EventT *>(&event);
-            m_callback(*concreteEvent);
-        }
-    }
-
-private:
-    std::function<void(const EventT &)> m_callback;
 };
 
 class ScriptingManager {
 public:
-    ScriptingManager();
+    explicit ScriptingManager(EntityContext &m_entityContext);
 
     void init();
 
-    template<typename Class, typename... Args>
+    template<typename T, typename... Args>
     void registerEventType(std::string classname, Args &&... args) {
-        m_luaState.new_usertype<Class>(classname, std::forward<Args>(args)...);
-        m_eventHandlers[classname] = new EventCallback<Class>();
+        m_luaState.new_usertype<T>(classname, std::forward<Args>(args)...);
+        if (m_eventHandlers.find(classname) != m_eventHandlers.end()) {
+            delete m_eventHandlers[classname];
+        }
+        m_eventHandlers[classname] = new ScriptingEventCallback<T>();
+    }
+
+    template<typename T, typename... Args>
+    void registerComponentType(Args &&... args) {
+        auto classname = T::TypeName();
+        m_luaState.new_usertype<T>(classname, std::forward<Args>(args)...);
+        if (m_componentBuilder.find(classname) != m_componentBuilder.end()) {
+            delete m_componentBuilder[classname];
+        }
+        m_componentBuilder[classname] = new ScriptingComponentBuilder<T>();
     }
 
     void handleEvent(const std::string &name, const BaseEvent &event) const;
@@ -51,6 +56,10 @@ public:
 private:
     void registerEventHandler(const std::string &eventName, const sol::function &func);
 
+    sol::object getComponent(const std::string &entityName, const std::string &componentName);
+
     sol::state m_luaState;
-    std::map<std::string, BaseEventCallback *> m_eventHandlers;
+    EntityContext *m_entityContext;
+    std::map<std::string, BaseScriptingEventCallback *> m_eventHandlers;
+    std::map<std::string, BaseScriptingComponentBuilder *> m_componentBuilder;
 };

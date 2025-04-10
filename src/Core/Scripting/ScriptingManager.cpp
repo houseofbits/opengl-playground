@@ -1,14 +1,16 @@
 #include "ScriptingManager.h"
 #include "../Helper/Log.h"
+#include "../Entity/EntityContext.h"
 
-ScriptingManager::ScriptingManager()
-= default;
+ScriptingManager::ScriptingManager(EntityContext &m_entityContext) : m_entityContext(&m_entityContext) {
+}
 
 void ScriptingManager::init() {
     m_luaState.open_libraries(sol::lib::base, sol::lib::package);
 
     m_luaState.new_usertype<ScriptingManager>("ScriptingManager",
-                                              "registerEventHandler", &ScriptingManager::registerEventHandler
+                                              "registerEventHandler", &ScriptingManager::registerEventHandler,
+                                              "getComponent", &ScriptingManager::getComponent
     );
 
     m_luaState["Manager"] = this;
@@ -42,4 +44,29 @@ void ScriptingManager::runScriptFromFile(const std::string &fileName) {
         const sol::error err{result};
         Log::error("Error running script: ", err.what());
     }
+}
+
+sol::object ScriptingManager::getComponent(const std::string& entityName, const std::string& componentName) {
+    // sol::state_view lua = sol::state_view(m_luaState);
+
+    const auto entity = m_entityContext->findEntity(entityName);
+    if (!entity) {
+        return sol::nil;
+    }
+
+    auto component = entity->findComponentByName(componentName);
+    if (!component) {
+        component = entity->findComponentByTypeName(componentName);
+    }
+
+    if (!component) {
+        return sol::nil;
+    }
+
+    auto builder = m_componentBuilder.find(component->getTypeName());
+    if (builder == m_componentBuilder.end()) {
+        return sol::nil;
+    }
+
+    return builder->second->make(m_luaState, *component);
 }

@@ -4,7 +4,8 @@
 
 EntityContext::EntityContext() : m_ComponentFactory(),
                                  m_EntityConfiguration(m_ComponentFactory),
-                                 m_Entities() {
+                                 m_Entities(),
+                                 scriptingManager(*this) {
 }
 
 Entity::TEntityPtr EntityContext::addEntity() {

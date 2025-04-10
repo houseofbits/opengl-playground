@@ -1,0 +1,129 @@
+[
+    {
+        "EditorCameraComponent": {
+            "firstPersonCtrl": false,
+            "isActive": true,
+            "mouseLookSpeed": 0.15000000596046448,
+            "moveSpeed": 3.0,
+            "orthoScale": 9.200000762939453,
+            "position": [
+                4.061879634857178,
+                3.7727761268615723,
+                -1.2880187034606934
+            ],
+            "reposition": false,
+            "type": 0,
+            "upDirection": [
+                -0.551963210105896,
+                0.8274139165878296,
+                0.10355079919099808
+            ],
+            "viewDirection": [
+                -0.8132268190383911,
+                -0.5615925788879395,
+                0.15256501734256744
+            ]
+        },
+        "name": "EditorCamera"
+    },
+    {
+        "ScriptingComponent#InputEventHandler": {
+            "scriptFile": "data/scripts/test.lua"
+        },
+        "name": "MainScript"
+    },
+    {
+        "PhysicsTriggerShapeComponent": null,
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "name": "Triggerhape"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 8.699996948242188,
+            "castShadows": false,
+            "color": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "intensity": 1.5000001192092896,
+            "isEnabled": true,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -0.004689335823059082,
+                1.6624703407287598,
+                -0.2853957414627075
+            ]
+        },
+        "name": "OmniLight"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "mass": 0.0,
+            "model": "resources/BoxTextured.gltf",
+            "restitution": 0.5,
+            "shape": 1,
+            "type": 0
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                5.1475372314453125,
+                0.21265745162963867,
+                5.785562992095947
+            ],
+            "translation": [
+                0.0,
+                -0.5314373970031738,
+                0.0
+            ]
+        },
+        "name": "Ground"
+    }
+]

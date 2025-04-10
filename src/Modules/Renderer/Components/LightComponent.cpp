@@ -10,6 +10,7 @@ LightComponent::LightComponent() : Component(),
                                    m_beamAngle(90.0),
                                    m_Attenuation(1.0),
                                    m_Radius(1),
+                                   m_blurRadius(1.0),
                                    m_ShadowMaps(),
                                    m_Projection(),
                                    m_doesCastShadows(false),
@@ -31,6 +32,7 @@ void LightComponent::serialize(nlohmann::json &j) {
     if (m_doesCastShadows) {
         j[SHADOW_RESOLUTION_KEY] = m_shadowResolution;
         j[SHADOW_BIAS_KEY] = m_shadowBias;
+        j[SHADOW_BLUR_RADIUS_KEY] = m_blurRadius;
     }
     if (m_Projection.isValid()) {
         j[PROJECTION_TEXTURE_KEY] = m_Projection().m_Path;
@@ -51,6 +53,7 @@ void LightComponent::deserialize(const nlohmann::json &j, ResourceManager &resou
     m_doesCastShadows = j.value(CAST_SHADOWS_KEY, m_doesCastShadows);
     m_shadowResolution = j.value(SHADOW_RESOLUTION_KEY, m_shadowResolution);
     m_shadowBias = j.value(SHADOW_BIAS_KEY, m_shadowBias);
+    m_blurRadius = j.value(SHADOW_BLUR_RADIUS_KEY, m_blurRadius);
 
     if (j.contains(PROJECTION_TEXTURE_KEY)) {
         std::string filename = j.value(PROJECTION_TEXTURE_KEY, m_Projection().m_Path);

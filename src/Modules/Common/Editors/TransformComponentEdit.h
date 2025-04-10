@@ -13,7 +13,7 @@ inline void processTransformComponentEditor(Component *c, Entity *e, EditorUISys
                                        component->m_isRotationEnabled,
                                        component->m_isScalingEnabled
         )) {
-        component->setWorldTransform(m);
+        component->setWorldTransform(m, true);
     }
 
     ImGui::Checkbox("Is relative rotation disabled##TRANSFORM_REL_ROTATION",

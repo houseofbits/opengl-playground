@@ -36,7 +36,7 @@ struct SpotLightStructure {
     uvec2 _PLACEHOLDER1;
     uvec2 shadowSamplerHandle;
     float bias;
-    float _PLACEHOLDER2;
+    float blurRadius;
 };
 
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
@@ -88,15 +88,17 @@ bool isProjCoordsClipping(vec2 uv)
     return true;
 }
 
-float sampleShadow(in sampler2D shadowMap, vec2 uv, float bias, float fragmentDepth)
+float sampleShadow(in sampler2DShadow shadowMap, vec2 uv, float bias, float fragmentDepth)
 {
-    float depth = texture(shadowMap, uv).x;
-    return ((fragmentDepth - bias) > depth) ? 0.0 : 1.0;
+//    float depth = texture(shadowMap, uv).x;
+    float depth = texture(shadowMap, vec3(uv, fragmentDepth - bias)).x;
+
+    return depth;// ? 0.0 : 1.0;
 }
 
 float pcfShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
 {
-    sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
+    sampler2DShadow shadowMap = sampler2DShadow(light.shadowSamplerHandle);
     float bias = light.bias;
     float blurFactor = 0.001;
     float shadow = 0;
@@ -123,8 +125,15 @@ float pcfShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndot
 //https://developer.download.nvidia.com/whitepapers/2008/PCSS_Integration.pdf
 float pcssShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
 {
-    sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
-    float filterRadiusUV = 8.0 / 2048;
+//    sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
+    sampler2DShadow shadowMap = sampler2DShadow(light.shadowSamplerHandle);
+
+//    float depth = texture(shadowMap, projCoords).x;
+////    depth = pow(depth, 200);
+//
+//    return depth;
+
+    float filterRadiusUV = light.blurRadius / 2048;
 
     float shadow = 0;
     vec2 uv;

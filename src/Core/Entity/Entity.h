@@ -35,7 +35,7 @@ public:
     }
 
     template<class T>
-    bool hasComponent() const {
+    [[nodiscard]] bool hasComponent() const {
         for (const auto &c: m_Components) {
             if (dynamic_cast<T *>(c.get())) {
                 return true;
@@ -99,6 +99,26 @@ public:
                 return nullptr;
             }
         }
+        return nullptr;
+    }
+
+    [[nodiscard]] Component *findComponentByName(const std::string &name) const {
+        for (const auto &c: m_Components) {
+            if (c->m_Name == name) {
+                return c.get();
+            }
+        }
+
+        return nullptr;
+    }
+
+    [[nodiscard]] Component *findComponentByTypeName(const std::string &typeName) const {
+        for (const auto &c: m_Components) {
+            if (c->getTypeName() == typeName) {
+                return c.get();
+            }
+        }
+
         return nullptr;
     }
 

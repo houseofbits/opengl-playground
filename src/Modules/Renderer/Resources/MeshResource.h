@@ -20,7 +20,7 @@ public:
         //TODO Unload the mesh resource
     }
 
-    void render(ShaderProgramResource &, MaterialResource &);
+    void render(const glm::mat4& worldTransform, ShaderProgramResource &, MaterialResource &);
 
     void render(ShaderProgramResource &);
 

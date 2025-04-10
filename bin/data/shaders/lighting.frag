@@ -38,7 +38,7 @@ struct SpotLightStructure {
     uvec2 _PLACEHOLDER1;
     uvec2 shadowSamplerHandle;
     float bias;
-    float _PLACEHOLDER2;
+    float blurRadius;
 };
 
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
@@ -90,44 +90,16 @@ bool isProjCoordsClipping(vec2 uv)
     return true;
 }
 
-float sampleShadow(in sampler2D shadowMap, vec2 uv, float bias, float fragmentDepth)
+float sampleShadow(in sampler2DShadow shadowMap, vec2 uv, float bias, float fragmentDepth)
 {
-    float depth = texture(shadowMap, uv).x;
-    return ((fragmentDepth - bias) > depth) ? 0.0 : 1.0;
+    return texture(shadowMap, vec3(uv, fragmentDepth - bias)).x;
 }
 
-float pcfShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
-{
-    sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
-    float bias = light.bias;    //0.0001 + (ndotl * 0.0001);
-    float blurFactor = 0.001;
-    float shadow = 0;
-    vec2 uv;
-    int div=0;
-    for (int x = -3; x <= 3; ++x)
-    {
-        for (int y = -3; y <= 3; ++y)
-        {
-            uv = projCoords.xy + vec2(x, y) * blurFactor;
-            if (isProjCoordsClipping(uv))
-            {
-                shadow += sampleShadow(shadowMap, uv, bias, projCoords.z);
-
-                div++;
-            }
-        }
-    }
-    shadow /= div;
-
-    return shadow;
-}
-
-//https://developer.download.nvidia.com/whitepapers/2008/PCSS_Integration.pdf
 float pcssShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
 {
-    sampler2D shadowMap = sampler2D(light.shadowSamplerHandle);
-    vec2 size = textureSize(shadowMap, 0);
-    vec2 filterRadiusUV = 2.0 / size;
+    sampler2DShadow shadowMap = sampler2DShadow(light.shadowSamplerHandle);
+
+    float filterRadiusUV = light.blurRadius / 2048.0; //size;
 
     float shadow = 0;
     vec2 uv;
@@ -192,13 +164,16 @@ void main()
      * (roughness)
      * frensnel;
 
-    reflectionColor = reflectionColor + reflectionColor + reflectionColor + reflectionColor;
+    reflectionColor = reflectionColor + reflectionColor;// + reflectionColor + reflectionColor;
 
     vec3 color = vec3(0.0);
     vec3 falloff;
     vec3 lightDir;
     float distToLight;
     vec3 lightColor = vec3(0);    //vec3(selfIllumination) + (diffuse * ambientEnvColor);
+
+    vec3 diffuseSpecular = diffuse.rgb + reflectionColor;
+    vec3 surfaceNormal = normalize(vsNormal);
 
     for (int lightIndex = 0; lightIndex < SpotLightStorageBuffer_size; lightIndex++) {
         SpotLightStructure light = spotLights[lightIndex];
@@ -215,11 +190,11 @@ void main()
                 lightDir = normalize(light.direction);
             }
 
-            float ndotlSurf = dot(lightDir, vsNormal);
+            float ndotlSurf = dot(lightDir, surfaceNormal);
 
-            if (ndotlSurf < 0) {
-                continue;
-            }
+//            if (ndotlSurf < 0) {
+//                continue;
+//            }
 
             float ndotl = dot(lightDir, normal);
 
@@ -235,7 +210,7 @@ void main()
                 shadow = pcssShadowCalculation(light, lightProjectedPosition, dot(lightDir, vsNormal)); //depth > lightProjectedPosition.z;
             }
 
-            vec3 diffuseLight = diffuse.rgb
+            vec3 diffuseLight = diffuseSpecular//diffuse.rgb
                 * ndotl
                 * light.color
                 * light.intensity;
@@ -243,7 +218,8 @@ void main()
             lightColor += attenuation
                 * falloff
                 * shadow
-                * (diffuseLight + reflectionColor);
+                * diffuseLight;
+//                * (diffuseLight + reflectionColor);
         }
     }
 

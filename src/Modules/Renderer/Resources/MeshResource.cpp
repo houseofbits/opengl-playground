@@ -46,17 +46,20 @@ void MeshResource::render(ShaderProgramResource &shader) {
     glBindVertexArray(0);
 }
 
-void MeshResource::render(ShaderProgramResource &shader, MaterialResource &defaultMaterial) {
+void MeshResource::render(const glm::mat4& worldTransform, ShaderProgramResource &shader, MaterialResource &defaultMaterial) {
     glBindVertexArray(m_model.m_vertexArrayObject);
 
-    for (auto &mesh: m_model.m_meshNodes) {
+    for (const auto &mesh: m_model.m_meshNodes) {
         if (mesh.materialIndex >= 0 && m_materials[mesh.materialIndex].isReady()) {
             m_materials[mesh.materialIndex].get().bind(shader);
         } else {
             defaultMaterial.bind(shader);
         }
 
-        glDrawElements(GL_TRIANGLES, mesh.size, GL_UNSIGNED_INT, (void *) (mesh.offset * sizeof(GLuint)));
+        auto m = mesh.modelMatrix * worldTransform;
+        shader.setUniform("modelMatrix", m);
+
+        glDrawElements(GL_TRIANGLES, mesh.size, GL_UNSIGNED_INT, reinterpret_cast<void *>(mesh.offset * sizeof(GLuint)));
     }
 
     glBindVertexArray(0);

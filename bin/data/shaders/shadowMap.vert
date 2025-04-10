@@ -11,7 +11,8 @@ struct SpotLightStructure {
     uvec2 projectorSamplerHandle;
     uvec2 _PLACEHOLDER1;
     uvec2 shadowSamplerHandle;
-    uvec2 _PLACEHOLDER2;
+    float bias;
+    float blurRadius;
 };
 
 layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
@@ -25,10 +26,10 @@ uniform uint SpotLightStorageBuffer_size;
 uniform mat4 modelMatrix;
 uniform int lightIndex;
 
-out vec4 vsPosition;
-out vec3 vsNormal;
-out vec2 vsTexcoord;
-out mat4 vsProjectionViewMatrix;
+//out vec4 vsPosition;
+//out vec3 vsNormal;
+//out vec2 vsTexcoord;
+//out mat4 vsProjectionViewMatrix;
 
 void main()
 {
@@ -36,10 +37,10 @@ void main()
 
     mat3 modelInverse = mat3(transpose(inverse(modelMatrix)));
 
-    vsNormal = modelInverse * vertexNormal;
-    vsTexcoord = texCoord;
-    vsPosition = modelMatrix * vec4(vertexPosition,1.0);
-    vsProjectionViewMatrix = spotLights[lightIndex].projectionViewMatrix;
+//    vsNormal = modelInverse * vertexNormal;
+//    vsTexcoord = texCoord;
+    vec4 vsPosition = modelMatrix * vec4(vertexPosition,1.0);
+//    vsProjectionViewMatrix = spotLights[lightIndex].projectionViewMatrix;
 
     gl_Position = viewProjectionMatrix * vsPosition;
 }

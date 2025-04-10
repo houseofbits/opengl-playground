@@ -18,4 +18,9 @@ public:
 
     void postRegister(EntityContext &ctx) override {
     }
+
+    void registerScriptableTypes(ScriptingManager &scriptingManager) override {
+        scriptingManager.registerEventType<InputEvent>(
+            "InputEvent", "keyCode", &InputEvent::keyCode);
+    }
 };

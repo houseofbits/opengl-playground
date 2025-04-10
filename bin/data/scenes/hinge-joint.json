@@ -7,21 +7,21 @@
             "moveSpeed": 3.0,
             "orthoScale": 12.200000762939453,
             "position": [
-                2.02046537399292,
-                6.362486362457275,
-                -5.0287556648254395
+                7.442252159118652,
+                10.143163681030273,
+                -4.985276222229004
             ],
             "reposition": true,
             "type": 0,
             "upDirection": [
-                -0.5628916621208191,
-                0.7249451279640198,
-                -0.3969981372356415
+                -0.6027836799621582,
+                0.7552482485771179,
+                -0.2573946416378021
             ],
             "viewDirection": [
-                -0.5924240350723267,
-                -0.6888065934181213,
-                -0.4178268015384674
+                -0.694574773311615,
+                -0.6554388999938965,
+                -0.2965903580188751
             ]
         },
         "name": "camera-orthographic"
@@ -67,6 +67,7 @@
     {
         "LightComponent": {
             "attenuation": 37.20000457763672,
+            "blurRadius": 20.0,
             "castShadows": true,
             "color": [
                 0.6410034894943237,
@@ -383,6 +384,7 @@
     {
         "LightComponent": {
             "attenuation": 26.000062942504883,
+            "blurRadius": 5.559999942779541,
             "castShadows": true,
             "color": [
                 0.9740484356880188,
@@ -411,7 +413,7 @@
             "translation": [
                 0.01416015625,
                 9.259735107421875,
-                -4.43634033203125
+                -14.763360023498535
             ]
         },
         "name": "omni-light-COPY"
@@ -476,8 +478,8 @@
             ],
             "scale": [
                 0.29791224002838135,
-                0.5305863618850708,
-                0.3075169324874878
+                0.5305858254432678,
+                0.3075166642665863
             ],
             "translation": [
                 -4.561594009399414,
@@ -546,8 +548,8 @@
             ],
             "scale": [
                 0.29791224002838135,
-                1.5673801898956299,
-                0.3616591989994049
+                1.567379117012024,
+                0.3616589307785034
             ],
             "translation": [
                 -4.570383071899414,
@@ -640,5 +642,70 @@
             ]
         },
         "name": "static-body-base-back"
+    },
+    {
+        "CameraComponent": {
+            "disableRelRotation": true,
+            "isActive": false,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "upDirection": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "viewDirection": [
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "MainCharacterBehaviourComponent": {
+            "active": true,
+            "cameraAttachment": [
+                0.0,
+                1.7000000476837158,
+                0.0
+            ],
+            "cameraName": "",
+            "lookDirection": [
+                0.5294145345687866,
+                -0.13046403229236603,
+                0.8382717370986938
+            ],
+            "mlookSpeed": 0.15000000596046448,
+            "moveSpeed": 10.0
+        },
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/character-capsule.gltf"
+        },
+        "PhysicsCharacterComponent": {
+            "height": 1.75,
+            "radius": 0.25
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "name": "NEW Character Controller"
     }
 ]

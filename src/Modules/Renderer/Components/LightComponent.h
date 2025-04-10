@@ -5,7 +5,7 @@
 #include "../Resources/TextureResource.h"
 
 class LightComponent : public Component {
-TYPE_DEFINITION(LightComponent);
+    TYPE_DEFINITION(LightComponent);
 
 public:
     inline static const std::string TYPE_KEY = "type";
@@ -19,6 +19,7 @@ public:
     inline static const std::string CAST_SHADOWS_KEY = "castShadows";
     inline static const std::string SHADOW_RESOLUTION_KEY = "shadowResolution";
     inline static const std::string SHADOW_BIAS_KEY = "shadowBias";
+    inline static const std::string SHADOW_BLUR_RADIUS_KEY = "blurRadius";
 
     enum Type {
         OMNI = 0,
@@ -57,6 +58,7 @@ public:
     bool m_doesCastShadows;
     int m_shadowResolution;
     float m_shadowBias;
+    float m_blurRadius;
     ResourceHandle<TextureResource> m_Projection;
     std::vector<ResourceHandle<ShadowMapResource> *> m_ShadowMaps;
     std::vector<int> m_lightBufferIndices;

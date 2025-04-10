@@ -46,6 +46,7 @@ void LightsBufferResource::appendLight(TransformComponent &transform, LightCompo
         structure.shadowSamplerHandle = 0;
         structure.isPointSource = light.m_Type == LightComponent::DIRECT ? 0 : 1;
         structure.bias = light.m_shadowBias;
+        structure.blurRadius = light.m_blurRadius;
 
         if (light.m_Projection().isReady()) {
             structure.projectorSamplerHandle = light.m_Projection().m_handleId;

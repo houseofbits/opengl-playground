@@ -65,7 +65,8 @@ inline void processLightComponentEditor(Component *c, Entity *e, EditorUISystem 
             ImGui::EndCombo();
         }
 
-        ImGui::InputFloat("Bias", &component->m_shadowBias, 0.001f, 0.01f, "%.5f");
+        ImGui::DragFloat("Bias", &component->m_shadowBias, 0.0000001f, 0.0f, 0.01f, "%.5f");
+        ImGui::DragFloat("Blur radius", &component->m_blurRadius, 0.01f, 0.0f, 20.0f, "%.5f");
 
         // for (int i = 0; i < light->m_ShadowMaps.size(); ++i) {
         //     std::string buttonName = "Preview " + std::to_string(i + 1);

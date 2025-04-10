@@ -23,6 +23,8 @@ public:
 
     void handleEntitySelection(Entity &);
 
+    void handleEntityDeselection();
+
 private:
     void processTransformComponentDropdown(Entity &);
 

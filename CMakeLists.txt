@@ -198,8 +198,7 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/Helper/DoubleBuffer.h
         src/Core/Scripting/ScriptingManager.cpp
         src/Core/Scripting/ScriptingManager.h
-        src/Modules/Common/Systems/ScriptingEventsSystem.cpp
-        src/Modules/Common/Systems/ScriptingEventsSystem.h
+        src/Core/Scripting/ScriptingEventCallback.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

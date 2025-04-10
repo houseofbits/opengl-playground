@@ -25,7 +25,7 @@ public:
         ctx.registerComponent<EnvironmentProbeComponent>();
         ctx.registerComponent<SkyComponent>();
         ctx.registerComponent<MeshComponent>();
-    };
+    }
 
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<StorageBufferUpdateSystem>(EntitySystemRegistry::MAIN_PROCESS, 1);
@@ -36,7 +36,13 @@ public:
         ctx.registerEntitySystem<PhysicsDebugRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 6);
 
         ctx.registerEntitySystem<OverlayRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 7);
-    };
+    }
+
+    void registerScriptableTypes(ScriptingManager &scriptingManager) override {
+        scriptingManager.registerComponentType<LightComponent>("isEnabled", &LightComponent::m_isEnabled,
+                                                               "intensity", &LightComponent::m_Intensity
+        );
+    }
 
     void postRegister(EntityContext &ctx) override {
         if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {

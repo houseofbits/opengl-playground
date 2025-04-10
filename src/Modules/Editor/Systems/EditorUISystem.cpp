@@ -140,6 +140,7 @@ void EditorUISystem::selectEntity(Entity &e) {
 
 void EditorUISystem::clearEntitySelection() {
     m_selectedEntityId = 0;
+    m_transformHelper.handleEntityDeselection();
 }
 
 Entity *EditorUISystem::getSelectedEntity() const {

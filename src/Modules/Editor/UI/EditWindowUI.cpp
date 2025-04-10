@@ -268,8 +268,9 @@ void EditWindowUI::processEntityCreation() {
 
         ImGui::SameLine();
         if (ImGui::Button("Delete")) {
-            sendEntityRemovalEvent();
+            const auto entityId = m_EditorUISystem->getSelectedEntity()->m_Id.id();
             m_EditorUISystem->clearEntitySelection();
+            m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE, entityId);
         }
 
         ImGui::SameLine();

@@ -20,6 +20,8 @@
 #include "../Editor/Systems/EditorUISystem.h"
 #include "Editors/PhysicsHingeJointComponentTransformEdit.h"
 #include "Editors/PhysicsSliderJointComponentTransformEdit.h"
+#include "Events/PhysicsPickingEvent.h"
+#include "Events/PhysicsTriggerShapeEvent.h"
 
 class PhysicsModule final : public EntityModule {
 public:

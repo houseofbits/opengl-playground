@@ -15,6 +15,7 @@
 #include "Systems/DoorBehaviourSystem.h"
 #include "Systems/GunBehaviourSystem.h"
 #include "Systems/MotorBehaviourSystem.h"
+#include "Systems/ScriptingEventsSystem.h"
 
 class BehavioursModule final : public EntityModule {
 public:
@@ -26,16 +27,17 @@ public:
         ctx.registerComponent<GunBehaviourComponent>();
         ctx.registerComponent<MotorBehaviourComponent>();
         ctx.registerComponent<ScriptingComponent>();
-    };
+    }
 
     void registerSystems(EntityContext &ctx) override {
         ctx.entitySystemRegistry.createContinuousProcess(BEHAVIOUR_PROCESS, 32);
 
+        ctx.registerEntitySystem<ScriptingEventsSystem>(BEHAVIOUR_PROCESS, 0);
         ctx.registerEntitySystem<MainCharacterBehaviourSystem>(BEHAVIOUR_PROCESS, 1);
         ctx.registerEntitySystem<DoorBehaviourSystem>(BEHAVIOUR_PROCESS, 2);
         ctx.registerEntitySystem<GunBehaviourSystem>(BEHAVIOUR_PROCESS, 3);
         ctx.registerEntitySystem<MotorBehaviourSystem>(BEHAVIOUR_PROCESS, 4);
-    };
+    }
 
     void postRegister(EntityContext &ctx) override {
         if (const auto editorSystem = ctx.getSystem<EditorUISystem>(); editorSystem != nullptr) {
