@@ -199,6 +199,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/Scripting/ScriptingManager.cpp
         src/Core/Scripting/ScriptingManager.h
         src/Core/Scripting/ScriptingEventCallback.h
+        src/Modules/Physics/Helpers/CompoundShape/PhysicsCompoundShapeBuilder.cpp
+        src/Modules/Physics/Helpers/CompoundShape/PhysicsCompoundShapeBuilder.h
+        src/Modules/Physics/Editors/PhysicsShapeComponentTransformEdit.cpp
+        src/Modules/Physics/Editors/PhysicsShapeComponentTransformEdit.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

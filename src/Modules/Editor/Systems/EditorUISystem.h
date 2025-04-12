@@ -50,7 +50,6 @@ public:
 
     ResourceManager *m_ResourceManager;
     bool m_isImUIInitialized;
-    // TransformGizmoHelper m_transformGizmo;
     MainToolbarUI m_MainToolbarUI;
     EditWindowUI m_EditWindowUI;
     MaterialEditWindowUI m_MaterialEditWindowUI;

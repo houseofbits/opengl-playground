@@ -17,11 +17,14 @@
 #include "Editors/PhysicsSliderJointComponentEdit.h"
 #include "Editors/PhysicsFixedJointComponentEdit.h"
 #include "Editors/PhysicsTriggerShapeComponentEdit.h"
+#include "Editors/PhysicsShapeComponentEdit.h"
 #include "../Editor/Systems/EditorUISystem.h"
 #include "Editors/PhysicsHingeJointComponentTransformEdit.h"
 #include "Editors/PhysicsSliderJointComponentTransformEdit.h"
 #include "Events/PhysicsPickingEvent.h"
 #include "Events/PhysicsTriggerShapeEvent.h"
+#include "Components/PhysicsShapeComponent.h"
+#include "Editors/PhysicsShapeComponentTransformEdit.h"
 
 class PhysicsModule final : public EntityModule {
 public:
@@ -34,6 +37,7 @@ public:
         ctx.registerComponent<PhysicsSliderJointComponent>();
         ctx.registerComponent<PhysicsFixedJointComponent>();
         ctx.registerComponent<PhysicsTriggerShapeComponent>();
+        ctx.registerComponent<PhysicsShapeComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {
@@ -57,8 +61,11 @@ public:
                 PhysicsHingeJointComponentTransformEdit>();
             editorSystem->registerTransformComponentEditor<PhysicsSliderJointComponent,
                 PhysicsSliderJointComponentTransformEdit>();
+            editorSystem->registerTransformComponentEditor<PhysicsShapeComponent,
+                PhysicsShapeComponentTransformEdit>();
 
             editorSystem->registerComponentEditor<PhysicsBodyComponent>(processPhysicsBodyComponentEditor);
+            editorSystem->registerComponentEditor<PhysicsShapeComponent>(processPhysicsShapeComponentEditor);
             editorSystem->registerComponentEditor<PhysicsCharacterComponent>(
                 processPhysicsCharacterControllerComponentEditor);
             editorSystem->registerComponentEditor<PhysicsFixedJointComponent>(processPhysicsFixedJointComponentEditor);

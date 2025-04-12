@@ -1,4 +1,6 @@
 #include "TransformComponent.h"
+
+#include "../../../Core/Helper/Math.h"
 #include "../../../Core/Helper/Types.h"
 #include "../../Editor/Systems/EditorUISystem.h"
 
@@ -99,29 +101,11 @@ glm::vec3 TransformComponent::getLocalPosition() {
 }
 
 glm::vec3 TransformComponent::getScale() {
-    const auto m = getWorldTransform();
-    glm::vec3 scale;
-    scale[0] = glm::length(glm::vec3(m[0]));
-    scale[1] = glm::length(glm::vec3(m[1]));
-    scale[2] = glm::length(glm::vec3(m[2]));
-
-    return scale;
+    return Math::getScale(getWorldTransform());
 }
 
 glm::quat TransformComponent::getRotation() {
-    const auto m = getWorldTransform();
-
-    glm::vec3 scale;
-    for (int i = 0; i < 3; i++) {
-        scale[i] = glm::length(glm::vec3(m[i]));
-    }
-
-    const glm::mat3 rotMtx(
-        glm::vec3(m[0]) / scale[0],
-        glm::vec3(m[1]) / scale[1],
-        glm::vec3(m[2]) / scale[2]);
-
-    return glm::quat_cast(rotMtx);
+    return Math::getRotation(getWorldTransform());
 }
 
 glm::vec3 TransformComponent::getDirection() {

@@ -5,6 +5,7 @@
 #include "Components/EditorCameraComponent.h"
 #include "Editors/EditorCameraComponentEdit.h"
 #include "Systems/EditorCameraSystem.h"
+#include "Systems/EditorPostRender.h"
 
 class EditorUIModule : public EntityModule {
 public:
@@ -14,6 +15,7 @@ public:
 
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<EditorUISystem>(EntitySystemRegistry::MAIN_PROCESS, 10);
+        ctx.registerEntitySystem<EditorPostRender>(EntitySystemRegistry::MAIN_PROCESS, 11);
         ctx.registerEntitySystem<EditorCameraSystem>(EntitySystemRegistry::MAIN_PROCESS, 1);
     };
 

@@ -20,6 +20,7 @@
 #include "../../../../Core/Helper/Math.h"
 #include "../../../Common/Components/TransformComponent.h"
 #include "../../Components/PhysicsBodyComponent.h"
+#include "../CompoundShape/PhysicsCompoundShapeBuilder.h"
 
 class PhysicsBuilder {
     class PhysicsBodyBuilder {
@@ -87,6 +88,11 @@ class PhysicsBuilder {
             return *this;
         }
 
+        PhysicsBodyBuilder &addCompoundShape(PhysicsCompoundShapeBuilder& shape) {
+
+            return *this;
+        }
+
         PhysicsBodyBuilder &setMass(const float mass) {
             m_settings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
             m_settings.mMassPropertiesOverride.mMass = mass;
@@ -121,16 +127,24 @@ class PhysicsBuilder {
             return *this;
         }
 
-        JPH::Body *createDynamic() {
+        JPH::Body *createDynamic(bool isSensor = false) {
             m_settings.mMotionType = JPH::EMotionType::Dynamic;
             m_settings.mObjectLayer = Layers::MOVING;
+            if (isSensor) {
+                m_settings.mObjectLayer = Layers::SENSOR;
+                m_settings.mIsSensor = true;
+            }
 
             return createInner();
         }
 
-        JPH::Body *createStatic() {
+        JPH::Body *createStatic(bool isSensor = false) {
             m_settings.mMotionType = JPH::EMotionType::Static;
             m_settings.mObjectLayer = Layers::NON_MOVING;
+            if (isSensor) {
+                m_settings.mObjectLayer = Layers::SENSOR;
+                m_settings.mIsSensor = true;
+            }
 
             return createInner();
         }

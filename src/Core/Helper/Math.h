@@ -18,12 +18,17 @@ namespace Math {
         return newMat;
     }
 
-    inline glm::quat getRotation(glm::mat4 m) {
+    inline glm::vec3 getScale(glm::mat4 m) {
         glm::vec3 scale;
         for (int i = 0; i < 3; i++) {
             scale[i] = glm::length(glm::vec3(m[i]));
         }
 
+        return scale;
+    }
+
+    inline glm::quat getRotation(glm::mat4 m) {
+        glm::vec3 scale = getScale(m);
         const glm::mat3 rotMtx(
             glm::vec3(m[0]) / scale[0],
             glm::vec3(m[1]) / scale[1],

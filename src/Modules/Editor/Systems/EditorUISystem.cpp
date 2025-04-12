@@ -50,9 +50,6 @@ void EditorUISystem::process(EventManager &eventManager) {
             // m_wireframeRenderer.renderSphere(transform, {0, 1, 0, 1});
         }
     }
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void EditorUISystem::initialize(ResourceManager &manager, EventManager &) {

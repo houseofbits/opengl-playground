@@ -2,6 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "PhysicsBodyComponent.h"
+#include "../Helpers/CompoundShape/PhysicsCompoundShapeBuilder.h"
 
 class PhysicsTriggerShapeComponent : public Component {
     TYPE_DEFINITION(PhysicsTriggerShapeComponent);
@@ -13,7 +14,7 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    bool isReadyToInitialize(EntityContext& ctx) const override;
+    bool isReadyToInitialize(EntityContext &ctx) const override;
 
     void create(TransformComponent &transform);
 
@@ -22,4 +23,6 @@ public:
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 
     JPH::Body *m_physicsBody;
+
+    PhysicsCompoundShapeBuilder m_compoundShapeBuilder;
 };
