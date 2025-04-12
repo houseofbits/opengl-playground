@@ -23,7 +23,9 @@ public:
     }
 
 private:
-    EntityUniqueComponentRegistry<PhysicsBodyComponent>* m_physicsBodiesRegistry;
+    void renderPhysicsMesh(glm::mat4& parentTransform, const PhysicsMeshResource& mesh);
+
+    EntityUniqueComponentRegistry<PhysicsBodyComponent> *m_physicsBodiesRegistry;
     bool m_isEditorModeEnabled{};
     bool m_isImUIInitialized{};
     WireframeRenderer m_wireframeRenderer;

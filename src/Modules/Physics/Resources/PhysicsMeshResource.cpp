@@ -4,7 +4,8 @@
 #include "../../../Renderer/Model/GLTFFileLoader.h"
 
 PhysicsMeshResource::PhysicsMeshResource() : Resource(),
-                                             m_model() {
+                                             m_model(),
+                                             m_wireModel() {
 }
 
 Resource::Status PhysicsMeshResource::fetchData(ResourceManager &resourceManager) {
@@ -23,6 +24,24 @@ Resource::Status PhysicsMeshResource::fetchData(ResourceManager &resourceManager
 }
 
 Resource::Status PhysicsMeshResource::build() {
+    for (auto node: m_model.nodes) {
+        for (unsigned int i = node.offset; i < node.offset + node.size; i += 3) {
+            auto i1 = m_model.indices[i + 0];
+            auto i2 = m_model.indices[i + 1];
+            auto i3 = m_model.indices[i + 2];
+
+            auto v1 = glm::vec4(m_model.vertices[i1].position, 1.0f) * node.modelMatrix;
+            auto v2 = glm::vec4(m_model.vertices[i2].position, 1.0f) * node.modelMatrix;
+            auto v3 = glm::vec4(m_model.vertices[i3].position, 1.0f) * node.modelMatrix;
+
+            m_wireModel.addSegment(v1, v2);
+            m_wireModel.addSegment(v2, v3);
+            m_wireModel.addSegment(v3, v1);
+        }
+    }
+
+    m_wireModel.build();
+
     return STATUS_READY;
 }
 

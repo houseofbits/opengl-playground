@@ -3,6 +3,7 @@
 #include "../../../Core/API.h"
 #include "PhysicsResource.h"
 #include "../../../Renderer/Model/ModelConfigurationLoader.h"
+#include "../../../Renderer/Model/WireModel.h"
 
 class PhysicsMeshResource : public Resource {
 public:
@@ -19,6 +20,8 @@ public:
     [[nodiscard]] JPH::Array<JPH::Vec3> createConvexMeshShape(glm::vec3 scale) const;
 
     ModelConfigurationLoader::ModelConfiguration m_model;
+
+    WireModel m_wireModel;
 
 private:
     ResourceHandle<PhysicsResource> m_PhysicsResource;

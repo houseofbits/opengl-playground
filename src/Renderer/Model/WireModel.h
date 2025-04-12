@@ -28,7 +28,7 @@ private:
     unsigned int m_vertexArrayObjectId{0};
     std::vector<unsigned int> m_bufferIds;
 
-    glm::vec4 m_currentColor{};
+    glm::vec4 m_currentColor{1.0f};
     std::vector<glm::vec4> m_colorArray;
     std::vector<glm::vec3> m_vertexArray;
 };

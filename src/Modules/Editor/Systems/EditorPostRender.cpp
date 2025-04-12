@@ -20,7 +20,7 @@ void EditorPostRender::process(EventManager &) {
     if (camera != nullptr) {
         m_wireframeRenderer.setCamera(*camera);
 
-        for (const auto&[id, component]: m_physicsBodiesRegistry->container()) {
+        for (const auto &[id, component]: m_physicsBodiesRegistry->container()) {
             auto e = m_EntityContext->getEntity(id);
             if (!e) {
                 continue;
@@ -36,10 +36,13 @@ void EditorPostRender::process(EventManager &) {
                 for (const auto &c: shapeComponents) {
                     auto m = c->getWorldTransform(transform);
                     if (c->m_type == PhysicsShapeComponent::TYPE_BOX) {
-                        m_wireframeRenderer.renderCube(m, glm::vec4(0,0,1, 1));
+                        m_wireframeRenderer.renderCube(m, glm::vec4(0, 0, 1, 1));
                     }
                     if (c->m_type == PhysicsShapeComponent::TYPE_SPHERE) {
-                        m_wireframeRenderer.renderSphere(m, glm::vec4(0,0,1, 1));
+                        m_wireframeRenderer.renderSphere(m, glm::vec4(0, 0, 1, 1));
+                    }
+                    if (c->m_type == PhysicsShapeComponent::TYPE_MESH && c->m_meshResource.isReady()) {
+                        m_wireframeRenderer.render(m, c->m_meshResource().m_wireModel, glm::vec4(0, 0, 1, 1));
                     }
                 }
             }
@@ -62,5 +65,11 @@ void EditorPostRender::handleSystemEvent(const SystemEvent &event) {
         m_isEditorModeEnabled = true;
     } else if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
         m_isEditorModeEnabled = false;
+    }
+}
+
+void EditorPostRender::renderPhysicsMesh(glm::mat4 &parentTransform, const PhysicsMeshResource &mesh) {
+    for (auto node: mesh.m_model.nodes) {
+        auto m = parentTransform * node.modelMatrix;
     }
 }
