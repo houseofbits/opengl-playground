@@ -1,6 +1,10 @@
 #include "PhysicsShapeComponent.h"
 #include "../../../Core/Helper/Math.h"
 #include <glm/gtx/quaternion.hpp>
+#include <Jolt/Physics/Collision/Shape/ConvexHullShape.h>
+#include <Jolt/Physics/Collision/Shape/MeshShape.h>
+#include <Jolt/Physics/Collision/PhysicsMaterialSimple.h>
+#include "../Helpers/PhysicsTypeCast.h"
 
 PhysicsShapeComponent::PhysicsShapeComponent() : Component() {
 }
@@ -17,6 +21,7 @@ void PhysicsShapeComponent::serialize(nlohmann::json &j) {
     }
     if (m_type == TYPE_MESH) {
         j[MESH_FILE_KEY] = m_meshResource().m_Path;
+        j[MESH_SACALE_KEY] = m_meshScale;
     }
 }
 
@@ -28,6 +33,7 @@ void PhysicsShapeComponent::deserialize(const nlohmann::json &j, ResourceManager
     if (m_type == TYPE_MESH) {
         std::string path = j.value(MESH_FILE_KEY, m_meshResource().m_Path);
         resourceManager.request(m_meshResource, path);
+        m_meshScale = j.value(MESH_SACALE_KEY, m_meshScale);
     }
     if (m_type == TYPE_BOX) {
         m_boxSize = j.value(BOX_SIZE_KEY, m_boxSize);
@@ -41,16 +47,53 @@ glm::mat4 PhysicsShapeComponent::getWorldTransform(const glm::mat4 &parentTransf
     glm::mat4 localTransform = glm::mat4(1.0f);
     localTransform = glm::toMat4(m_localRotation);
 
-    glm::vec3 scale = glm::vec3(1.0);
+    auto scale = glm::vec3(1.0);
     if (m_type == TYPE_BOX) {
         scale = m_boxSize;
     }
     if (m_type == TYPE_SPHERE) {
         scale = glm::vec3(m_sphereRadius);
     }
+    if (m_type == TYPE_MESH) {
+        scale = m_meshScale;
+    }
 
     localTransform = glm::scale(localTransform, scale);
     localTransform[3] = glm::vec4(m_localPosition, 1.0);
 
     return Math::rescaleMatrix(parentTransform) * localTransform;
+}
+
+JPH::Shape *PhysicsShapeComponent::createShape(bool isDynamic, const glm::vec3 debugColor) {
+    const auto material = new JPH::PhysicsMaterialSimple(
+        "Material", JPH::Color(static_cast<unsigned short>(255.0f * debugColor.x),
+                               static_cast<unsigned short>(255.0f * debugColor.y),
+                               static_cast<unsigned short>(255.0f * debugColor.z)));
+
+    if (m_type == TYPE_MESH) {
+        if (isDynamic) {
+            const auto shapeSettings = new JPH::ConvexHullShapeSettings(
+                m_meshResource().createConvexMeshShape(m_meshScale),
+                JPH::cDefaultConvexRadius, material);
+
+            return shapeSettings->Create().Get().GetPtr();
+        } else {
+            JPH::PhysicsMaterialList materials;
+            materials.push_back(material);
+
+            const auto shapeSettings = new JPH::MeshShapeSettings(
+                m_meshResource().createTriangleMeshShape(m_meshScale),
+                std::move(materials));
+
+            return shapeSettings->Create().Get().GetPtr();
+        }
+    }
+    if (m_type == TYPE_BOX) {
+        return new JPH::BoxShape(PhysicsTypeCast::glmToJPH(m_boxSize * 0.5f), glm::length(m_boxSize), material);
+    }
+    if (m_type == TYPE_SPHERE) {
+        return new JPH::SphereShape(m_sphereRadius, material);
+    }
+
+    return nullptr;
 }

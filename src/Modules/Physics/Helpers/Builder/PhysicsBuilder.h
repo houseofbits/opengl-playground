@@ -21,6 +21,7 @@
 #include "../../../Common/Components/TransformComponent.h"
 #include "../../Components/PhysicsBodyComponent.h"
 #include "../CompoundShape/PhysicsCompoundShapeBuilder.h"
+#include "Jolt/Physics/Collision/Shape/StaticCompoundShape.h"
 
 class PhysicsBuilder {
     class PhysicsBodyBuilder {
@@ -88,11 +89,6 @@ class PhysicsBuilder {
             return *this;
         }
 
-        PhysicsBodyBuilder &addCompoundShape(PhysicsCompoundShapeBuilder& shape) {
-
-            return *this;
-        }
-
         PhysicsBodyBuilder &setMass(const float mass) {
             m_settings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
             m_settings.mMassPropertiesOverride.mMass = mass;
@@ -103,6 +99,18 @@ class PhysicsBuilder {
         PhysicsBodyBuilder &setDamping(const float linear, const float angular) {
             m_settings.mLinearDamping = linear;
             m_settings.mAngularDamping = angular;
+
+            return *this;
+        }
+
+        PhysicsBodyBuilder &setShape(const JPH::Shape &shape) {
+            m_settings.SetShape(&shape);
+
+            return *this;
+        }
+
+        PhysicsBodyBuilder &addStaticCompoundShape(const JPH::StaticCompoundShapeSettings &shapeSettings) {
+            m_settings.SetShapeSettings(&shapeSettings);
 
             return *this;
         }

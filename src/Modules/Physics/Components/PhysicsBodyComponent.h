@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PhysicsShapeComponent.h"
 #include "../../../Core/API.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../Resources/PhysicsMeshResource.h"

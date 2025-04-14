@@ -48,4 +48,8 @@ void PhysicsShapeComponentTransformEdit::setWorldSpaceTransform(glm::mat4 m, int
     if (m_component->m_type == PhysicsShapeComponent::TYPE_SPHERE) {
         m_component->m_sphereRadius = scaling.x;
     }
+
+    if (m_component->m_type == PhysicsShapeComponent::TYPE_MESH) {
+        m_component->m_meshScale = scaling;
+    }
 }

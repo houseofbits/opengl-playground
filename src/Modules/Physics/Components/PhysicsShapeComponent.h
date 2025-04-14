@@ -10,6 +10,7 @@ class PhysicsShapeComponent : public Component {
     inline static const std::string POS_KEY = "position";
     inline static const std::string ROT_KEY = "rotation";
     inline static const std::string BOX_SIZE_KEY = "boxSize";
+    inline static const std::string MESH_SACALE_KEY = "meshScale";
     inline static const std::string SPHERE_RADIUS_KEY = "sphereRadius";
     inline static const std::string MESH_FILE_KEY = "mesh";
 
@@ -27,12 +28,15 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &) override;
 
-    glm::mat4 getWorldTransform(const glm::mat4& parentTransform) const;
+    JPH::Shape* createShape(bool isDynamic, glm::vec3 debugColor = {0.5, 0.5, 0.5});
+
+    [[nodiscard]] glm::mat4 getWorldTransform(const glm::mat4& parentTransform) const;
 
     Type m_type{TYPE_UNDEFINED};
     glm::vec3 m_localPosition{0.0};
     glm::quat m_localRotation{1, 0, 0, 0};
     float m_sphereRadius{1.0};
     glm::vec3 m_boxSize{1.0};
+    glm::vec3 m_meshScale{1.0};
     ResourceHandle<PhysicsMeshResource> m_meshResource;
 };

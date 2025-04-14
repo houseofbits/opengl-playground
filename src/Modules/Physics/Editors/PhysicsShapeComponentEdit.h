@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../SourceLibs/imgui/imgui.h"
+#include "../../Renderer/Components/MeshComponent.h"
 #include "../Components/PhysicsShapeComponent.h"
 
 inline void processPhysicsShapeComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
@@ -45,6 +46,18 @@ inline void processPhysicsShapeComponentEditor(Component *c, Entity *e, EditorUI
                       component->m_meshResource().m_Path)) {
             component->m_meshResource.invalidate();
             system.m_ResourceManager->request(component->m_meshResource, meshPath);
+        }
+
+        if (ImGui::Button("Create from render mesh##create-from-render-mesh")) {
+            if (auto m = e->getComponent<MeshComponent>(); m && m->m_Mesh().isReady()) {
+                component->m_meshResource.invalidate();
+                system.m_ResourceManager->request(component->m_meshResource, m->m_Mesh().m_Path);
+            }
+            if (auto t = e->getComponent<TransformComponent>()) {
+                component->m_localPosition = glm::vec3(0.0);
+                component->m_localRotation = glm::quat(1, 0, 0, 0);
+                component->m_meshScale = t->getScale();
+            }
         }
     }
 }
