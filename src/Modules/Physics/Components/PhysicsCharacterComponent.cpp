@@ -40,7 +40,7 @@ void PhysicsCharacterComponent::deserialize(const nlohmann::json &j, ResourceMan
 
 void PhysicsCharacterComponent::create(TransformComponent &transform) {
     const float cylinderHalfHeight = (m_height - m_stepTolerance - (m_radius * 2.f)) * 0.5f;
-    Log::write("st:", m_stepTolerance, ", chh:", cylinderHalfHeight, ", h:", m_height, ", r: ", m_radius);
+    //Log::write("st:", m_stepTolerance, ", chh:", cylinderHalfHeight, ", h:", m_height, ", r: ", m_radius);
     const float cylinderOffsetY = m_height - (cylinderHalfHeight + m_radius);
 
     const auto material = new JPH::PhysicsMaterialSimple("Material2", JPH::Color(0, 0, 255));
@@ -241,11 +241,11 @@ void PhysicsCharacterComponent::castRayForGroundReference(const glm::vec3 &point
     }
 }
 
-bool PhysicsCharacterComponent::rayCast(glm::vec3 position, glm::vec3 direction, PhysicsRayCastResult &result) {
+bool PhysicsCharacterComponent::rayCast(glm::vec3 position, glm::vec3 direction, PhysicsRayCastResult &result, bool excludeAllSensors) {
     JPH::RayCastResult hit;
     JPH::RRayCast ray{PhysicsTypeCast::glmToJPH(position), PhysicsTypeCast::glmToJPH(direction)};
     const JPH::IgnoreSingleBodyFilter bodyFilter(m_physicsBody->GetID());
-    SensorLayerFilter filter{};
+    SensorLayerFilter filter{excludeAllSensors};
 
     if (m_PhysicsResource().getSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, filter, bodyFilter)) {
         if (const JPH::BodyLockRead lock(m_PhysicsResource().getLockInterface(), hit.mBodyID); lock.Succeeded()) {

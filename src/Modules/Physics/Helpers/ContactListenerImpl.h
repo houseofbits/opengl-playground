@@ -26,5 +26,7 @@ public:
     }
 
 private:
+    void handleSensorContact(const JPH::Body &collider, const JPH::Body &sensor, const JPH::SubShapeID &sensorSubShapeId) const;
+
     PhysicsResource *m_physicsResource;
 };

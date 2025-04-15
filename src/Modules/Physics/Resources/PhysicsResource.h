@@ -20,8 +20,15 @@
 #include "../Helpers/ContactListenerImpl.h"
 #include "../../Renderer/Helpers/PhysicsDebugRenderer.h"
 
-class PhysicsResource : public Resource {
+class PhysicsResource final : public Resource {
 public:
+    typedef struct SensorContact {
+        Identity::Type colliderEntityId;
+        Identity::Type targetEntityId;
+        Identity::Type targetShapeComponentId;
+        std::string targetShapeComponentName;
+    } SensorContact;
+
     PhysicsResource();
 
     Resource::Status fetchData(ResourceManager &) override;
@@ -44,6 +51,10 @@ public:
 
     void clearEntityContacts();
 
+    void addSensorContact(const SensorContact &contact) {
+        m_sensorContacts.push_back(contact);
+    }
+
     JPH::PhysicsSystem &getSystem();
 
     JPH::BodyInterface &getInterface();
@@ -52,7 +63,9 @@ public:
 
     std::map<Identity::Type, std::vector<glm::vec3> > m_entityContacts;
 
-    std::list<std::pair<Identity::Type, Identity::Type> > m_sensorContacts;
+    // std::list<std::pair<Identity::Type, Identity::Type> > m_sensorContacts;
+
+    std::list<SensorContact> m_sensorContacts;
 
 private:
     JPH::PhysicsSystem m_PhysicsSystem;

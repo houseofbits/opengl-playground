@@ -7,6 +7,7 @@
 PhysicsBodyComponent::PhysicsBodyComponent() : PhysicsComponent(),
                                                m_BodyType(BODY_TYPE_STATIC),
                                                m_isSensor(false),
+                                               m_excludeSensorFromActionHit(false),
                                                m_friction(0.5, 0.5),
                                                m_damping(0.7, 0.7),
                                                m_restitution(0.5),
@@ -108,12 +109,13 @@ void PhysicsBodyComponent::createPhysics(EntityContext &ctx) {
             .setTransform(*transformComponent)
             .setMass(m_mass)
             .setShape(*createdShape.Get().GetPtr())
-            .setDamping(m_damping.x, m_damping.y);
+            .setDamping(m_damping.x, m_damping.y)
+            .setSensor(m_isSensor, m_excludeSensorFromActionHit);
 
     if (m_BodyType == BODY_TYPE_STATIC) {
-        m_physicsBodyId = builder.createStatic(m_isSensor)->GetID();
+        m_physicsBodyId = builder.createStatic()->GetID();
     } else {
-        m_physicsBodyId = builder.createDynamic(m_isSensor)->GetID();
+        m_physicsBodyId = builder.createDynamic()->GetID();
     }
 
     m_PhysicsResource().getInterface().SetFriction(m_physicsBodyId, m_friction.x);

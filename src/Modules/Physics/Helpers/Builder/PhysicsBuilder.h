@@ -29,6 +29,8 @@ class PhysicsBuilder {
         Identity::Type m_entityId = 0;
         JPH::PhysicsMaterial *m_material = nullptr;
         JPH::BodyCreationSettings m_settings;
+        bool m_isSensor = false;
+        bool m_excludeSensorFromActionHit = false;
 
         [[nodiscard]] JPH::Body *createInner() const {
             const auto physicsBody = m_physicsSystem->GetBodyInterface().CreateBody(m_settings);
@@ -52,6 +54,13 @@ class PhysicsBuilder {
 
         PhysicsBodyBuilder &setEntityReference(const Identity::Type entityId) {
             m_entityId = entityId;
+
+            return *this;
+        }
+
+        PhysicsBodyBuilder &setSensor(const bool isSensor, const bool disableActions = false) {
+            m_isSensor = isSensor;
+            m_excludeSensorFromActionHit = disableActions;
 
             return *this;
         }
@@ -135,32 +144,24 @@ class PhysicsBuilder {
             return *this;
         }
 
-        JPH::Body *createDynamic(bool isSensor = false) {
+        JPH::Body *createDynamic() {
             m_settings.mMotionType = JPH::EMotionType::Dynamic;
             m_settings.mObjectLayer = Layers::MOVING;
-            if (isSensor) {
-                m_settings.mObjectLayer = Layers::SENSOR;
+            if (m_isSensor) {
+                m_settings.mObjectLayer = m_excludeSensorFromActionHit ? Layers::SENSOR : Layers::SENSOR_WITH_ACTIONS;
                 m_settings.mIsSensor = true;
             }
 
             return createInner();
         }
 
-        JPH::Body *createStatic(bool isSensor = false) {
+        JPH::Body *createStatic() {
             m_settings.mMotionType = JPH::EMotionType::Static;
             m_settings.mObjectLayer = Layers::NON_MOVING;
-            if (isSensor) {
-                m_settings.mObjectLayer = Layers::SENSOR;
+            if (m_isSensor) {
+                m_settings.mObjectLayer = m_excludeSensorFromActionHit ? Layers::SENSOR : Layers::SENSOR_WITH_ACTIONS;
                 m_settings.mIsSensor = true;
             }
-
-            return createInner();
-        }
-
-        JPH::Body *createStaticSensor() {
-            m_settings.mMotionType = JPH::EMotionType::Static;
-            m_settings.mObjectLayer = Layers::SENSOR;
-            m_settings.mIsSensor = true;
 
             return createInner();
         }

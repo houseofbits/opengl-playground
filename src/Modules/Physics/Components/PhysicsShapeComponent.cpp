@@ -96,7 +96,8 @@ JPH::Shape *PhysicsShapeComponent::createShape(bool isDynamic, const glm::vec3 d
         }
     }
     if (m_type == TYPE_BOX) {
-        const auto shape = new JPH::BoxShape(PhysicsTypeCast::glmToJPH(m_boxSize * 0.5f), glm::length(m_boxSize),
+        const auto shape = new JPH::BoxShape(PhysicsTypeCast::glmToJPH(m_boxSize * 0.5f),
+                                             0.0f,
                                              material);
         setUserData(shape);
 

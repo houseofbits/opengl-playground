@@ -1,5 +1,5 @@
 #include "PhysicsSystem.h"
-#include "../Events//PhysicsTriggerShapeEvent.h"
+#include "../Events/PhysicsSensorEvent.h"
 
 PhysicsSystem::PhysicsSystem() : EntitySystem(),
                                  m_isSimulationDisabled(false),
@@ -25,8 +25,18 @@ void PhysicsSystem::process(EventManager &eventManager) {
         m_PhysicsResource().simulate();
     }
 
-    for (const auto &[sensorEntityId, colliderEntityId]: m_PhysicsResource().m_sensorContacts) {
-        eventManager.queueEvent<PhysicsTriggerShapeEvent>(sensorEntityId, colliderEntityId);
+    for (const auto &contact: m_PhysicsResource().m_sensorContacts) {
+        const auto collider = m_EntityContext->getEntity(contact.colliderEntityId);
+        const auto sensor = m_EntityContext->getEntity(contact.targetEntityId);
+        if (collider && sensor) {
+            eventManager.queueEvent<PhysicsSensorEvent>(
+                contact.colliderEntityId,
+                collider->m_Name,
+                contact.targetEntityId,
+                sensor->m_Name,
+                contact.targetShapeComponentName
+            );
+        }
     }
 }
 
@@ -58,4 +68,3 @@ void PhysicsSystem::recreateAll() const {
         component->setPhysicsCreated(false);
     }
 }
-

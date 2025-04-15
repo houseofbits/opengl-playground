@@ -24,7 +24,7 @@ public:
 
     [[nodiscard]] bool isCreated() const;
 
-    bool rayCast(glm::vec3 position, glm::vec3 direction, PhysicsRayCastResult &result);
+    bool rayCast(glm::vec3 position, glm::vec3 direction, PhysicsRayCastResult &result, bool excludeAllSensors = true);
 
     [[nodiscard]] glm::vec3 getVelocity() const;
 

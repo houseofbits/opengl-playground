@@ -7,16 +7,13 @@
 #include "Systems/JointsProcessingSystem.h"
 #include "Systems/PhysicsBodyProcessingSystem.h"
 #include "Systems/PhysicsSystem.h"
-#include "Systems/PhysicsTriggerShapeSystem.h"
 #include "Components/PhysicsSliderJointComponent.h"
 #include "Components/PhysicsFixedJointComponent.h"
-#include "Components/PhysicsTriggerShapeComponent.h"
 #include "Editors/CharacterControllerComponentEdit.h"
 #include "Editors/PhysicsBodyComponentEdit.h"
 #include "Editors/PhysicsHingeJointComponentEdit.h"
 #include "Editors/PhysicsSliderJointComponentEdit.h"
 #include "Editors/PhysicsFixedJointComponentEdit.h"
-#include "Editors/PhysicsTriggerShapeComponentEdit.h"
 #include "Editors/PhysicsShapeComponentEdit.h"
 #include "../Editor/Systems/EditorUISystem.h"
 #include "Editors/PhysicsHingeJointComponentTransformEdit.h"
@@ -25,6 +22,7 @@
 #include "Events/PhysicsTriggerShapeEvent.h"
 #include "Components/PhysicsShapeComponent.h"
 #include "Editors/PhysicsShapeComponentTransformEdit.h"
+#include "Events/PhysicsSensorEvent.h"
 
 class PhysicsModule final : public EntityModule {
 public:
@@ -36,7 +34,6 @@ public:
         ctx.registerComponent<PhysicsHingeJointComponent>();
         ctx.registerComponent<PhysicsSliderJointComponent>();
         ctx.registerComponent<PhysicsFixedJointComponent>();
-        ctx.registerComponent<PhysicsTriggerShapeComponent>();
         ctx.registerComponent<PhysicsShapeComponent>();
     };
 
@@ -47,7 +44,6 @@ public:
         ctx.registerEntitySystem<PhysicsBodyProcessingSystem>(PHYSICS_PROCESS, 2);
         ctx.registerEntitySystem<JointsProcessingSystem>(PHYSICS_PROCESS, 3);
         ctx.registerEntitySystem<CharacterControllerSystem>(PHYSICS_PROCESS, 4);
-        ctx.registerEntitySystem<PhysicsTriggerShapeSystem>(PHYSICS_PROCESS, 5);
     }
 
     void registerScriptableTypes(ScriptingManager &scriptingManager) override {
@@ -56,7 +52,14 @@ public:
                                                                 "entityName", &PhysicsPickingEvent::m_entityName,
                                                                 "shapeName", &PhysicsPickingEvent::m_shapeComponentName
         );
-        scriptingManager.registerEventType<PhysicsTriggerShapeEvent>("PhysicsTriggerShapeEvent");
+        scriptingManager.registerEventType<PhysicsSensorEvent>("PhysicsSensorEvent",
+                                                                     "colliderName",
+                                                                     &PhysicsSensorEvent::m_colliderEntityName,
+                                                                     "sensorName",
+                                                                     &PhysicsSensorEvent::m_sensorEntityName,
+                                                                     "sensorShapeName",
+                                                                     &PhysicsSensorEvent::m_sensorShapeName
+        );
     }
 
     void postRegister(EntityContext &ctx) override {
@@ -76,8 +79,6 @@ public:
             editorSystem->registerComponentEditor<PhysicsHingeJointComponent>(processPhysicsHingeJointComponentEditor);
             editorSystem->registerComponentEditor<
                 PhysicsSliderJointComponent>(processPhysicsSliderJointComponentEditor);
-            editorSystem->registerComponentEditor<PhysicsTriggerShapeComponent>(
-                processPhysicsTriggerShapeComponentEditor);
         }
     }
 };

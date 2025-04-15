@@ -25,7 +25,10 @@ inline void processPhysicsBodyComponentEditor(Component *c, Entity *e, EditorUIS
     }
 
     ImGui::Checkbox("Is sensor", &physicsBody->m_isSensor);
-
+    if (physicsBody->m_isSensor) {
+        ImGui::Checkbox("Disable actions", &physicsBody->m_excludeSensorFromActionHit);
+    }
+    ImGui::SeparatorText("Physics properties");
     ImGui::InputFloat("Mass", &physicsBody->m_mass);
     ImGui::InputFloat("Friction", &physicsBody->m_friction.x);
     ImGui::InputFloat("Rolling friction", &physicsBody->m_friction.y);

@@ -50,6 +50,7 @@ public:
 
     BodyType m_BodyType;
     bool m_isSensor;
+    bool m_excludeSensorFromActionHit;
     glm::vec2 m_friction;
     glm::vec2 m_damping;
     float m_restitution;

@@ -107,7 +107,7 @@ void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
         (event.type == InputEvent::MOUSEUP && event.mouseButtonRight)) {
         PhysicsRayCastResult hit;
         if (characterComponent->rayCast(viewPosition,
-                                        viewDirection * 10.f, hit)) {
+                                        viewDirection * 10.f, hit, false)) {
             if (const auto entity = m_EntityContext->getEntity(hit.m_entityId)) {
                 event.m_EventManager->queueEvent<PhysicsPickingEvent>(
                     hit.m_entityId,
