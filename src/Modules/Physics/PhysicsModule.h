@@ -51,7 +51,11 @@ public:
     }
 
     void registerScriptableTypes(ScriptingManager &scriptingManager) override {
-        scriptingManager.registerEventType<PhysicsPickingEvent>("PhysicsPickingEvent");
+        scriptingManager.registerEventType<PhysicsPickingEvent>("PhysicsPickingEvent",
+                                                                "distance", &PhysicsPickingEvent::m_distance,
+                                                                "entityName", &PhysicsPickingEvent::m_entityName,
+                                                                "shapeName", &PhysicsPickingEvent::m_shapeComponentName
+        );
         scriptingManager.registerEventType<PhysicsTriggerShapeEvent>("PhysicsTriggerShapeEvent");
     }
 

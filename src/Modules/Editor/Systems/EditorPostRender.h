@@ -5,6 +5,7 @@
 #include "../../../Modules/Application/Events/SystemEvent.h"
 #include "../../../Renderer/Shader/WireframeRenderer.h"
 #include "../../Common/Helpers/ActiveCameraHelper.h"
+#include "../Events//EditorUIEvent.h"
 
 class EditorPostRender : public EntitySystem {
 public:
@@ -18,16 +19,17 @@ public:
 
     void handleSystemEvent(const SystemEvent &);
 
+    void handleEditorUIEvent(const EditorUIEvent &event);
+
     void handleCameraActivationEvent(const CameraActivationEvent &event) {
         m_activeCameraHelper.m_activeCameraId = event.m_cameraComponentId;
     }
 
 private:
-    void renderPhysicsMesh(glm::mat4& parentTransform, const PhysicsMeshResource& mesh);
-
     EntityUniqueComponentRegistry<PhysicsBodyComponent> *m_physicsBodiesRegistry;
     bool m_isEditorModeEnabled{};
     bool m_isImUIInitialized{};
+    bool m_doREnderWireframes{true};
     WireframeRenderer m_wireframeRenderer;
     ActiveCameraHelper m_activeCameraHelper;
 };

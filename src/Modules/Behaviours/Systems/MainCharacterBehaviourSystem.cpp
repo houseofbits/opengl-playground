@@ -102,18 +102,23 @@ void MainCharacterBehaviourSystem::handleMovement(const InputEvent &event,
 void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
                                                 PhysicsCharacterComponent *characterComponent,
                                                 const glm::vec3 viewPosition,
-                                                const glm::vec3 viewDirection) {
+                                                const glm::vec3 viewDirection) const {
     if ((event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) ||
         (event.type == InputEvent::MOUSEUP && event.mouseButtonRight)) {
         PhysicsRayCastResult hit;
         if (characterComponent->rayCast(viewPosition,
                                         viewDirection * 10.f, hit)) {
-            event.m_EventManager->queueEvent<PhysicsPickingEvent>(
-                hit.m_entityId,
-                hit.m_distance,
-                hit.m_touchPoint,
-                event.mouseButtonRight
-            );
+            if (const auto entity = m_EntityContext->getEntity(hit.m_entityId)) {
+                event.m_EventManager->queueEvent<PhysicsPickingEvent>(
+                    hit.m_entityId,
+                    entity->m_Name,
+                    hit.m_distance,
+                    hit.m_touchPoint,
+                    event.mouseButtonRight,
+                    hit.m_shapeComponentId,
+                    hit.m_shapeComponentName
+                );
+            }
         }
     }
 }

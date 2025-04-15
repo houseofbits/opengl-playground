@@ -6,11 +6,11 @@
 
 PhysicsBodyComponent::PhysicsBodyComponent() : PhysicsComponent(),
                                                m_BodyType(BODY_TYPE_STATIC),
-                                               m_MeshType(MESH_TYPE_TRIANGLE),
+                                               m_isSensor(false),
                                                m_friction(0.5, 0.5),
+                                               m_damping(0.7, 0.7),
                                                m_restitution(0.5),
                                                m_mass(0.0),
-                                               m_meshResource(),
                                                m_PhysicsResource(),
                                                m_physicsBodyId() {
 }
@@ -19,11 +19,11 @@ PhysicsBodyComponent::~PhysicsBodyComponent() = default;
 
 void PhysicsBodyComponent::serialize(nlohmann::json &j) {
     j[TYPE_KEY] = m_BodyType;
-    j[SHAPE_KEY] = m_MeshType;
-    j[MODEL_KEY] = m_meshResource().m_Path;
     j[RESTITUTION_KEY] = m_restitution;
     j[FRICTION_KEY] = m_friction;
+    j[DAMPING_KEY] = m_damping;
     j[MASS_KEY] = m_mass;
+    j[SENSOR_KEY] = m_isSensor;
 }
 
 void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -31,22 +31,14 @@ void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager 
 
     m_restitution = j.value(RESTITUTION_KEY, m_restitution);
     m_friction = j.value(FRICTION_KEY, m_friction);
+    m_damping = j.value(DAMPING_KEY, m_damping);
     m_mass = j.value(MASS_KEY, m_mass);
-
-
-    std::string path = j.value(MODEL_KEY, m_meshResource().m_Path);
-    resourceManager.request(m_meshResource, path);
-
+    m_isSensor = j.value(SENSOR_KEY, m_isSensor);
     m_BodyType = j.value(TYPE_KEY, m_BodyType);
-    m_MeshType = j.value(SHAPE_KEY, m_MeshType);
 }
 
 bool PhysicsBodyComponent::isReadyToCreate(EntityContext &ctx) const {
     if (!m_PhysicsResource.isReady()) {
-        return false;
-    }
-
-    if (!m_meshResource.isReady()) {
         return false;
     }
 
@@ -75,10 +67,15 @@ void PhysicsBodyComponent::createPhysics(EntityContext &ctx) {
         return;
     }
 
-
     auto color = (m_BodyType == BODY_TYPE_STATIC)
-                     ? glm::vec3{0.5f, 0.5f, 0.5f}
-                     : glm::vec3{0, 1, 0};
+                     ? STATIC_COLOR
+                     : DYNAMIC_COLOR;
+
+    if (m_isSensor) {
+        color = (m_BodyType == BODY_TYPE_STATIC)
+                    ? STATIC_SENSOR_COLOR
+                    : DYNAMIC_SENSOR_COLOR;
+    }
 
     JPH::StaticCompoundShapeSettings compoundShapeSettings;
     for (const auto &shapeComponent: shapeComponents) {
@@ -106,73 +103,21 @@ void PhysicsBodyComponent::createPhysics(EntityContext &ctx) {
     }
 
     auto builder = PhysicsBuilder::newBody(m_PhysicsResource().getSystem())
-            .setDebugColor((m_BodyType == BODY_TYPE_STATIC)
-                               ? glm::vec3{0.5f, 0.5f, 0.5f}
-                               : glm::vec3{0, 1, 0}
-            )
+            .setDebugColor(color)
             .setEntityReference(m_EntityId.id())
             .setTransform(*transformComponent)
             .setMass(m_mass)
             .setShape(*createdShape.Get().GetPtr())
-            .setDamping(0.7, 0.7);
+            .setDamping(m_damping.x, m_damping.y);
 
     if (m_BodyType == BODY_TYPE_STATIC) {
-        m_physicsBodyId = builder.createStatic()->GetID();
+        m_physicsBodyId = builder.createStatic(m_isSensor)->GetID();
     } else {
-        m_physicsBodyId = builder.createDynamic()->GetID();
+        m_physicsBodyId = builder.createDynamic(m_isSensor)->GetID();
     }
 
     m_PhysicsResource().getInterface().SetFriction(m_physicsBodyId, m_friction.x);
     m_PhysicsResource().getInterface().SetRestitution(m_physicsBodyId, m_restitution);
-}
-
-bool PhysicsBodyComponent::create(TransformComponent &transform) {
-    return false;
-
-    if (!m_meshResource.isReady()) {
-        Log::warn("PhysicsBodyComponent::create: Mesh resource not ready");
-
-        return false;
-    }
-
-    if (m_MeshType == MESH_TYPE_TRIANGLE && m_BodyType != BODY_TYPE_STATIC) {
-        Log::warn("PhysicsBodyComponent::create: Non static body cannot have triangle mesh shape");
-
-        return false;
-    }
-
-    if (m_BodyType == BODY_TYPE_DYNAMIC && m_mass < 0.0001) {
-        Log::warn("PhysicsBodyComponent::create: Dynamic body should have mass");
-
-        return false;
-    }
-
-    auto builder = PhysicsBuilder::newBody(m_PhysicsResource().getSystem())
-            .setDebugColor((m_BodyType == BODY_TYPE_STATIC)
-                               ? glm::vec3{0.5f, 0.5f, 0.5f}
-                               : glm::vec3{0, 1, 0}
-            )
-            .setEntityReference(m_EntityId.id())
-            .setTransform(transform)
-            .setMass(80)
-            .setDamping(0.7, 0.7);
-
-    if (m_MeshType == MESH_TYPE_TRIANGLE) {
-        builder.addTriangleMeshShape(m_meshResource().createTriangleMeshShape(transform.getScale()));
-    } else {
-        builder.addConvexMeshShape(m_meshResource().createConvexMeshShape(transform.getScale()));
-    }
-
-    if (m_BodyType == BODY_TYPE_STATIC) {
-        m_physicsBodyId = builder.createStatic()->GetID();
-    } else {
-        m_physicsBodyId = builder.createDynamic()->GetID();
-    }
-
-    m_PhysicsResource().getInterface().SetFriction(m_physicsBodyId, m_friction.x);
-    m_PhysicsResource().getInterface().SetRestitution(m_physicsBodyId, m_restitution);
-
-    return true;
 }
 
 void PhysicsBodyComponent::release() {

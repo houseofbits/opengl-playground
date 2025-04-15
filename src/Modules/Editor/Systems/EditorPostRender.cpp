@@ -17,7 +17,7 @@ void EditorPostRender::process(EventManager &) {
     }
 
     Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
-    if (camera != nullptr) {
+    if (camera != nullptr && m_isEditorModeEnabled && m_doREnderWireframes) {
         m_wireframeRenderer.setCamera(*camera);
 
         for (const auto &[id, component]: m_physicsBodiesRegistry->container()) {
@@ -56,6 +56,7 @@ void EditorPostRender::process(EventManager &) {
 void EditorPostRender::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &EditorPostRender::handleSystemEvent);
     eventManager.registerEventReceiver(this, &EditorPostRender::handleCameraActivationEvent);
+    eventManager.registerEventReceiver(this, &EditorPostRender::handleEditorUIEvent);
 }
 
 void EditorPostRender::handleSystemEvent(const SystemEvent &event) {
@@ -68,8 +69,12 @@ void EditorPostRender::handleSystemEvent(const SystemEvent &event) {
     }
 }
 
-void EditorPostRender::renderPhysicsMesh(glm::mat4 &parentTransform, const PhysicsMeshResource &mesh) {
-    for (auto node: mesh.m_model.nodes) {
-        auto m = parentTransform * node.modelMatrix;
+void EditorPostRender::handleEditorUIEvent(const EditorUIEvent &event) {
+    if (event.m_Type == EditorUIEvent::SHOW_PHYSICS_SHAPES) {
+        m_doREnderWireframes = true;
+    }
+
+    if (event.m_Type == EditorUIEvent::HIDE_PHYSICS_SHAPES) {
+        m_doREnderWireframes = false;
     }
 }

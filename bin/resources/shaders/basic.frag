@@ -22,7 +22,7 @@ void main()
 
     float diff = max(dot(lightDir, normal), 0.0);
 
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), 128);
     vec3 specular = lightColor * spec;
 
     vec3 c = modelColor.xyz * color.xyz;

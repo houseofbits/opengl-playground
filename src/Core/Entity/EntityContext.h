@@ -118,7 +118,7 @@ public:
         return nullptr;
     }
 
-    Entity *getEntity(Identity::Type id);
+    Entity *getEntity(Identity::Type id) const;
 
     Entity *findEntity(const std::string &name);
 

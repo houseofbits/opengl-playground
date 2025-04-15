@@ -39,4 +39,7 @@ public:
     glm::vec3 m_boxSize{1.0};
     glm::vec3 m_meshScale{1.0};
     ResourceHandle<PhysicsMeshResource> m_meshResource;
+
+private:
+    void setUserData(JPH::Shape* shape) const;
 };

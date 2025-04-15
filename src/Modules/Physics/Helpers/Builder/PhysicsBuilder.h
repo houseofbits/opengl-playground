@@ -16,7 +16,7 @@
 #include "../../../../Core/Reflection/Identity.h"
 #include "../Layers.h"
 #include "../PhysicsTypeCast.h"
-#include "../PhysicsUserData.h"
+#include "../PhysicsBodyUserData.h"
 #include "../../../../Core/Helper/Math.h"
 #include "../../../Common/Components/TransformComponent.h"
 #include "../../Components/PhysicsBodyComponent.h"
@@ -34,7 +34,7 @@ class PhysicsBuilder {
             const auto physicsBody = m_physicsSystem->GetBodyInterface().CreateBody(m_settings);
 
             if (m_entityId != 0) {
-                auto *userData = new PhysicsUserData(m_entityId);
+                auto *userData = new PhysicsBodyUserData(m_entityId);
                 physicsBody->SetUserData(reinterpret_cast<unsigned long>(userData));
             }
 

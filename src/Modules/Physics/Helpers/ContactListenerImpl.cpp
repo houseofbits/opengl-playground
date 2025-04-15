@@ -1,5 +1,5 @@
 #include "ContactListenerImpl.h"
-#include "PhysicsUserData.h"
+#include "PhysicsBodyUserData.h"
 #include "../Resources/PhysicsResource.h"
 
 using namespace JPH;
@@ -18,14 +18,14 @@ void ContactListenerImpl::OnContactAdded(const JPH::Body &inBody1, const JPH::Bo
                                          const JPH::ContactManifold &inManifold,
                                          JPH::ContactSettings &ioSettings) {
     if (inBody1.IsSensor()) {
-        const auto userData1 = reinterpret_cast<PhysicsUserData *>(inBody1.GetUserData());
-        const auto userData2 = reinterpret_cast<PhysicsUserData *>(inBody2.GetUserData());
+        const auto userData1 = reinterpret_cast<PhysicsBodyUserData *>(inBody1.GetUserData());
+        const auto userData2 = reinterpret_cast<PhysicsBodyUserData *>(inBody2.GetUserData());
         m_physicsResource->m_sensorContacts.emplace_back(userData1->m_entityId, userData2->m_entityId);
     }
 
     if (inBody2.IsSensor()) {
-        const auto userData1 = reinterpret_cast<PhysicsUserData *>(inBody1.GetUserData());
-        const auto userData2 = reinterpret_cast<PhysicsUserData *>(inBody2.GetUserData());
+        const auto userData1 = reinterpret_cast<PhysicsBodyUserData *>(inBody1.GetUserData());
+        const auto userData2 = reinterpret_cast<PhysicsBodyUserData *>(inBody2.GetUserData());
         m_physicsResource->m_sensorContacts.emplace_back(userData2->m_entityId, userData1->m_entityId);
     }
 }

@@ -17,6 +17,8 @@ public:
         TOGGLE_RENDER_PROBES,
         TOGGLE_RENDER_REFLECTIONS,
         TOGGLE_RENDER_PHYSICS,
+        SHOW_PHYSICS_SHAPES,
+        HIDE_PHYSICS_SHAPES,
     } Type;
 
     EditorUIEvent() : BaseEvent() {

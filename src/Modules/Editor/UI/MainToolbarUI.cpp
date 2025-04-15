@@ -62,6 +62,14 @@ void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) const {
 
 void MainToolbarUI::processViewMenu() {
     if (ImGui::BeginMenu("View")) {
+        if (ImGui::MenuItem("View physics wireframe", nullptr, m_showPhysicsShapesWireframe)) {
+            m_showPhysicsShapesWireframe = !m_showPhysicsShapesWireframe;
+            if (m_showPhysicsShapesWireframe) {
+                sendUIEvent(EditorUIEvent::SHOW_PHYSICS_SHAPES);
+            } else {
+                sendUIEvent(EditorUIEvent::HIDE_PHYSICS_SHAPES);
+            }
+        }
         if (ImGui::MenuItem("View shaded", nullptr, m_renderShaderType == 0)) {
             sendUIEvent(EditorUIEvent::TOGGLE_RENDER_SHADED);
             m_renderShaderType = 0;

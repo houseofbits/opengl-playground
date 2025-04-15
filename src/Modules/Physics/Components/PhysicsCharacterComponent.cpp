@@ -2,6 +2,7 @@
 #include "../../Editor/Systems/EditorUISystem.h"
 #include "../Helpers/PhysicsTypeCast.h"
 #include "../Helpers/SensorLayerFilter.h"
+#include "../Helpers/PhysicsShapeUserData.h"
 #include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
 #include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
 #include "Jolt/Physics/Collision/RayCast.h"
@@ -72,7 +73,7 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
     m_physicsBody->SetFriction(0.5);
     m_physicsBody->SetRestitution(0);
 
-    auto *userData = new PhysicsUserData(m_EntityId.id());
+    auto *userData = new PhysicsBodyUserData(m_EntityId.id());
     m_physicsBody->SetUserData(reinterpret_cast<unsigned long>(userData));
 
     m_PhysicsResource().getInterface().AddBody(m_physicsBody->GetID(), JPH::EActivation::Activate);
@@ -243,11 +244,18 @@ void PhysicsCharacterComponent::castRayForGroundReference(const glm::vec3 &point
 bool PhysicsCharacterComponent::rayCast(glm::vec3 position, glm::vec3 direction, PhysicsRayCastResult &result) {
     JPH::RayCastResult hit;
     JPH::RRayCast ray{PhysicsTypeCast::glmToJPH(position), PhysicsTypeCast::glmToJPH(direction)};
-    JPH::IgnoreSingleBodyFilter bodyFilter(m_physicsBody->GetID());
+    const JPH::IgnoreSingleBodyFilter bodyFilter(m_physicsBody->GetID());
     SensorLayerFilter filter{};
 
     if (m_PhysicsResource().getSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, filter, bodyFilter)) {
-        auto *userData = m_PhysicsResource().getBodyUserData(hit.mBodyID);
+        if (const JPH::BodyLockRead lock(m_PhysicsResource().getLockInterface(), hit.mBodyID); lock.Succeeded()) {
+            const auto rawUserData = lock.GetBody().GetShape()->GetSubShapeUserData(hit.mSubShapeID2);
+            const auto userData = reinterpret_cast<PhysicsShapeUserData *>(rawUserData);
+            result.m_shapeComponentId = userData->m_physicsShapeComponentId;
+            result.m_shapeComponentName = userData->m_physicsShapeComponentName;
+        }
+
+        const auto *userData = m_PhysicsResource().getBodyUserData(hit.mBodyID);
         result.m_entityId = userData->m_entityId;
         result.m_touchPoint = PhysicsTypeCast::JPHToGlm(ray.GetPointOnRay(hit.mFraction));
         result.m_distance = ray.mDirection.Length() * hit.mFraction;

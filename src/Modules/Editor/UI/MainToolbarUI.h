@@ -11,6 +11,7 @@ public:
     void process();
 
     int m_renderShaderType;
+    bool m_showPhysicsShapesWireframe{true};
 
 private:
     void processViewMenu();

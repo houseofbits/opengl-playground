@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../Helpers/PhysicsUserData.h"
+#include "../Helpers/PhysicsBodyUserData.h"
 #include "../Helpers/PhysicsRayCastResult.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/RegisterTypes.h>
@@ -36,8 +36,8 @@ public:
 
     void drawDebug(ShaderProgramResource &shader);
 
-    PhysicsUserData *getBodyUserData(JPH::BodyID id) {
-        return reinterpret_cast<PhysicsUserData *>(getInterface().GetUserData(id));
+    PhysicsBodyUserData *getBodyUserData(JPH::BodyID id) {
+        return reinterpret_cast<PhysicsBodyUserData *>(getInterface().GetUserData(id));
     }
 
     void addContactPoint(Identity::Type entityId, glm::vec3 point);

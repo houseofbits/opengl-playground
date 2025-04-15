@@ -8,4 +8,10 @@ function InputEventHandler(event)
     end
 end
 
+function PhysicsPickingEventHandler(event)
+    print(event.entityName)
+    print(event.shapeName)
+end
+
 Manager:registerEventHandler("InputEvent", InputEventHandler);
+Manager:registerEventHandler("PhysicsPickingEvent", PhysicsPickingEventHandler);

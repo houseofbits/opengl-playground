@@ -131,7 +131,7 @@ void EntityContext::processSystems(EventManager &eventManager) {
     entitySystemRegistry.processMain();
 }
 
-Entity *EntityContext::getEntity(const Identity::Type id) {
+Entity *EntityContext::getEntity(const Identity::Type id) const {
     for (const auto &e: m_Entities) {
         if (e->m_Id.id() == id) {
             return e.get();

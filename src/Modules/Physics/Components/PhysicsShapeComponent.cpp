@@ -5,6 +5,7 @@
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 #include <Jolt/Physics/Collision/PhysicsMaterialSimple.h>
 #include "../Helpers/PhysicsTypeCast.h"
+#include "../Helpers/PhysicsShapeUserData.h"
 
 PhysicsShapeComponent::PhysicsShapeComponent() : Component() {
 }
@@ -76,7 +77,10 @@ JPH::Shape *PhysicsShapeComponent::createShape(bool isDynamic, const glm::vec3 d
                 m_meshResource().createConvexMeshShape(m_meshScale),
                 JPH::cDefaultConvexRadius, material);
 
-            return shapeSettings->Create().Get().GetPtr();
+            const auto shape = shapeSettings->Create().Get().GetPtr();
+            setUserData(shape);
+
+            return shape;
         } else {
             JPH::PhysicsMaterialList materials;
             materials.push_back(material);
@@ -85,15 +89,30 @@ JPH::Shape *PhysicsShapeComponent::createShape(bool isDynamic, const glm::vec3 d
                 m_meshResource().createTriangleMeshShape(m_meshScale),
                 std::move(materials));
 
-            return shapeSettings->Create().Get().GetPtr();
+            const auto shape = shapeSettings->Create().Get().GetPtr();
+            setUserData(shape);
+
+            return shape;
         }
     }
     if (m_type == TYPE_BOX) {
-        return new JPH::BoxShape(PhysicsTypeCast::glmToJPH(m_boxSize * 0.5f), glm::length(m_boxSize), material);
+        const auto shape = new JPH::BoxShape(PhysicsTypeCast::glmToJPH(m_boxSize * 0.5f), glm::length(m_boxSize),
+                                             material);
+        setUserData(shape);
+
+        return shape;
     }
     if (m_type == TYPE_SPHERE) {
-        return new JPH::SphereShape(m_sphereRadius, material);
+        const auto shape = new JPH::SphereShape(m_sphereRadius, material);
+        setUserData(shape);
+
+        return shape;
     }
 
     return nullptr;
+}
+
+void PhysicsShapeComponent::setUserData(JPH::Shape *shape) const {
+    auto *userData = new PhysicsShapeUserData(m_Id.id(), m_Name);
+    shape->SetUserData(reinterpret_cast<unsigned long>(userData));
 }

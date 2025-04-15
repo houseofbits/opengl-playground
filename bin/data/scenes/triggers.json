@@ -7,21 +7,21 @@
             "moveSpeed": 3.0,
             "orthoScale": 9.200000762939453,
             "position": [
-                2.2671597003936768,
-                3.6208081245422363,
-                -2.343256950378418
+                4.809835433959961,
+                3.427771806716919,
+                -3.4601221084594727
             ],
             "reposition": false,
             "type": 0,
             "upDirection": [
-                -0.4823715388774872,
-                0.8172913789749146,
-                0.31520238518714905
+                -0.5540089011192322,
+                0.8100473880767822,
+                0.19208727777004242
             ],
             "viewDirection": [
-                -0.6841742992401123,
-                -0.5762246251106262,
-                0.4470690190792084
+                -0.7653489112854004,
+                -0.5863645672798157,
+                0.26536357402801514
             ]
         },
         "name": "EditorCamera"
@@ -41,7 +41,7 @@
                 1.0,
                 1.0
             ],
-            "intensity": 1.5000001192092896,
+            "intensity": 1.9000002145767212,
             "isEnabled": true,
             "type": "OMNI"
         },
@@ -60,7 +60,7 @@
             ],
             "translation": [
                 -0.004689335823059082,
-                1.6624703407287598,
+                3.2224133014678955,
                 -0.2853957414627075
             ]
         },
@@ -72,28 +72,36 @@
             "model": "data/models/unit-cube.gltf"
         },
         "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
             "friction": [
                 0.5,
                 0.5
             ],
+            "isSensor": false,
             "mass": 0.0,
-            "model": "resources/BoxTextured.gltf",
             "restitution": 0.5,
-            "shape": 1,
             "type": 0
         },
-        "PhysicsShapeComponent#shape1": {
+        "PhysicsShapeComponent#GroundShape": {
             "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                11.898664474487305,
+                0.1715952754020691,
+                15.443957328796387
+            ],
             "position": [
                 0.0,
-                1.4420051574707031,
+                0.0,
                 0.0
             ],
             "rotation": [
                 0.0,
-                0.2808399498462677,
                 0.0,
-                0.9597546458244324
+                0.0,
+                1.0
             ],
             "type": 3
         },
@@ -106,16 +114,141 @@
                 1.0
             ],
             "scale": [
-                5.1475372314453125,
-                0.21265745162963867,
-                5.785562992095947
+                11.898664474487305,
+                0.1715952754020691,
+                15.443957328796387
             ],
             "translation": [
                 0.0,
-                -0.5314373970031738,
+                0.0,
                 0.0
             ]
         },
         "name": "Ground"
+    },
+    {
+        "CameraComponent": {
+            "disableRelRotation": true,
+            "isActive": false,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "upDirection": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "viewDirection": [
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "MainCharacterBehaviourComponent": {
+            "active": true,
+            "cameraAttachment": [
+                0.0,
+                1.7000000476837158,
+                0.0
+            ],
+            "cameraName": "",
+            "lookDirection": [
+                -0.577010989189148,
+                -0.5151687860488892,
+                0.6337660551071167
+            ],
+            "mlookSpeed": 0.15000000596046448,
+            "moveSpeed": 10.0
+        },
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/character-capsule.gltf"
+        },
+        "PhysicsCharacterComponent": {
+            "height": 1.75,
+            "radius": 0.25
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                1.4263566732406616,
+                0.0
+            ]
+        },
+        "name": "CharacterController"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "isSensor": true,
+            "mass": 0.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -0.15083640813827515,
+                1.0796210765838623,
+                -3.1516990661621094
+            ]
+        },
+        "name": "SensorBody"
     }
 ]

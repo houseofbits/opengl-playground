@@ -10,7 +10,9 @@ void ScriptingEventsSystem::registerEventHandlers(EventManager &eventManager) {
 }
 
 void ScriptingEventsSystem::handleCharacterPickingEvent(const PhysicsPickingEvent &event) {
-    m_EntityContext->scriptingManager.handleEvent("PhysicsPickingEvent", event);
+    if (event.m_doActivate) {
+        m_EntityContext->scriptingManager.handleEvent("PhysicsPickingEvent", event);
+    }
 }
 
 void ScriptingEventsSystem::handlePhysicsTriggerShapeEvent(const PhysicsTriggerShapeEvent &event) {
