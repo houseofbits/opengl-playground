@@ -39,7 +39,7 @@ public:
 
     void activate() override;
 
-    void setMotorVelocity(float velocity) const override;
+    void setMotorVelocity(float velocity) override;
 
     void setMotorOff() const override;
 

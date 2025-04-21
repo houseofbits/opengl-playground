@@ -9,14 +9,14 @@
 TextureResource::TextureResource() : Resource(), m_textureId(), m_handleId(), m_width(0), m_height(0), m_data(nullptr) {
 }
 
-Resource::Status TextureResource::fetchData(ResourceManager&) {
+Resource::Status TextureResource::fetchData(ResourceManager &) {
     int comp;
-    m_data = stbi_load(m_Path.c_str(), &m_width, &m_height, &comp, 3);
+    m_data = stbi_load(m_Path.c_str(), &m_width, &m_height, &comp, 4);
 
     if (m_data == nullptr) {
         return STATUS_FETCH_ERROR;
     }
-    
+
     return STATUS_DATA_READY;
 }
 
@@ -53,7 +53,7 @@ Resource::Status TextureResource::build() {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    glTextureSubImage2D(m_textureId, 0, 0, 0, m_width, m_height, GL_RGB, GL_UNSIGNED_BYTE, m_data);
+    glTextureSubImage2D(m_textureId, 0, 0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, m_data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(m_data);
@@ -80,7 +80,7 @@ void TextureResource::destroy() {
     }
 }
 
-void TextureResource::bind(ShaderProgramResource& shader, const int unit) const {
+void TextureResource::bind(ShaderProgramResource &shader, const int unit) const {
     shader.setUniform("screenTexture", unit);
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, m_textureId);
@@ -89,3 +89,4 @@ void TextureResource::bind(ShaderProgramResource& shader, const int unit) const 
 void TextureResource::bindImageTexture(const unsigned int unit) const {
     glBindImageTexture(unit, m_textureId, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
 }
+

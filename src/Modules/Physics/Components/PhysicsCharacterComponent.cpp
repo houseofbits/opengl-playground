@@ -104,17 +104,6 @@ void PhysicsCharacterComponent::createPhysics(EntityContext &ctx) {
 void PhysicsCharacterComponent::update(TransformComponent &transform, bool isSimulationEnabled) {
     if (isSimulationEnabled) {
         const auto t = m_physicsBody->GetWorldTransform();
-
-        //Rotation from look-at direction
-        // constexpr glm::vec3 yAxis(0.0f, 1.0f, 0.0f);
-        // const glm::vec3 zAxis = glm::normalize(glm::vec3(m_moveDirection.x, 0, m_moveDirection.z));
-        // const glm::vec3 xAxis = glm::cross(yAxis, zAxis);
-        // const glm::mat4 rotationMatrix(
-        //     glm::vec4(xAxis, 1),
-        //     glm::vec4(yAxis, 1),
-        //     glm::vec4(zAxis, 1),
-        //     glm::vec4(0, 0, 0, 1));
-
         const auto capsulePosition = PhysicsTypeCast::JPHToGlm(t.GetTranslation());
 
         auto transformMatrix = glm::mat4(1.0);
@@ -122,38 +111,10 @@ void PhysicsCharacterComponent::update(TransformComponent &transform, bool isSim
         // transformMatrix *= rotationMatrix;
         transform.setWorldTransform(transformMatrix);
 
-        // Log::write(capsulePosition);
-
-        //
-        // // glm::mat4 rotationMatrix = glm::mat4_cast(glm::quat_cast(rotationMatrix));
-        //
-        // transform.resetTransform();
-        // transform.setTranslation(capsulePosition - glm::vec3(0, m_stepTolerance, 0));
-        // transform.setRotation(glm::quat_cast(rotationMatrix));
-
         castRayForGroundReference(capsulePosition);
         updateGroundSpring(capsulePosition);
 
         updateMove();
-
-        // auto t = m_physicsBody->GetWorldTransform();
-        // PhysicsTypeCast::applyJPHMat44ToTransformComponent(transform, t);
-        //
-        // castRayForGroundReference(transform.getWorldPosition());
-        // updateGroundSpring(transform.getWorldPosition());
-        //
-        // transform.setTranslation(glm::vec3(0, -m_stepTolerance, 0));
-        //
-        // updateMove();
-    } else {
-        // m_PhysicsResource().getInterface().SetPositionAndRotation(m_physicsBody->GetID(),
-        //                                                           PhysicsTypeCast::glmToJPH(
-        //                                                               transform.getWorldPosition() +
-        //                                                               glm::vec3(0,
-        //                                                                   m_stepTolerance,
-        //                                                                   0)),
-        //                                                           PhysicsTypeCast::glmToJPH(transform.getRotation()),
-        //                                                           JPH::EActivation::DontActivate);
     }
 }
 

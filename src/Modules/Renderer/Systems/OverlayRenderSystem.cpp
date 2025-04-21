@@ -1,8 +1,9 @@
 #include "OverlayRenderSystem.h"
 #include <GL/glew.h>
+#include "../Resources/DeferredRenderTargetResource.h"
 
 OverlayRenderSystem::OverlayRenderSystem() : EntitySystem() {
-    m_lights = useEntityUniqueComponentRegistry<LightComponent>();
+    // m_lights = useEntityUniqueComponentRegistry<LightComponent>();
 }
 
 void OverlayRenderSystem::initialize(ResourceManager &resourceManager, EventManager &) {
@@ -11,9 +12,11 @@ void OverlayRenderSystem::initialize(ResourceManager &resourceManager, EventMana
 
     // resourceManager.request(m_computeTestShader, "data/shaders/compute/test.cs");
 
-    resourceManager.request(m_computeTestShader, "data/shaders/compute/h-blur.cs");
+    // resourceManager.request(m_computeTestShader, "data/shaders/compute/h-blur.cs");
 
     resourceManager.request(m_textureResource, "resources/textures/checker-map.png");
+    resourceManager.request(m_crosshairTextureResource, "data/textures/crosshair198.png");
+    resourceManager.request(m_deferredRenderTarget, "deferredRenderTarget");
 }
 
 void OverlayRenderSystem::process(EventManager &eventManager) {
@@ -23,9 +26,9 @@ void OverlayRenderSystem::process(EventManager &eventManager) {
         return;
     }
 
-    // if (VAO == 0) {
-    //     glGenVertexArrays(1, &VAO);
-    // }
+    if (VAO == 0) {
+        glGenVertexArrays(1, &VAO);
+    }
     // if (texture == 0) {
     //     glGenTextures(1, &texture);
     //     // glActiveTexture(GL_TEXTURE0);
@@ -66,22 +69,19 @@ void OverlayRenderSystem::process(EventManager &eventManager) {
     // }
 
 
-    // glDisable(GL_DEPTH_TEST);
-    // glDisable(GL_CULL_FACE);
-    //
-    // m_ShaderProgram().use();
-    //
-    // // m_ShaderProgram().setUniform("screenTexture", 0);
-    // // glActiveTexture(GL_TEXTURE0);
-    // // glBindTexture(GL_TEXTURE_2D, shadowTextureId);
-    //
-    // m_textureResource().bind(m_ShaderProgram());
-    //
-    // glBindVertexArray(VAO);
-    //
-    // glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    //
-    // glEnable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+
+    m_ShaderProgram().use();
+
+    m_ShaderProgram().setUniform("screenTexture", m_deferredRenderTarget().getHandle());
+    m_ShaderProgram().setUniform("crosshairTexture", m_crosshairTextureResource().getHandle());
+
+    glBindVertexArray(VAO);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 void OverlayRenderSystem::registerEventHandlers(EventManager &eventManager) {

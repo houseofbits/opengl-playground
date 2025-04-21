@@ -25,7 +25,5 @@ public:
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 
 private:
-    EntityUniqueComponentRegistry<PhysicsHingeJointComponent> *m_hingeJointComponentRegistry;
-    EntityUniqueComponentRegistry<PhysicsFixedJointComponent> *m_fixedJointComponentRegistry;
-    EntityUniqueComponentRegistry<PhysicsSliderJointComponent> *m_sliderJointComponentRegistry;
+    SameComponentRegistry<BasePhysicsJoint> *m_physicsJoints;
 };

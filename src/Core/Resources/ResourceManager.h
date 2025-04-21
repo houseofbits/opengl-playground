@@ -75,7 +75,7 @@ public:
     template<class T>
     void requestWith(T &hand, std::string resourceName, std::function<void(typename T::TYPE &)> fetchFunctor) {
         if (resourceName.empty()) {
-            Log::error("requestWith: Empty resource name");
+            // Log::error("requestWith: Empty resource name");
             return;
         }
 

@@ -2,9 +2,11 @@
 #include "../../Common/Events/EntityLinkingEvent.h"
 
 JointsProcessingSystem::JointsProcessingSystem() : EntitySystem() {
-    m_hingeJointComponentRegistry = useEntityUniqueComponentRegistry<PhysicsHingeJointComponent>();
-    m_fixedJointComponentRegistry = useEntityUniqueComponentRegistry<PhysicsFixedJointComponent>();
-    m_sliderJointComponentRegistry = useEntityUniqueComponentRegistry<PhysicsSliderJointComponent>();
+    // m_hingeJointComponentRegistry = useEntityUniqueComponentRegistry<PhysicsHingeJointComponent>();
+    // m_fixedJointComponentRegistry = useEntityUniqueComponentRegistry<PhysicsFixedJointComponent>();
+    // m_sliderJointComponentRegistry = useEntityUniqueComponentRegistry<PhysicsSliderJointComponent>();
+
+    m_physicsJoints = useSameComponentRegistry<BasePhysicsJoint>();
 }
 
 void JointsProcessingSystem::initialize(ResourceManager &resourceManager, EventManager &) {
@@ -16,6 +18,11 @@ void JointsProcessingSystem::registerEventHandlers(EventManager &eventManager) {
 }
 
 void JointsProcessingSystem::process(EventManager &eventManager) {
+    for (const auto &[id, component]: m_physicsJoints->container()) {
+        if (component->isPhysicsCreated()) {
+            component->update();
+        }
+    }
 }
 
 void JointsProcessingSystem::handleSystemEvent(const SystemEvent &event) {

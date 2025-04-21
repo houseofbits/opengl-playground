@@ -53,12 +53,24 @@ public:
                                                                 "shapeName", &PhysicsPickingEvent::m_shapeComponentName
         );
         scriptingManager.registerEventType<PhysicsSensorEvent>("PhysicsSensorEvent",
-                                                                     "colliderName",
-                                                                     &PhysicsSensorEvent::m_colliderEntityName,
-                                                                     "sensorName",
-                                                                     &PhysicsSensorEvent::m_sensorEntityName,
-                                                                     "sensorShapeName",
-                                                                     &PhysicsSensorEvent::m_sensorShapeName
+                                                               "colliderName",
+                                                               &PhysicsSensorEvent::m_colliderEntityName,
+                                                               "sensorName",
+                                                               &PhysicsSensorEvent::m_sensorEntityName,
+                                                               "sensorShapeName",
+                                                               &PhysicsSensorEvent::m_sensorShapeName
+        );
+
+        scriptingManager.registerComponentType<PhysicsHingeJointComponent>(
+            "setMotorOff", &PhysicsHingeJointComponent::setMotorOff,
+            "setMotorVelocity", &PhysicsHingeJointComponent::setMotorVelocity,
+            "lockInPlace", &PhysicsHingeJointComponent::lockInPlace,
+            "unLock", &PhysicsHingeJointComponent::unLock,
+            "toggleState", [](PhysicsHingeJointComponent& self) {
+                if (self.m_useStatefulJointBehaviour) {
+                    self.m_statefulJointBehaviour.toggleJointState(&self);
+                }
+            }
         );
     }
 

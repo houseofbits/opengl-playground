@@ -97,7 +97,7 @@ void PhysicsSliderJointComponent::activate() {
     m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody2()->GetID());
 }
 
-void PhysicsSliderJointComponent::setMotorVelocity(float velocity) const {
+void PhysicsSliderJointComponent::setMotorVelocity(float velocity) {
     m_Joint->SetMotorState(JPH::EMotorState::Velocity);
     m_Joint->SetTargetVelocity(velocity);
 }

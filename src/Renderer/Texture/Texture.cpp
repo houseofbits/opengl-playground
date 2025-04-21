@@ -115,3 +115,16 @@ void Texture::createArray(unsigned int textureWidth, unsigned int textureHeight,
 
     //TODO: Texture array
 }
+
+bool Texture::createHandle() {
+    handleId = glGetTextureHandleARB(textureId);
+    if (handleId == 0) {
+        std::cout << "Error! Handle returned null " << textureId << std::endl;
+
+        return false;
+    }
+
+    glMakeTextureHandleResidentARB(handleId);
+
+    return true;
+}

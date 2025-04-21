@@ -1,5 +1,6 @@
 #pragma once
 
+#include "StatefulJointBehaviourEdit.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../../Editor/Helpers/TargetEntityHelper.h"
 #include "../../Editor/UI/ComponentEdit.h"
@@ -57,5 +58,13 @@ inline void processPhysicsHingeJointComponentEditor(Component *c, Entity *e, Edi
         ImGui::InputFloat("Force limit", &component->m_motorForceLimit);
         ImGui::InputFloat("Damping", &component->m_motorDamping);
         ImGui::InputFloat("Frequency", &component->m_motorFrequency);
+    }
+
+    if (ImGui::TreeNode("Stateful behaviour")) {
+        ImGui::Checkbox("Enabled", &component->m_useStatefulJointBehaviour);
+
+        StatefulJointBehaviourEditor(&component->m_statefulJointBehaviour, system);
+
+        ImGui::TreePop();
     }
 }

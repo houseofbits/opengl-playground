@@ -13,6 +13,16 @@ void MainCharacterBehaviourSystem::initialize(ResourceManager &, EventManager &)
 }
 
 void MainCharacterBehaviourSystem::process(EventManager &) {
+    for (const auto &[id, components]: m_registry->container()) {
+        const auto &[transform, character, behaviour] = components.get();
+
+        if (behaviour->m_isActive && !m_isEditorModeEnabled) {
+            const glm::vec3 worldPosition = transform->getWorldTransform() * glm::vec4(
+                                                behaviour->m_cameraAttachmentPosition, 1.0);
+
+            updateCamera(behaviour, worldPosition);
+        }
+    }
 }
 
 void MainCharacterBehaviourSystem::registerEventHandlers(EventManager &eventManager) {

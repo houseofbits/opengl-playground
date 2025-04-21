@@ -30,6 +30,10 @@ void ScriptingManager::handleEvent(const std::string &name, const BaseEvent &eve
     m_eventHandlers.at(name)->call(event);
 }
 
+void ScriptingManager::runScript(const std::string &source) {
+    m_luaState.script(source.c_str());
+}
+
 void ScriptingManager::runScriptFromFile(const std::string &fileName) {
     sol::load_result script = m_luaState.load_file(fileName);
     if (!script.valid()) {
@@ -63,7 +67,7 @@ sol::object ScriptingManager::getComponent(const std::string& entityName, const 
         return sol::nil;
     }
 
-    auto builder = m_componentBuilder.find(component->getTypeName());
+    const auto builder = m_componentBuilder.find(component->getTypeName());
     if (builder == m_componentBuilder.end()) {
         return sol::nil;
     }

@@ -5,44 +5,48 @@
             "isActive": true,
             "mouseLookSpeed": 0.15000000596046448,
             "moveSpeed": 3.0,
-            "orthoScale": 9.200000762939453,
+            "orthoScale": 6.199999809265137,
             "position": [
-                2.751514434814453,
-                4.4475016593933105,
-                1.6296749114990234
+                -4.322553634643555,
+                2.5932211875915527,
+                0.12643343210220337
             ],
             "reposition": false,
             "type": 0,
             "upDirection": [
-                -0.35320591926574707,
-                0.7879270911216736,
-                -0.5043970942497253
+                0.4002816081047058,
+                0.9163796305656433,
+                0.004794178996235132
             ],
             "viewDirection": [
-                -0.4519564211368561,
-                -0.615768551826477,
-                -0.6454181671142578
+                0.9163139462471008,
+                -0.40031033754348755,
+                0.010974706150591373
             ]
         },
         "name": "EditorCamera"
     },
     {
-        "ScriptingComponent#InputEventHandler": {
-            "scriptFile": "data/scripts/test.lua"
+        "ScriptingComponent#PhysicsPickingEventHandler": {
+            "scriptFile": "",
+            "scriptSource": "function PhysicsPickingEventHandler(event)\n    if event.entityName == \"Door1\" then\n        c = Manager:getComponent(\"Door1\", \"Hinge\");\n        if c then\n            c:toggleState();\n        end\n    end\nend\n\nManager:registerEventHandler(\"PhysicsPickingEvent\", PhysicsPickingEventHandler);"
         },
         "name": "MainScript"
     },
     {
         "LightComponent": {
-            "attenuation": 8.699996948242188,
-            "castShadows": false,
+            "attenuation": 10.000001907348633,
+            "blurRadius": 20.0,
+            "castShadows": true,
             "color": [
-                1.0,
-                1.0,
+                0.7658591866493225,
+                0.7254902124404907,
                 1.0
             ],
-            "intensity": 1.9000002145767212,
+            "intensity": 0.6999999284744263,
             "isEnabled": true,
+            "shadowBias": 2.9999999242136255e-05,
+            "shadowResolution": 512,
             "type": "OMNI"
         },
         "TransformComponent": {
@@ -59,9 +63,9 @@
                 1.0
             ],
             "translation": [
-                -0.004689335823059082,
-                3.2224133014678955,
-                -0.2853957414627075
+                4.690537452697754,
+                4.953719139099121,
+                2.5103769302368164
             ]
         },
         "name": "OmniLight"
@@ -155,9 +159,9 @@
             ],
             "cameraName": "",
             "lookDirection": [
-                0.0703340396285057,
-                -0.36890682578086853,
-                -0.9268015027046204
+                0.8667011260986328,
+                -0.13665397465229034,
+                -0.47974464297294617
             ],
             "mlookSpeed": 0.15000000596046448,
             "moveSpeed": 10.0
@@ -210,35 +214,15 @@
             "restitution": 0.5,
             "type": 0
         },
-        "PhysicsShapeComponent#Sensor1": {
+        "PhysicsShapeComponent": {
             "mesh": "data/models/unit-cube.gltf",
             "meshScale": [
-                1.0,
-                1.0,
-                1.0
+                0.2988186478614807,
+                0.35875868797302246,
+                0.4080355763435364
             ],
             "position": [
                 0.0,
-                0.0,
-                0.0
-            ],
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "type": 3
-        },
-        "PhysicsShapeComponent#Sensor2": {
-            "mesh": "data/models/unit-cube.gltf",
-            "meshScale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "position": [
-                2.0744152069091797,
                 0.0,
                 0.0
             ],
@@ -259,16 +243,270 @@
                 1.0
             ],
             "scale": [
+                0.2988186478614807,
+                0.35875868797302246,
+                0.4080355763435364
+            ],
+            "translation": [
+                1.7861604690551758,
+                1.887794017791748,
+                4.025424003601074
+            ]
+        },
+        "name": "DoorButton"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "isSensor": false,
+            "mass": 10.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.36585503816604614,
+                3.591257095336914,
+                2.1669557094573975
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.36585503816604614,
+                3.591257095336914,
+                2.1669557094573975
+            ],
+            "translation": [
+                1.5262746810913086,
+                1.7484049797058105,
+                4.773013591766357
+            ]
+        },
+        "name": "Body2"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "isSensor": false,
+            "mass": 10.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent#Hinge": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                -0.8866225481033325
+            ],
+            "attachmentARotation": [
+                0.0,
+                0.0,
+                0.7071067690849304,
+                0.7071067690849304
+            ],
+            "attachmentBPosition": [
+                0.0,
+                0.0,
+                0.4969292879104614
+            ],
+            "attachmentBRotation": [
+                0.0,
+                0.0,
+                0.7071067690849304,
+                0.7071067690849304
+            ],
+            "enableLimits": true,
+            "enableLockingLimits": true,
+            "limits": [
+                0.0,
+                1.5707963705062866
+            ],
+            "statefulBehaviour": {
+                "fixed": true,
+                "initialState": false,
+                "velocity": 2.0
+            },
+            "targetEntityA": "",
+            "targetEntityB": "Body1"
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.13686665892601013,
+                3.209014892578125,
+                1.7209734916687012
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.13686665892601013,
+                3.209014892578125,
+                1.7209734916687012
+            ],
+            "translation": [
+                1.5262746810913086,
+                1.7484049797058105,
+                2.7832186222076416
+            ]
+        },
+        "name": "Door1"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "isSensor": false,
+            "mass": 10.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.36585503816604614,
+                3.591257095336914,
+                0.9992461204528809
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.36585503816604614,
+                3.591257095336914,
+                0.9992461204528809
+            ],
+            "translation": [
+                1.5262746810913086,
+                1.7484049797058105,
+                1.3996667861938477
+            ]
+        },
+        "name": "Body1"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 13.30001449584961,
+            "blurRadius": 10.170000076293945,
+            "castShadows": true,
+            "color": [
+                0.9726066589355469,
+                1.0,
+                0.813725471496582
+            ],
+            "intensity": 1.9000002145767212,
+            "isEnabled": true,
+            "shadowBias": 0.00016999999934341758,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
                 1.0,
                 1.0,
                 1.0
             ],
             "translation": [
-                -0.7734910845756531,
-                1.0796210765838623,
-                -3.1516990661621094
+                -0.004689335823059082,
+                5.172558307647705,
+                3.463564395904541
             ]
         },
-        "name": "SensorBody"
+        "name": "OmniLight2"
     }
 ]

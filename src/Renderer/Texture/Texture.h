@@ -1,10 +1,10 @@
 #pragma once
 
-class Texture
-{
+#include <cstdint>
+
+class Texture {
 public:
-    enum Type
-    {
+    enum Type {
         TYPE_DEPTH,
         TYPE_RGBA,
         TYPE_RGBA16,
@@ -14,6 +14,7 @@ public:
     static const int maxMipMapLevels = 7;
 
     Texture();
+
     virtual ~Texture();
 
     unsigned int textureId;
@@ -22,15 +23,25 @@ public:
     unsigned int arrayDepth;
     Type type;
     bool isMipmapsEnabled;
+    std::uint64_t handleId;
 
     virtual void create(unsigned int width, unsigned int height, Type type);
+
     virtual void createArray(unsigned int width, unsigned int height, Type type, int depth);
+
     void enableMipMaps();
-    void applyImage(unsigned int left, unsigned int top, unsigned int imageWidth, unsigned int imageHeight, const unsigned char *imageData);
-    void applyTexture(const Texture& texture, unsigned int left, unsigned int top);
+
+    void applyImage(unsigned int left, unsigned int top, unsigned int imageWidth, unsigned int imageHeight,
+                    const unsigned char *imageData);
+
+    void applyTexture(const Texture &texture, unsigned int left, unsigned int top);
+
+    bool createHandle();
 
     virtual void bind();
+
     virtual void unbind();
+
     virtual void destroy();
 
     bool isLoaded();

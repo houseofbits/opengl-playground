@@ -47,6 +47,11 @@ void ScriptingEventsSystem::handleSystemEvent(const SystemEvent &event) {
 
 void ScriptingEventsSystem::runAllScripts() const {
     for (const auto &[componentId, component]: m_registry->container()) {
-        m_EntityContext->scriptingManager.runScriptFromFile(component->m_scriptFile);
+        if (!component->m_scriptFile.empty()) {
+            m_EntityContext->scriptingManager.runScriptFromFile(component->m_scriptFile);
+        }
+        if (!component->m_scriptSource.empty()) {
+            m_EntityContext->scriptingManager.runScript(component->m_scriptSource);
+        }
     }
 }

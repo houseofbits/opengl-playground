@@ -202,6 +202,11 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/CompoundShape/PhysicsCompoundShapeBuilder.h
         src/Modules/Physics/Editors/PhysicsShapeComponentTransformEdit.cpp
         src/Modules/Physics/Editors/PhysicsShapeComponentTransformEdit.h
+        src/Modules/Physics/Helpers/Behaviours/StatefulJointBehaviour.cpp
+        src/Modules/Physics/Helpers/Behaviours/StatefulJointBehaviour.h
+        src/Modules/Physics/Editors/StatefulJointBehaviourEdit.h
+        src/Modules/Renderer/Resources/DeferredRenderTargetResource.cpp
+        src/Modules/Renderer/Resources/DeferredRenderTargetResource.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

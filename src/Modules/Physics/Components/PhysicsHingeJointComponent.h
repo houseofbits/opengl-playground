@@ -5,6 +5,7 @@
 #include "PhysicsBodyComponent.h"
 #include "Jolt/Physics/Constraints/HingeConstraint.h"
 #include "../Helpers/BasePhysicsJoint.h"
+#include "../Helpers/Behaviours/StatefulJointBehaviour.h"
 
 class PhysicsHingeJointComponent : public BasePhysicsJoint {
     TYPE_DEFINITION(PhysicsHingeJointComponent);
@@ -22,6 +23,7 @@ public:
     inline static const std::string ATTACHMENT_A_ROTATION_KEY = "attachmentARotation";
     inline static const std::string ATTACHMENT_B_POSITION_KEY = "attachmentBPosition";
     inline static const std::string ATTACHMENT_B_ROTATION_KEY = "attachmentBRotation";
+    inline static const std::string STATEFUL_BEHAVIOUR_KEY = "statefulBehaviour";
 
     PhysicsHingeJointComponent();
 
@@ -43,7 +45,7 @@ public:
 
     void unLock() override;
 
-    void setMotorVelocity(float velocity) const override;
+    void setMotorVelocity(float velocity) override;
 
     void setMotorOff() const override;
 
@@ -58,4 +60,7 @@ public:
 
     glm::mat4 m_localAttachmentMatrixA;
     glm::mat4 m_localAttachmentMatrixB;
+
+    bool m_useStatefulJointBehaviour;
+    StatefulJointBehaviour m_statefulJointBehaviour;
 };

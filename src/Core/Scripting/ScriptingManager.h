@@ -17,8 +17,9 @@ template<class ComponentT>
 class ScriptingComponentBuilder final : public BaseScriptingComponentBuilder {
 public:
     sol::object make(sol::state &state, const Component &component) override {
-        const auto comp = dynamic_cast<const ComponentT *>(&component);
-        if (comp) return sol::make_object(state.lua_state(), comp);
+        if (const auto comp = dynamic_cast<const ComponentT *>(&component)) {
+            return sol::make_object(state.lua_state(), comp);
+        }
 
         return sol::nil;
     }
@@ -52,6 +53,8 @@ public:
     void handleEvent(const std::string &name, const BaseEvent &event) const;
 
     void runScriptFromFile(const std::string &fileName);
+
+    void runScript(const std::string &source);
 
 private:
     void registerEventHandler(const std::string &eventName, const sol::function &func);

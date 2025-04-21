@@ -3,6 +3,7 @@
 #include "../Components/StaticMeshComponent.h"
 #include <GL/glew.h>
 #include "../../Application/Events/SystemEvent.h"
+#include "../Resources/DeferredRenderTargetResource.h"
 
 MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_isEnabled(true),
@@ -73,13 +74,25 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
                                     resource.fetchDefault(resourceManager);
                                 });
 
-    // resourceManager.request(m_computeTestShader, "data/shaders/compute/test.cs");
+    resourceManager.request(m_deferredRenderTarget, "deferredRenderTarget");
 }
 
 void MainRenderSystem::process(EventManager &eventManager) {
     glViewport(0, 0, m_viewportWidth, m_viewportHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+
+    if (!m_deferredRenderTarget().isReady()) {
+        return;
+    }
+
+    m_deferredRenderTarget().bindRenderTarget();
+    glViewport(0,
+               0,
+               m_viewportWidth,
+               m_viewportHeight);
+    glClearColor(1.0f, 1.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
     if (camera == nullptr) {
@@ -102,54 +115,41 @@ void MainRenderSystem::process(EventManager &eventManager) {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    if (!m_isEnabled) {
+    auto &currentProgram = m_ShaderPrograms[m_shaderType]();
+
+    if (!m_isEnabled || !currentProgram.isReady()) {
         return;
     }
 
-    m_ShaderPrograms[m_shaderType]().use();
-    camera->bind(m_ShaderPrograms[m_shaderType]());
-    m_LightsBuffer().bind(m_ShaderPrograms[m_shaderType]());
-    m_ProbesBuffer().bind(m_ShaderPrograms[m_shaderType]());
+    currentProgram.use();
+    camera->bind(currentProgram);
+    m_LightsBuffer().bind(currentProgram);
+    m_ProbesBuffer().bind(currentProgram);
     if (m_ProbesCubeMapArray().isReady()) {
-        m_ShaderPrograms[m_shaderType]().setUniform("probesCubeArraySampler", m_ProbesCubeMapArray().m_handleId);
+        currentProgram.setUniform("probesCubeArraySampler", m_ProbesCubeMapArray().m_handleId);
     }
     if (doesSkyComponentExist && sky->second->m_cubeMap().isReady()) {
-        m_ShaderPrograms[m_shaderType]().setUniform("environmentSampler", sky->second->m_cubeMap().m_handleId);
+        currentProgram.setUniform("environmentSampler", sky->second->m_cubeMap().m_handleId);
     }
-
-    for (const auto &[id, components]: m_meshComponentRegistry->container()) {
-        const auto &[transform, mesh] = components.get();
-        m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getWorldTransform());
-        if (mesh->m_Mesh().isReady()) {
-            mesh->m_Material().bind(m_ShaderPrograms[m_shaderType]());
-            mesh->m_Mesh().render();
-        }
-    }
+    //
+    // for (const auto &[id, components]: m_meshComponentRegistry->container()) {
+    //     const auto &[transform, mesh] = components.get();
+    //     m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getWorldTransform());
+    //     if (mesh->m_Mesh().isReady()) {
+    //         mesh->m_Material().bind(m_ShaderPrograms[m_shaderType]());
+    //         mesh->m_Mesh().render();
+    //     }
+    // }
 
     for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
         if (const auto &[transform, mesh] = components.get(); mesh->m_Mesh().isReady()) {
-            mesh->m_Mesh().render(transform->getWorldTransform(), m_ShaderPrograms[m_shaderType](), m_defaultMaterial.get());
+            mesh->m_Mesh().render(transform->getWorldTransform(), currentProgram, m_defaultMaterial.get());
         }
     }
 
-    // if (m_computeTestShader().isReady()) {
-    //     for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
-    //         const auto &[transform, mesh] = components.get();
-    //
-    //         for (auto material: mesh->m_Mesh().m_materials) {
-    //             if (material().isReady() && material().m_Diffuse().isReady()) {
-    //                 // glMakeTextureHandleNonResidentARB(material().m_Diffuse().m_handleId);
-    //                 m_computeTestShader().use();
-    //
-    //                 material().m_Diffuse().bindImageTexture(0);
-    //
-    //                 m_computeTestShader().dispatchCompute(8,8);
-    //
-    //                 // glMakeTextureHandleResidentARB(material().m_Diffuse().m_handleId);
-    //             }
-    //         }
-    //     }
-    // }
+    m_deferredRenderTarget().unbindRenderTarget();
+
+    glViewport(0, 0, m_viewportWidth, m_viewportHeight);
 }
 
 void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {

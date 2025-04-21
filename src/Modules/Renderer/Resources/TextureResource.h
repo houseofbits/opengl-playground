@@ -5,16 +5,22 @@
 #include <cstdint>
 #include "ShaderProgramResource.h"
 
-
-class TextureResource : public Resource {
+class TextureResource final : public Resource {
 public:
     explicit TextureResource();
 
-    Status fetchData(ResourceManager&) override;
+    Status fetchData(ResourceManager &) override;
+
     Status build() override;
+
     void destroy() override;
 
     void bind(ShaderProgramResource &shader, int unit = 0) const;
+
+    [[nodiscard]] std::uint64_t getHandle() const {
+        return m_handleId;
+    }
+
     void bindImageTexture(unsigned int unit) const;
 
     int m_width;

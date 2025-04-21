@@ -14,6 +14,8 @@
 #include "../Components/MeshComponent.h"
 #include "../Components/SkyComponent.h"
 
+class DeferredRenderTargetResource;
+
 class MainRenderSystem : public EntitySystem {
 public:
     MainRenderSystem();
@@ -54,6 +56,5 @@ private:
     EntityUniqueComponentRegistry<SkyComponent> *m_skyComponentRegistry;
     EntityRelatedComponentRegistry<TransformComponent, MeshComponent> *m_compositeMeshComponentRegistry;
     ResourceHandle<MaterialResource> m_defaultMaterial;
-
-    ResourceHandle<ShaderProgramResource> m_computeTestShader;
+    ResourceHandle<DeferredRenderTargetResource> m_deferredRenderTarget;
 };

@@ -18,7 +18,9 @@ PhysicsHingeJointComponent::PhysicsHingeJointComponent() : BasePhysicsJoint(),
                                                            m_motorDamping(0),
                                                            m_motorFrequency(0),
                                                            m_localAttachmentMatrixA(1.0),
-                                                           m_localAttachmentMatrixB(1.0) {
+                                                           m_localAttachmentMatrixB(1.0),
+                                                           m_useStatefulJointBehaviour(false),
+                                                           m_statefulJointBehaviour() {
 }
 
 void PhysicsHingeJointComponent::serialize(nlohmann::json &j) {
@@ -38,6 +40,12 @@ void PhysicsHingeJointComponent::serialize(nlohmann::json &j) {
     j[ATTACHMENT_A_ROTATION_KEY] = Math::getRotation(m_localAttachmentMatrixA);
     j[ATTACHMENT_B_POSITION_KEY] = Math::getTranslation(m_localAttachmentMatrixB);
     j[ATTACHMENT_B_ROTATION_KEY] = Math::getRotation(m_localAttachmentMatrixB);
+
+    if (m_useStatefulJointBehaviour) {
+        nlohmann::json statefulBehaviour;
+        m_statefulJointBehaviour.serialize(statefulBehaviour);
+        j[STATEFUL_BEHAVIOUR_KEY] = statefulBehaviour;
+    }
 }
 
 void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -60,6 +68,11 @@ void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceMa
         j.value(ATTACHMENT_B_POSITION_KEY, glm::vec3(0)),
         j.value(ATTACHMENT_B_ROTATION_KEY, glm::quat(1, 0, 0, 0))
     );
+
+    if (j.contains(STATEFUL_BEHAVIOUR_KEY)) {
+        m_useStatefulJointBehaviour = true;
+        m_statefulJointBehaviour.deserialize(j[STATEFUL_BEHAVIOUR_KEY], resourceManager);
+    }
 }
 
 bool PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
@@ -107,11 +120,15 @@ void PhysicsHingeJointComponent::activate() {
 }
 
 void PhysicsHingeJointComponent::update() {
+    if (m_useStatefulJointBehaviour) {
+        m_statefulJointBehaviour.processJoint(this);
+    }
 }
 
-void PhysicsHingeJointComponent::setMotorVelocity(float velocity) const {
+void PhysicsHingeJointComponent::setMotorVelocity(float velocity) {
     m_Joint->SetMotorState(JPH::EMotorState::Velocity);
     m_Joint->SetTargetAngularVelocity(velocity);
+    activate();
 }
 
 void PhysicsHingeJointComponent::setMotorOff() const {
