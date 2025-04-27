@@ -31,7 +31,7 @@ public:
 
                 comp->m_Status = Component::STATUS_DESERIALIZED;
             } catch (nlohmann::detail::type_error &exception) {
-                std::cout << "JSON deserialization error " << e.m_Name << ": " << exception.what() << std::endl;
+                std::cout << "JSON deserialization error " << e.m_Name <<" "<<comp->m_Name<<"("<<comp->getTypeName()<< "): " << exception.what() << std::endl;
             }
         }
     }

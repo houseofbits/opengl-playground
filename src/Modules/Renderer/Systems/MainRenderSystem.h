@@ -57,4 +57,5 @@ private:
     EntityRelatedComponentRegistry<TransformComponent, MeshComponent> *m_compositeMeshComponentRegistry;
     ResourceHandle<MaterialResource> m_defaultMaterial;
     ResourceHandle<DeferredRenderTargetResource> m_deferredRenderTarget;
+    ResourceHandle<TextureResource> m_brdfLUTTexture;
 };

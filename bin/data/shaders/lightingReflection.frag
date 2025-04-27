@@ -55,9 +55,9 @@ void main()
         normal = vsInvTBN * normalize(normal * 2.0 - 1.0);
     }
 
-    vec3 roughness = vec3(0.0);
+    float roughness = 1.0;
     if (hasRoughnessSampler == 1) {
-        roughness = texture(roughnessSampler, vsTexcoord).xyz;
+        roughness = texture(roughnessSampler, vsTexcoord).g;
     }
 
     vec3 view = normalize(vsPosition.xyz - viewPosition);

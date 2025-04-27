@@ -7,29 +7,33 @@
             "moveSpeed": 3.0,
             "orthoScale": 6.199999809265137,
             "position": [
-                -4.322553634643555,
-                2.5932211875915527,
-                0.12643343210220337
+                -8.370649337768555,
+                1.8042864799499512,
+                -2.6653966903686523
             ],
             "reposition": false,
             "type": 0,
             "upDirection": [
-                0.4002816081047058,
-                0.9163796305656433,
-                0.004794178996235132
+                0.17115311324596405,
+                0.984315037727356,
+                0.042785536497831345
             ],
             "viewDirection": [
-                0.9163139462471008,
-                -0.40031033754348755,
-                0.010974706150591373
+                0.9549294710159302,
+                -0.1764199286699295,
+                0.23871707916259766
             ]
         },
         "name": "EditorCamera"
     },
     {
+        "ScriptingComponent#InputEventHandler": {
+            "scriptFile": "",
+            "scriptSource": "function InputEventHandler(event)\n\t--print(event.keyCode)\n\t--key = q\n\tif event.keyCode == 20 then\n\t\tc = Manager:getComponent(\"MovingBody\", \"Slider\");\n\t\tif c then\n\t\t\tc:setMotorVelocity(1)\n\t\tend\n\tend\n\n\t--c = Manager:getComponent(\"OmniLight\", \"LightComponent\");\n    --if c then\n    --    c.isEnabled = not c.isEnabled;\n    --end\n\n    --c = Manager:getComponent(\"Swing1\", \"Hinge\");\n    --if c then\n    --    c:setMotorVelocity(5);\n    --end\n\n    --c = Manager:getComponent(\"Door1\", \"Hinge\");\n    --if c then\n    --    c:toggleState();\n    --end\nend\n\nManager:registerEventHandler(\"InputEvent\", InputEventHandler);"
+        },
         "ScriptingComponent#PhysicsPickingEventHandler": {
             "scriptFile": "",
-            "scriptSource": "function PhysicsPickingEventHandler(event)\n    if event.entityName == \"Door1\" then\n        c = Manager:getComponent(\"Door1\", \"Hinge\");\n        if c then\n            c:toggleState();\n        end\n    end\nend\n\nManager:registerEventHandler(\"PhysicsPickingEvent\", PhysicsPickingEventHandler);"
+            "scriptSource": "function PhysicsPickingEventHandler(event)\n    if event.entityName == \"Door1\" then\n        c = Manager:getComponent(\"Door1\", \"Hinge\");\n        if (c and event.distance < 2) then\n            c:toggleState();\n        end\n    end\nend\n\nManager:registerEventHandler(\"PhysicsPickingEvent\", PhysicsPickingEventHandler);"
         },
         "name": "MainScript"
     },
@@ -45,7 +49,7 @@
             ],
             "intensity": 0.6999999284744263,
             "isEnabled": true,
-            "shadowBias": 2.9999999242136255e-05,
+            "shadowBias": 3.9999998989515007e-05,
             "shadowResolution": 512,
             "type": "OMNI"
         },
@@ -159,9 +163,9 @@
             ],
             "cameraName": "",
             "lookDirection": [
-                0.8667011260986328,
-                -0.13665397465229034,
-                -0.47974464297294617
+                0.9822279214859009,
+                -0.1789538413286209,
+                0.05660240352153778
             ],
             "mlookSpeed": 0.15000000596046448,
             "moveSpeed": 10.0
@@ -188,9 +192,9 @@
                 1.0
             ],
             "translation": [
-                0.0,
-                1.4263566732406616,
-                0.0
+                -0.7805905342102051,
+                2.328902244567871,
+                -4.958603382110596
             ]
         },
         "name": "CharacterController"
@@ -475,7 +479,7 @@
     {
         "LightComponent": {
             "attenuation": 13.30001449584961,
-            "blurRadius": 10.170000076293945,
+            "blurRadius": 8.720000267028809,
             "castShadows": true,
             "color": [
                 0.9726066589355469,
@@ -484,7 +488,7 @@
             ],
             "intensity": 1.9000002145767212,
             "isEnabled": true,
-            "shadowBias": 0.00016999999934341758,
+            "shadowBias": 7.999999797903001e-05,
             "shadowResolution": 512,
             "type": "OMNI"
         },
@@ -508,5 +512,101 @@
             ]
         },
         "name": "OmniLight2"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "isSensor": false,
+            "mass": 10.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                2.520296573638916,
+                0.29170963168144226,
+                2.387784242630005
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "PhysicsSliderJointComponent#Slider": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                -0.03058338165283203
+            ],
+            "attachmentARotation": [
+                0.0,
+                0.6265337467193604,
+                0.0,
+                0.7793943285942078
+            ],
+            "attachmentBPosition": [
+                -0.6580917835235596,
+                1.7165294885635376,
+                -5.115415573120117
+            ],
+            "attachmentBRotation": [
+                0.0,
+                0.6265337467193604,
+                0.0,
+                0.7793943285942078
+            ],
+            "axis": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "enableLimits": false,
+            "limits": [
+                0.0,
+                0.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "Ground"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                2.520296573638916,
+                0.29170963168144226,
+                2.387784242630005
+            ],
+            "translation": [
+                -0.6580917835235596,
+                1.7165294885635376,
+                -5.084832191467285
+            ]
+        },
+        "name": "MovingBody"
     }
 ]

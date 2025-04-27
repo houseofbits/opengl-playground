@@ -22,7 +22,7 @@ void PhysicsShapeComponent::serialize(nlohmann::json &j) {
     }
     if (m_type == TYPE_MESH) {
         j[MESH_FILE_KEY] = m_meshResource().m_Path;
-        j[MESH_SACALE_KEY] = m_meshScale;
+        j[MESH_SCALE_KEY] = m_meshScale;
     }
 }
 
@@ -34,7 +34,7 @@ void PhysicsShapeComponent::deserialize(const nlohmann::json &j, ResourceManager
     if (m_type == TYPE_MESH) {
         std::string path = j.value(MESH_FILE_KEY, m_meshResource().m_Path);
         resourceManager.request(m_meshResource, path);
-        m_meshScale = j.value(MESH_SACALE_KEY, m_meshScale);
+        m_meshScale = j.value(MESH_SCALE_KEY, m_meshScale);
     }
     if (m_type == TYPE_BOX) {
         m_boxSize = j.value(BOX_SIZE_KEY, m_boxSize);

@@ -6,7 +6,7 @@
 
 class SensorLayerFilter final : public JPH::ObjectLayerFilter {
 public:
-    SensorLayerFilter(bool excludeActions) {
+    explicit SensorLayerFilter(bool excludeActions) {
         m_excludeActions = excludeActions;
     }
 

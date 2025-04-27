@@ -51,10 +51,15 @@ private:
 
     void updateGroundSpring(const glm::vec3 &kneePosition);
 
+    std::optional<float> rayCastFeet(glm::vec3 position, glm::vec3 direction, bool doCheckGroundMovement = false);
+
     float m_groundSpringForce;
     float m_groundSpringDamping;
     float m_freeFallForce;
 
     bool m_doMove;
     glm::vec3 m_movementDirection;
+
+    bool m_isGroundMoving;
+    JPH::Vec3 m_groundMovementVelocity;
 };

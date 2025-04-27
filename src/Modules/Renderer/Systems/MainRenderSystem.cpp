@@ -14,6 +14,7 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_defaultMaterial(),
                                        m_LightsBuffer(),
                                        m_ProbesBuffer(),
+                                       m_brdfLUTTexture(),
                                        m_activeCameraHelper() {
     m_meshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, StaticMeshComponent>();
     m_skyComponentRegistry = useEntityUniqueComponentRegistry<SkyComponent>();
@@ -75,6 +76,7 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
                                 });
 
     resourceManager.request(m_deferredRenderTarget, "deferredRenderTarget");
+    resourceManager.request(m_brdfLUTTexture, "data/textures/ibl_brdf_lut.png");
 }
 
 void MainRenderSystem::process(EventManager &eventManager) {
@@ -131,6 +133,9 @@ void MainRenderSystem::process(EventManager &eventManager) {
     if (doesSkyComponentExist && sky->second->m_cubeMap().isReady()) {
         currentProgram.setUniform("environmentSampler", sky->second->m_cubeMap().m_handleId);
     }
+
+    currentProgram.setUniform("brdfLUT", m_brdfLUTTexture().getHandle());
+
     //
     // for (const auto &[id, components]: m_meshComponentRegistry->container()) {
     //     const auto &[transform, mesh] = components.get();

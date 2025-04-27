@@ -125,7 +125,7 @@ void PhysicsHingeJointComponent::update() {
     }
 }
 
-void PhysicsHingeJointComponent::setMotorVelocity(float velocity) {
+void PhysicsHingeJointComponent::setMotorVelocity(const float velocity) {
     m_Joint->SetMotorState(JPH::EMotorState::Velocity);
     m_Joint->SetTargetAngularVelocity(velocity);
     activate();

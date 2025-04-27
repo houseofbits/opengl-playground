@@ -8,11 +8,13 @@ layout (location=4) in vec3 biTangent;
 
 uniform mat4 viewProjectionMatrix;
 uniform mat4 modelMatrix;
+uniform vec3 viewPosition;
 
 out vec4 vsPosition;
 out vec3 vsNormal;
 out vec2 vsTexcoord;
 out mat3 vsInvTBN;
+out vec3 vsTangentViewDirection;
 
 void main()
 {
@@ -27,6 +29,8 @@ void main()
     vec3 N = normalize(vec3(modelMatrix * vec4(vertexNormal,    0.0)));
 
     vsInvTBN = mat3(T, B, N);
+
+    vsTangentViewDirection = (vsInvTBN) * normalize(vsPosition.xyz - viewPosition);
 
     gl_Position = viewProjectionMatrix * vsPosition;
 }

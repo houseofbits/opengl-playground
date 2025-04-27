@@ -25,10 +25,13 @@
                 "class": "TransformComponent"
             },
             "mesh": {
-                "class": "StaticMeshComponent"
+                "class": "MeshComponent"
             },
             "physicsBody": {
                 "class": "PhysicsBodyComponent"
+            },
+            "physicsShape": {
+                "class": "PhysicsShapeComponent"
             }
         }
     },
@@ -162,123 +165,6 @@
                         0,
                         0
                     ]
-                }
-            }
-        }
-    },
-    {
-        "name": "Door",
-        "components": {
-            "transform": {
-                "class": "TransformComponent",
-                "default": {
-                    "allowScaling": false
-                }
-            },
-            "mesh": {
-                "class": "StaticMeshComponent"
-            },
-            "physicsBody": {
-                "class": "PhysicsBodyComponent"
-            },
-            "physicsJoint": {
-                "class": "PhysicsJointComponent"
-            }
-        }
-    },
-    {
-        "name": "Trigger shape",
-        "components": {
-            "transform": {
-                "class": "TransformComponent"
-            },
-            "physicsTriggerShape": {
-                "class": "PhysicsTriggerShapeComponent"
-            }
-        }
-    },
-    {
-        "name": "Composite Mesh",
-        "components": {
-            "meshComp": {
-                "class": "MeshComponent"
-            }
-        }
-    },
-    {
-        "name": "Physics Box",
-        "components": {
-            "transform": {
-                "class": "TransformComponent"
-            },
-            "mesh": {
-                "class": "StaticMeshComponent",
-                "default": {
-                    "material": "data/materials/grid-gray.json",
-                    "model": "resources/BoxTextured.gltf",
-                    "renderer": "SOLID"
-                }
-            },
-            "physicsBody": {
-                "class": "PhysicsBodyComponent",
-                "default": {
-                    "friction": [
-                        0.5,
-                        0.5
-                    ],
-                    "mass": 0.0,
-                    "model": "resources/BoxTextured.gltf",
-                    "restitution": 0.5,
-                    "shape": 1,
-                    "type": 0
-                }
-            }
-        }
-    },
-    {
-        "name": "Physics Floor",
-        "components": {
-            "transform": {
-                "class": "TransformComponent",
-                "default": {
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "scale": [
-                        10.0,
-                        0.1,
-                        10.0
-                    ],
-                    "translation": [
-                        -0.0,
-                        -0.05,
-                        -0.0
-                    ]
-                }
-            },
-            "mesh": {
-                "class": "StaticMeshComponent",
-                "default": {
-                    "material": "data/materials/grid-gray.json",
-                    "model": "resources/BoxTextured.gltf",
-                    "renderer": "SOLID"
-                }
-            },
-            "physicsBody": {
-                "class": "PhysicsBodyComponent",
-                "default": {
-                    "friction": [
-                        0.5,
-                        0.5
-                    ],
-                    "mass": 0.0,
-                    "model": "resources/BoxTextured.gltf",
-                    "restitution": 0.5,
-                    "shape": 1,
-                    "type": 0
                 }
             }
         }

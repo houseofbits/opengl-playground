@@ -31,7 +31,11 @@ void ScriptingManager::handleEvent(const std::string &name, const BaseEvent &eve
 }
 
 void ScriptingManager::runScript(const std::string &source) {
-    m_luaState.script(source.c_str());
+    const sol::protected_function_result result = m_luaState.script(source);
+    if (!result.valid()) {
+        const sol::error err{result};
+        Log::error("Error running script: ", err.what());
+    }
 }
 
 void ScriptingManager::runScriptFromFile(const std::string &fileName) {
@@ -43,8 +47,7 @@ void ScriptingManager::runScriptFromFile(const std::string &fileName) {
         return;
     }
 
-    sol::protected_function_result result = script();
-    if (!result.valid()) {
+    if (const sol::protected_function_result result = script(); !result.valid()) {
         const sol::error err{result};
         Log::error("Error running script: ", err.what());
     }
@@ -52,6 +55,8 @@ void ScriptingManager::runScriptFromFile(const std::string &fileName) {
 
 sol::object ScriptingManager::getComponent(const std::string& entityName, const std::string& componentName) {
     // sol::state_view lua = sol::state_view(m_luaState);
+
+    // Log::write("Get ", entityName, " / ", componentName);
 
     const auto entity = m_entityContext->findEntity(entityName);
     if (!entity) {

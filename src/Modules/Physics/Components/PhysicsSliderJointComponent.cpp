@@ -12,6 +12,8 @@ PhysicsSliderJointComponent::PhysicsSliderJointComponent() : BasePhysicsJoint(),
                                                              m_isMotorSettingsEnabled(false),
                                                              m_motorForceLimit(0),
                                                              m_motorDamping(0),
+                                                             m_localAttachmentMatrixA(1.0),
+                                                             m_localAttachmentMatrixB(1.0),
                                                              m_motorFrequency(0) {
 }
 
@@ -100,6 +102,7 @@ void PhysicsSliderJointComponent::activate() {
 void PhysicsSliderJointComponent::setMotorVelocity(float velocity) {
     m_Joint->SetMotorState(JPH::EMotorState::Velocity);
     m_Joint->SetTargetVelocity(velocity);
+    activate();
 }
 
 void PhysicsSliderJointComponent::setMotorOff() const {

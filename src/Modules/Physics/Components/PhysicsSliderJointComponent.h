@@ -56,6 +56,6 @@ public:
     float m_motorDamping;
     float m_motorFrequency;
 
-    glm::mat4 m_localAttachmentMatrixA{};
-    glm::mat4 m_localAttachmentMatrixB{};
+    glm::mat4 m_localAttachmentMatrixA;
+    glm::mat4 m_localAttachmentMatrixB;
 };

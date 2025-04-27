@@ -10,7 +10,7 @@ class PhysicsShapeComponent : public Component {
     inline static const std::string POS_KEY = "position";
     inline static const std::string ROT_KEY = "rotation";
     inline static const std::string BOX_SIZE_KEY = "boxSize";
-    inline static const std::string MESH_SACALE_KEY = "meshScale";
+    inline static const std::string MESH_SCALE_KEY = "meshScale";
     inline static const std::string SPHERE_RADIUS_KEY = "sphereRadius";
     inline static const std::string MESH_FILE_KEY = "mesh";
 

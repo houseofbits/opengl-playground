@@ -13,7 +13,7 @@ public:
             case Layers::MOVING:
                 return true;
             default:
-                JPH_ASSERT(false);
+                // JPH_ASSERT(false);
                 return false;
         }
     }

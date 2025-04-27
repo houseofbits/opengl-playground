@@ -72,6 +72,18 @@ public:
                 }
             }
         );
+
+        scriptingManager.registerComponentType<PhysicsSliderJointComponent>(
+            "setMotorOff", &PhysicsSliderJointComponent::setMotorOff,
+            "setMotorVelocity", &PhysicsSliderJointComponent::setMotorVelocity,
+            "lockInPlace", &PhysicsSliderJointComponent::lockInPlace,
+            "unLock", &PhysicsSliderJointComponent::unLock
+            // "toggleState", [](PhysicsSliderJointComponent& self) {
+            //     if (self.m_useStatefulJointBehaviour) {
+            //         self.m_statefulJointBehaviour.toggleJointState(&self);
+            //     }
+            // }
+        );
     }
 
     void postRegister(EntityContext &ctx) override {

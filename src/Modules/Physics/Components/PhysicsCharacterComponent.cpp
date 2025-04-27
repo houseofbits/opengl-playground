@@ -63,8 +63,10 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
     characterSettings.mAllowedDOFs =
             JPH::EAllowedDOFs::TranslationX | JPH::EAllowedDOFs::TranslationY | JPH::EAllowedDOFs::TranslationZ;
     // | JPH::EAllowedDOFs::RotationY;
-    characterSettings.mLinearDamping = 10;
-    characterSettings.mAngularDamping = 10;
+
+    // characterSettings.mLinearDamping = 10; //Damping slows down the user (makes him lag behind) when riding on a platform, for example
+    // characterSettings.mAngularDamping = 10;
+
     //    characterSettings.mNumPositionStepsOverride = 255;
     //    characterSettings.mNumVelocityStepsOverride = 255;
 
@@ -151,58 +153,62 @@ bool PhysicsCharacterComponent::isCreated() const {
 void PhysicsCharacterComponent::castRayForGroundReference(const glm::vec3 &point) {
     m_isOnGround = false;
     m_haveGroundDetected = false;
+    m_isGroundMoving = false;
     float prevDist = 1;
-    float rayCastStart = m_stepTolerance;
-    float radiusFactor = m_radius * .5f;
+    const float rayCastStart = m_stepTolerance;
+    const float radiusFactor = m_radius * .5f;
     glm::vec3 direction(0, -prevDist, 0);
     glm::vec3 p = point;
     PhysicsRayCastResult rayCastResult;
-    if (rayCast(p + glm::vec3(0, rayCastStart, 0), direction, rayCastResult)) {
-        prevDist = rayCastResult.m_distance;
+    //Center
+    auto result = rayCastFeet(p + glm::vec3(0, rayCastStart, 0), direction, true);
+    if (result.has_value() && result.value() < prevDist) {
+        prevDist = result.value();
         m_haveGroundDetected = true;
-        m_minDistanceToGround = glm::length(point - rayCastResult.m_touchPoint);
+        m_minDistanceToGround = result.value() - rayCastStart;
     }
 
     //Forward
     glm::vec3 fw = glm::vec3(m_moveDirection.x, 0, m_moveDirection.z) * radiusFactor;
     p = point + fw;
-    if (rayCast(p + glm::vec3(0, rayCastStart, 0), direction, rayCastResult)
-        && rayCastResult.m_distance < prevDist) {
-        prevDist = rayCastResult.m_distance;
+    result = rayCastFeet(p + glm::vec3(0, rayCastStart, 0), direction);
+    if (result.has_value() && result.value() < prevDist) {
+        prevDist = result.value();
         m_haveGroundDetected = true;
-        m_minDistanceToGround = glm::length(p - rayCastResult.m_touchPoint);
+        m_minDistanceToGround = result.value() - rayCastStart;
     }
 
     //Backward
     p = point - fw;
-    if (rayCast(p + glm::vec3(0, rayCastStart, 0), direction, rayCastResult)
-        && rayCastResult.m_distance < prevDist) {
-        prevDist = rayCastResult.m_distance;
+    result = rayCastFeet(p + glm::vec3(0, rayCastStart, 0), direction);
+    if (result.has_value() && result.value() < prevDist) {
+        prevDist = result.value();
         m_haveGroundDetected = true;
-        m_minDistanceToGround = glm::length(p - rayCastResult.m_touchPoint);
+        m_minDistanceToGround = result.value() - rayCastStart;
     }
 
     glm::vec3 right = glm::normalize(glm::cross(fw, glm::vec3(0, 1, 0))) * radiusFactor;
     //Right
     p = point + right;
-    if (rayCast(p + glm::vec3(0, rayCastStart, 0), direction, rayCastResult)
-        && rayCastResult.m_distance < prevDist) {
-        prevDist = rayCastResult.m_distance;
+    result = rayCastFeet(p + glm::vec3(0, rayCastStart, 0), direction);
+    if (result.has_value() && result.value() < prevDist) {
+        prevDist = result.value();
         m_haveGroundDetected = true;
-        m_minDistanceToGround = glm::length(p - rayCastResult.m_touchPoint);
+        m_minDistanceToGround = result.value() - rayCastStart;
     }
 
     //Left
     p = point - right;
-    if (rayCast(p + glm::vec3(0, rayCastStart, 0), direction, rayCastResult)
-        && rayCastResult.m_distance < prevDist) {
-        prevDist = rayCastResult.m_distance;
+    result = rayCastFeet(p + glm::vec3(0, rayCastStart, 0), direction);
+    if (result.has_value() && result.value() < prevDist) {
+        prevDist = result.value();
         m_haveGroundDetected = true;
-        m_minDistanceToGround = glm::length(p - rayCastResult.m_touchPoint);
+        m_minDistanceToGround = result.value() - rayCastStart;
     }
 }
 
-bool PhysicsCharacterComponent::rayCast(glm::vec3 position, glm::vec3 direction, PhysicsRayCastResult &result, bool excludeAllSensors) {
+bool PhysicsCharacterComponent::rayCast(const glm::vec3 position, const glm::vec3 direction,
+                                        PhysicsRayCastResult &result, const bool excludeAllSensors) {
     JPH::RayCastResult hit;
     JPH::RRayCast ray{PhysicsTypeCast::glmToJPH(position), PhysicsTypeCast::glmToJPH(direction)};
     const JPH::IgnoreSingleBodyFilter bodyFilter(m_physicsBody->GetID());
@@ -214,6 +220,9 @@ bool PhysicsCharacterComponent::rayCast(glm::vec3 position, glm::vec3 direction,
             const auto userData = reinterpret_cast<PhysicsShapeUserData *>(rawUserData);
             result.m_shapeComponentId = userData->m_physicsShapeComponentId;
             result.m_shapeComponentName = userData->m_physicsShapeComponentName;
+
+            if (lock.GetBody().GetMotionType() == JPH::EMotionType::Dynamic) {
+            }
         }
 
         const auto *userData = m_PhysicsResource().getBodyUserData(hit.mBodyID);
@@ -227,6 +236,33 @@ bool PhysicsCharacterComponent::rayCast(glm::vec3 position, glm::vec3 direction,
     return false;
 }
 
+std::optional<float> PhysicsCharacterComponent::rayCastFeet(const glm::vec3 position, const glm::vec3 direction,
+                                                            bool doCheckGroundMovement) {
+    JPH::RayCastResult hit;
+    JPH::RRayCast ray{PhysicsTypeCast::glmToJPH(position), PhysicsTypeCast::glmToJPH(direction)};
+    const JPH::IgnoreSingleBodyFilter bodyFilter(m_physicsBody->GetID());
+    SensorLayerFilter filter{true};
+
+    if (m_PhysicsResource().getSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, filter, bodyFilter)) {
+        if (doCheckGroundMovement) {
+            if (const JPH::BodyLockRead lock(m_PhysicsResource().getLockInterface(), hit.mBodyID); lock.Succeeded()) {
+                auto &body = lock.GetBody();
+                if (body.GetMotionType() == JPH::EMotionType::Dynamic) {
+                    const auto point = ray.GetPointOnRay(hit.mFraction);
+                    const auto velocityAtPoint = body.GetPointVelocity(point);
+                    if (velocityAtPoint.Length() > 0.1) {
+                        m_isGroundMoving = true;
+                        m_groundMovementVelocity = velocityAtPoint;
+                    }
+                }
+            }
+        }
+
+        return std::optional(ray.mDirection.Length() * hit.mFraction);
+    }
+    return std::nullopt;
+}
+
 glm::vec3 PhysicsCharacterComponent::getVelocity() const {
     return PhysicsTypeCast::JPHToGlm(m_physicsBody->GetLinearVelocity());
 }
@@ -236,21 +272,29 @@ void PhysicsCharacterComponent::setMoveDirection(const glm::vec3 &direction) {
 }
 
 void PhysicsCharacterComponent::updateMove() {
-    if (!m_doMove) {
+    if (!m_isOnGround) {
         return;
     }
 
-    constexpr float speed = 10.0f;
+    constexpr float dampingFactor = 0.9f;
+    JPH::Vec3 inputVelocity = {0.0, 0.0, 0.0};
 
-    JPH::Vec3 movementDirection = PhysicsTypeCast::glmToJPH(m_movementDirection);
-
-    JPH::Vec3 currentVelocity = m_physicsBody->GetLinearVelocity();
-    JPH::Vec3 desiredVelocity = speed * movementDirection;
-    if (!desiredVelocity.IsNearZero() || currentVelocity.GetY() < 0.0f) {
-        desiredVelocity.SetY(currentVelocity.GetY());
+    if (m_doMove) {
+        constexpr float speed = 10.0f;
+        inputVelocity = PhysicsTypeCast::glmToJPH(m_movementDirection) * speed;
     }
 
-    const JPH::Vec3 newVelocity = 0.75f * currentVelocity + 0.25f * desiredVelocity;
+    JPH::Vec3 currentVelocity = m_physicsBody->GetLinearVelocity();
+
+    if (m_isGroundMoving) {
+        currentVelocity -= m_groundMovementVelocity;
+    }
+
+    JPH::Vec3 newVelocity = dampingFactor * currentVelocity + (1.0 - dampingFactor) * inputVelocity;
+
+    if (m_isGroundMoving) {
+        newVelocity += m_groundMovementVelocity;
+    }
 
     m_physicsBody->SetLinearVelocity(newVelocity);
     m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());

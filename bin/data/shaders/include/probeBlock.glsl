@@ -33,12 +33,12 @@ vec3 parallaxCorrectedProbeReflection(
    return intersectedWorldSpacePos - probe.position;
 }
 
-int roughnessToLod(float roughness)
+float roughnessToLod(float roughness)
 {
-    return int(roughness * 5.0);
+    return roughness * 5.0;
 }
 
-vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 viewReflection, vec3 roughness, vec3 normal, in samplerCube environmentSampler)
+vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 viewReflection, float roughness, vec3 normal, in samplerCube environmentSampler)
 {
     vec3 selectedColor[4];
     float selectedWeights[4];
@@ -75,7 +75,7 @@ vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 v
         vec4 color = textureLod(
                 probesCubeArraySampler,
                 vec4(reflectedRay, probe.cubeMapTextureLayer),
-                roughnessToLod(length(roughness))
+                roughnessToLod(roughness)
         );
 
         if (color.a == 0) {
