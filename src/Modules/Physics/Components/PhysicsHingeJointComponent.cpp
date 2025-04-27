@@ -144,13 +144,26 @@ float PhysicsHingeJointComponent::getUnitPosition() const {
 }
 
 void PhysicsHingeJointComponent::lockInPlace() {
-    m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(),
-                                                     EMotionType::Static,
-                                                     EActivation::DontActivate);
+    float currentAngle = m_Joint->GetCurrentAngle();
+    m_Joint->SetMotorState(EMotorState::Position);
+    m_Joint->SetTargetAngle(currentAngle);
+
+    MotorSettings motorSettings;
+    // motorSettings.mFrequency = 30.0f;    // High frequency means it will hold very stiffly
+    // motorSettings.mDamping = 1.0f;       // Prevent oscillations
+    // motorSettings.mMaxForce = 1.0e6f;     // Large enough to resist any forces
+    //
+    // m_Joint->SetMotorSettings(motorSettings);
+
+    // m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(),
+    //                                                  EMotionType::Static,
+    //                                                  EActivation::DontActivate);
+
 }
 
 void PhysicsHingeJointComponent::unLock() {
-    m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(),
-                                                     EMotionType::Dynamic,
-                                                     EActivation::Activate);
+    // m_PhysicsResource().getInterface().SetMotionType(m_Joint->GetBody1()->GetID(),
+    //                                                  EMotionType::Dynamic,
+    //                                                  EActivation::Activate);
+    m_Joint->SetMotorState(JPH::EMotorState::Off);
 }
