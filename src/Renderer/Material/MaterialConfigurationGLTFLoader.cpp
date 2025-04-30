@@ -11,6 +11,9 @@ MaterialConfiguration MaterialConfigurationGLTFLoader::createFromGLTFMaterial(
 
     MaterialConfiguration config;
 
+    if (material.emissiveTexture.index >= 0) {
+        config.emissiveTextureUri = getTextureUri(model, material.emissiveTexture.index);
+    }
     if (material.normalTexture.index >= 0) {
         config.normalTextureUri = getTextureUri(model, material.normalTexture.index);
     }
@@ -18,8 +21,14 @@ MaterialConfiguration MaterialConfigurationGLTFLoader::createFromGLTFMaterial(
         config.diffuseTextureUri = getTextureUri(model, material.pbrMetallicRoughness.baseColorTexture.index);
     }
     if (material.pbrMetallicRoughness.metallicRoughnessTexture.index >= 0) {
-        config.roughnessTextureUri = getTextureUri(model, material.pbrMetallicRoughness.metallicRoughnessTexture.index);
+        config.roughnessMetallicTextureUri = getTextureUri(model, material.pbrMetallicRoughness.metallicRoughnessTexture.index);
     }
+
+    config.emissiveColor = {
+        material.emissiveFactor[0],
+        material.emissiveFactor[1],
+        material.emissiveFactor[2],
+    };
 
     config.diffuseColor = {
         material.pbrMetallicRoughness.baseColorFactor[0],

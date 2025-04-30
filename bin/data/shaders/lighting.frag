@@ -210,8 +210,11 @@ void main()
     }
 
     float roughness = 1.0;
+    float metallic = 0.1;
     if (hasRoughnessSampler == 1) {
-        roughness = texture(roughnessSampler, texCoords).g;
+        vec2 metallicRoughness = texture(roughnessSampler, texCoords).gb;
+        roughness = metallicRoughness.x;
+        metallic = metallicRoughness.y;
     }
 
 //    float hh = texture(roughnessSampler, texCoords).r;
@@ -233,7 +236,6 @@ void main()
     vec3 surfaceNormal = normalize(vsNormal);
 
     //IBL
-    float metallic = 0.1;
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, diffuse, metallic);
     vec3 V = normalize(viewPosition - vsPosition.xyz);

@@ -33,6 +33,7 @@ void MaterialResource::bind(ShaderProgramResource &shader) {
     }
 
     shader.setUniform("diffuseColor", m_materialConfiguration.diffuseColor);
+    shader.setUniform("emissiveColor", m_materialConfiguration.emissiveColor);
     shader.setUniform("selfIllumination", m_materialConfiguration.selfIllumination);
     shader.setUniform("hasDiffuseSampler", static_cast<int>(m_Diffuse().isReady()));
     shader.setUniform("hasNormalSampler", static_cast<int>(m_Normal().isReady()));
@@ -47,7 +48,8 @@ void MaterialResource::fetchFromGLTF(ResourceManager &resourceManager, const tin
 
     requestTextureResource(resourceManager, m_Diffuse, m_materialConfiguration.diffuseTextureUri);
     requestTextureResource(resourceManager, m_Normal, m_materialConfiguration.normalTextureUri);
-    requestTextureResource(resourceManager, m_Roughness, m_materialConfiguration.roughnessTextureUri);
+    requestTextureResource(resourceManager, m_Roughness, m_materialConfiguration.roughnessMetallicTextureUri);
+    requestTextureResource(resourceManager, m_Emissive, m_materialConfiguration.emissiveTextureUri);
 
     setDataReady();
 }

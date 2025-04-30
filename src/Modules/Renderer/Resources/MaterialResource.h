@@ -25,6 +25,7 @@ public:
     ResourceHandle<TextureResource> m_Diffuse;
     ResourceHandle<TextureResource> m_Normal;
     ResourceHandle<TextureResource> m_Roughness;
+    ResourceHandle<TextureResource> m_Emissive;
 
 private:
     void requestTextureResource(ResourceManager &, ResourceHandle<TextureResource> &, const std::string &);
