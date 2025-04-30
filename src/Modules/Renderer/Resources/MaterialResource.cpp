@@ -32,12 +32,17 @@ void MaterialResource::bind(ShaderProgramResource &shader) {
         shader.setUniform("roughnessSampler", m_Roughness().m_handleId);
     }
 
+    if (m_Emissive().isReady()) {
+        shader.setUniform("emissiveSampler", m_Emissive().m_handleId);
+    }
+
     shader.setUniform("diffuseColor", m_materialConfiguration.diffuseColor);
     shader.setUniform("emissiveColor", m_materialConfiguration.emissiveColor);
     shader.setUniform("selfIllumination", m_materialConfiguration.selfIllumination);
     shader.setUniform("hasDiffuseSampler", static_cast<int>(m_Diffuse().isReady()));
     shader.setUniform("hasNormalSampler", static_cast<int>(m_Normal().isReady()));
     shader.setUniform("hasRoughnessSampler", static_cast<int>(m_Roughness().isReady()));
+    shader.setUniform("hasEmissivesSampler", static_cast<int>(m_Emissive().isReady()));
     shader.setUniform("doesReceiveShadows", static_cast<int>(m_materialConfiguration.doesReceiveShadows));
     shader.setUniform("wrappingType", (int) m_materialConfiguration.diffuseTextureWrappingType);
 }

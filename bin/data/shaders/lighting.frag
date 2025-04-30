@@ -50,16 +50,18 @@ layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotL
 uniform uint SpotLightStorageBuffer_size;
 uniform vec3 viewPosition;
 uniform vec3 diffuseColor;
-uniform float selfIllumination;
+uniform vec3 emissiveColor;
 uniform int hasDiffuseSampler;
 uniform int hasNormalSampler;
 uniform int hasRoughnessSampler;
+uniform int hasEmissiveSampler;
 uniform int doesReceiveShadows;
 uniform int wrappingType;
 
 layout(bindless_sampler) uniform sampler2D diffuseSampler;
 layout(bindless_sampler) uniform sampler2D normalSampler;
 layout(bindless_sampler) uniform sampler2D roughnessSampler;
+layout(bindless_sampler) uniform sampler2D emissiveSampler;
 layout(bindless_sampler) uniform samplerCube environmentSampler;
 layout(bindless_sampler) uniform sampler2D brdfLUT;
 
@@ -198,15 +200,15 @@ void main()
         }
     }
 
-    if (selfIllumination > 0.95) {
-        fragColor = vec4(diffuse, 1.0);
-        return;
-    }
-
     vec3 normal = normalize(vsNormal);
     if (hasNormalSampler == 1) {
         normal = texture(normalSampler, texCoords).xyz;
         normal = vsInvTBN * normalize(normal * 2.0 - 1.0);
+    }
+
+    vec3 emissive = emissiveColor;
+    if (hasEmissiveSampler == 1) {
+        emissive = texture(emissiveSampler, texCoords).xyz;
     }
 
     float roughness = 1.0;
@@ -230,7 +232,7 @@ void main()
     vec3 falloff;
     vec3 lightDir;
     float distToLight;
-    vec3 lightColor = vec3(0);    //vec3(selfIllumination) + (diffuse * ambientEnvColor);
+    vec3 lightColor = vec3(0);
 
     vec3 diffuseSpecular = diffuse.rgb + reflectionColor;
     vec3 surfaceNormal = normalize(vsNormal);
@@ -300,7 +302,7 @@ void main()
         }
     }
 
-      //Ambient IBL
+    //Ambient IBL
     float NdotV = max(dot(normal, V), 0.0);
     vec2 brdf = texture2D(brdfLUT, vec2(NdotV, roughness)).xy;
     vec3 F = fresnelSchlickRoughness(NdotV, F0, roughness);
@@ -310,9 +312,7 @@ void main()
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - metallic;
 
-    vec3 irradiance = vec3(0.0);    //texture(irradianceMap, N).rgb;
-
-    vec3 lightedColor = irradiance * diffuse;
+    vec3 lightedColor = emissive * diffuse;
     lightedColor = (kD * lightedColor + specular);// * ao;
     lightedColor += lightColor;
 
