@@ -19,5 +19,7 @@ public:
 
     glm::ivec2 getViewportSize() const;
 
+    static void setRelativeMouseMode(bool isRelativeMouseModeOn);
+
     Window* m_Window;
 };

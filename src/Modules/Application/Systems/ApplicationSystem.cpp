@@ -2,6 +2,7 @@
 #include "../../../Core/Entity/EntitySerializer.h"
 #include "../../../Core/Helper/Time.h"
 #include <fstream>
+#include "../Events/SystemEvent.h"
 
 ApplicationSystem::ApplicationSystem() : EntitySystem(), m_ResourceManager(nullptr), m_WindowResource() {
 }
@@ -21,6 +22,7 @@ void ApplicationSystem::process(EventManager &) {
 void ApplicationSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &ApplicationSystem::handleEntityCreationEvent);
     eventManager.registerEventReceiver(this, &ApplicationSystem::handleEditorUIEvent);
+    eventManager.registerEventReceiver(this, &ApplicationSystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &ApplicationSystem::handleEntityPersistenceEvent);
 }
 
@@ -49,6 +51,16 @@ void ApplicationSystem::handleEntityCreationEvent(const EntityCreationEvent &eve
     }
     if (event.m_Type == EntityCreationEvent::REMOVE_COMPONENT) {
         m_EntityContext->removeComponent(event.m_entityId, event.m_componentId);
+    }
+}
+
+void ApplicationSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
+        m_WindowResource().setRelativeMouseMode(true);
+    }
+
+    if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
+        m_WindowResource().setRelativeMouseMode(false);
     }
 }
 

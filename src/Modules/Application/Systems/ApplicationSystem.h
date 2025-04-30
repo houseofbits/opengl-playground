@@ -5,6 +5,8 @@
 #include "../../Editor/Events/EditorUIEvent.h"
 #include "../Events/EntityPersistenceEvent.h"
 
+class SystemEvent;
+
 class ApplicationSystem : public EntitySystem {
 public:
     ApplicationSystem();
@@ -20,6 +22,8 @@ public:
     void handleEditorUIEvent(const EditorUIEvent &event);
 
     void handleEntityPersistenceEvent(const EntityPersistenceEvent &event);
+
+    void handleSystemEvent(const SystemEvent &);
 
 private:
     static void setTime();

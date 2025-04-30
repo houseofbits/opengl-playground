@@ -17,7 +17,7 @@ void MainToolbarUI::process() {
             ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor(0, 200, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4) ImColor(0, 170, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4) ImColor(0, 150, 0));
-            if (ImGui::Button("Run")) {
+            if (ImGui::Button("Run (F1)")) {
                 enableGameMode();
             }
             ImGui::PopStyleColor(3);
@@ -25,7 +25,7 @@ void MainToolbarUI::process() {
             ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor(200, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4) ImColor(170, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4) ImColor(150, 0, 0));
-            if (ImGui::Button("Stop")) {
+            if (ImGui::Button("Stop (F1)")) {
                 enableEditorMode();
             }
             ImGui::PopStyleColor(3);

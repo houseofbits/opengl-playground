@@ -78,6 +78,7 @@ void EditorUISystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &EditorUISystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &EditorUISystem::handleRawSDLEvent);
     eventManager.registerEventReceiver(this, &EditorUISystem::handleCameraActivationEvent);
+    eventManager.registerEventReceiver(this, &EditorUISystem::handleInputEvent);
 }
 
 void EditorUISystem::handleSystemEvent(const SystemEvent &event) {
@@ -89,6 +90,21 @@ void EditorUISystem::handleSystemEvent(const SystemEvent &event) {
         m_isEditorModeEnabled = true;
     } else if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
         m_isEditorModeEnabled = false;
+    }
+}
+
+void EditorUISystem::handleInputEvent(const InputEvent &event) {
+    if (event.type == InputEvent::KEYUP) {
+        //F1
+        if (event.keyCode == 58) {
+            if (m_isEditorModeEnabled) {
+                m_EventManager->queueEvent<SystemEvent>(SystemEvent::REQUEST_GAME_MODE);
+                m_isEditorModeEnabled = false;
+            } else {
+                m_EventManager->queueEvent<SystemEvent>(SystemEvent::REQUEST_EDITOR_MODE);
+                m_isEditorModeEnabled = true;
+            }
+        }
     }
 }
 

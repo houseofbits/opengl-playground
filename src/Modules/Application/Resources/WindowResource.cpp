@@ -32,3 +32,13 @@ glm::ivec2 WindowResource::getViewportSize() const {
 
     return glm::ivec2(m_Window->viewportWidth, m_Window->viewportHeight);
 }
+
+void WindowResource::setRelativeMouseMode(const bool isRelativeMouseModeOn) {
+    if (isRelativeMouseModeOn) {
+        SDL_ShowCursor(SDL_DISABLE);
+        SDL_SetRelativeMouseMode(SDL_TRUE);
+    } else {
+        SDL_ShowCursor(SDL_ENABLE);
+        SDL_SetRelativeMouseMode(SDL_FALSE);
+    }
+}

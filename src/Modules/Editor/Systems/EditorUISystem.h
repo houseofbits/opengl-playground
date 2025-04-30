@@ -29,6 +29,8 @@ public:
 
     void handleRawSDLEvent(const RawSDLEvent &);
 
+    void handleInputEvent(const InputEvent &);
+
     void handleCameraActivationEvent(const CameraActivationEvent &event) {
         m_activeCameraHelper.m_activeCameraId = event.m_cameraComponentId;
     }

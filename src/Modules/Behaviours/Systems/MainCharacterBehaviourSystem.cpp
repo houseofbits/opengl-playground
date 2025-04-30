@@ -39,17 +39,19 @@ void MainCharacterBehaviourSystem::handleSystemEvent(const SystemEvent &event) {
 }
 
 void MainCharacterBehaviourSystem::handleInputEvent(const InputEvent &event) {
+    if (m_isEditorModeEnabled) {
+        return;
+    }
+
     for (const auto &[id, components]: m_registry->container()) {
         const auto &[transform, character, behaviour] = components.get();
 
-        if (behaviour->m_isActive && !m_isEditorModeEnabled) {
+        if (behaviour->m_isActive) {
             handleMouseLook(event, behaviour, character);
             handleMovement(event, behaviour, character);
 
             const glm::vec3 worldPosition = transform->getWorldTransform() * glm::vec4(
                                                 behaviour->m_cameraAttachmentPosition, 1.0);
-
-            // Log::write(character->m_);
 
             handleAction(event, character, worldPosition, behaviour->m_lookingDirection);
 
@@ -61,8 +63,8 @@ void MainCharacterBehaviourSystem::handleInputEvent(const InputEvent &event) {
 void MainCharacterBehaviourSystem::handleMouseLook(const InputEvent &event,
                                                    MainCharacterBehaviourComponent *behaviour,
                                                    PhysicsCharacterComponent *physics) {
-    if (event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) {
-        behaviour->adjustLookingDirection(-event.mouseMotion * behaviour->m_mouseLookSpeed * Time::frameTime);
+    if (event.type == InputEvent::MOUSEMOVE) {
+        behaviour->adjustLookingDirection(event.mouseMotion * behaviour->m_mouseLookSpeed * Time::frameTime);
         physics->setMoveDirection(behaviour->m_lookingDirection);
     }
 }
