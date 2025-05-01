@@ -8,16 +8,19 @@
 #include "Systems/PhysicsBodyProcessingSystem.h"
 #include "Systems/PhysicsSystem.h"
 #include "Components/PhysicsSliderJointComponent.h"
+#include "Components/PhysicsDistanceJointComponent.h"
 #include "Components/PhysicsFixedJointComponent.h"
 #include "Editors/CharacterControllerComponentEdit.h"
 #include "Editors/PhysicsBodyComponentEdit.h"
 #include "Editors/PhysicsHingeJointComponentEdit.h"
 #include "Editors/PhysicsSliderJointComponentEdit.h"
 #include "Editors/PhysicsFixedJointComponentEdit.h"
+#include "Editors/PhysicsDistanceJointComponentEdit.h"
 #include "Editors/PhysicsShapeComponentEdit.h"
 #include "../Editor/Systems/EditorUISystem.h"
 #include "Editors/PhysicsHingeJointComponentTransformEdit.h"
 #include "Editors/PhysicsSliderJointComponentTransformEdit.h"
+#include "Editors/PhysicsDistanceJointComponentTransformEdit.h"
 #include "Events/PhysicsPickingEvent.h"
 #include "Events/PhysicsTriggerShapeEvent.h"
 #include "Components/PhysicsShapeComponent.h"
@@ -35,6 +38,7 @@ public:
         ctx.registerComponent<PhysicsSliderJointComponent>();
         ctx.registerComponent<PhysicsFixedJointComponent>();
         ctx.registerComponent<PhysicsShapeComponent>();
+        ctx.registerComponent<PhysicsDistanceJointComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {
@@ -66,7 +70,7 @@ public:
             "setMotorVelocity", &PhysicsHingeJointComponent::setMotorVelocity,
             "lockInPlace", &PhysicsHingeJointComponent::lockInPlace,
             "unLock", &PhysicsHingeJointComponent::unLock,
-            "toggleState", [](PhysicsHingeJointComponent& self) {
+            "toggleState", [](PhysicsHingeJointComponent &self) {
                 if (self.m_useStatefulJointBehaviour) {
                     self.m_statefulJointBehaviour.toggleJointState(&self);
                 }
@@ -94,6 +98,8 @@ public:
                 PhysicsSliderJointComponentTransformEdit>();
             editorSystem->registerTransformComponentEditor<PhysicsShapeComponent,
                 PhysicsShapeComponentTransformEdit>();
+            editorSystem->registerTransformComponentEditor<PhysicsDistanceJointComponent,
+                PhysicsDistanceJointComponentTransformEdit>();
 
             editorSystem->registerComponentEditor<PhysicsBodyComponent>(processPhysicsBodyComponentEditor);
             editorSystem->registerComponentEditor<PhysicsShapeComponent>(processPhysicsShapeComponentEditor);
@@ -103,6 +109,8 @@ public:
             editorSystem->registerComponentEditor<PhysicsHingeJointComponent>(processPhysicsHingeJointComponentEditor);
             editorSystem->registerComponentEditor<
                 PhysicsSliderJointComponent>(processPhysicsSliderJointComponentEditor);
+            editorSystem->registerComponentEditor<
+                PhysicsDistanceJointComponent>(processPhysicsDistanceJointComponentEditor);
         }
     }
 };

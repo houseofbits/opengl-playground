@@ -219,12 +219,6 @@ void main()
         metallic = metallicRoughness.y;
     }
 
-//    float hh = texture(roughnessSampler, texCoords).r;
-//
-//    fragColor = vec4(vec3(texCoords, 1.0), 1.0);
-//
-//    return;
-
     vec3 viewReflection = reflect(view, normal);
     vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(vsPosition.xyz, viewReflection, roughness, normal, environmentSampler);
 

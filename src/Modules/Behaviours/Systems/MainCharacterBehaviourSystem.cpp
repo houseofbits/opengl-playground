@@ -3,6 +3,7 @@
 #include "../../Physics/Events/PhysicsPickingEvent.h"
 #include "../../Application/Events/InputEvent.h"
 #include "../../../Modules/Application/Events/SystemEvent.h"
+#include "../../Physics/Components/PhysicsBodyComponent.h"
 
 MainCharacterBehaviourSystem::MainCharacterBehaviourSystem() : EntitySystem(), m_isEditorModeEnabled(false) {
     m_registry = useEntityRelatedComponentsRegistry<TransformComponent, PhysicsCharacterComponent,
@@ -115,8 +116,9 @@ void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
                                                 PhysicsCharacterComponent *characterComponent,
                                                 const glm::vec3 viewPosition,
                                                 const glm::vec3 viewDirection) const {
-    if ((event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) ||
-        (event.type == InputEvent::MOUSEUP && event.mouseButtonRight)) {
+    //(event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) ||
+
+    if (event.type == InputEvent::MOUSEUP && event.mouseButtonRight) {
         PhysicsRayCastResult hit;
         if (characterComponent->rayCast(viewPosition,
                                         viewDirection * 10.f, hit, false)) {
@@ -130,6 +132,11 @@ void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
                     hit.m_shapeComponentId,
                     hit.m_shapeComponentName
                 );
+
+                auto c = entity->getComponent<PhysicsBodyComponent>();
+                if (c && c->m_BodyType == PhysicsBodyComponent::BODY_TYPE_DYNAMIC) {
+                    // Log::write(entity->m_Name, " dynamic ", hit.m_distance);
+                }
             }
         }
     }

@@ -35,7 +35,7 @@ public:
 
     void update() override;
 
-    float getUnitPosition() const override;
+    [[nodiscard]] float getUnitPosition() const override;
 
     void activate() override;
 

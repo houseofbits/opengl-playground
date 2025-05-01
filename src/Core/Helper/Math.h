@@ -53,7 +53,7 @@ namespace Math {
         return m[2];
     }
 
-    inline glm::mat4 createMatrixFromTranslationAndRotation(glm::vec3 translation, glm::quat rotation) {
+    inline glm::mat4 createMatrixFromTranslationAndRotation(const glm::vec3 translation, const glm::quat rotation) {
         glm::mat4 m(1.0);
         m = glm::translate(m, translation);
         glm::mat4 rotationMatrix = glm::mat4_cast(rotation);

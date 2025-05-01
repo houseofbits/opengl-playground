@@ -12,6 +12,7 @@
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 #include <Jolt/Physics/Constraints/FixedConstraint.h>
 #include <Jolt/Physics/Constraints/HingeConstraint.h>
+#include <Jolt/Physics/Constraints/DistanceConstraint.h>
 #include <Jolt/Physics/Constraints/SliderConstraint.h>
 #include "../../../../Core/Reflection/Identity.h"
 #include "../Layers.h"
@@ -177,10 +178,10 @@ class PhysicsBuilder {
         float m_motorFrequency = 0;
         float m_motorDamping = 0;
         float m_motorForceLimit = FLT_MAX;
-        glm::vec3 m_axis1{0.0f};
-        glm::vec3 m_axis2{0.0f};
-        glm::vec3 m_point1{0.0f};
-        glm::vec3 m_point2{0.0f};
+        // glm::vec3 m_axis1{0.0f};
+        // glm::vec3 m_axis2{0.0f};
+        // glm::vec3 m_point1{0.0f};
+        // glm::vec3 m_point2{0.0f};
         glm::mat4 m_attachment1{1.0};
         glm::mat4 m_attachment2{1.0};
 
@@ -209,19 +210,19 @@ class PhysicsBuilder {
             return *this;
         }
 
-        PhysicsJointBuilder &setPoints(const glm::vec3 point1, const glm::vec3 point2) {
-            m_point1 = point1;
-            m_point2 = point2;
-
-            return *this;
-        }
-
-        PhysicsJointBuilder &setAxis(const glm::vec3 axis1, const glm::vec3 axis2) {
-            m_axis1 = axis1;
-            m_axis2 = axis2;
-
-            return *this;
-        }
+        // PhysicsJointBuilder &setPoints(const glm::vec3 point1, const glm::vec3 point2) {
+        //     m_point1 = point1;
+        //     m_point2 = point2;
+        //
+        //     return *this;
+        // }
+        //
+        // PhysicsJointBuilder &setAxis(const glm::vec3 axis1, const glm::vec3 axis2) {
+        //     m_axis1 = axis1;
+        //     m_axis2 = axis2;
+        //
+        //     return *this;
+        // }
 
         PhysicsJointBuilder &setAttachments(const glm::mat4 &attachment1, const glm::mat4 &attachment2) {
             m_attachment1 = attachment1;
@@ -253,14 +254,12 @@ class PhysicsBuilder {
             JPH::Body *body1 = nullptr;
             JPH::Body *body2 = nullptr;
 
-            JPH::BodyLockWrite lock1(m_physicsSystem->GetBodyLockInterface(), m_bodyId1);
-            if (lock1.Succeeded()) {
+            if (JPH::BodyLockWrite lock1(m_physicsSystem->GetBodyLockInterface(), m_bodyId1); lock1.Succeeded()) {
                 body1 = &lock1.GetBody();
                 lock1.ReleaseLock();
             }
 
-            JPH::BodyLockWrite lock2(m_physicsSystem->GetBodyLockInterface(), m_bodyId2);
-            if (lock2.Succeeded()) {
+            if (JPH::BodyLockWrite lock2(m_physicsSystem->GetBodyLockInterface(), m_bodyId2); lock2.Succeeded()) {
                 body2 = &lock2.GetBody();
                 lock2.ReleaseLock();
             }
@@ -278,6 +277,44 @@ class PhysicsBuilder {
             m_physicsSystem->AddConstraint(joint);
 
             return dynamic_cast<JPH::FixedConstraint *>(joint);
+        }
+
+        [[nodiscard]] JPH::DistanceConstraint *createDistanceConstraint() const {
+            if (m_bodyId1.IsInvalid() || m_bodyId2.IsInvalid()) {
+                return nullptr;
+            }
+
+            JPH::Body *body1 = nullptr;
+            JPH::Body *body2 = nullptr;
+
+            JPH::BodyLockWrite lock1(m_physicsSystem->GetBodyLockInterface(), m_bodyId1);
+            if (lock1.Succeeded()) {
+                body1 = &lock1.GetBody();
+                lock1.ReleaseLock();
+            }
+
+            JPH::BodyLockWrite lock2(m_physicsSystem->GetBodyLockInterface(), m_bodyId2);
+            if (lock2.Succeeded()) {
+                body2 = &lock2.GetBody();
+                lock2.ReleaseLock();
+            }
+
+            if (!body1 || !body2) {
+                return nullptr;
+            }
+
+            JPH::DistanceConstraintSettings settings;
+            settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
+            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
+            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
+            settings.mMinDistance = m_limits.x;
+            settings.mMaxDistance = m_limits.y;
+
+            auto joint = dynamic_cast<JPH::DistanceConstraint *>(settings.Create(*body1, *body2));
+
+            m_physicsSystem->AddConstraint(joint);
+
+            return joint;
         }
 
         [[nodiscard]] JPH::SliderConstraint *createSliderConstraint() const {

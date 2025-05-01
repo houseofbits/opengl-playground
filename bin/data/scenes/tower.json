@@ -16,7 +16,7 @@
             "upDirection": [
                 0.6129709482192993,
                 0.7900663018226624,
-                -0.007874836213886738
+                -0.007874828763306141
             ],
             "viewDirection": [
                 0.7900010943412781,
@@ -94,21 +94,21 @@
             "moveSpeed": 10.0,
             "orthoScale": 48.49983215332031,
             "position": [
-                -15.96707534790039,
-                4.961690902709961,
-                13.487504959106445
+                -8.458675384521484,
+                2.2380409240722656,
+                11.250088691711426
             ],
             "reposition": false,
             "type": 0,
             "upDirection": [
-                0.3813409209251404,
-                0.8839341402053833,
-                -0.27062809467315674
+                -0.2812250554561615,
+                0.959337055683136,
+                -0.02418764866888523
             ],
             "viewDirection": [
-                0.7208554148674011,
-                -0.4676114320755005,
-                -0.5115730166435242
+                -0.9558082222938538,
+                -0.28226327896118164,
+                -0.08220729976892471
             ]
         },
         "name": "PerspectiveEditorCamera"
@@ -287,9 +287,9 @@
             ],
             "cameraName": "",
             "lookDirection": [
-                0.9357118606567383,
-                0.3403456509113312,
-                0.09278032183647156
+                0.47341495752334595,
+                -0.3304823935031891,
+                0.8164922595024109
             ],
             "mlookSpeed": 0.15000000596046448,
             "moveSpeed": 10.0
@@ -388,8 +388,8 @@
             ],
             "scale": [
                 1.0,
-                0.9999997019767761,
-                0.9999997019767761
+                0.9999991655349731,
+                0.9999991655349731
             ],
             "translation": [
                 -10.17956829071045,
@@ -427,8 +427,8 @@
             ],
             "scale": [
                 1.0,
-                0.9999996423721313,
-                0.9999996423721313
+                0.9999991059303284,
+                0.9999991059303284
             ],
             "translation": [
                 -1.57035231590271,
@@ -466,8 +466,8 @@
             ],
             "scale": [
                 1.0,
-                0.9999995827674866,
-                0.9999995827674866
+                0.9999990463256836,
+                0.9999990463256836
             ],
             "translation": [
                 6.383544445037842,
@@ -550,5 +550,263 @@
             ]
         },
         "name": "CenterLight-COPY-COPY"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-sphere.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "isSensor": false,
+            "mass": 10.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "attachmentBPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "limits": [
+                3.0,
+                3.0
+            ],
+            "targetEntityA": "",
+            "targetEntityB": "Sphere3"
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-sphere.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -10.810494422912598,
+                1.615138053894043,
+                11.057801246643066
+            ]
+        },
+        "name": "Sphere1"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-sphere.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "isSensor": false,
+            "mass": 10.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-sphere.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -10.810494422912598,
+                7.075390338897705,
+                11.393325805664063
+            ]
+        },
+        "name": "Sphere2"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-sphere.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "isSensor": false,
+            "mass": 10.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-sphere.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -10.810494422912598,
+                2.3685007095336914,
+                11.956686973571777
+            ]
+        },
+        "name": "Sphere3"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "isSensor": false,
+            "mass": 10.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -12.175912857055664,
+                2.2302558422088623,
+                11.701332092285156
+            ]
+        },
+        "name": "RigidBox1"
     }
 ]

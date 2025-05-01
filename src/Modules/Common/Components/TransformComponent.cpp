@@ -16,6 +16,8 @@ TransformComponent::TransformComponent() : Component(),
                                            m_isTransformInSync(false),
                                            m_initialTransform(1.0),
                                            m_shouldSyncWorldTransformToLocal(false) {
+
+    setWorldTransform(glm::mat4(1.0), true);
 }
 
 void TransformComponent::decomposeModelMatrix(glm::vec3 &translation, glm::quat &rotation, glm::vec3 &scale) {
