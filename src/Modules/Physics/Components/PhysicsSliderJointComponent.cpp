@@ -61,10 +61,6 @@ void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceM
 }
 
 bool PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
-    if (!areAllowedToConnect(bodyA, bodyB)) {
-        return false;
-    }
-
     auto builder = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
             .setAttachments(m_localAttachmentMatrixA, m_localAttachmentMatrixB)
             .setBodies(bodyA, bodyB);
@@ -84,11 +80,10 @@ bool PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBod
 
 void PhysicsSliderJointComponent::release() {
     if (m_Joint != nullptr) {
-        // Log::write("Release slider joint ", m_Joint);
-
         m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
         m_Joint = nullptr;
     }
+    BasePhysicsJoint::release();
 }
 
 void PhysicsSliderJointComponent::update() {

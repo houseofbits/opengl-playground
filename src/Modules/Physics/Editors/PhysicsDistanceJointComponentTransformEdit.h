@@ -3,11 +3,11 @@
 #include "../../Common/Components/TransformComponent.h"
 #include "../../Editor/UI/ComponentEdit.h"
 #include "../../../Core/Helper/Math.h"
-#include "../Components/PhysicsHingeJointComponent.h"
+#include "../Components/PhysicsDistanceJointComponent.h"
 #include "../../Common/Editors/EntityLinkedComponentEdit.h"
 #include "../../Editor/Systems/EditorUISystem.h"
 
-class PhysicsDistanceJointComponentTransformEdit final : public ComponentEdit<PhysicsHingeJointComponent> {
+class PhysicsDistanceJointComponentTransformEdit final : public ComponentEdit<PhysicsDistanceJointComponent> {
 public:
     explicit PhysicsDistanceJointComponentTransformEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
     }

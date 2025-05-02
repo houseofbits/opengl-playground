@@ -16,6 +16,8 @@
 inline void processPhysicsDistanceJointComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
     const auto component = dynamic_cast<PhysicsDistanceJointComponent *>(c);
 
+    ImGui::Checkbox("Is initially connected", &component->m_isInitiallyConnected);
+
     EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
         *system.m_EntityContext,
         component->m_targetEntityAName,

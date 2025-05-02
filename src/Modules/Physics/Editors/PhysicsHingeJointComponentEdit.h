@@ -16,6 +16,8 @@
 inline void processPhysicsHingeJointComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
     const auto component = dynamic_cast<PhysicsHingeJointComponent *>(c);
 
+    ImGui::Checkbox("Is initially connected", &component->m_isInitiallyConnected);
+
     EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
         *system.m_EntityContext,
         component->m_targetEntityAName,

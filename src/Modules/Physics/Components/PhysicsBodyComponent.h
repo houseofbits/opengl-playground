@@ -42,7 +42,7 @@ public:
 
     void update(TransformComponent &transform, bool isSimulationEnabled);
 
-    void wakeUp();
+    void wakeUp() override;
 
     const JPH::Body *getReadableBody();
 

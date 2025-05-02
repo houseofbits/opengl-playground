@@ -34,18 +34,11 @@ void PhysicsDistanceJointComponent::deserialize(const nlohmann::json &j, Resourc
 }
 
 bool PhysicsDistanceJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
-    if (!areAllowedToConnect(bodyA, bodyB)) {
-        return false;
-    }
-
     m_Joint = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
             .setAttachments(m_localAttachmentMatrixA, m_localAttachmentMatrixB)
             .setBodies(bodyA, bodyB)
             .setLimits(m_limits)
             .createDistanceConstraint();
-
-    bodyA.wakeUp();
-    bodyB.wakeUp();
 
     return true;
 }
@@ -55,6 +48,7 @@ void PhysicsDistanceJointComponent::release() {
         m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
         m_Joint = nullptr;
     }
+    BasePhysicsJoint::release();
 }
 
 void PhysicsDistanceJointComponent::update() {

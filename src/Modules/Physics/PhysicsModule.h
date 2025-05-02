@@ -21,6 +21,7 @@
 #include "Editors/PhysicsHingeJointComponentTransformEdit.h"
 #include "Editors/PhysicsSliderJointComponentTransformEdit.h"
 #include "Editors/PhysicsDistanceJointComponentTransformEdit.h"
+#include "Editors/PhysicsFixedJointComponentTransformEdit.h"
 #include "Events/PhysicsPickingEvent.h"
 #include "Events/PhysicsTriggerShapeEvent.h"
 #include "Components/PhysicsShapeComponent.h"
@@ -70,6 +71,8 @@ public:
             "setMotorVelocity", &PhysicsHingeJointComponent::setMotorVelocity,
             "lockInPlace", &PhysicsHingeJointComponent::lockInPlace,
             "unLock", &PhysicsHingeJointComponent::unLock,
+            "connect", &PhysicsHingeJointComponent::requestConnectState,
+            "disconnect", &PhysicsHingeJointComponent::requestDisconnectState,
             "toggleState", [](PhysicsHingeJointComponent &self) {
                 if (self.m_useStatefulJointBehaviour) {
                     self.m_statefulJointBehaviour.toggleJointState(&self);
@@ -81,12 +84,19 @@ public:
             "setMotorOff", &PhysicsSliderJointComponent::setMotorOff,
             "setMotorVelocity", &PhysicsSliderJointComponent::setMotorVelocity,
             "lockInPlace", &PhysicsSliderJointComponent::lockInPlace,
-            "unLock", &PhysicsSliderJointComponent::unLock
-            // "toggleState", [](PhysicsSliderJointComponent& self) {
-            //     if (self.m_useStatefulJointBehaviour) {
-            //         self.m_statefulJointBehaviour.toggleJointState(&self);
-            //     }
-            // }
+            "unLock", &PhysicsSliderJointComponent::unLock,
+            "connect", &PhysicsHingeJointComponent::requestConnectState,
+            "disconnect", &PhysicsHingeJointComponent::requestDisconnectState
+        );
+
+        scriptingManager.registerComponentType<PhysicsFixedJointComponent>(
+            "connect", &PhysicsFixedJointComponent::requestConnectState,
+            "disconnect", &PhysicsFixedJointComponent::requestDisconnectState
+        );
+
+        scriptingManager.registerComponentType<PhysicsDistanceJointComponent>(
+            "connect", &PhysicsDistanceJointComponent::requestConnectState,
+            "disconnect", &PhysicsDistanceJointComponent::requestDisconnectState
         );
     }
 
@@ -100,6 +110,8 @@ public:
                 PhysicsShapeComponentTransformEdit>();
             editorSystem->registerTransformComponentEditor<PhysicsDistanceJointComponent,
                 PhysicsDistanceJointComponentTransformEdit>();
+            // editorSystem->registerTransformComponentEditor<PhysicsFixedJointComponent,
+            //     PhysicsFixedJointComponentTransformEdit>();
 
             editorSystem->registerComponentEditor<PhysicsBodyComponent>(processPhysicsBodyComponentEditor);
             editorSystem->registerComponentEditor<PhysicsShapeComponent>(processPhysicsShapeComponentEditor);

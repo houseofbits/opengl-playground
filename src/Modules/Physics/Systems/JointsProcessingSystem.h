@@ -25,5 +25,8 @@ public:
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 
 private:
+    void releaseAll() const;
+
     SameComponentRegistry<BasePhysicsJoint> *m_physicsJoints;
+    bool m_isSimulationDisabled;
 };

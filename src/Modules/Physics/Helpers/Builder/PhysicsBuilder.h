@@ -178,10 +178,6 @@ class PhysicsBuilder {
         float m_motorFrequency = 0;
         float m_motorDamping = 0;
         float m_motorForceLimit = FLT_MAX;
-        // glm::vec3 m_axis1{0.0f};
-        // glm::vec3 m_axis2{0.0f};
-        // glm::vec3 m_point1{0.0f};
-        // glm::vec3 m_point2{0.0f};
         glm::mat4 m_attachment1{1.0};
         glm::mat4 m_attachment2{1.0};
 
@@ -209,20 +205,6 @@ class PhysicsBuilder {
 
             return *this;
         }
-
-        // PhysicsJointBuilder &setPoints(const glm::vec3 point1, const glm::vec3 point2) {
-        //     m_point1 = point1;
-        //     m_point2 = point2;
-        //
-        //     return *this;
-        // }
-        //
-        // PhysicsJointBuilder &setAxis(const glm::vec3 axis1, const glm::vec3 axis2) {
-        //     m_axis1 = axis1;
-        //     m_axis2 = axis2;
-        //
-        //     return *this;
-        // }
 
         PhysicsJointBuilder &setAttachments(const glm::mat4 &attachment1, const glm::mat4 &attachment2) {
             m_attachment1 = attachment1;
@@ -272,6 +254,8 @@ class PhysicsBuilder {
 
             JPH::FixedConstraintSettings settings;
             settings.mAutoDetectPoint = true;
+            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
+            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
             const auto joint = settings.Create(*body1, *body2);
 
             m_physicsSystem->AddConstraint(joint);

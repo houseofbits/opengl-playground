@@ -136,6 +136,14 @@ void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
                 auto c = entity->getComponent<PhysicsBodyComponent>();
                 if (c && c->m_BodyType == PhysicsBodyComponent::BODY_TYPE_DYNAMIC) {
                     // Log::write(entity->m_Name, " dynamic ", hit.m_distance);
+
+                    /*
+                     * 1. transformComponent = entity->getComp<TransformComponent>();
+                     * 2. localPoint = transformComponent->toLocal(touchPoint);
+                     * 3. physicsBodyComponent = entity->getComp<PhysicsBody>()
+                     * 4. cct->attachBody(physicsBody, localPoint);
+                     **/
+
                 }
             }
         }

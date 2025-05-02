@@ -76,10 +76,6 @@ void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceMa
 }
 
 bool PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
-    if (!areAllowedToConnect(bodyA, bodyB)) {
-        return false;
-    }
-
     auto builder = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
             .setAttachments(m_localAttachmentMatrixA, m_localAttachmentMatrixB)
             .setBodies(bodyA, bodyB);
@@ -100,9 +96,6 @@ bool PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBody
     m_Joint->GetBody1()->SetCollisionGroup(JPH::CollisionGroup(groupFilter, 0, 0));
     m_Joint->GetBody2()->SetCollisionGroup(JPH::CollisionGroup(groupFilter, 0, 1));
 
-    bodyA.wakeUp();
-    bodyB.wakeUp();
-
     return true;
 }
 
@@ -112,6 +105,7 @@ void PhysicsHingeJointComponent::release() {
         m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
         m_Joint = nullptr;
     }
+    BasePhysicsJoint::release();
 }
 
 void PhysicsHingeJointComponent::activate() {

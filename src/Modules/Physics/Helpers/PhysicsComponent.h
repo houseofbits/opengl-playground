@@ -9,6 +9,8 @@ public:
 
     ~PhysicsComponent() override = default;
 
+    virtual void wakeUp() {}
+
     [[nodiscard]] bool isPhysicsCreated() const {
         return !m_shouldCreatePhysics;
     }
