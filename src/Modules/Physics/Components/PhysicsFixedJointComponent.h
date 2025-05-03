@@ -24,7 +24,7 @@ public:
 
     bool create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) override;
 
-    JPH::FixedConstraint *m_Joint;
+    JPH::Ref<JPH::FixedConstraint> m_Joint;
     glm::mat4 m_localAttachmentMatrixA;
     glm::mat4 m_localAttachmentMatrixB;
 };

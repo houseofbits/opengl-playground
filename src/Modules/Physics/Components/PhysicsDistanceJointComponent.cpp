@@ -45,7 +45,18 @@ bool PhysicsDistanceJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsB
 
 void PhysicsDistanceJointComponent::release() {
     if (m_Joint != nullptr) {
-        m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
+        bool exists = false;
+        auto constr = m_PhysicsResource().getSystem().GetConstraints();
+        for (auto &constraint : constr) {
+            if (constraint.GetPtr() == m_Joint.GetPtr()) {
+                exists = true;
+                break;
+            }
+        }
+        if (exists) {
+            m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
+        }
+
         m_Joint = nullptr;
     }
     BasePhysicsJoint::release();

@@ -73,6 +73,7 @@ public:
             "unLock", &PhysicsHingeJointComponent::unLock,
             "connect", &PhysicsHingeJointComponent::requestConnectState,
             "disconnect", &PhysicsHingeJointComponent::requestDisconnectState,
+            "isConnected", &PhysicsHingeJointComponent::isStateConnected,
             "toggleState", [](PhysicsHingeJointComponent &self) {
                 if (self.m_useStatefulJointBehaviour) {
                     self.m_statefulJointBehaviour.toggleJointState(&self);
@@ -85,18 +86,21 @@ public:
             "setMotorVelocity", &PhysicsSliderJointComponent::setMotorVelocity,
             "lockInPlace", &PhysicsSliderJointComponent::lockInPlace,
             "unLock", &PhysicsSliderJointComponent::unLock,
-            "connect", &PhysicsHingeJointComponent::requestConnectState,
-            "disconnect", &PhysicsHingeJointComponent::requestDisconnectState
+            "connect", &PhysicsSliderJointComponent::requestConnectState,
+            "disconnect", &PhysicsSliderJointComponent::requestDisconnectState,
+            "isConnected", &PhysicsSliderJointComponent::isStateConnected
         );
 
         scriptingManager.registerComponentType<PhysicsFixedJointComponent>(
             "connect", &PhysicsFixedJointComponent::requestConnectState,
-            "disconnect", &PhysicsFixedJointComponent::requestDisconnectState
+            "disconnect", &PhysicsFixedJointComponent::requestDisconnectState,
+            "isConnected", &PhysicsFixedJointComponent::isStateConnected
         );
 
         scriptingManager.registerComponentType<PhysicsDistanceJointComponent>(
             "connect", &PhysicsDistanceJointComponent::requestConnectState,
-            "disconnect", &PhysicsDistanceJointComponent::requestDisconnectState
+            "disconnect", &PhysicsDistanceJointComponent::requestDisconnectState,
+            "isConnected", &PhysicsDistanceJointComponent::isStateConnected
         );
     }
 

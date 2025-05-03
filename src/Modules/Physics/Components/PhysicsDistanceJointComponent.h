@@ -26,7 +26,7 @@ public:
 
     bool create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) override;
 
-    JPH::DistanceConstraint *m_Joint;
+    JPH::Ref<JPH::DistanceConstraint> m_Joint;
     glm::mat4 m_localAttachmentMatrixA;
     glm::mat4 m_localAttachmentMatrixB;
     glm::vec2 m_limits;

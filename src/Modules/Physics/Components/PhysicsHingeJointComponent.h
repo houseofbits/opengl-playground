@@ -51,7 +51,7 @@ public:
 
     bool m_isLimitsEnabled;
     bool m_isLockingToLimitsEnabled;
-    JPH::HingeConstraint *m_Joint;
+    JPH::Ref<JPH::HingeConstraint> m_Joint;
     glm::vec2 m_angularLimits;
     bool m_isMotorSettingsEnabled;
     float m_motorForceLimit;

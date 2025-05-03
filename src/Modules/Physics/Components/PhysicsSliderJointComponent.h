@@ -47,7 +47,7 @@ public:
 
     void unLock() override;
 
-    JPH::SliderConstraint *m_Joint;
+    JPH::Ref<JPH::SliderConstraint> m_Joint;
     bool m_isLimitsEnabled;
     glm::vec2 m_limits;
     glm::vec3 m_axis;

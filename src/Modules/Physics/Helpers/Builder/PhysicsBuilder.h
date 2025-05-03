@@ -228,7 +228,7 @@ class PhysicsBuilder {
             return *this;
         }
 
-        [[nodiscard]] JPH::FixedConstraint *createFixedConstraint() const {
+        [[nodiscard]] JPH::Ref<JPH::FixedConstraint> createFixedConstraint() const {
             if (m_bodyId1.IsInvalid() || m_bodyId2.IsInvalid()) {
                 return nullptr;
             }
@@ -263,7 +263,7 @@ class PhysicsBuilder {
             return dynamic_cast<JPH::FixedConstraint *>(joint);
         }
 
-        [[nodiscard]] JPH::DistanceConstraint *createDistanceConstraint() const {
+        [[nodiscard]] JPH::Ref<JPH::DistanceConstraint> createDistanceConstraint() const {
             if (m_bodyId1.IsInvalid() || m_bodyId2.IsInvalid()) {
                 return nullptr;
             }
@@ -301,7 +301,7 @@ class PhysicsBuilder {
             return joint;
         }
 
-        [[nodiscard]] JPH::SliderConstraint *createSliderConstraint() const {
+        [[nodiscard]] JPH::Ref<JPH::SliderConstraint> createSliderConstraint() const {
             if (m_bodyId1.IsInvalid() || m_bodyId2.IsInvalid()) {
                 return nullptr;
             }
@@ -354,7 +354,7 @@ class PhysicsBuilder {
             return joint;
         }
 
-        [[nodiscard]] JPH::HingeConstraint *createHingeConstraint() const {
+        [[nodiscard]] JPH::Ref<JPH::HingeConstraint> createHingeConstraint() const {
             if (m_bodyId1.IsInvalid() || m_bodyId2.IsInvalid()) {
                 return nullptr;
             }

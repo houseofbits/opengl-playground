@@ -150,7 +150,7 @@ public:
         m_state = STATE_AWAITING_CONNECTION;
     }
 
-    bool isStateConnected() const {
+    [[nodiscard]] bool isStateConnected() const {
         return m_state == STATE_CONNECTED;
     }
 
