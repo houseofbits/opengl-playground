@@ -37,8 +37,11 @@ void PhysicsDebugRenderSystem::handleSystemEvent(const SystemEvent &) {
 }
 
 void PhysicsDebugRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {
-    m_isEnabled = false;
     if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_PHYSICS) {
         m_isEnabled = true;
+    } else if (event.m_Type == EditorUIEvent::TOGGLE_RENDER_SHADED
+        || event.m_Type == EditorUIEvent::TOGGLE_RENDER_REFLECTIONS
+        || event.m_Type == EditorUIEvent::TOGGLE_RENDER_PROBES) {
+        m_isEnabled = false;
     }
 }

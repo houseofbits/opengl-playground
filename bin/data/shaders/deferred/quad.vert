@@ -1,10 +1,10 @@
 #version 330 core
 
 const vec2 vertices[4] = vec2[](
-vec2(-1.0, -1.0),  // Bottom-left
-vec2(1.0, -1.0),   // Bottom-right
-vec2(-1.0,  1.0),  // Top-left
-vec2(1.0,  1.0)    // Top-right
+    vec2(-1.0, -1.0),  // Bottom-left
+    vec2(1.0, -1.0),   // Bottom-right
+    vec2(-1.0,  1.0),  // Top-left
+    vec2(1.0,  1.0)    // Top-right
 );
 
 out vec2 TexCoords;

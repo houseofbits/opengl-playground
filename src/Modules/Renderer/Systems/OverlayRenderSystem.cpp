@@ -7,6 +7,8 @@ OverlayRenderSystem::OverlayRenderSystem() : EntitySystem() {
 }
 
 void OverlayRenderSystem::initialize(ResourceManager &resourceManager, EventManager &) {
+    resourceManager.request(m_WindowResource, "window");
+
     resourceManager.request(m_ShaderProgram,
                             "data/shaders/deferred/|quad.vert|texturedQuad.frag");
 
@@ -17,14 +19,16 @@ void OverlayRenderSystem::initialize(ResourceManager &resourceManager, EventMana
     resourceManager.request(m_textureResource, "resources/textures/checker-map.png");
     resourceManager.request(m_crosshairTextureResource, "data/textures/crosshair198.png");
     resourceManager.request(m_deferredRenderTarget, "deferredRenderTarget");
+
+    resourceManager.request(m_texturedQuadShaderProgram, "data/shaders/ui/texturedQuad.|vert|frag");
 }
 
 void OverlayRenderSystem::process(EventManager &eventManager) {
-    const unsigned int TEXTURE_WIDTH = 512, TEXTURE_HEIGHT = 512;
+    // const unsigned int TEXTURE_WIDTH = 512, TEXTURE_HEIGHT = 512;
 
-    if (!m_textureResource().isReady()) {
-        return;
-    }
+    // if (!m_textureResource().isReady()) {
+    //     return;
+    // }
 
     if (VAO == 0) {
         glGenVertexArrays(1, &VAO);
@@ -68,20 +72,22 @@ void OverlayRenderSystem::process(EventManager &eventManager) {
     //     m_computeTestShader().dispatchCompute(2048, 2048);
     // }
 
+    renderTexturedQuad(m_crosshairTextureResource());
 
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
-
-    m_ShaderProgram().use();
-
-    m_ShaderProgram().setUniform("screenTexture", m_deferredRenderTarget().getHandle());
-    m_ShaderProgram().setUniform("crosshairTexture", m_crosshairTextureResource().getHandle());
-
-    glBindVertexArray(VAO);
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    glEnable(GL_DEPTH_TEST);
+    //Deferred step - not used at the moment
+    // glDisable(GL_DEPTH_TEST);
+    // glDisable(GL_CULL_FACE);
+    //
+    // m_ShaderProgram().use();
+    //
+    // m_ShaderProgram().setUniform("screenTexture", m_deferredRenderTarget().getHandle());
+    // m_ShaderProgram().setUniform("crosshairTexture", m_crosshairTextureResource().getHandle());
+    //
+    // glBindVertexArray(VAO);
+    //
+    // glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    //
+    // glEnable(GL_DEPTH_TEST);
 }
 
 void OverlayRenderSystem::registerEventHandlers(EventManager &eventManager) {
@@ -93,4 +99,27 @@ void OverlayRenderSystem::handleSystemEvent(const SystemEvent &event) {
 }
 
 void OverlayRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {
+}
+
+void OverlayRenderSystem::renderTexturedQuad(const TextureResource &texture) {
+    auto vw = m_WindowResource().getViewportSize();
+    glm::vec2 size = glm::vec2(static_cast<float>(texture.m_width) / static_cast<float>(vw.x),
+                               static_cast<float>(texture.m_height) / static_cast<float>(vw.y));
+
+    glm::vec2 position = glm::vec2(0.5) - size * 0.5f;
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+
+    m_texturedQuadShaderProgram().use();
+
+    m_texturedQuadShaderProgram().setUniform("inputTexture", texture.getHandle());
+    m_texturedQuadShaderProgram().setUniform("position", position);
+    m_texturedQuadShaderProgram().setUniform("size", size);
+
+    glBindVertexArray(VAO);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glEnable(GL_DEPTH_TEST);
 }

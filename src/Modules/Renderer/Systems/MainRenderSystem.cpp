@@ -88,13 +88,13 @@ void MainRenderSystem::process(EventManager &eventManager) {
         return;
     }
 
-    m_deferredRenderTarget().bindRenderTarget();
-    glViewport(0,
-               0,
-               m_viewportWidth,
-               m_viewportHeight);
-    glClearColor(1.0f, 1.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // m_deferredRenderTarget().bindRenderTarget();
+    // glViewport(0,
+    //            0,
+    //            m_viewportWidth,
+    //            m_viewportHeight);
+    // glClearColor(1.0f, 1.0f, 0.0f, 0.0f);
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
     if (camera == nullptr) {
@@ -152,9 +152,9 @@ void MainRenderSystem::process(EventManager &eventManager) {
         }
     }
 
-    m_deferredRenderTarget().unbindRenderTarget();
+    // m_deferredRenderTarget().unbindRenderTarget();
 
-    glViewport(0, 0, m_viewportWidth, m_viewportHeight);
+    // glViewport(0, 0, m_viewportWidth, m_viewportHeight);
 }
 
 void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {

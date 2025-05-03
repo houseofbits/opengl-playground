@@ -104,6 +104,10 @@ JPH::Shape *PhysicsShapeComponent::createShape(bool isDynamic, const glm::vec3 d
         return shape;
     }
     if (m_type == TYPE_SPHERE) {
+
+        auto sensorShape = new JPH::SphereShapeSettings(2.0f);
+
+
         const auto shape = new JPH::SphereShape(m_sphereRadius, material);
         setUserData(shape);
 
