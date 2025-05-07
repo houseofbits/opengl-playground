@@ -42,7 +42,7 @@ inline void processPhysicsSwingTwistJointComponentEditor(Component *c, Entity *e
     }
 
     static glm::vec2 angularLimits{0, 0};
-    if (ImGui::InputFloat2("Twist limits", reinterpret_cast<float *>(&angularLimits))) {
+    if (ImGui::InputFloat2("Twist limits (Y)", reinterpret_cast<float *>(&angularLimits))) {
         component->m_twistAngleLimits.x = glm::radians(angularLimits.x);
         component->m_twistAngleLimits.y = glm::radians(angularLimits.y);
     } else {
@@ -51,7 +51,7 @@ inline void processPhysicsSwingTwistJointComponentEditor(Component *c, Entity *e
     }
 
     static glm::vec2 coneAngle{0, 0};
-    if (ImGui::InputFloat2("Cone half angle", reinterpret_cast<float *>(&coneAngle))) {
+    if (ImGui::InputFloat2("Cone half angle (X,Z)", reinterpret_cast<float *>(&coneAngle))) {
         component->m_coneHalfAngle.x = glm::radians(coneAngle.x);
         component->m_coneHalfAngle.y = glm::radians(coneAngle.y);
     } else {

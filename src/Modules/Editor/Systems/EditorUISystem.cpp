@@ -95,6 +95,7 @@ void EditorUISystem::handleSystemEvent(const SystemEvent &event) {
 
 void EditorUISystem::handleInputEvent(const InputEvent &event) {
     if (event.type == InputEvent::KEYUP) {
+        // Log::write(event.keyCode);
         //F1
         if (event.keyCode == 58) {
             if (m_isEditorModeEnabled) {
@@ -104,6 +105,9 @@ void EditorUISystem::handleInputEvent(const InputEvent &event) {
                 m_EventManager->queueEvent<SystemEvent>(SystemEvent::REQUEST_EDITOR_MODE);
                 m_isEditorModeEnabled = true;
             }
+        }
+        if (event.keyCode >= 30 && event.keyCode <= 39) {
+            m_MainToolbarUI.selectCameraByIndex(event.keyCode - 30);
         }
     }
 }

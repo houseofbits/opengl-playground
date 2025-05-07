@@ -88,18 +88,25 @@ void MainToolbarUI::processViewMenu() {
         }
         ImGui::SeparatorText("Cameras");
 
+        unsigned int index = 1;
         for (const auto &[id, camera]: m_EditorUISystem->m_editorCameraComponentRegistry->container()) {
             Entity *e = m_EditorUISystem->m_EntityContext->getEntity(id);
-            if (ImGui::MenuItem(e->getListName().c_str(), nullptr, camera->m_isActive)) {
+            std::string name = e->getListName() + " (" + std::to_string(index) + ")";
+            if (ImGui::MenuItem(name.c_str(), nullptr, camera->m_isActive)) {
                 m_EditorUISystem->m_EventManager->queueEvent<CameraActivationEvent>(id);
             }
+
+            index++;
         }
 
         for (const auto &[id, camera]: m_EditorUISystem->m_cameraComponentRegistry->container()) {
             Entity *e = m_EditorUISystem->m_EntityContext->getEntity(id);
-            if (ImGui::MenuItem(e->getListName().c_str(), nullptr, camera->m_isActive)) {
+            std::string name = e->getListName() + " (" + std::to_string(index) + ")";
+            if (ImGui::MenuItem(name.c_str(), nullptr, camera->m_isActive)) {
                 m_EditorUISystem->m_EventManager->queueEvent<CameraActivationEvent>(id);
             }
+
+            index++;
         }
 
         ImGui::SeparatorText("Views");
@@ -133,4 +140,25 @@ void MainToolbarUI::enableGameMode() const {
 
 void MainToolbarUI::enableEditorMode() const {
     m_EditorUISystem->m_EventManager->queueEvent<SystemEvent>(SystemEvent::REQUEST_EDITOR_MODE);
+}
+
+void MainToolbarUI::selectCameraByIndex(const unsigned int index) const {
+    unsigned int i = 0;
+    for (const auto &[id, camera]: m_EditorUISystem->m_editorCameraComponentRegistry->container()) {
+        if (index == i) {
+            m_EditorUISystem->m_EventManager->queueEvent<CameraActivationEvent>(id);
+
+            return;
+        }
+        i++;
+    }
+
+    for (const auto &[id, camera]: m_EditorUISystem->m_cameraComponentRegistry->container()) {
+        if (index == i) {
+            m_EditorUISystem->m_EventManager->queueEvent<CameraActivationEvent>(id);
+
+            return;
+        }
+        i++;
+    }
 }

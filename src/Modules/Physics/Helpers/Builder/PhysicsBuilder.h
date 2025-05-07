@@ -440,14 +440,14 @@ class PhysicsBuilder {
             settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM; //JPH::EConstraintSpace::WorldSpace;
             settings.mPosition1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
             settings.mPosition2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
-            settings.mTwistAxis1 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment1));
-            settings.mTwistAxis2 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment2));
-            settings.mPlaneAxis1 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment1));
-            settings.mPlaneAxis2 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment2));
+            settings.mTwistAxis1 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment1));
+            settings.mTwistAxis2 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment2));
+            settings.mPlaneAxis1 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment1));
+            settings.mPlaneAxis2 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment2));
             settings.mTwistMinAngle = m_swingTwistSettings.m_twistAngleLimits.x;
             settings.mTwistMaxAngle = m_swingTwistSettings.m_twistAngleLimits.y;
-            settings.mNormalHalfConeAngle = m_swingTwistSettings.m_coneHalfAngle.x;
-            settings.mPlaneHalfConeAngle = m_swingTwistSettings.m_coneHalfAngle.y;
+            settings.mPlaneHalfConeAngle = m_swingTwistSettings.m_coneHalfAngle.x;
+            settings.mNormalHalfConeAngle = m_swingTwistSettings.m_coneHalfAngle.y;
 
             const auto joint = dynamic_cast<JPH::SwingTwistConstraint *>(settings.Create(*body1, *body2));
 

@@ -13,6 +13,8 @@
 inline void processPhysicsSliderJointComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
     const auto component = dynamic_cast<PhysicsSliderJointComponent *>(c);
 
+    ImGui::Text("Slide on X axis");
+
     ImGui::Checkbox("Is initially connected", &component->m_isInitiallyConnected);
 
     EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(

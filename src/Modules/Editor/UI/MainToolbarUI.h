@@ -13,6 +13,8 @@ public:
     int m_renderShaderType;
     bool m_showPhysicsShapesWireframe{true};
 
+    void selectCameraByIndex(unsigned int index) const;
+
 private:
     void processViewMenu();
     void sendUIEvent(EditorUIEvent::Type type) const;

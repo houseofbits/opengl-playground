@@ -18,6 +18,8 @@ inline void processPhysicsHingeJointComponentEditor(Component *c, Entity *e, Edi
 
     ImGui::Checkbox("Is initially connected", &component->m_isInitiallyConnected);
 
+    ImGui::Text("Rotate around X axis");
+
     EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
         *system.m_EntityContext,
         component->m_targetEntityAName,
