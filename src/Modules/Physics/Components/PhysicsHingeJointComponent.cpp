@@ -75,10 +75,10 @@ void PhysicsHingeJointComponent::deserialize(const nlohmann::json &j, ResourceMa
     }
 }
 
-bool PhysicsHingeJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
+bool PhysicsHingeJointComponent::create(PhysicsComponent &bodyA, PhysicsComponent &bodyB) {
     auto builder = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
             .setAttachments(m_localAttachmentMatrixA, m_localAttachmentMatrixB)
-            .setBodies(bodyA, bodyB);
+            .setBodies(bodyA.getId(), bodyB.getId());
 
     if (m_isLimitsEnabled) {
         builder.setLimits(m_angularLimits);

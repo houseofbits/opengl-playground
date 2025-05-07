@@ -111,9 +111,8 @@ glm::quat TransformComponent::getRotation() {
 }
 
 glm::vec3 TransformComponent::getDirection() {
-    const glm::quat rotation = glm::quat_cast(getWorldTransform());
-
-    return rotation * glm::vec3(0, 0, 1);
+    // const glm::quat rotation = glm::quat_cast(getWorldTransform());
+    return glm::vec3(getWorldTransform()[2]);//rotation * glm::vec3(0, 0, 1);
 }
 
 glm::vec3 TransformComponent::getInitialTranslation() {

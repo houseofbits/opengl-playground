@@ -32,10 +32,10 @@ void PhysicsFixedJointComponent::deserialize(const nlohmann::json &j, ResourceMa
     );
 }
 
-bool PhysicsFixedJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
+bool PhysicsFixedJointComponent::create(PhysicsComponent &bodyA, PhysicsComponent &bodyB) {
     m_Joint = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
             .setAttachments(m_localAttachmentMatrixA, m_localAttachmentMatrixB)
-            .setBodies(bodyA, bodyB)
+            .setBodies(bodyA.getId(), bodyB.getId())
             .createFixedConstraint();
 
     return true;

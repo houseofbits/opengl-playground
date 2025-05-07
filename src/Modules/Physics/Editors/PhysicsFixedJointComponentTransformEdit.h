@@ -2,6 +2,8 @@
 
 #include "../../Common/Components/TransformComponent.h"
 #include "../../Editor/UI/ComponentEdit.h"
+#include "../../../Core/Helper/Math.h"
+#include "../Components/PhysicsDistanceJointComponent.h"
 #include "../../Common/Editors/EntityLinkedComponentEdit.h"
 #include "../../Editor/Systems/EditorUISystem.h"
 

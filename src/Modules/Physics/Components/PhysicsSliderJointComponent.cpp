@@ -8,23 +8,19 @@ PhysicsSliderJointComponent::PhysicsSliderJointComponent() : BasePhysicsJoint(),
                                                              m_Joint(nullptr),
                                                              m_isLimitsEnabled(false),
                                                              m_limits(0.0),
-                                                             m_axis(1, 0, 0),
                                                              m_isMotorSettingsEnabled(false),
                                                              m_motorForceLimit(0),
                                                              m_motorDamping(0),
+                                                             m_motorFrequency(0),
                                                              m_localAttachmentMatrixA(1.0),
-                                                             m_localAttachmentMatrixB(1.0),
-                                                             m_motorFrequency(0) {
+                                                             m_localAttachmentMatrixB(1.0) {
 }
 
 void PhysicsSliderJointComponent::serialize(nlohmann::json &j) {
     BasePhysicsJoint::serialize(j);
 
-    j[ENTITY_KEY_A] = m_targetEntityAName;
-    j[ENTITY_KEY_B] = m_targetEntityBName;
     j[ARE_LIMITS_ENABLED_KEY] = m_isLimitsEnabled;
     j[LIMITS_KEY] = m_limits;
-    j[AXIS_KEY] = m_axis;
     if (m_isMotorSettingsEnabled) {
         j[ENABLE_MOTOR_SETTINGS_KEY] = m_isMotorSettingsEnabled;
         j[MOTOR_MAX_FORCE_KEY] = m_motorForceLimit;
@@ -43,7 +39,6 @@ void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceM
 
     m_isLimitsEnabled = j.value(ARE_LIMITS_ENABLED_KEY, m_isLimitsEnabled);
     m_limits = j.value(LIMITS_KEY, m_limits);
-    m_axis = j.value(AXIS_KEY, m_axis);
     m_isMotorSettingsEnabled = j.value(ENABLE_MOTOR_SETTINGS_KEY, m_isMotorSettingsEnabled);
     m_motorForceLimit = j.value(MOTOR_MAX_FORCE_KEY, m_motorForceLimit);
     m_motorDamping = j.value(MOTOR_DAMPING_KEY, m_motorDamping);
@@ -60,10 +55,10 @@ void PhysicsSliderJointComponent::deserialize(const nlohmann::json &j, ResourceM
     );
 }
 
-bool PhysicsSliderJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
+bool PhysicsSliderJointComponent::create(PhysicsComponent &bodyA, PhysicsComponent &bodyB) {
     auto builder = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
             .setAttachments(m_localAttachmentMatrixA, m_localAttachmentMatrixB)
-            .setBodies(bodyA, bodyB);
+            .setBodies(bodyA.getId(), bodyB.getId());
 
     if (m_isLimitsEnabled) {
         builder.setLimits(m_limits);

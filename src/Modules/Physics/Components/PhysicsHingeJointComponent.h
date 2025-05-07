@@ -31,7 +31,7 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    bool create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) override;
+    bool create(PhysicsComponent &bodyA, PhysicsComponent &bodyB) override;
 
     void release() override;
 

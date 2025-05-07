@@ -30,6 +30,10 @@ public:
     virtual void createPhysics(EntityContext &ctx) {
     }
 
+    virtual bool isDynamic() const = 0;
+
+    virtual JPH::BodyID getId() = 0;
+
 private:
     bool m_shouldCreatePhysics{true};
 };

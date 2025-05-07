@@ -1,26 +1,28 @@
 #pragma once
 
+#include "StatefulJointBehaviourEdit.h"
+#include "../../Editor/Helpers/TargetEntityHelper.h"
 #include "../../../SourceLibs/imgui/imgui.h"
-#include "../../Editor/UI/ComponentEdit.h"
-#include "../../Editor/Systems/EditorUISystem.h"
-#include "../Components/PhysicsSliderJointComponent.h"
+#include "../../Editor/UI/BaseComponentTransformEdit.h"
+#include "../Components/PhysicsDistanceJointComponent.h"
+#include "../Components/PhysicsCharacterComponent.h"
 #include "../../Common/Editors/EntityLinkedComponentEdit.h"
-#include "PhysicsSliderJointComponentEdit.h"
 #include "../../Editor/Helpers/TransformHelper.h"
+#include "../../Editor/Systems/EditorUISystem.h"
 
 inline void processPhysicsSliderJointComponentEditor(Component *c, Entity *e, EditorUISystem &system) {
     const auto component = dynamic_cast<PhysicsSliderJointComponent *>(c);
 
     ImGui::Checkbox("Is initially connected", &component->m_isInitiallyConnected);
 
-    EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
+    EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
         *system.m_EntityContext,
         component->m_targetEntityAName,
         "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
         "Self"
     );
 
-    EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
+    EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
     *system.m_EntityContext,
     component->m_targetEntityBName,
         "Attachment entity B##TRANSFORM_PARENT_ENTITY_NAME_B"

@@ -61,14 +61,14 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
     characterSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
     characterSettings.mMassPropertiesOverride.mMass = 80;
     characterSettings.mAllowedDOFs =
-            JPH::EAllowedDOFs::TranslationX | JPH::EAllowedDOFs::TranslationY | JPH::EAllowedDOFs::TranslationZ;
-    // | JPH::EAllowedDOFs::RotationY;
+            JPH::EAllowedDOFs::TranslationX | JPH::EAllowedDOFs::TranslationY | JPH::EAllowedDOFs::TranslationZ
+    | JPH::EAllowedDOFs::RotationY;
 
-    // characterSettings.mLinearDamping = 10; //Damping slows down the user (makes him lag behind) when riding on a platform, for example
-    // characterSettings.mAngularDamping = 10;
+    // characterSettings.mLinearDamping = 10; //Damping slows down the player (makes him lag behind) when riding on a platform, for example
+    characterSettings.mAngularDamping = 30;
 
-    //    characterSettings.mNumPositionStepsOverride = 255;
-    //    characterSettings.mNumVelocityStepsOverride = 255;
+    // characterSettings.mNumPositionStepsOverride = 255;
+    // characterSettings.mNumVelocityStepsOverride = 255;
 
     m_physicsBody = m_PhysicsResource().getInterface().CreateBody(characterSettings);
 
@@ -110,7 +110,12 @@ void PhysicsCharacterComponent::update(TransformComponent &transform, bool isSim
 
         auto transformMatrix = glm::mat4(1.0);
         transformMatrix = glm::translate(transformMatrix, capsulePosition - glm::vec3(0, m_stepTolerance, 0));
-        // transformMatrix *= rotationMatrix;
+
+
+        auto rot = t.GetRotation().GetQuaternion();
+        glm::quat glmQuat(rot.GetW(), rot.GetX(), rot.GetY(), rot.GetZ());
+
+        transformMatrix *= glm::toMat4(glmQuat); //rotationMatrix;
         transform.setWorldTransform(transformMatrix);
 
         castRayForGroundReference(capsulePosition);
@@ -220,9 +225,9 @@ bool PhysicsCharacterComponent::rayCast(const glm::vec3 position, const glm::vec
             const auto userData = reinterpret_cast<PhysicsShapeUserData *>(rawUserData);
             result.m_shapeComponentId = userData->m_physicsShapeComponentId;
             result.m_shapeComponentName = userData->m_physicsShapeComponentName;
-
-            if (lock.GetBody().GetMotionType() == JPH::EMotionType::Dynamic) {
-            }
+            //
+            // if (lock.GetBody().GetMotionType() == JPH::EMotionType::Dynamic) {
+            // }
         }
 
         const auto *userData = m_PhysicsResource().getBodyUserData(hit.mBodyID);
@@ -296,9 +301,21 @@ void PhysicsCharacterComponent::updateMove() {
         newVelocity += m_groundMovementVelocity;
     }
 
-    m_physicsBody->SetLinearVelocity(newVelocity);
+    m_physicsBody->SetLinearVelocityClamped(newVelocity);
     m_PhysicsResource().getInterface().ActivateBody(m_physicsBody->GetID());
 
     m_doMove = false;
     m_movementDirection = glm::vec3(0.0f);
+
+    auto angularVel = m_physicsBody->GetAngularVelocity();
+    constexpr float angularDampingFactor = 0.0001f;
+    constexpr float rotationSpeed = 0.5f;
+    const float yVel = m_rotationDirection * rotationSpeed;
+
+    // angularVel.SetY(angularDampingFactor * angularVel.GetY() + (1.0 - angularDampingFactor) * yVel);
+    angularVel.SetY(yVel);
+    m_physicsBody->SetAngularVelocityClamped(angularVel);
+
+    m_rotationDirection = 0;
+
 }

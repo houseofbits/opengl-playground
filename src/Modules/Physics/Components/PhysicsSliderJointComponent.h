@@ -8,8 +8,6 @@
 class PhysicsSliderJointComponent : public BasePhysicsJoint {
     TYPE_DEFINITION(PhysicsSliderJointComponent);
 
-    inline static const std::string ENTITY_KEY = "targetEntity";
-    inline static const std::string AXIS_KEY = "axis";
     inline static const std::string ARE_LIMITS_ENABLED_KEY = "enableLimits";
     inline static const std::string LIMITS_KEY = "limits";
     inline static const std::string ENABLE_MOTOR_SETTINGS_KEY = "enableMotorSettings";
@@ -29,7 +27,7 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    bool create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) override;
+    bool create(PhysicsComponent &bodyA, PhysicsComponent &bodyB) override;
 
     void release() override;
 
@@ -50,7 +48,6 @@ public:
     JPH::Ref<JPH::SliderConstraint> m_Joint;
     bool m_isLimitsEnabled;
     glm::vec2 m_limits;
-    glm::vec3 m_axis;
     bool m_isMotorSettingsEnabled;
     float m_motorForceLimit;
     float m_motorDamping;

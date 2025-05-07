@@ -11,6 +11,7 @@
 #include <Jolt/Physics/Collision/Shape/ConvexHullShape.h>
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 #include <Jolt/Physics/Constraints/FixedConstraint.h>
+#include <Jolt/Physics/Constraints/SwingTwistConstraint.h>
 #include <Jolt/Physics/Constraints/HingeConstraint.h>
 #include <Jolt/Physics/Constraints/DistanceConstraint.h>
 #include <Jolt/Physics/Constraints/SliderConstraint.h>
@@ -42,9 +43,6 @@ class PhysicsBuilder {
             }
 
             m_physicsSystem->GetBodyInterface().AddBody(physicsBody->GetID(), JPH::EActivation::Activate);
-            //
-            // auto body = m_physicsSystem->GetBodyLockInterface().TryGetBody(physicsBody->GetID());
-            // Log::write("Create physics body: ", physicsBody->GetID().GetIndex(), " p:", body);
 
             return physicsBody;
         }
@@ -180,6 +178,10 @@ class PhysicsBuilder {
         float m_motorForceLimit = FLT_MAX;
         glm::mat4 m_attachment1{1.0};
         glm::mat4 m_attachment2{1.0};
+        struct {
+            glm::vec2 m_twistAngleLimits{0, 0};
+            glm::vec2 m_coneHalfAngle{0, 0};
+        } m_swingTwistSettings{};
 
     public:
         explicit PhysicsJointBuilder(JPH::PhysicsSystem &physicsSystem): m_physicsSystem(&physicsSystem), m_limits() {
@@ -224,6 +226,18 @@ class PhysicsBuilder {
         PhysicsJointBuilder &setMotorForceLimit(const float limit) {
             m_motorForceLimit = limit;
             m_isMotorSettingsEnabled = true;
+
+            return *this;
+        }
+
+        PhysicsJointBuilder &setTwistAngleLimits(const glm::vec2 limit) {
+            m_swingTwistSettings.m_twistAngleLimits = limit;
+
+            return *this;
+        }
+
+        PhysicsJointBuilder &setConeHalfAngle(const glm::vec2 coneHalfAngle) {
+            m_swingTwistSettings.m_coneHalfAngle = coneHalfAngle;
 
             return *this;
         }
@@ -407,6 +421,37 @@ class PhysicsBuilder {
             }
 
             // Log::write("Create hinge joint: ", body1, " ", body2);
+
+            return joint;
+        }
+
+        [[nodiscard]] JPH::Ref<JPH::SwingTwistConstraint> createSwingTwistConstraint() const {
+            JPH::Body *body1 = nullptr;
+            JPH::Body *body2 = nullptr;
+
+            body1 = m_physicsSystem->GetBodyLockInterface().TryGetBody(m_bodyId1);
+            body2 = m_physicsSystem->GetBodyLockInterface().TryGetBody(m_bodyId2);
+
+            if (!body1 || !body2) {
+                return nullptr;
+            }
+
+            JPH::SwingTwistConstraintSettings settings;
+            settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM; //JPH::EConstraintSpace::WorldSpace;
+            settings.mPosition1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
+            settings.mPosition2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
+            settings.mTwistAxis1 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment1));
+            settings.mTwistAxis2 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment2));
+            settings.mPlaneAxis1 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment1));
+            settings.mPlaneAxis2 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment2));
+            settings.mTwistMinAngle = m_swingTwistSettings.m_twistAngleLimits.x;
+            settings.mTwistMaxAngle = m_swingTwistSettings.m_twistAngleLimits.y;
+            settings.mNormalHalfConeAngle = m_swingTwistSettings.m_coneHalfAngle.x;
+            settings.mPlaneHalfConeAngle = m_swingTwistSettings.m_coneHalfAngle.y;
+
+            const auto joint = dynamic_cast<JPH::SwingTwistConstraint *>(settings.Create(*body1, *body2));
+
+            m_physicsSystem->AddConstraint(joint);
 
             return joint;
         }

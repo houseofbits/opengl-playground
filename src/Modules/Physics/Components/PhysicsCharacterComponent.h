@@ -8,7 +8,8 @@
 #include "../Helpers/PhysicsComponent.h"
 
 class PhysicsCharacterComponent : public PhysicsComponent {
-TYPE_DEFINITION(PhysicsCharacterComponent);
+    TYPE_DEFINITION(PhysicsCharacterComponent);
+
 public:
     PhysicsCharacterComponent();
 
@@ -34,15 +35,26 @@ public:
 
     bool isReadyToCreate(EntityContext &ctx) const override;
 
+    bool isDynamic() const override {
+        return true;
+    }
+
+    JPH::BodyID getId() override {
+        return m_physicsBody ? m_physicsBody->GetID() : JPH::BodyID(JPH::BodyID::cInvalidBodyID);
+    }
+
     float m_height;
     float m_radius;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     bool m_isOnGround;
-    float m_stepTolerance;      //aka. knee-height
+    float m_stepTolerance; //aka. knee-height
     JPH::Body *m_physicsBody;
     bool m_haveGroundDetected;
     float m_minDistanceToGround;
     glm::vec3 m_moveDirection;
+
+    //New look stuff
+    float m_rotationDirection;
 
 private:
     void updateMove();
@@ -62,4 +74,5 @@ private:
 
     bool m_isGroundMoving;
     JPH::Vec3 m_groundMovementVelocity;
+
 };

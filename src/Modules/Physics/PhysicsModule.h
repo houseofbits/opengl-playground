@@ -9,6 +9,7 @@
 #include "Systems/PhysicsSystem.h"
 #include "Components/PhysicsSliderJointComponent.h"
 #include "Components/PhysicsDistanceJointComponent.h"
+#include "Components/PhysicsSwingTwistJointComponent.h"
 #include "Components/PhysicsFixedJointComponent.h"
 #include "Editors/CharacterControllerComponentEdit.h"
 #include "Editors/PhysicsBodyComponentEdit.h"
@@ -16,12 +17,14 @@
 #include "Editors/PhysicsSliderJointComponentEdit.h"
 #include "Editors/PhysicsFixedJointComponentEdit.h"
 #include "Editors/PhysicsDistanceJointComponentEdit.h"
+#include "Editors/PhysicsSwingTwistJointComponentEdit.h"
 #include "Editors/PhysicsShapeComponentEdit.h"
 #include "../Editor/Systems/EditorUISystem.h"
 #include "Editors/PhysicsHingeJointComponentTransformEdit.h"
 #include "Editors/PhysicsSliderJointComponentTransformEdit.h"
 #include "Editors/PhysicsDistanceJointComponentTransformEdit.h"
 #include "Editors/PhysicsFixedJointComponentTransformEdit.h"
+#include "Editors/PhysicsSwingTwistJointComponentTransformEdit.h"
 #include "Events/PhysicsPickingEvent.h"
 #include "Events/PhysicsTriggerShapeEvent.h"
 #include "Components/PhysicsShapeComponent.h"
@@ -40,6 +43,7 @@ public:
         ctx.registerComponent<PhysicsFixedJointComponent>();
         ctx.registerComponent<PhysicsShapeComponent>();
         ctx.registerComponent<PhysicsDistanceJointComponent>();
+        ctx.registerComponent<PhysicsSwingTwistJointComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {
@@ -114,8 +118,10 @@ public:
                 PhysicsShapeComponentTransformEdit>();
             editorSystem->registerTransformComponentEditor<PhysicsDistanceJointComponent,
                 PhysicsDistanceJointComponentTransformEdit>();
-            // editorSystem->registerTransformComponentEditor<PhysicsFixedJointComponent,
-            //     PhysicsFixedJointComponentTransformEdit>();
+            editorSystem->registerTransformComponentEditor<PhysicsFixedJointComponent,
+                PhysicsFixedJointComponentTransformEdit>();
+            editorSystem->registerTransformComponentEditor<PhysicsSwingTwistJointComponent,
+                PhysicsSwingTwistJointComponentTransformEdit>();
 
             editorSystem->registerComponentEditor<PhysicsBodyComponent>(processPhysicsBodyComponentEditor);
             editorSystem->registerComponentEditor<PhysicsShapeComponent>(processPhysicsShapeComponentEditor);
@@ -127,6 +133,8 @@ public:
                 PhysicsSliderJointComponent>(processPhysicsSliderJointComponentEditor);
             editorSystem->registerComponentEditor<
                 PhysicsDistanceJointComponent>(processPhysicsDistanceJointComponentEditor);
+            editorSystem->registerComponentEditor<
+                PhysicsSwingTwistJointComponent>(processPhysicsSwingTwistJointComponentEditor);
         }
     }
 };

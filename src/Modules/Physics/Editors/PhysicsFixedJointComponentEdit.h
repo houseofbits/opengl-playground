@@ -8,14 +8,14 @@ inline void processPhysicsFixedJointComponentEditor(Component *c, Entity *e, Edi
 
     ImGui::Checkbox("Is initially connected", &component->m_isInitiallyConnected);
 
-    EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
+    EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
         *system.m_EntityContext,
         component->m_targetEntityAName,
         "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
         "Self"
     );
 
-    EntityLinkedComponentEdit::processBasic<PhysicsBodyComponent>(
+    EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
         *system.m_EntityContext,
         component->m_targetEntityBName,
         "Attachment entity B##TRANSFORM_PARENT_ENTITY_NAME_B"

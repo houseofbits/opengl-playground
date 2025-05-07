@@ -21,7 +21,7 @@ void MainCharacterBehaviourSystem::process(EventManager &) {
             const glm::vec3 worldPosition = transform->getWorldTransform() * glm::vec4(
                                                 behaviour->m_cameraAttachmentPosition, 1.0);
 
-            updateCamera(behaviour, worldPosition);
+            updateCamera(transform, behaviour, worldPosition);
         }
     }
 }
@@ -49,14 +49,14 @@ void MainCharacterBehaviourSystem::handleInputEvent(const InputEvent &event) {
 
         if (behaviour->m_isActive) {
             handleMouseLook(event, behaviour, character);
-            handleMovement(event, behaviour, character);
+            handleMovement(event, transform, character);
 
             const glm::vec3 worldPosition = transform->getWorldTransform() * glm::vec4(
                                                 behaviour->m_cameraAttachmentPosition, 1.0);
 
             handleAction(event, character, worldPosition, behaviour->m_lookingDirection);
 
-            updateCamera(behaviour, worldPosition);
+            updateCamera(transform, behaviour, worldPosition);
         }
     }
 }
@@ -66,15 +66,15 @@ void MainCharacterBehaviourSystem::handleMouseLook(const InputEvent &event,
                                                    PhysicsCharacterComponent *physics) {
     if (event.type == InputEvent::MOUSEMOVE) {
         behaviour->adjustLookingDirection(event.mouseMotion * behaviour->m_mouseLookSpeed * Time::frameTime);
-        physics->setMoveDirection(behaviour->m_lookingDirection);
+        physics->m_rotationDirection = -event.mouseMotion.x;
     }
 }
 
 void MainCharacterBehaviourSystem::handleMovement(const InputEvent &event,
-                                                  const MainCharacterBehaviourComponent *behaviour,
+                                                  TransformComponent *transform,
                                                   PhysicsCharacterComponent *characterComponent) {
     if (event.type == InputEvent::KEYPRESS) {
-        glm::vec3 forwardDirection = behaviour->m_lookingDirection;
+        glm::vec3 forwardDirection = transform->getDirection(); //behaviour->m_lookingDirection;
         forwardDirection.y = 0;
         forwardDirection = glm::normalize(forwardDirection);
         glm::vec3 rightDirection = glm::normalize(glm::cross(forwardDirection, glm::vec3(0, 1, 0)));
@@ -143,14 +143,14 @@ void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
                      * 3. physicsBodyComponent = entity->getComp<PhysicsBody>()
                      * 4. cct->attachBody(physicsBody, localPoint);
                      **/
-
                 }
             }
         }
     }
 }
 
-void MainCharacterBehaviourSystem::updateCamera(const MainCharacterBehaviourComponent *behaviour,
+void MainCharacterBehaviourSystem::updateCamera(TransformComponent *transform,
+                                                const MainCharacterBehaviourComponent *behaviour,
                                                 const glm::vec3 viewPosition) const {
     CameraComponent *camera = nullptr;
     if (behaviour->m_cameraEntityId == 0) {
@@ -162,6 +162,11 @@ void MainCharacterBehaviourSystem::updateCamera(const MainCharacterBehaviourComp
     }
 
     if (camera && camera->m_isActive) {
-        camera->setPositionAndDirection(viewPosition, behaviour->m_lookingDirection, glm::vec3(0, 1, 0));
+        glm::quat localRotation = glm::rotate(glm::quat(1, 0, 0, 0), behaviour->m_lookingDirection.y,
+                                              glm::vec3(1.0f, 0.0f, 0.0f));
+        localRotation = transform->getRotation() * localRotation;
+        glm::vec3 direction = localRotation * glm::vec3(0.0f, 0.0f, 1.0f);
+
+        camera->setPositionAndDirection(viewPosition, direction, glm::vec3(0, 1, 0));
     }
 }

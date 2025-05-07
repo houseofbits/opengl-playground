@@ -33,10 +33,10 @@ void PhysicsDistanceJointComponent::deserialize(const nlohmann::json &j, Resourc
     );
 }
 
-bool PhysicsDistanceJointComponent::create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) {
+bool PhysicsDistanceJointComponent::create(PhysicsComponent &bodyA, PhysicsComponent &bodyB) {
     m_Joint = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
             .setAttachments(m_localAttachmentMatrixA, m_localAttachmentMatrixB)
-            .setBodies(bodyA, bodyB)
+            .setBodies(bodyA.getId(), bodyB.getId())
             .setLimits(m_limits)
             .createDistanceConstraint();
 

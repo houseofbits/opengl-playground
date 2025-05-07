@@ -2,6 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../Components/PhysicsBodyComponent.h"
+#include "../Components/PhysicsCharacterComponent.h"
 
 class BasePhysicsJoint : public Component {
 public:
@@ -21,7 +22,7 @@ public:
 
     ~BasePhysicsJoint() override = default;
 
-    virtual bool create(PhysicsBodyComponent &bodyA, PhysicsBodyComponent &bodyB) = 0;
+    virtual bool create(PhysicsComponent &bodyA, PhysicsComponent &bodyB) = 0;
 
     virtual void release() {
         setStateDisconnected();
@@ -48,13 +49,12 @@ public:
     virtual void unLock() {
     }
 
-    static bool areAllowedToConnect(const PhysicsBodyComponent &bodyA, const PhysicsBodyComponent &bodyB) {
+    static bool areAllowedToConnect(const PhysicsComponent &bodyA, const PhysicsComponent &bodyB) {
         if (bodyA.m_EntityId == bodyB.m_EntityId) {
             return false;
         }
 
-        if (bodyA.m_BodyType == PhysicsBodyComponent::BODY_TYPE_STATIC &&
-            bodyB.m_BodyType == PhysicsBodyComponent::BODY_TYPE_STATIC) {
+        if (!bodyA.isDynamic() && !bodyB.isDynamic()) {
             return false;
         }
 
@@ -86,18 +86,18 @@ public:
             return false;
         }
 
-        const auto bodyB = ctx.findEntityComponent<PhysicsBodyComponent>(m_targetEntityBName);
+        const auto bodyB = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityBName);
         if (!bodyB || !bodyB->isPhysicsCreated()) {
             return false;
         }
 
         if (!m_targetEntityAName.empty()) {
-            const auto bodyA = ctx.findEntityComponent<PhysicsBodyComponent>(m_targetEntityAName);
+            const auto bodyA = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityAName);
             if (!bodyA || !bodyA->isPhysicsCreated()) {
                 return false;
             }
         } else {
-            const auto bodyA = ctx.getEntityComponent<PhysicsBodyComponent>(m_EntityId.id());
+            const auto bodyA = ctx.getEntityComponent<PhysicsComponent>(m_EntityId.id());
             if (!bodyA || !bodyA->isPhysicsCreated()) {
                 return false;
             }
@@ -108,20 +108,32 @@ public:
 
     void createPhysics(EntityContext &ctx) {
         if (!isReadyToCreate(ctx)) {
+            Log::warn("Joint not ready to be created");
+
             return;
         }
 
-        PhysicsBodyComponent *bodyA = nullptr;
+        PhysicsComponent *bodyA = nullptr;
         if (m_targetEntityAName.empty()) {
-            bodyA = ctx.getEntityComponent<PhysicsBodyComponent>(m_EntityId.id());
+            bodyA = ctx.getEntityComponent<PhysicsComponent>(m_EntityId.id());
         } else {
-            bodyA = ctx.findEntityComponent<PhysicsBodyComponent>(m_targetEntityAName);
+            bodyA = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityAName);
         }
 
-        const auto bodyB = ctx.findEntityComponent<PhysicsBodyComponent>(m_targetEntityBName);
+        const auto bodyB = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityBName);
+
+        if (!bodyA) {
+            Log::warn("Joint Self component not found");
+        }
+
+        if (!bodyB) {
+            Log::warn("Joint body not found ", m_targetEntityBName);
+        }
 
         if (bodyA && bodyB) {
             if (!areAllowedToConnect(*bodyA, *bodyB)) {
+                Log::warn("Joint bodies are not allowed to connect");
+
                 return;
             }
 

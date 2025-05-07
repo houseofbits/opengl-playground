@@ -48,6 +48,14 @@ public:
 
     [[nodiscard]] bool isValid() const;
 
+    bool isDynamic() const override {
+        return m_BodyType == BODY_TYPE_DYNAMIC;
+    }
+
+    JPH::BodyID getId() override {
+        return m_physicsBodyId;
+    }
+
     BodyType m_BodyType;
     bool m_isSensor;
     bool m_excludeSensorFromActionHit;

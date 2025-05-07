@@ -49,9 +49,11 @@ void MainCharacterBehaviourComponent::clearCameraEntity() {
 }
 
 void MainCharacterBehaviourComponent::adjustLookingDirection(glm::vec2 viewChangeAlongScreenAxis) {
-    const glm::vec3 rightHorizontal = glm::normalize(glm::cross(m_lookingDirection, glm::vec3(0, 1, 0)));
-    const glm::vec3 upVertical = glm::normalize(glm::cross(m_lookingDirection, rightHorizontal));
-    const glm::vec3 viewChange = rightHorizontal * viewChangeAlongScreenAxis.x + upVertical * viewChangeAlongScreenAxis.y;
+    // const glm::vec3 rightHorizontal = glm::normalize(glm::cross(m_lookingDirection, glm::vec3(0, 1, 0)));
+    // const glm::vec3 upVertical = glm::normalize(glm::cross(m_lookingDirection, rightHorizontal));
+    // const glm::vec3 viewChange = rightHorizontal * viewChangeAlongScreenAxis.x + upVertical * viewChangeAlongScreenAxis.y;
+    //
+    // m_lookingDirection = glm::normalize(m_lookingDirection + viewChange);
 
-    m_lookingDirection = glm::normalize(m_lookingDirection + viewChange);
+    m_lookingDirection.y += viewChangeAlongScreenAxis.y;
 }
