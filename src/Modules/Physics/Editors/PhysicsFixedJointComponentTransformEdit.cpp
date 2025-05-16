@@ -85,8 +85,8 @@ void PhysicsFixedJointComponentTransformEdit::setWorldSpaceTransform(glm::mat4 m
 void PhysicsFixedJointComponentTransformEdit::handleEntitySelection(Entity &e, Component *c) {
     ComponentEdit::handleEntitySelection(e, c);
 
-    m_linkedTransformA = getTransformComponentByName(m_component->m_targetEntityAName);
-    m_linkedTransformB = getTransformComponentByName(m_component->m_targetEntityBName);
+    m_linkedTransformA = e.getComponent<TransformComponent>();
+    m_linkedTransformB = getTransformComponentByName(m_component->m_targetEntityName);
 }
 
 TransformComponent *PhysicsFixedJointComponentTransformEdit::getTransformComponentByName(const std::string &name) const {

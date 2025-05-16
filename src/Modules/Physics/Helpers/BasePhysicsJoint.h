@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../Components/PhysicsBodyComponent.h"
 #include "../Components/PhysicsCharacterComponent.h"
 
 class BasePhysicsJoint : public Component {
 public:
     inline static const std::string ENTITY_KEY_A = "targetEntityA";
     inline static const std::string ENTITY_KEY_B = "targetEntityB";
+
+    inline static const std::string TARGET_ENTITY_KEY = "targetEntity";
     inline static const std::string CONNECTED_KEY = "initiallyConnected";
 
     enum JointState {
@@ -62,8 +63,7 @@ public:
     }
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override {
-        m_targetEntityAName = j.value(ENTITY_KEY_A, "");
-        m_targetEntityBName = j.value(ENTITY_KEY_B, "");
+        m_targetEntityName = j.value(TARGET_ENTITY_KEY, "");
         m_isInitiallyConnected = j.value(CONNECTED_KEY, m_isInitiallyConnected);
 
         resourceManager.request(m_PhysicsResource, "physics");
@@ -76,8 +76,7 @@ public:
     }
 
     void serialize(nlohmann::json &j) override {
-        j[ENTITY_KEY_A] = m_targetEntityAName;
-        j[ENTITY_KEY_B] = m_targetEntityBName;
+        j[TARGET_ENTITY_KEY] = m_targetEntityName;
         j[CONNECTED_KEY] = m_isInitiallyConnected;
     }
 
@@ -86,21 +85,14 @@ public:
             return false;
         }
 
-        const auto bodyB = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityBName);
-        if (!bodyB || !bodyB->isPhysicsCreated()) {
+        const auto bodyA = ctx.getEntityComponent<PhysicsComponent>(m_EntityId.id());
+        if (!bodyA || !bodyA->isPhysicsCreated()) {
             return false;
         }
 
-        if (!m_targetEntityAName.empty()) {
-            const auto bodyA = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityAName);
-            if (!bodyA || !bodyA->isPhysicsCreated()) {
-                return false;
-            }
-        } else {
-            const auto bodyA = ctx.getEntityComponent<PhysicsComponent>(m_EntityId.id());
-            if (!bodyA || !bodyA->isPhysicsCreated()) {
-                return false;
-            }
+        const auto bodyB = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityName);
+        if (!bodyB || !bodyB->isPhysicsCreated()) {
+            return false;
         }
 
         return true;
@@ -113,21 +105,16 @@ public:
             return;
         }
 
-        PhysicsComponent *bodyA = nullptr;
-        if (m_targetEntityAName.empty()) {
-            bodyA = ctx.getEntityComponent<PhysicsComponent>(m_EntityId.id());
-        } else {
-            bodyA = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityAName);
-        }
+        auto *bodyA = ctx.getEntityComponent<PhysicsComponent>(m_EntityId.id());;
 
-        const auto bodyB = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityBName);
+        const auto bodyB = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityName);
 
         if (!bodyA) {
             Log::warn("Joint Self component not found");
         }
 
         if (!bodyB) {
-            Log::warn("Joint body not found ", m_targetEntityBName);
+            Log::warn("Joint body not found ", m_targetEntityName);
         }
 
         if (bodyA && bodyB) {
@@ -171,8 +158,11 @@ public:
     }
 
     bool m_isInitiallyConnected;
-    std::string m_targetEntityAName;
-    std::string m_targetEntityBName;
+    // std::string m_targetEntityAName;
+    // std::string m_targetEntityBName;
+
+    std::string m_targetEntityName;
+
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 
 private:

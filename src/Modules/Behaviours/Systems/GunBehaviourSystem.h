@@ -3,6 +3,7 @@
 #include "../../../Core/API.h"
 #include "../Components/GunBehaviourComponent.h"
 #include "../../Common/Components/TransformComponent.h"
+#include "../../Physics/Components/PhysicsSwingTwistJointComponent.h"
 
 class GunBehaviourSystem : public EntitySystem {
 public:
@@ -15,5 +16,5 @@ public:
     void registerEventHandlers(EventManager &) override;
 
 private:
-    EntityRelatedComponentRegistry<TransformComponent, GunBehaviourComponent> *m_registry;
+    EntityRelatedComponentRegistry<PhysicsSwingTwistJointComponent, GunBehaviourComponent> *m_registry;
 };

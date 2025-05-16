@@ -22,6 +22,7 @@ public:
     inline static const std::string FRICTION_KEY = "friction";
     inline static const std::string MASS_KEY = "mass";
     inline static const std::string SENSOR_KEY = "isSensor";
+    inline static const std::string GRAVITY_KEY = "gravityFactor";
 
     enum BodyType {
         BODY_TYPE_STATIC,
@@ -63,6 +64,7 @@ public:
     glm::vec2 m_damping;
     float m_restitution;
     float m_mass;
+    float m_gravityFactor;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     JPH::BodyID m_physicsBodyId;
 

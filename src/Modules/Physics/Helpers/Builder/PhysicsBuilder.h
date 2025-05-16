@@ -111,6 +111,12 @@ class PhysicsBuilder {
             return *this;
         }
 
+        PhysicsBodyBuilder &setGravityFactor(const float gravity) {
+            m_settings.mGravityFactor = gravity;
+
+            return *this;
+        }
+
         PhysicsBodyBuilder &setShape(const JPH::Shape &shape) {
             m_settings.SetShape(&shape);
 
@@ -172,12 +178,16 @@ class PhysicsBuilder {
         JPH::BodyID m_bodyId2{};
         glm::vec2 m_limits;
         bool m_isLimitsEnabled = false;
-        bool m_isMotorSettingsEnabled = false;
-        float m_motorFrequency = 0;
-        float m_motorDamping = 0;
+        bool m_isMotorSettings1Enabled = false;
+        float m_motorFrequency1 = 0;
+        float m_motorDamping1 = 0;
         float m_motorForceLimit = FLT_MAX;
+        bool m_isMotorSettings2Enabled = false;
+        float m_motorFrequency2 = 0;
+        float m_motorDamping2 = 0;
         glm::mat4 m_attachment1{1.0};
         glm::mat4 m_attachment2{1.0};
+
         struct {
             glm::vec2 m_twistAngleLimits{0, 0};
             glm::vec2 m_coneHalfAngle{0, 0};
@@ -216,16 +226,32 @@ class PhysicsBuilder {
         }
 
         PhysicsJointBuilder &setMotorSettings(const float frequency, const float damping) {
-            m_motorFrequency = frequency;
-            m_motorDamping = damping;
-            m_isMotorSettingsEnabled = true;
+            m_motorFrequency1 = frequency;
+            m_motorDamping1 = damping;
+            m_isMotorSettings1Enabled = true;
+
+            return *this;
+        }
+
+        PhysicsJointBuilder &setSwingMotorSettings(const float frequency, const float damping) {
+            m_motorFrequency1 = frequency;
+            m_motorDamping1 = damping;
+            m_isMotorSettings1Enabled = true;
+
+            return *this;
+        }
+
+        PhysicsJointBuilder &setTwistMotorSettings(const float frequency, const float damping) {
+            m_motorFrequency2 = frequency;
+            m_motorDamping2 = damping;
+            m_isMotorSettings2Enabled = true;
 
             return *this;
         }
 
         PhysicsJointBuilder &setMotorForceLimit(const float limit) {
             m_motorForceLimit = limit;
-            m_isMotorSettingsEnabled = true;
+            m_isMotorSettings1Enabled = true;
 
             return *this;
         }
@@ -358,10 +384,10 @@ class PhysicsBuilder {
 
             m_physicsSystem->AddConstraint(joint);
 
-            if (m_isMotorSettingsEnabled) {
+            if (m_isMotorSettings1Enabled) {
                 JPH::MotorSettings &motor_settings = joint->GetMotorSettings();
-                motor_settings.mSpringSettings.mFrequency = m_motorFrequency;
-                motor_settings.mSpringSettings.mDamping = m_motorDamping;
+                motor_settings.mSpringSettings.mFrequency = m_motorFrequency1;
+                motor_settings.mSpringSettings.mDamping = m_motorDamping1;
                 motor_settings.SetForceLimit(m_motorForceLimit);
             }
 
@@ -413,10 +439,10 @@ class PhysicsBuilder {
 
             m_physicsSystem->AddConstraint(joint);
 
-            if (m_isMotorSettingsEnabled) {
+            if (m_isMotorSettings1Enabled) {
                 JPH::MotorSettings &motor_settings = joint->GetMotorSettings();
-                motor_settings.mSpringSettings.mFrequency = m_motorFrequency;
-                motor_settings.mSpringSettings.mDamping = m_motorDamping;
+                motor_settings.mSpringSettings.mFrequency = m_motorFrequency1;
+                motor_settings.mSpringSettings.mDamping = m_motorDamping1;
                 motor_settings.SetForceLimit(m_motorForceLimit);
             }
 
@@ -436,18 +462,37 @@ class PhysicsBuilder {
                 return nullptr;
             }
 
+            auto q1 = glm::quat_cast(m_attachment1);
+            auto q2 = glm::quat_cast(m_attachment2);
+
+            glm::quat q1_diff = q1; //glm::inverse(q1) * q2;
+
+            auto twistAxis1 = q1_diff * glm::vec3(1, 0, 0);
+            auto twistAxis2 = q2 * glm::vec3(1, 0, 0);
+
+            auto planeAxis1 = q1_diff * glm::vec3(0, 1, 0);
+            auto planeAxis2 = q2 * glm::vec3(0, 1, 0);
+
             JPH::SwingTwistConstraintSettings settings;
-            settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM; //JPH::EConstraintSpace::WorldSpace;
+            settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
             settings.mPosition1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
             settings.mPosition2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
-            settings.mTwistAxis1 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment1));
-            settings.mTwistAxis2 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment2));
-            settings.mPlaneAxis1 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment1));
-            settings.mPlaneAxis2 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment2));
+            settings.mTwistAxis1 = PhysicsTypeCast::glmToJPH(twistAxis1);
+            settings.mTwistAxis2 = PhysicsTypeCast::glmToJPH(twistAxis2);
+            settings.mPlaneAxis1 = PhysicsTypeCast::glmToJPH(planeAxis1);
+            settings.mPlaneAxis2 = PhysicsTypeCast::glmToJPH(planeAxis2);
             settings.mTwistMinAngle = m_swingTwistSettings.m_twistAngleLimits.x;
             settings.mTwistMaxAngle = m_swingTwistSettings.m_twistAngleLimits.y;
             settings.mPlaneHalfConeAngle = m_swingTwistSettings.m_coneHalfAngle.x;
             settings.mNormalHalfConeAngle = m_swingTwistSettings.m_coneHalfAngle.y;
+            if (m_isMotorSettings1Enabled) {
+                settings.mSwingMotorSettings.mSpringSettings.mDamping = m_motorDamping1;
+                settings.mSwingMotorSettings.mSpringSettings.mFrequency = m_motorFrequency1;
+            }
+            if (m_isMotorSettings2Enabled) {
+                settings.mTwistMotorSettings.mSpringSettings.mDamping = m_motorDamping2;
+                settings.mTwistMotorSettings.mSpringSettings.mFrequency = m_motorFrequency2;
+            }
 
             const auto joint = dynamic_cast<JPH::SwingTwistConstraint *>(settings.Create(*body1, *body2));
 

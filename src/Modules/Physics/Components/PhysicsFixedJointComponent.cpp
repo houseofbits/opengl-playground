@@ -10,9 +10,9 @@ PhysicsFixedJointComponent::PhysicsFixedJointComponent() : BasePhysicsJoint(),
 
 void PhysicsFixedJointComponent::serialize(nlohmann::json &j) {
     BasePhysicsJoint::serialize(j);
-
-    j[ENTITY_KEY_A] = m_targetEntityAName;
-    j[ENTITY_KEY_B] = m_targetEntityBName;
+    //
+    // j[ENTITY_KEY_A] = m_targetEntityAName;
+    // j[ENTITY_KEY_B] = m_targetEntityBName;
 
     j[ATTACHMENT_A_POSITION_KEY] = Math::getTranslation(m_localAttachmentMatrixA);
     j[ATTACHMENT_B_POSITION_KEY] = Math::getTranslation(m_localAttachmentMatrixB);

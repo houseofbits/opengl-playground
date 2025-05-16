@@ -7,6 +7,7 @@ MainCharacterBehaviourComponent::MainCharacterBehaviourComponent() : Component()
                                                                      m_movementSpeed(10.0),
                                                                      m_cameraAttachmentPosition(0.0),
                                                                      m_cameraEntityId(0),
+                                                                     m_lookUpRadians(0),
                                                                      m_lookingDirection(1, 0, 0) {
 }
 
@@ -48,12 +49,12 @@ void MainCharacterBehaviourComponent::clearCameraEntity() {
     m_cameraEntityId = 0;
 }
 
-void MainCharacterBehaviourComponent::adjustLookingDirection(glm::vec2 viewChangeAlongScreenAxis) {
-    // const glm::vec3 rightHorizontal = glm::normalize(glm::cross(m_lookingDirection, glm::vec3(0, 1, 0)));
-    // const glm::vec3 upVertical = glm::normalize(glm::cross(m_lookingDirection, rightHorizontal));
-    // const glm::vec3 viewChange = rightHorizontal * viewChangeAlongScreenAxis.x + upVertical * viewChangeAlongScreenAxis.y;
-    //
-    // m_lookingDirection = glm::normalize(m_lookingDirection + viewChange);
-
-    m_lookingDirection.y += viewChangeAlongScreenAxis.y;
-}
+// void MainCharacterBehaviourComponent::adjustLookingDirection(glm::vec2 viewChangeAlongScreenAxis) {
+//     // const glm::vec3 rightHorizontal = glm::normalize(glm::cross(m_lookingDirection, glm::vec3(0, 1, 0)));
+//     // const glm::vec3 upVertical = glm::normalize(glm::cross(m_lookingDirection, rightHorizontal));
+//     // const glm::vec3 viewChange = rightHorizontal * viewChangeAlongScreenAxis.x + upVertical * viewChangeAlongScreenAxis.y;
+//     //
+//     // m_lookingDirection = glm::normalize(m_lookingDirection + viewChange);
+//
+//     m_lookingDirection.y += viewChangeAlongScreenAxis.y;
+// }

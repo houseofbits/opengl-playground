@@ -25,7 +25,7 @@ public:
 
     void clearCameraEntity();
 
-    void adjustLookingDirection(glm::vec2);
+    // void adjustLookingDirection(glm::vec2);
 
     bool m_isActive;
     float m_mouseLookSpeed;
@@ -33,5 +33,7 @@ public:
     std::string m_cameraName;
     glm::vec3 m_cameraAttachmentPosition;
     Identity::Type m_cameraEntityId;
+    float m_lookUpRadians;
     glm::vec3 m_lookingDirection;
+    glm::vec3 m_viewPoint;
 };

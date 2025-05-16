@@ -18,17 +18,17 @@ inline void processPhysicsSwingTwistJointComponentEditor(Component *c, Entity *e
 
     ImGui::Checkbox("Is initially connected", &component->m_isInitiallyConnected);
 
-    EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
-        *system.m_EntityContext,
-        component->m_targetEntityAName,
-        "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
-        "Self"
-    );
+    // EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
+    //     *system.m_EntityContext,
+    //     component->m_targetEntityAName,
+    //     "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
+    //     "Self"
+    // );
 
     EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
         *system.m_EntityContext,
-        component->m_targetEntityBName,
-        "Attachment entity B##TRANSFORM_PARENT_ENTITY_NAME_B"
+        component->m_targetEntityName,
+        "Attachment entity##TRANSFORM_PARENT_ENTITY_NAME_B"
     );
 
     if (ImGui::TreeNode("Attachment transform A")) {
@@ -58,4 +58,12 @@ inline void processPhysicsSwingTwistJointComponentEditor(Component *c, Entity *e
         coneAngle.x = glm::degrees(component->m_coneHalfAngle.x);
         coneAngle.y = glm::degrees(component->m_coneHalfAngle.y);
     }
+
+    ImGui::Checkbox("Swing motor settings", &component->m_isSwingMotorSettingsEnabled);
+    if (component->m_isSwingMotorSettingsEnabled) {
+        ImGui::InputFloat("Damping", &component->m_swingMotorDamping);
+        ImGui::InputFloat("Frequency", &component->m_swingMotorFrequency);
+    }
+
+    ImGui::Checkbox("Look at behaviour", &component->m_useLookAtBehaviour);
 }

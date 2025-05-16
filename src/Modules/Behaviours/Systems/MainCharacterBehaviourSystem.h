@@ -21,14 +21,14 @@ public:
 
 private:
     void handleMovement(const InputEvent &, TransformComponent *,
-                               PhysicsCharacterComponent *);
+                        PhysicsCharacterComponent *);
 
     void handleAction(const InputEvent &, PhysicsCharacterComponent *, glm::vec3 viewPosition,
-                             glm::vec3 viewDirection) const;
+                      glm::vec3 viewDirection) const;
 
     void handleMouseLook(const InputEvent &, MainCharacterBehaviourComponent *, PhysicsCharacterComponent *);
 
-    void updateCamera(TransformComponent *,const MainCharacterBehaviourComponent *, glm::vec3 viewPosition) const;
+    void updateCamera(TransformComponent *, MainCharacterBehaviourComponent *, glm::vec3 viewPosition) const;
 
     EntityRelatedComponentRegistry<TransformComponent, PhysicsCharacterComponent, MainCharacterBehaviourComponent> *
     m_registry;

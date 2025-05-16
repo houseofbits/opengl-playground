@@ -20,17 +20,17 @@ inline void processPhysicsHingeJointComponentEditor(Component *c, Entity *e, Edi
 
     ImGui::Text("Rotate around X axis");
 
-    EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
-        *system.m_EntityContext,
-        component->m_targetEntityAName,
-        "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
-        "Self"
-    );
+    // EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
+    //     *system.m_EntityContext,
+    //     component->m_targetEntityAName,
+    //     "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
+    //     "Self"
+    // );
 
     EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
         *system.m_EntityContext,
-        component->m_targetEntityBName,
-        "Attachment entity B##TRANSFORM_PARENT_ENTITY_NAME_B"
+        component->m_targetEntityName,
+        "Attachment entity##TRANSFORM_PARENT_ENTITY_NAME"
     );
 
     if (ImGui::TreeNode("Attachment transform A")) {

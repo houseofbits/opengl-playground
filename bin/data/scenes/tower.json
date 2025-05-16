@@ -89,26 +89,26 @@
     {
         "EditorCameraComponent": {
             "firstPersonCtrl": true,
-            "isActive": false,
+            "isActive": true,
             "mouseLookSpeed": 0.1599999964237213,
             "moveSpeed": 10.0,
             "orthoScale": 48.49983215332031,
             "position": [
-                -14.880709648132324,
-                2.2779438495635986,
-                8.894048690795898
+                -14.252897262573242,
+                2.4430224895477295,
+                10.248169898986816
             ],
             "reposition": false,
             "type": 0,
             "upDirection": [
-                0.0687561184167862,
-                0.9966810941696167,
-                0.04358243942260742
+                0.27049729228019714,
+                0.9095956087112427,
+                0.3153841495513916
             ],
             "viewDirection": [
-                0.8418110013008118,
-                -0.08140536397695541,
-                0.5335985422134399
+                0.592168927192688,
+                -0.41549479961395264,
+                0.6904346942901611
             ]
         },
         "name": "PerspectiveEditorCamera"
@@ -261,7 +261,7 @@
     {
         "CameraComponent": {
             "disableRelRotation": true,
-            "isActive": true,
+            "isActive": false,
             "position": [
                 0.0,
                 0.0,
@@ -287,11 +287,11 @@
             ],
             "cameraName": "",
             "lookDirection": [
-                0.5471000075340271,
-                0.07248114049434662,
-                0.833767831325531
+                0.3246620297431946,
+                0.04498253017663956,
+                0.9447598457336426
             ],
-            "mlookSpeed": 0.15000000596046448,
+            "mlookSpeed": 0.003000000026077032,
             "moveSpeed": 10.0
         },
         "MeshComponent": {
@@ -329,9 +329,9 @@
             "blurRadius": 1.0,
             "castShadows": true,
             "color": [
-                1.0,
-                0.44607841968536377,
-                0.44607841968536377
+                0.06372547149658203,
+                0.3666378855705261,
+                1.0
             ],
             "intensity": 5.899998664855957,
             "isEnabled": true,
@@ -388,8 +388,8 @@
             ],
             "scale": [
                 1.0,
-                0.999998152256012,
-                0.999998152256012
+                0.9999957084655762,
+                0.9999957084655762
             ],
             "translation": [
                 -10.17956829071045,
@@ -427,8 +427,8 @@
             ],
             "scale": [
                 1.0,
-                0.9999980926513672,
-                0.9999980926513672
+                0.9999956488609314,
+                0.9999956488609314
             ],
             "translation": [
                 -1.57035231590271,
@@ -466,8 +466,8 @@
             ],
             "scale": [
                 1.0,
-                0.9999980330467224,
-                0.9999980330467224
+                0.9999955892562866,
+                0.9999955892562866
             ],
             "translation": [
                 6.383544445037842,
@@ -568,7 +568,7 @@
             "isSensor": false,
             "mass": 10.0,
             "restitution": 0.5,
-            "type": 1
+            "type": 0
         },
         "PhysicsShapeComponent": {
             "mesh": "data/models/unit-sphere.gltf",
@@ -604,7 +604,7 @@
                 1.0
             ],
             "translation": [
-                -10.810494422912598,
+                -6.398508071899414,
                 1.615138053894043,
                 11.057801246643066
             ]
@@ -628,7 +628,7 @@
             "isSensor": false,
             "mass": 10.0,
             "restitution": 0.5,
-            "type": 1
+            "type": 0
         },
         "PhysicsShapeComponent": {
             "mesh": "data/models/unit-sphere.gltf",
@@ -688,7 +688,7 @@
             "isSensor": false,
             "mass": 10.0,
             "restitution": 0.5,
-            "type": 1
+            "type": 0
         },
         "PhysicsShapeComponent": {
             "mesh": "data/models/unit-sphere.gltf",
@@ -724,7 +724,7 @@
                 1.0
             ],
             "translation": [
-                -10.810494422912598,
+                -6.7647294998168945,
                 2.3685007095336914,
                 11.956686973571777
             ]
@@ -762,8 +762,7 @@
                 0.26966285705566406
             ],
             "initiallyConnected": true,
-            "targetEntityA": "",
-            "targetEntityB": "CharacterController"
+            "targetEntity": "CharacterController"
         },
         "PhysicsShapeComponent": {
             "mesh": "data/models/unit-cube.gltf",
@@ -800,7 +799,7 @@
             ],
             "translation": [
                 -11.516408920288086,
-                2.5273938179016113,
+                2.316741943359375,
                 9.550405502319336
             ]
         },
@@ -867,6 +866,9 @@
         "name": "FixedBox1"
     },
     {
+        "GunBehaviourComponent": {
+            "active": true
+        },
         "MeshComponent": {
             "material": "",
             "model": "data/models/unit-cube.gltf"
@@ -881,7 +883,7 @@
                 0.5
             ],
             "isSensor": false,
-            "mass": 10.0,
+            "mass": 1.0,
             "restitution": 0.5,
             "type": 1
         },
@@ -908,36 +910,39 @@
         "PhysicsSwingTwistJointComponent": {
             "attachmentAPosition": [
                 0.0,
-                1.4825413227081299,
+                1.4176576137542725,
                 0.0
             ],
             "attachmentARotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
+                -1.0048592410634785e-13,
+                -1.0048591733008427e-13,
+                0.7071068286895752,
+                -0.7071067094802856
             ],
             "attachmentBPosition": [
                 0.0,
-                -0.2370142936706543,
+                -0.25,
                 0.0
             ],
             "attachmentBRotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
+                -1.2868817975686397e-06,
+                0.7071071267127991,
+                -1.2868817975686397e-06,
+                -0.7071064114570618
             ],
             "coneHalfAngles": [
-                0.0,
+                1.5707963705062866,
                 0.0
             ],
+            "enableSwingMotorSettings": true,
             "initiallyConnected": true,
-            "targetEntityA": "",
-            "targetEntityB": "FixedBox1",
+            "lookAtBehaviour": true,
+            "swingMotorDamping": 50.0,
+            "swingMotorFrequency": 100.0,
+            "targetEntity": "FixedBox1",
             "twistLimits": [
-                -0.7853981852531433,
-                0.7853981852531433
+                0.0,
+                0.0
             ]
         },
         "TransformComponent": {
@@ -960,5 +965,65 @@
             ]
         },
         "name": "RigidBox1"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "isSensor": false,
+            "mass": 10.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.25763168931007385,
+                0.22073675692081451,
+                0.29378870129585266
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.25763168931007385,
+                0.22073675692081451,
+                0.29378870129585266
+            ],
+            "translation": [
+                -14.008448600769043,
+                0.539426863193512,
+                15.467428207397461
+            ]
+        },
+        "name": "TestTarget1"
     }
 ]

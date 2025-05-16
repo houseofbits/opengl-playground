@@ -207,6 +207,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Editors/StatefulJointBehaviourEdit.h
         src/Modules/Renderer/Resources/DeferredRenderTargetResource.cpp
         src/Modules/Renderer/Resources/DeferredRenderTargetResource.h
+        src/Modules/Physics/Helpers/Behaviours/LookAtJointBehaviour.cpp
+        src/Modules/Physics/Helpers/Behaviours/LookAtJointBehaviour.h
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)

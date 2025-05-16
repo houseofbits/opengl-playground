@@ -17,17 +17,17 @@ inline void processPhysicsSliderJointComponentEditor(Component *c, Entity *e, Ed
 
     ImGui::Checkbox("Is initially connected", &component->m_isInitiallyConnected);
 
-    EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
-        *system.m_EntityContext,
-        component->m_targetEntityAName,
-        "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
-        "Self"
-    );
+    // EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
+    //     *system.m_EntityContext,
+    //     component->m_targetEntityAName,
+    //     "Attachment entity A##TRANSFORM_PARENT_ENTITY_NAME_A",
+    //     "Self"
+    // );
 
     EntityLinkedComponentEdit::processMulti<PhysicsBodyComponent, PhysicsCharacterComponent>(
     *system.m_EntityContext,
-    component->m_targetEntityBName,
-        "Attachment entity B##TRANSFORM_PARENT_ENTITY_NAME_B"
+    component->m_targetEntityName,
+        "Attachment entity##TRANSFORM_PARENT_ENTITY_NAME_B"
     );
 
     // ImGui::InputFloat3("Axis", reinterpret_cast<float *>(&component->m_axis));

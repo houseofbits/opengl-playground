@@ -8,7 +8,7 @@
 class PhysicsDistanceJointComponent : public BasePhysicsJoint {
     TYPE_DEFINITION(PhysicsDistanceJointComponent);
 
-    inline static const std::string ENTITY_KEY = "targetEntity";
+    // inline static const std::string ENTITY_KEY = "targetEntity";
     inline static const std::string LIMITS_KEY = "limits";
     inline static const std::string ATTACHMENT_A_POSITION_KEY = "attachmentAPosition";
     inline static const std::string ATTACHMENT_B_POSITION_KEY = "attachmentBPosition";

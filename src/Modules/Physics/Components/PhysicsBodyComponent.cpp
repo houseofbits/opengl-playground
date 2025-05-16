@@ -12,6 +12,7 @@ PhysicsBodyComponent::PhysicsBodyComponent() : PhysicsComponent(),
                                                m_damping(0.7, 0.7),
                                                m_restitution(0.5),
                                                m_mass(0.0),
+                                               m_gravityFactor(1.0),
                                                m_PhysicsResource(),
                                                m_physicsBodyId() {
 }
@@ -25,6 +26,7 @@ void PhysicsBodyComponent::serialize(nlohmann::json &j) {
     j[DAMPING_KEY] = m_damping;
     j[MASS_KEY] = m_mass;
     j[SENSOR_KEY] = m_isSensor;
+    j[GRAVITY_KEY] = m_gravityFactor;
 }
 
 void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -36,6 +38,7 @@ void PhysicsBodyComponent::deserialize(const nlohmann::json &j, ResourceManager 
     m_mass = j.value(MASS_KEY, m_mass);
     m_isSensor = j.value(SENSOR_KEY, m_isSensor);
     m_BodyType = j.value(TYPE_KEY, m_BodyType);
+    m_gravityFactor = j.value(GRAVITY_KEY, m_gravityFactor);
 }
 
 bool PhysicsBodyComponent::isReadyToCreate(EntityContext &ctx) const {
@@ -108,6 +111,7 @@ void PhysicsBodyComponent::createPhysics(EntityContext &ctx) {
             .setEntityReference(m_EntityId.id())
             .setTransform(*transformComponent)
             .setMass(m_mass)
+            .setGravityFactor(m_gravityFactor)
             .setShape(*createdShape.Get().GetPtr())
             .setDamping(m_damping.x, m_damping.y)
             .setSensor(m_isSensor, m_excludeSensorFromActionHit);

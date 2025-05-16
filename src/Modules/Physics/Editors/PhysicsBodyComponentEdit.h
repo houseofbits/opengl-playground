@@ -29,6 +29,7 @@ inline void processPhysicsBodyComponentEditor(Component *c, Entity *e, EditorUIS
         ImGui::Checkbox("Disable actions", &physicsBody->m_excludeSensorFromActionHit);
     }
     ImGui::SeparatorText("Physics properties");
+    ImGui::InputFloat("Gravity factor", &physicsBody->m_gravityFactor);
     ImGui::InputFloat("Mass", &physicsBody->m_mass);
     ImGui::InputFloat("Friction", &physicsBody->m_friction.x);
     ImGui::InputFloat("Rolling friction", &physicsBody->m_friction.y);

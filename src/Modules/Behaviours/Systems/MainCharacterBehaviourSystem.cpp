@@ -56,7 +56,7 @@ void MainCharacterBehaviourSystem::handleInputEvent(const InputEvent &event) {
 
             handleAction(event, character, worldPosition, behaviour->m_lookingDirection);
 
-            updateCamera(transform, behaviour, worldPosition);
+            // updateCamera(transform, behaviour, worldPosition);
         }
     }
 }
@@ -65,7 +65,7 @@ void MainCharacterBehaviourSystem::handleMouseLook(const InputEvent &event,
                                                    MainCharacterBehaviourComponent *behaviour,
                                                    PhysicsCharacterComponent *physics) {
     if (event.type == InputEvent::MOUSEMOVE) {
-        behaviour->adjustLookingDirection(event.mouseMotion * behaviour->m_mouseLookSpeed * Time::frameTime);
+        behaviour->m_lookUpRadians += event.mouseMotion.y * behaviour->m_mouseLookSpeed;
         physics->m_rotationDirection = -event.mouseMotion.x;
     }
 }
@@ -150,7 +150,7 @@ void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
 }
 
 void MainCharacterBehaviourSystem::updateCamera(TransformComponent *transform,
-                                                const MainCharacterBehaviourComponent *behaviour,
+                                                MainCharacterBehaviourComponent *behaviour,
                                                 const glm::vec3 viewPosition) const {
     CameraComponent *camera = nullptr;
     if (behaviour->m_cameraEntityId == 0) {
@@ -162,11 +162,14 @@ void MainCharacterBehaviourSystem::updateCamera(TransformComponent *transform,
     }
 
     if (camera && camera->m_isActive) {
-        glm::quat localRotation = glm::rotate(glm::quat(1, 0, 0, 0), behaviour->m_lookingDirection.y,
+        glm::quat localRotation = glm::rotate(glm::quat(1, 0, 0, 0), behaviour->m_lookUpRadians,
                                               glm::vec3(1.0f, 0.0f, 0.0f));
         localRotation = transform->getRotation() * localRotation;
         glm::vec3 direction = localRotation * glm::vec3(0.0f, 0.0f, 1.0f);
 
         camera->setPositionAndDirection(viewPosition, direction, glm::vec3(0, 1, 0));
+
+        behaviour->m_lookingDirection = direction;
+        behaviour->m_viewPoint = viewPosition;
     }
 }
