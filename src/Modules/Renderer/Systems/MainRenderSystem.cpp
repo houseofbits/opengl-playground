@@ -45,6 +45,7 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
     resourceManager.request(m_ShaderPrograms[SHADER_SHADED],
                             // "data/shaders/|lighting.vert|lighting-shadow-test.frag",
                             "data/shaders/lighting|.vert|.frag",
+                            // "data/shaders/|lighting.vert|lightingEnvProbe.frag",
                             {
                                 "SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
                                 "EnvironmentProbesCubeMapArray"

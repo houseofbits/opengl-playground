@@ -22,7 +22,8 @@ public:
 
     void update() override;
 
-    bool create(PhysicsComponent &bodyA, PhysicsComponent &bodyB) override;
+    bool create(PhysicsComponent &bodyA, PhysicsComponent &bodyB,
+                        PhysicsJointAttachmentComponent *attachmentB) override;
 
     JPH::Ref<JPH::FixedConstraint> m_Joint;
     glm::mat4 m_localAttachmentMatrixA;

@@ -8,6 +8,8 @@
 #include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 
+#include "../../../Renderer/Shader/WireframeRenderer.h"
+
 JPH_SUPPRESS_WARNINGS
 using namespace JPH;
 using namespace JPH::literals;
@@ -135,4 +137,12 @@ void PhysicsResource::drawDebug(ShaderProgramResource &shader) {
     m_debugRenderer->m_shader = &shader;
 
     m_PhysicsSystem.DrawBodies(drawSettings, m_debugRenderer);
+}
+
+
+void PhysicsResource::drawDebugWireframe(WireframeRenderer &wireframeRenderer) {
+    m_PhysicsSystem.DrawConstraints(m_debugRenderer);
+    m_debugRenderer->m_wireModel.build();
+
+    wireframeRenderer.render(glm::mat4(1.0), m_debugRenderer->m_wireModel);
 }

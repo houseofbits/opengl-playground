@@ -24,7 +24,7 @@ public:
 
     void processSwingTwistJoint(PhysicsSwingTwistJointComponent *joint);
 
-    static JPH::Quat createRotation(JPH::Vec3, const JPH::Mat44 &);
+    static JPH::Quat createRotation(const JPH::Vec3& lookat, const JPH::Vec3& up);
 
     glm::vec3 m_targetPosition;
 };

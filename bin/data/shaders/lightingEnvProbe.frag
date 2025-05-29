@@ -64,6 +64,13 @@ bool isProjCoordsClipping(vec2 uv)
     return true;
 }
 
+float pcssShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
+{
+    sampler2DShadow shadowMap = sampler2DShadow(light.shadowSamplerHandle);
+
+    return texture(shadowMap, vec3(projCoords.xy, projCoords.z - light.bias)).x;
+}
+
 void main()
 {
     vec3 diffuse = vec3(0.7);
@@ -112,7 +119,12 @@ void main()
                 falloff = texture(sampler2D(light.projectorSamplerHandle), lightProjectedPosition.xy).rgb;
             }
 
-            color += light.intensity * ndotl * light.color * attenuation * falloff * diffuse;
+            float shadow = 1.0;
+            if (doesReceiveShadows == 1 && isSamplerHandleValid(light.shadowSamplerHandle)) {
+                shadow = pcssShadowCalculation(light, lightProjectedPosition, dot(lightDir, vsNormal));
+            }
+
+            color += shadow * light.intensity * 0.3 * ndotl * light.color * attenuation * falloff * diffuse;
         }
     }
 

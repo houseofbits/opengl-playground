@@ -93,7 +93,21 @@ public:
         for (const auto &c: m_Components) {
             if (c->m_Id.id() == componentId) {
                 if (dynamic_cast<T *>(c.get())) {
-                    return c;
+                    return dynamic_cast<T *>(c.get());
+                }
+
+                return nullptr;
+            }
+        }
+        return nullptr;
+    }
+
+    template<class T>
+    T *getComponent(const std::string &name) {
+        for (const auto &c: m_Components) {
+            if (c->m_Name == name) {
+                if (dynamic_cast<T *>(c.get())) {
+                    return dynamic_cast<T *>(c.get());
                 }
 
                 return nullptr;

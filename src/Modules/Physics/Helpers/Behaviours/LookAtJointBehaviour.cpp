@@ -16,57 +16,65 @@ void LookAtJointBehaviour::deserialize(const nlohmann::json &j, ResourceManager 
 void LookAtJointBehaviour::processHingeJoint(PhysicsHingeJointComponent *joint) {
 }
 
+// void printQuatAxis(JPH::Quat q) {
+//     auto x = q * JPH::Vec3::sAxisX();
+//     auto y = q * JPH::Vec3::sAxisY();
+//     auto z = q * JPH::Vec3::sAxisZ();
+//
+//     Log::write(x, " | ", y, " | ", z);
+// }
+
+//
+// JPH::Quat quatFromAxis(JPH::Vec3 x, JPH::Vec3 y) {
+//     auto z = x.Cross(y).Normalized();
+//     auto yN = z.Cross(x).Normalized();
+//
+//     JPH::Mat44 rotation = JPH::Mat44::sIdentity();
+//
+//     rotation.SetAxisX(x.Normalized());
+//     rotation.SetAxisY(y);
+//     rotation.SetAxisZ(z);
+//
+//     return rotation.GetQuaternion();
+// }
+//
+// JPH::Quat lookAt(JPH::Vec3 lookat, JPH::Vec3 up) {
+//     auto z = up.Cross(lookat).Normalized();
+//     auto x = lookat.Cross(z).Normalized();
+//
+//     JPH::Mat44 rotation = JPH::Mat44::sIdentity();
+//
+//     rotation.SetAxisX(x);
+//     rotation.SetAxisY(lookat.Normalized());
+//     rotation.SetAxisZ(z);
+//
+//     return rotation.GetQuaternion();
+// }
+
 void LookAtJointBehaviour::processSwingTwistJoint(PhysicsSwingTwistJointComponent *jointComponent) {
     const auto &joint = jointComponent->m_Joint;
 
-    auto targetDirection = PhysicsTypeCast::glmToJPH(m_targetPosition) - joint->GetBody2()->GetPosition();
+    const auto pivot = joint->GetBody2()->GetWorldTransform() * joint->GetLocalSpacePosition2();
+    auto targetDirection = (PhysicsTypeCast::glmToJPH(m_targetPosition) - pivot).Normalized();
 
-    // Log::write(targetDirection.Normalized());
+    const auto constrB2World = joint->GetBody2()->GetRotation() * joint->GetConstraintToBody2();
+    auto vConstrSpace = constrB2World.Conjugated() * targetDirection;
 
-    // auto worldRotationToTarget = JPH::Quat::sRotation(JPH::Vec3Arg(0, 0, 1), JPH::DegreesToRadians(-45.0f));
-    // auto worldRotationToTarget = createRotation(JPH::Vec3(1,-1,0).Normalized(), joint->GetBody2()->GetCenterOfMassTransform());
-    auto worldRotationToTarget = createRotation(targetDirection.Normalized(), joint->GetBody2()->GetCenterOfMassTransform());
+    auto r = createRotation(vConstrSpace.Normalized(), JPH::Vec3(0,1,0));
 
-    // auto local = joint->GetBody2()->GetRotation().Conjugated() * worldRotationToTarget;
-
-    JPH::Quat cBody1World = worldRotationToTarget * joint->GetConstraintToBody1();
-    JPH::Quat cBody2World = joint->GetBody2()->GetRotation() * joint->GetConstraintToBody2();
-    auto rt = cBody1World.Conjugated() * cBody2World;
-
-    // Log::write(worldRotationToTarget, " / ", rt, " | ", local);
-    //
-    // auto rcs = joint->GetRotationInConstraintSpace();
-    //
-    // Log::write(rcs);
-    //
-
-
-    rt = JPH::Quat::sRotation(JPH::Vec3Arg(0, 1, 0), JPH::DegreesToRadians(10.0f));
-    //
-    // joint->SetSwingMotorState(JPH::EMotorState::Position);
-    // joint->SetTargetOrientationCS(rt);
+    joint->SetSwingMotorState(JPH::EMotorState::Position);
+    joint->SetTargetOrientationCS(r.Conjugated());
 }
 
-JPH::Quat LookAtJointBehaviour::createRotation(const JPH::Vec3 direction, const JPH::Mat44 &frame) {
+JPH::Quat LookAtJointBehaviour::createRotation(const JPH::Vec3 &lookat, const JPH::Vec3 &up) {
+    auto z = lookat.Cross(up).Normalized();
+    auto y = z.Cross(lookat).Normalized();
 
-    return JPH::Quat::sFromTo(JPH::Vec3(0,-1,0), direction);
+    JPH::Mat44 rotation = JPH::Mat44::sIdentity();
 
-    const auto lookAtMatrix = glm::lookAt(glm::vec3(0), PhysicsTypeCast::JPHToGlm(direction), glm::vec3(0, 1, 0));
+    rotation.SetAxisX(lookat.Normalized());
+    rotation.SetAxisY(y);
+    rotation.SetAxisZ(z);
 
-    // const auto body2Z = frame.GetAxisZ();
-    // const auto Y = body2Z.Cross(xDirection).Normalized();
-    // const auto Z = xDirection.Cross(Y).Normalized();
-    //
-    // const auto rotationMatrix = JPH::Mat44(
-    //     JPH::Vec4Arg(xDirection.Normalized(), 1.0),
-    //     JPH::Vec4Arg(Y, 1.0),
-    //     JPH::Vec4Arg(Z, 1.0), JPH::Vec3::sZero());
-
-    glm::quat q = glm::quat_cast(lookAtMatrix);
-
-    // Log::write(q);
-
-    return PhysicsTypeCast::glmToJPH(q);
-
-    // return rotationMatrix.GetQuaternion();
+    return rotation.GetQuaternion().Normalized();
 }

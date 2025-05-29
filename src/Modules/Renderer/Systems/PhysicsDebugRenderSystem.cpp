@@ -7,6 +7,8 @@ PhysicsDebugRenderSystem::PhysicsDebugRenderSystem() : EntitySystem(), m_isEnabl
 void PhysicsDebugRenderSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     resourceManager.request(m_PhysicsResource, "physics");
     resourceManager.request(m_ShaderProgram, "resources/shaders/basic|.vert|.frag");
+
+    m_wireframeRenderer.initialize();
 }
 
 void PhysicsDebugRenderSystem::process(EventManager &) {
@@ -24,6 +26,9 @@ void PhysicsDebugRenderSystem::process(EventManager &) {
     camera->bind(m_ShaderProgram());
 
     m_PhysicsResource().drawDebug(m_ShaderProgram());
+
+    m_wireframeRenderer.setCamera(*camera);
+    m_PhysicsResource().drawDebugWireframe(m_wireframeRenderer);
 }
 
 void PhysicsDebugRenderSystem::registerEventHandlers(EventManager &eventManager) {

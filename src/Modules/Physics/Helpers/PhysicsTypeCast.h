@@ -17,6 +17,10 @@ namespace PhysicsTypeCast {
         return {p.GetX(), p.GetY(), p.GetZ()};
     }
 
+    inline glm::vec4 JPHToGlm(JPH::Vec4 p) {
+        return {p.GetX(), p.GetY(), p.GetZ(), p.GetW()};
+    }
+
     inline glm::quat JPHToGlm(JPH::Quat q) {
         return {q.GetW(), q.GetX(), q.GetY(), q.GetZ()};
     }

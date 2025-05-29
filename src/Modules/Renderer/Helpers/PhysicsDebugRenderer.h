@@ -4,6 +4,7 @@
 #include "Jolt/Renderer/DebugRenderer.h"
 #include "Jolt/Geometry/Triangle.h"
 #include "../../../Renderer/Model/VertexArray.h"
+#include "../../../Renderer/Model/WireModel.h"
 #include "../Resources/ShaderProgramResource.h"
 
 class PhysicsDebugRenderer final : public JPH::DebugRenderer {
@@ -49,6 +50,7 @@ public:
 
 
     ShaderProgramResource* m_shader;
+    WireModel m_wireModel;
 };
 
 class ThatIHaveToMake : public JPH::RefTarget<ThatIHaveToMake> {

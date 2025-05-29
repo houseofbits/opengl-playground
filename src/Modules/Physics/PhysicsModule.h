@@ -20,14 +20,17 @@
 #include "Editors/PhysicsSwingTwistJointComponentEdit.h"
 #include "Editors/PhysicsShapeComponentEdit.h"
 #include "../Editor/Systems/EditorUISystem.h"
+#include "Components/PhysicsJointAttachmentComponent.h"
 #include "Editors/PhysicsHingeJointComponentTransformEdit.h"
 #include "Editors/PhysicsSliderJointComponentTransformEdit.h"
 #include "Editors/PhysicsDistanceJointComponentTransformEdit.h"
 #include "Editors/PhysicsFixedJointComponentTransformEdit.h"
 #include "Editors/PhysicsSwingTwistJointComponentTransformEdit.h"
+#include "Editors/PhysicsJointAttachmentComponentTransformEdit.h"
 #include "Events/PhysicsPickingEvent.h"
 #include "Events/PhysicsTriggerShapeEvent.h"
 #include "Components/PhysicsShapeComponent.h"
+#include "Editors/PhysicsJointAttachmentComponentEdit.h"
 #include "Editors/PhysicsShapeComponentTransformEdit.h"
 #include "Events/PhysicsSensorEvent.h"
 
@@ -44,6 +47,7 @@ public:
         ctx.registerComponent<PhysicsShapeComponent>();
         ctx.registerComponent<PhysicsDistanceJointComponent>();
         ctx.registerComponent<PhysicsSwingTwistJointComponent>();
+        ctx.registerComponent<PhysicsJointAttachmentComponent>();
     };
 
     void registerSystems(EntityContext &ctx) override {
@@ -76,6 +80,8 @@ public:
             "lockInPlace", &PhysicsHingeJointComponent::lockInPlace,
             "unLock", &PhysicsHingeJointComponent::unLock,
             "connect", &PhysicsHingeJointComponent::requestConnectState,
+            "connectToEntity", &PhysicsHingeJointComponent::connectToEntity,
+            "connectToEntityTarget", &PhysicsHingeJointComponent::connectToEntityTarget,
             "disconnect", &PhysicsHingeJointComponent::requestDisconnectState,
             "isConnected", &PhysicsHingeJointComponent::isStateConnected,
             "toggleState", [](PhysicsHingeJointComponent &self) {
@@ -91,20 +97,34 @@ public:
             "lockInPlace", &PhysicsSliderJointComponent::lockInPlace,
             "unLock", &PhysicsSliderJointComponent::unLock,
             "connect", &PhysicsSliderJointComponent::requestConnectState,
+            "connectToEntity", &PhysicsSliderJointComponent::connectToEntity,
+            "connectToEntityTarget", &PhysicsSliderJointComponent::connectToEntityTarget,
             "disconnect", &PhysicsSliderJointComponent::requestDisconnectState,
             "isConnected", &PhysicsSliderJointComponent::isStateConnected
         );
 
         scriptingManager.registerComponentType<PhysicsFixedJointComponent>(
             "connect", &PhysicsFixedJointComponent::requestConnectState,
+            "connectToEntity", &PhysicsFixedJointComponent::connectToEntity,
+            "connectToEntityTarget", &PhysicsFixedJointComponent::connectToEntityTarget,
             "disconnect", &PhysicsFixedJointComponent::requestDisconnectState,
             "isConnected", &PhysicsFixedJointComponent::isStateConnected
         );
 
         scriptingManager.registerComponentType<PhysicsDistanceJointComponent>(
             "connect", &PhysicsDistanceJointComponent::requestConnectState,
+            "connectToEntity", &PhysicsDistanceJointComponent::connectToEntity,
+            "connectToEntityTarget", &PhysicsDistanceJointComponent::connectToEntityTarget,
             "disconnect", &PhysicsDistanceJointComponent::requestDisconnectState,
             "isConnected", &PhysicsDistanceJointComponent::isStateConnected
+        );
+
+        scriptingManager.registerComponentType<PhysicsSwingTwistJointComponent>(
+            "connect", &PhysicsSwingTwistJointComponent::requestConnectState,
+            "connectToEntity", &PhysicsSwingTwistJointComponent::connectToEntity,
+            "connectToEntityTarget", &PhysicsSwingTwistJointComponent::connectToEntityTarget,
+            "disconnect", &PhysicsSwingTwistJointComponent::requestDisconnectState,
+            "isConnected", &PhysicsSwingTwistJointComponent::isStateConnected
         );
     }
 
@@ -122,8 +142,12 @@ public:
                 PhysicsFixedJointComponentTransformEdit>();
             editorSystem->registerTransformComponentEditor<PhysicsSwingTwistJointComponent,
                 PhysicsSwingTwistJointComponentTransformEdit>();
+            editorSystem->registerTransformComponentEditor<PhysicsJointAttachmentComponent,
+                PhysicsJointAttachmentComponentTransformEdit>();
 
             editorSystem->registerComponentEditor<PhysicsBodyComponent>(processPhysicsBodyComponentEditor);
+            editorSystem->registerComponentEditor<PhysicsJointAttachmentComponent>(
+                processPhysicsJointAttachmentComponentEditor);
             editorSystem->registerComponentEditor<PhysicsShapeComponent>(processPhysicsShapeComponentEditor);
             editorSystem->registerComponentEditor<PhysicsCharacterComponent>(
                 processPhysicsCharacterControllerComponentEditor);

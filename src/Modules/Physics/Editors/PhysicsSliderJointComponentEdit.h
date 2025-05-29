@@ -4,7 +4,7 @@
 #include "../../Editor/Helpers/TargetEntityHelper.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../Editor/UI/BaseComponentTransformEdit.h"
-#include "../Components/PhysicsDistanceJointComponent.h"
+#include "../Components/PhysicsSliderJointComponent.h"
 #include "../Components/PhysicsCharacterComponent.h"
 #include "../../Common/Editors/EntityLinkedComponentEdit.h"
 #include "../../Editor/Helpers/TransformHelper.h"

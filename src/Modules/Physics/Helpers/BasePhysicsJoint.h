@@ -2,13 +2,12 @@
 
 #include "../../../Core/API.h"
 #include "../Components/PhysicsCharacterComponent.h"
+#include "../Components/PhysicsJointAttachmentComponent.h"
 
 class BasePhysicsJoint : public Component {
 public:
-    inline static const std::string ENTITY_KEY_A = "targetEntityA";
-    inline static const std::string ENTITY_KEY_B = "targetEntityB";
-
     inline static const std::string TARGET_ENTITY_KEY = "targetEntity";
+    inline static const std::string TARGET_ENTITY_COMPONENT_KEY = "targetEntityComponent";
     inline static const std::string CONNECTED_KEY = "initiallyConnected";
 
     enum JointState {
@@ -23,7 +22,8 @@ public:
 
     ~BasePhysicsJoint() override = default;
 
-    virtual bool create(PhysicsComponent &bodyA, PhysicsComponent &bodyB) = 0;
+    virtual bool create(PhysicsComponent &bodyA, PhysicsComponent &bodyB,
+                        PhysicsJointAttachmentComponent *attachmentB) = 0;
 
     virtual void release() {
         setStateDisconnected();
@@ -64,6 +64,7 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override {
         m_targetEntityName = j.value(TARGET_ENTITY_KEY, "");
+        m_targetComponentName = j.value(TARGET_ENTITY_COMPONENT_KEY, "");
         m_isInitiallyConnected = j.value(CONNECTED_KEY, m_isInitiallyConnected);
 
         resourceManager.request(m_PhysicsResource, "physics");
@@ -77,6 +78,7 @@ public:
 
     void serialize(nlohmann::json &j) override {
         j[TARGET_ENTITY_KEY] = m_targetEntityName;
+        j[TARGET_ENTITY_COMPONENT_KEY] = m_targetComponentName;
         j[CONNECTED_KEY] = m_isInitiallyConnected;
     }
 
@@ -107,30 +109,70 @@ public:
 
         auto *bodyA = ctx.getEntityComponent<PhysicsComponent>(m_EntityId.id());;
 
-        const auto bodyB = ctx.findEntityComponent<PhysicsComponent>(m_targetEntityName);
+        const auto entityB = ctx.findEntity(m_targetEntityName);
+        if (!entityB) {
+            Log::warn("Joint target entity not found");
+
+            return;
+        }
+
+        const auto bodyB = entityB->getComponent<PhysicsComponent>();
 
         if (!bodyA) {
             Log::warn("Joint Self component not found");
+
+            return;
         }
 
         if (!bodyB) {
             Log::warn("Joint body not found ", m_targetEntityName);
+
+            return;
         }
 
-        if (bodyA && bodyB) {
-            if (!areAllowedToConnect(*bodyA, *bodyB)) {
-                Log::warn("Joint bodies are not allowed to connect");
+        if (!areAllowedToConnect(*bodyA, *bodyB)) {
+            Log::warn("Joint bodies are not allowed to connect");
 
-                return;
+            return;
+        }
+
+        auto attachment = entityB->getComponent<PhysicsJointAttachmentComponent>(m_targetComponentName);
+        if (create(*bodyA, *bodyB, attachment)) {
+            setStateConnected();
+
+            bodyA->wakeUp();
+            bodyB->wakeUp();
+        }
+    }
+
+    void removeJoint(JPH::Constraint *joint) {
+        if (joint != nullptr) {
+            bool exists = false;
+            auto constr = m_PhysicsResource().getSystem().GetConstraints();
+            for (auto &constraint: constr) {
+                if (constraint.GetPtr() == joint) {
+                    exists = true;
+                    break;
+                }
             }
-
-            if (create(*bodyA, *bodyB)) {
-                setStateConnected();
-
-                bodyA->wakeUp();
-                bodyB->wakeUp();
+            if (exists) {
+                m_PhysicsResource().getSystem().RemoveConstraint(joint);
             }
         }
+    }
+
+    void connectToEntity(const std::string &entityName) {
+        m_targetEntityName = entityName;
+        m_targetComponentName = "";
+
+        requestConnectState();
+    }
+
+    void connectToEntityTarget(const std::string &entityName, const std::string &componentName) {
+        m_targetEntityName = entityName;
+        m_targetComponentName = componentName;
+
+        requestConnectState();
     }
 
     void setStateConnected() {
@@ -158,11 +200,8 @@ public:
     }
 
     bool m_isInitiallyConnected;
-    // std::string m_targetEntityAName;
-    // std::string m_targetEntityBName;
-
     std::string m_targetEntityName;
-
+    std::string m_targetComponentName;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
 
 private:

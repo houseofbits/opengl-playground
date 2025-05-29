@@ -2,8 +2,10 @@
 
 #include "../../../Core/API.h"
 #include "../Components/GunBehaviourComponent.h"
-#include "../../Common/Components/TransformComponent.h"
 #include "../../Physics/Components/PhysicsSwingTwistJointComponent.h"
+#include "../../Physics/Events/PhysicsPickingEvent.h"
+#include "../../Physics/Events/PhysicsSensorEvent.h"
+#include "../../Application/Events/InputEvent.h"
 
 class GunBehaviourSystem : public EntitySystem {
 public:
@@ -14,6 +16,12 @@ public:
     void process(EventManager &) override;
 
     void registerEventHandlers(EventManager &) override;
+
+    void handlePhysicsPickingEvent(const PhysicsPickingEvent &);
+
+    void handlePhysicsSensorEvent(const PhysicsSensorEvent &);
+
+    void handleInputEvent(const InputEvent &);
 
 private:
     EntityRelatedComponentRegistry<PhysicsSwingTwistJointComponent, GunBehaviourComponent> *m_registry;

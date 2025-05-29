@@ -33,9 +33,17 @@ void PhysicsDistanceJointComponent::deserialize(const nlohmann::json &j, Resourc
     );
 }
 
-bool PhysicsDistanceJointComponent::create(PhysicsComponent &bodyA, PhysicsComponent &bodyB) {
+bool PhysicsDistanceJointComponent::create(PhysicsComponent &bodyA, PhysicsComponent &bodyB,
+                                        PhysicsJointAttachmentComponent *attachmentB) {
+    removeJoint(m_Joint.GetPtr());
+
+    auto m = m_localAttachmentMatrixB;
+    if (attachmentB) {
+        m = attachmentB->m_localAttachmentMatrix;
+    }
+
     m_Joint = PhysicsBuilder::newJoint(m_PhysicsResource().getSystem())
-            .setAttachments(m_localAttachmentMatrixA, m_localAttachmentMatrixB)
+            .setAttachments(m_localAttachmentMatrixA, m)
             .setBodies(bodyA.getId(), bodyB.getId())
             .setLimits(m_limits)
             .createDistanceConstraint();
@@ -44,21 +52,12 @@ bool PhysicsDistanceJointComponent::create(PhysicsComponent &bodyA, PhysicsCompo
 }
 
 void PhysicsDistanceJointComponent::release() {
-    if (m_Joint != nullptr) {
-        bool exists = false;
-        auto constr = m_PhysicsResource().getSystem().GetConstraints();
-        for (auto &constraint : constr) {
-            if (constraint.GetPtr() == m_Joint.GetPtr()) {
-                exists = true;
-                break;
-            }
-        }
-        if (exists) {
-            m_PhysicsResource().getSystem().RemoveConstraint(m_Joint);
-        }
-
-        m_Joint = nullptr;
+    if (m_Joint) {
+        m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody1()->GetID());
+        m_PhysicsResource().getInterface().ActivateBody(m_Joint->GetBody2()->GetID());
     }
+    removeJoint(m_Joint.GetPtr());
+    m_Joint = nullptr;
     BasePhysicsJoint::release();
 }
 

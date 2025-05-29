@@ -29,7 +29,7 @@ EnvironmentProbeRenderSystem::EnvironmentProbeRenderSystem() : EntitySystem(),
                                                                m_Camera(),
                                                                m_isRenderEnabled(true) {
     m_probeComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, EnvironmentProbeComponent>();
-    m_meshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, StaticMeshComponent>();
+    m_compositeMeshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, MeshComponent>();
 }
 
 void EnvironmentProbeRenderSystem::registerEventHandlers(EventManager &eventManager) {
@@ -45,6 +45,11 @@ void EnvironmentProbeRenderSystem::initialize(ResourceManager &resourceManager, 
                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer"});
 
     m_Camera.setFieldOfView(90.0);
+
+    resourceManager.requestWith(m_defaultMaterial, "defaultMaterial",
+                                [&](MaterialResource &resource) {
+                                    resource.fetchDefault(resourceManager);
+                                });
 }
 
 void EnvironmentProbeRenderSystem::process(EventManager &eventManager) {
@@ -100,13 +105,10 @@ void EnvironmentProbeRenderSystem::bindGeometry() {
 
 void EnvironmentProbeRenderSystem::renderGeometry() {
     m_Camera.bind(m_ShaderProgram());
-
-    for (const auto &[id, components]: m_meshComponentRegistry->container()) {
-        const auto &[transform, mesh] = components.get();
-
-        m_ShaderProgram().setUniform("modelMatrix", transform->getWorldTransform());
-        mesh->m_Material().bind(m_ShaderProgram());
-        mesh->m_Mesh().render();
+    for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
+        if (const auto &[transform, mesh] = components.get(); mesh->m_Mesh().isReady()) {
+            mesh->m_Mesh().render(transform->getWorldTransform(), m_ShaderProgram(), m_defaultMaterial.get());
+        }
     }
 }
 

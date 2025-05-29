@@ -3,7 +3,11 @@
 #include "../../Physics/Helpers/PhysicsTypeCast.h"
 
 void PhysicsDebugRenderer::DrawLine(JPH::RVec3Arg inFrom, JPH::RVec3Arg inTo, JPH::ColorArg inColor) {
-    Log::warn("PhysicsDebugRenderer::DrawLine not implemented");
+    // Log::warn("PhysicsDebugRenderer::DrawLine not implemented");
+
+    m_wireModel.setColor(PhysicsTypeCast::JPHToGlm(inColor.ToVec4()));
+    m_wireModel.addVertex(PhysicsTypeCast::JPHToGlm(inFrom));
+    m_wireModel.addVertex(PhysicsTypeCast::JPHToGlm(inTo));
 }
 
 JPH::DebugRenderer::Batch PhysicsDebugRenderer::CreateTriangleBatch(const Triangle *inTriangles, int inTriangleCount) {

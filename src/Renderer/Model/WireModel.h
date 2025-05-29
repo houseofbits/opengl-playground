@@ -24,6 +24,10 @@ protected:
     void createCircle(const glm::mat4 &transform, float radius, unsigned int segments);
 
 private:
+    void rebuild() const;
+
+    void deleteBuffers();
+
     unsigned int m_numberOfVertices{0};
     unsigned int m_vertexArrayObjectId{0};
     std::vector<unsigned int> m_bufferIds;

@@ -39,6 +39,16 @@ void WireModel::createCircle(const glm::mat4 &transform, float radius, unsigned 
 }
 
 void WireModel::build() {
+    if (m_vertexArrayObjectId > 0) {
+        if (m_numberOfVertices >= m_vertexArray.size()) {
+            rebuild();
+
+            return;
+        }
+
+        deleteBuffers();
+    }
+
     glGenVertexArrays(1, &m_vertexArrayObjectId);
     glBindVertexArray(m_vertexArrayObjectId);
 
@@ -70,8 +80,30 @@ void WireModel::build() {
     m_colorArray.clear();
 }
 
+void WireModel::rebuild() const {
+    glBindBuffer(GL_ARRAY_BUFFER, m_bufferIds[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(m_vertexArray.size() * sizeof(GLfloat) * 3),
+                    m_vertexArray.data());
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_bufferIds[1]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(m_colorArray.size() * sizeof(GLfloat) * 4),
+                    m_colorArray.data());
+}
+
 void WireModel::draw() const {
     glBindVertexArray(m_vertexArrayObjectId);
     glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(m_numberOfVertices));
     glBindVertexArray(0);
+}
+
+void WireModel::deleteBuffers() {
+    if (!m_bufferIds.empty()) {
+        glDeleteBuffers(static_cast<GLsizei>(m_bufferIds.size()), m_bufferIds.data());
+        m_bufferIds.clear();
+    }
+
+    if (m_vertexArrayObjectId != 0) {
+        glDeleteVertexArrays(1, &m_vertexArrayObjectId);
+        m_vertexArrayObjectId = 0;
+    }
 }

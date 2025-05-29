@@ -20,6 +20,8 @@
 #include "../Helpers/ContactListenerImpl.h"
 #include "../../Renderer/Helpers/PhysicsDebugRenderer.h"
 
+class WireframeRenderer;
+
 class PhysicsResource final : public Resource {
 public:
     typedef struct SensorContact {
@@ -42,6 +44,8 @@ public:
     void simulate();
 
     void drawDebug(ShaderProgramResource &shader);
+
+    void drawDebugWireframe(WireframeRenderer &wireframeRenderer);
 
     PhysicsBodyUserData *getBodyUserData(JPH::BodyID id) {
         return reinterpret_cast<PhysicsBodyUserData *>(getInterface().GetUserData(id));

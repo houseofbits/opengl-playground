@@ -15,33 +15,37 @@ void GunBehaviourSystem::process(EventManager &) {
     for (const auto &[id, components]: m_registry->container()) {
         const auto &[lookAtJoint, behaviour] = components.get();
         if (lookAtJoint->isStateConnected()) {
-            // auto entity = m_EntityContext->findEntity(lookAtJoint->m_targetEntityBName);
-            // if (!entity) {
-            //     continue;
-            // }
-
-            // if (!entity->hasComponent<MainCharacterBehaviourComponent>()) {
-            //     continue;
-            // }
-
-            auto player = m_EntityContext->findEntity("CharacterController");
+            const auto player = m_EntityContext->findEntity(lookAtJoint->m_targetEntityName);
             if (!player) {
                 continue;
             }
 
-            // auto playerBehaviour = player->getComponent<MainCharacterBehaviourComponent>();
-            // if (!playerBehaviour) {
+            if (!player->hasComponent<MainCharacterBehaviourComponent>()) {
+                continue;
+            }
+            //
+            // auto player = m_EntityContext->findEntity("CharacterController");
+            // if (!player) {
             //     continue;
             // }
 
-            if (auto testTargetEntity = m_EntityContext->findEntity("TestTarget1")) {
-                const auto t = testTargetEntity->getComponent<TransformComponent>();
-
-                lookAtJoint->m_useLookAtBehaviour = true;
-                lookAtJoint->m_lookAtBehaviour.m_targetPosition = t->getWorldPosition();
-                // lookAtJoint->m_lookAtBehaviour.m_targetPosition  = playerBehaviour->m_viewPoint + playerBehaviour->m_lookingDirection * 3.0f;
-                lookAtJoint->activate();
+            auto playerBehaviour = player->getComponent<MainCharacterBehaviourComponent>();
+            if (!playerBehaviour) {
+                continue;
             }
+
+            lookAtJoint->m_useLookAtBehaviour = true;
+            lookAtJoint->m_lookAtBehaviour.m_targetPosition  = playerBehaviour->m_viewPoint + playerBehaviour->m_lookingDirection * 3.0f;
+            lookAtJoint->activate();
+
+            // if (auto testTargetEntity = m_EntityContext->findEntity("TestTarget1")) {
+            //     const auto t = testTargetEntity->getComponent<TransformComponent>();
+            //
+            //     lookAtJoint->m_useLookAtBehaviour = true;
+            //     // lookAtJoint->m_lookAtBehaviour.m_targetPosition = t->getWorldPosition();
+            //     lookAtJoint->m_lookAtBehaviour.m_targetPosition  = playerBehaviour->m_viewPoint + playerBehaviour->m_lookingDirection * 3.0f;
+            //     lookAtJoint->activate();
+            // }
         }
 
         // if (behaviour->m_isActive && transform->isLinkedToEntityId()) {
@@ -75,5 +79,19 @@ void GunBehaviourSystem::process(EventManager &) {
 }
 
 void GunBehaviourSystem::registerEventHandlers(EventManager &eventManager) {
-    //    eventManager.registerEventReceiver(this, &GunBehaviourSystem::handleCharacterPickingEvent);
+    eventManager.registerEventReceiver(this, &GunBehaviourSystem::handlePhysicsPickingEvent);
+    eventManager.registerEventReceiver(this, &GunBehaviourSystem::handlePhysicsSensorEvent);
+    eventManager.registerEventReceiver(this, &GunBehaviourSystem::handleInputEvent);
+}
+
+void GunBehaviourSystem::handlePhysicsPickingEvent(const PhysicsPickingEvent &event) {
+
+}
+
+void GunBehaviourSystem::handlePhysicsSensorEvent(const PhysicsSensorEvent &event) {
+
+}
+
+void GunBehaviourSystem::handleInputEvent(const InputEvent &event) {
+
 }

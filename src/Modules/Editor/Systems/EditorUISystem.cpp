@@ -67,9 +67,9 @@ void EditorUISystem::initialize(ResourceManager &manager, EventManager &) {
 
     //    ImGui::StyleColorsLight();
 
-    //    ImGuiStyle& style = ImGui::GetStyle();
-    //    style.WindowPadding.x = 0;
-    //    style.WindowPadding.y = 0;
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.WindowPadding.x = 0;
+    style.WindowPadding.y = 0;
 
     m_wireframeRenderer.initialize();
 }

@@ -5,6 +5,7 @@
 #include "../../Physics/Resources/PhysicsResource.h"
 #include "../Resources/ShaderProgramResource.h"
 #include "../../../Renderer/Camera/Camera.h"
+#include "../../../Renderer/Shader/WireframeRenderer.h"
 #include "../../Common/Events/CameraActivationEvent.h"
 #include "../../Common/Helpers/ActiveCameraHelper.h"
 
@@ -32,4 +33,5 @@ private:
     ResourceHandle<PhysicsResource> m_PhysicsResource;
     ResourceHandle<ShaderProgramResource> m_ShaderProgram;
     ActiveCameraHelper m_activeCameraHelper;
+    WireframeRenderer m_wireframeRenderer;
 };
