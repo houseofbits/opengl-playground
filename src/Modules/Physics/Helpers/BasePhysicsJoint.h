@@ -195,6 +195,10 @@ public:
         return m_state == STATE_CONNECTED;
     }
 
+    [[nodiscard]] bool isStateDisconnected() const {
+        return m_state == STATE_DISCONNECTED;
+    }
+
     [[nodiscard]] JointState getState() const {
         return m_state;
     }

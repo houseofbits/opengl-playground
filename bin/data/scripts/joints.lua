@@ -1,19 +1,19 @@
 print("Run test scrtipt")
 
 function InputEventHandler(event)
-    print(event.keyCode)
+    --print(event.keyCode)
 
     -- A
-    if event.keyCode == 4 then
-        c = Manager:getComponent("Dynamic1Detached", "Joint")
-        c:connectToEntity("Static1")
-    end
-    -- Z
-    if event.keyCode == 29 then
-        c = Manager:getComponent("Dynamic1Detached", "Joint")
-        print(c)
-        c:disconnect()
-    end
+    --if event.keyCode == 4 then
+    --    c = Manager:getComponent("Dynamic1Detached", "Joint")
+    --    c:connectToEntity("Static1")
+    --end
+    ---- Z
+    --if event.keyCode == 29 then
+    --    c = Manager:getComponent("Dynamic1Detached", "Joint")
+    --    print(c)
+    --    c:disconnect()
+    --end
 
     
     --print(c);

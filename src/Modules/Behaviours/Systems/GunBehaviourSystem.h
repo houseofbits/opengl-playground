@@ -24,5 +24,7 @@ public:
     void handleInputEvent(const InputEvent &);
 
 private:
-    EntityRelatedComponentRegistry<PhysicsSwingTwistJointComponent, GunBehaviourComponent> *m_registry;
+    EntityUniqueComponentRegistry<GunBehaviourComponent> *m_registry;
+
+    Entity* findActiveGunEntity() const;
 };

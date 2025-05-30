@@ -5,76 +5,29 @@
 #include "../../Behaviours/Components/MainCharacterBehaviourComponent.h"
 
 GunBehaviourSystem::GunBehaviourSystem() : EntitySystem() {
-    m_registry = useEntityRelatedComponentsRegistry<PhysicsSwingTwistJointComponent, GunBehaviourComponent>();
+    m_registry = useEntityUniqueComponentRegistry<GunBehaviourComponent>();
 }
 
 void GunBehaviourSystem::initialize(ResourceManager &, EventManager &) {
 }
 
 void GunBehaviourSystem::process(EventManager &) {
-    for (const auto &[id, components]: m_registry->container()) {
-        const auto &[lookAtJoint, behaviour] = components.get();
-        if (lookAtJoint->isStateConnected()) {
-            const auto player = m_EntityContext->findEntity(lookAtJoint->m_targetEntityName);
-            if (!player) {
-                continue;
-            }
-
-            if (!player->hasComponent<MainCharacterBehaviourComponent>()) {
-                continue;
-            }
-            //
-            // auto player = m_EntityContext->findEntity("CharacterController");
-            // if (!player) {
-            //     continue;
-            // }
-
-            auto playerBehaviour = player->getComponent<MainCharacterBehaviourComponent>();
-            if (!playerBehaviour) {
-                continue;
-            }
-
-            lookAtJoint->m_useLookAtBehaviour = true;
-            lookAtJoint->m_lookAtBehaviour.m_targetPosition  = playerBehaviour->m_viewPoint + playerBehaviour->m_lookingDirection * 3.0f;
-            lookAtJoint->activate();
-
-            // if (auto testTargetEntity = m_EntityContext->findEntity("TestTarget1")) {
-            //     const auto t = testTargetEntity->getComponent<TransformComponent>();
-            //
-            //     lookAtJoint->m_useLookAtBehaviour = true;
-            //     // lookAtJoint->m_lookAtBehaviour.m_targetPosition = t->getWorldPosition();
-            //     lookAtJoint->m_lookAtBehaviour.m_targetPosition  = playerBehaviour->m_viewPoint + playerBehaviour->m_lookingDirection * 3.0f;
-            //     lookAtJoint->activate();
-            // }
+    const auto entity = findActiveGunEntity();
+    if (entity == nullptr) {
+        return;
+    }
+    auto joint = entity->getComponent<PhysicsSwingTwistJointComponent>();
+    if (joint->isStateConnected()) {
+        const auto player = m_EntityContext->findEntity(joint->m_targetEntityName);
+        const auto playerBehaviour = player->getComponent<MainCharacterBehaviourComponent>();
+        if (!playerBehaviour) {
+            return;
         }
 
-        // if (behaviour->m_isActive && transform->isLinkedToEntityId()) {
-        //     auto parentEntity = m_EntityContext->getEntity(transform->getLinkedEntityId());
-        //     if (parentEntity && parentEntity->hasComponent<PhysicsCharacterComponent>()) {
-        //         auto characterComponent = parentEntity->getComponent<PhysicsCharacterComponent>();
-        //         auto cameraComponent = parentEntity->getComponent<CameraComponent>();
-        //         auto transformComponent = parentEntity->getComponent<TransformComponent>();
-        //         auto characterBehaviour = parentEntity->getComponent<MainCharacterBehaviourComponent>();
-        //
-        //         if (characterBehaviour == nullptr || transformComponent == nullptr || !characterBehaviour->m_isActive) {
-        //             return;
-        //         }
-        //
-        //         // auto eyePosition = characterBehaviour->m_cameraAttachmentPosition; //Get world position
-        //         //
-        //         // glm::vec3 target = eyePosition + characterBehaviour->m_lookingDirection * 2.0f;
-        //         //
-        //         // auto localTarget = inverse(transformComponent->getWorldTransform()) * glm::vec4(target, 1.0);
-        //         //
-        //         // auto lookAtM = lookAt(
-        //         //     transform->getLocalPosition(),
-        //         //     glm::vec3(localTarget),
-        //         //     glm::vec3(0, 1, 0)
-        //         //     );
-        //         //
-        //         // transform->setLocalRotation(lookAtM);
-        //     }
-        // }
+        joint->m_useLookAtBehaviour = true;
+        joint->m_lookAtBehaviour.m_targetPosition =
+                playerBehaviour->m_viewPoint + playerBehaviour->m_lookingDirection * 3.0f;
+        joint->activate();
     }
 }
 
@@ -85,13 +38,54 @@ void GunBehaviourSystem::registerEventHandlers(EventManager &eventManager) {
 }
 
 void GunBehaviourSystem::handlePhysicsPickingEvent(const PhysicsPickingEvent &event) {
-
+    if (m_registry->contains(event.m_entityId) && event.m_distance < 2.0) {
+        const auto behaviour = m_registry->get(event.m_entityId);
+        const auto entity = m_EntityContext->getEntity(behaviour->m_EntityId.id());
+        auto joint = entity->getComponent<PhysicsSwingTwistJointComponent>();
+        if (joint && joint->isStateDisconnected()) {
+            joint->connectToEntityTarget("CharacterController", "GunAttachment");
+        }
+    }
 }
 
 void GunBehaviourSystem::handlePhysicsSensorEvent(const PhysicsSensorEvent &event) {
-
 }
 
 void GunBehaviourSystem::handleInputEvent(const InputEvent &event) {
+    if (event.type == InputEvent::KEYPRESS) {
+        //E - detach
+        if (event.keyCode == 8) {
+            const auto entity = findActiveGunEntity();
+            if (entity == nullptr) {
+                return;
+            }
 
+            auto joint = entity->getComponent<PhysicsSwingTwistJointComponent>();
+            if (joint->isStateConnected()) {
+                joint->requestDisconnectState();
+            }
+        }
+    }
+}
+
+Entity *GunBehaviourSystem::findActiveGunEntity() const {
+    for (const auto &[id, behaviour]: m_registry->container()) {
+        const auto entity = m_EntityContext->getEntity(behaviour->m_EntityId.id());
+
+        auto joint = entity->getComponent<PhysicsSwingTwistJointComponent>();
+        if (joint->isStateConnected()) {
+            const auto player = m_EntityContext->findEntity(joint->m_targetEntityName);
+            if (!player) {
+                continue;
+            }
+
+            if (!player->hasComponent<MainCharacterBehaviourComponent>()) {
+                continue;
+            }
+
+            return entity;
+        }
+    }
+
+    return nullptr;
 }
