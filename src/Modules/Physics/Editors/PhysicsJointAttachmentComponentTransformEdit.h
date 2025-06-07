@@ -6,6 +6,8 @@
 #include "../../Common/Editors/EntityLinkedComponentEdit.h"
 #include "../../../Core/Helper/Math.h"
 
+class PhysicsCharacterComponent;
+
 class PhysicsJointAttachmentComponentTransformEdit final : public ComponentEdit<PhysicsJointAttachmentComponent> {
 public:
     explicit PhysicsJointAttachmentComponentTransformEdit(EditorUISystem &editorSystem) : ComponentEdit(editorSystem) {
@@ -25,4 +27,5 @@ public:
 
 private:
     TransformComponent *m_parentTransform{nullptr};
+    PhysicsCharacterComponent *m_parentCharacter{nullptr};
 };

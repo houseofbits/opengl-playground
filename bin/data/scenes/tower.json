@@ -7,16 +7,16 @@
             "moveSpeed": 0.5600000023841858,
             "orthoScale": 23.479984283447266,
             "position": [
-                -37.160804748535156,
-                27.19055938720703,
-                10.51943302154541
+                -20.879980087280273,
+                6.080214500427246,
+                10.95025634765625
             ],
             "reposition": true,
             "type": 1,
             "upDirection": [
                 0.6129709482192993,
                 0.7900663018226624,
-                -0.007874828763306141
+                -0.00787483248859644
             ],
             "viewDirection": [
                 0.7900010943412781,
@@ -95,21 +95,21 @@
             "moveSpeed": 10.0,
             "orthoScale": 48.49983215332031,
             "position": [
-                -14.234505653381348,
-                2.0512025356292725,
-                9.207833290100098
+                -14.975438117980957,
+                2.1024465560913086,
+                11.501824378967285
             ],
             "reposition": false,
             "type": 0,
             "upDirection": [
-                0.15776121616363525,
-                0.9842691421508789,
-                0.07953415811061859
+                0.48362600803375244,
+                0.8751894235610962,
+                0.012218892574310303
             ],
             "viewDirection": [
-                0.8788958191871643,
-                -0.17667563259601593,
-                0.44308891892433167
+                0.874910295009613,
+                -0.4837803542613983,
+                0.022104764357209206
             ]
         },
         "name": "PerspectiveEditorCamera"
@@ -288,9 +288,9 @@
             ],
             "cameraName": "",
             "lookDirection": [
-                0.8362006545066833,
-                -0.2318699210882187,
-                -0.4969959259033203
+                -0.1559809148311615,
+                -0.8260146379470825,
+                -0.5416361093521118
             ],
             "mlookSpeed": 0.003000000026077032,
             "moveSpeed": 10.0
@@ -305,15 +305,15 @@
         },
         "PhysicsJointAttachmentComponent#GunAttachment": {
             "attachmentPosition": [
-                0.0,
-                0.8550946712493896,
-                0.38109397888183594
+                -0.2617959976196289,
+                -0.025617361068725586,
+                0.21116924285888672
             ],
             "attachmentRotation": [
-                0.0,
-                0.7159998416900635,
-                0.0,
-                -0.6981005072593689
+                -6.181228684454254e-08,
+                0.7159999012947083,
+                -6.181228684454254e-08,
+                -0.6981004476547241
             ]
         },
         "TransformComponent": {
@@ -330,8 +330,8 @@
                 1.0
             ],
             "translation": [
-                -11.319541931152344,
-                -0.14362847805023193,
+                -12.294679641723633,
+                2.1756279468536377,
                 8.923778533935547
             ]
         },
@@ -402,8 +402,8 @@
             ],
             "scale": [
                 1.0,
-                0.9999935030937195,
-                0.9999935030937195
+                0.9999923706054688,
+                0.9999923706054688
             ],
             "translation": [
                 -10.17956829071045,
@@ -441,8 +441,8 @@
             ],
             "scale": [
                 1.0,
-                0.9999934434890747,
-                0.9999934434890747
+                0.999992311000824,
+                0.999992311000824
             ],
             "translation": [
                 -1.57035231590271,
@@ -480,8 +480,8 @@
             ],
             "scale": [
                 1.0,
-                0.9999933838844299,
-                0.9999933838844299
+                0.9999922513961792,
+                0.9999922513961792
             ],
             "translation": [
                 6.383544445037842,
@@ -581,7 +581,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 10.0,
+            "mass": 0.10000000149011612,
             "restitution": 0.5,
             "type": 1
         },
@@ -642,7 +642,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 10.0,
+            "mass": 0.10000000149011612,
             "restitution": 0.5,
             "type": 1
         },
@@ -703,7 +703,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 10.0,
+            "mass": 0.10000000149011612,
             "restitution": 0.5,
             "type": 1
         },
@@ -764,9 +764,9 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 1.0,
+            "mass": 0.10000000149011612,
             "restitution": 0.5,
-            "type": 0
+            "type": 1
         },
         "PhysicsJointAttachmentComponent#Attach1": {
             "attachmentPosition": [
@@ -784,9 +784,9 @@
         "PhysicsShapeComponent": {
             "mesh": "data/models/unit-cube.gltf",
             "meshScale": [
-                2.0443482398986816,
-                0.06387531012296677,
-                1.1433290243148804
+                1.8346970081329346,
+                0.23372489213943481,
+                1.1837844848632813
             ],
             "position": [
                 0.0,
@@ -810,14 +810,14 @@
                 1.0
             ],
             "scale": [
-                2.0443482398986816,
-                0.06387531012296677,
-                1.1433290243148804
+                1.8346970081329346,
+                0.23372489213943481,
+                1.1837844848632813
             ],
             "translation": [
-                -13.842974662780762,
-                0.1577780544757843,
-                10.955946922302246
+                -12.55898380279541,
+                -0.05000000074505806,
+                8.572257041931152
             ]
         },
         "name": "Static1"
@@ -957,9 +957,28 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 1.0,
+            "mass": 0.10000000149011612,
             "restitution": 0.5,
             "type": 1
+        },
+        "PhysicsDistanceJointComponent#magnetGun": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.524205207824707
+            ],
+            "attachmentBPosition": [
+                -0.2072296142578125,
+                0.4999985694885254,
+                0.17944379150867462
+            ],
+            "initiallyConnected": false,
+            "limits": [
+                1.0,
+                3.0
+            ],
+            "targetEntity": "GunMock2",
+            "targetEntityComponent": ""
         },
         "PhysicsShapeComponent": {
             "mesh": "data/models/unit-cube.gltf",
@@ -981,7 +1000,7 @@
             ],
             "type": 3
         },
-        "PhysicsSwingTwistJointComponent": {
+        "PhysicsSwingTwistJointComponent#characterAttachment": {
             "attachmentAPosition": [
                 0.0,
                 0.0,
@@ -989,9 +1008,9 @@
             ],
             "attachmentARotation": [
                 0.500000536441803,
-                0.499999463558197,
-                0.5000004172325134,
-                -0.499999463558197
+                0.4999995231628418,
+                0.5000004768371582,
+                -0.4999995231628418
             ],
             "attachmentBPosition": [
                 -0.2071371078491211,
@@ -1046,5 +1065,447 @@
             "scriptFile": "data/scripts/joints.lua"
         },
         "name": "MainScript"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.009999999776482582,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.26379871368408203
+            ],
+            "attachmentBPosition": [
+                0.0,
+                0.0,
+                -0.28160572052001953
+            ],
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                0.009999999776482582
+            ],
+            "targetEntity": "ChainLink2",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "translation": [
+                -12.979969024658203,
+                -0.05000000074505806,
+                10.84876537322998
+            ]
+        },
+        "name": "ChainLink1"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.009999999776482582,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.27272701263427734
+            ],
+            "attachmentBPosition": [
+                0.0,
+                0.0,
+                -0.2646608352661133
+            ],
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                0.009999999776482582
+            ],
+            "targetEntity": "ChainLink3",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "translation": [
+                -12.979969024658203,
+                -0.05000000074505806,
+                11.394169807434082
+            ]
+        },
+        "name": "ChainLink2"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.009999999776482582,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.2850666046142578
+            ],
+            "attachmentBPosition": [
+                0.0,
+                0.0,
+                -0.25092029571533203
+            ],
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                0.009999999776482582
+            ],
+            "targetEntity": "ChainLink4",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "translation": [
+                -12.979969024658203,
+                -0.05000000074505806,
+                11.931557655334473
+            ]
+        },
+        "name": "ChainLink3"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.009999999776482582,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "attachmentBPosition": [
+                -0.3889628052711487,
+                -0.06424975395202637,
+                0.29779911041259766
+            ],
+            "initiallyConnected": false,
+            "limits": [
+                0.0,
+                0.009999999776482582
+            ],
+            "targetEntity": "Sphere2",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "translation": [
+                -12.979969024658203,
+                -0.05000000074505806,
+                12.467544555664063
+            ]
+        },
+        "name": "ChainLink4"
+    },
+    {
+        "GunBehaviourComponent": {
+            "active": true
+        },
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.10000000149011612,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent#chainLinkGun": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.21432209014892578
+            ],
+            "attachmentBPosition": [
+                -0.000164031982421875,
+                0.0024030692875385284,
+                -0.2797870635986328
+            ],
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                0.10000000149011612
+            ],
+            "targetEntity": "ChainLink1",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.18919706344604492,
+                0.1456083059310913,
+                0.3670596778392792
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "PhysicsSwingTwistJointComponent#characterAttachment": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                -0.22026824951171875
+            ],
+            "attachmentARotation": [
+                0.500000536441803,
+                0.499999463558197,
+                0.5000004172325134,
+                -0.499999463558197
+            ],
+            "attachmentBPosition": [
+                0.0,
+                0.0,
+                -0.22026824951171875
+            ],
+            "attachmentBRotation": [
+                0.500000536441803,
+                0.499999463558197,
+                0.5000004172325134,
+                -0.499999463558197
+            ],
+            "coneHalfAngles": [
+                1.5707963705062866,
+                1.5707963705062866
+            ],
+            "enableSwingMotorSettings": true,
+            "initiallyConnected": false,
+            "lookAtBehaviour": true,
+            "swingMotorDamping": 50.0,
+            "swingMotorFrequency": 100.0,
+            "targetEntity": "CharacterController",
+            "targetEntityComponent": "GunAttachment",
+            "twistLimits": [
+                0.0,
+                0.0
+            ]
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.18919706344604492,
+                0.1456083059310913,
+                0.3670596778392792
+            ],
+            "translation": [
+                -12.980133056640625,
+                -0.04759693145751953,
+                10.354656219482422
+            ]
+        },
+        "name": "ChainLinkGun"
     }
 ]

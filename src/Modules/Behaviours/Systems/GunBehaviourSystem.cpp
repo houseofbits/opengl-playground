@@ -3,6 +3,7 @@
 #include "../../Common/Components/CameraComponent.h"
 #include "../../Physics/Components/PhysicsCharacterComponent.h"
 #include "../../Behaviours/Components/MainCharacterBehaviourComponent.h"
+#include "../../Physics/Components/PhysicsDistanceJointComponent.h"
 
 GunBehaviourSystem::GunBehaviourSystem() : EntitySystem() {
     m_registry = useEntityUniqueComponentRegistry<GunBehaviourComponent>();
@@ -38,12 +39,44 @@ void GunBehaviourSystem::registerEventHandlers(EventManager &eventManager) {
 }
 
 void GunBehaviourSystem::handlePhysicsPickingEvent(const PhysicsPickingEvent &event) {
-    if (m_registry->contains(event.m_entityId) && event.m_distance < 2.0) {
+    if (m_registry->contains(event.m_entityId) && event.m_distance < 10.0) {
         const auto behaviour = m_registry->get(event.m_entityId);
         const auto entity = m_EntityContext->getEntity(behaviour->m_EntityId.id());
         auto joint = entity->getComponent<PhysicsSwingTwistJointComponent>();
-        if (joint && joint->isStateDisconnected()) {
-            joint->connectToEntityTarget("CharacterController", "GunAttachment");
+        if (joint) {
+            if (joint->isStateDisconnected()) {
+                joint->connectToEntityTarget("CharacterController", "GunAttachment");
+            }
+        }
+    }
+
+    if (auto target = m_EntityContext->getEntity(event.m_entityId)) {
+        const auto gun = findActiveGunEntity();
+        if (gun) {
+            if (auto magnetGun = gun->getComponent<PhysicsDistanceJointComponent>("magnetGun")) {
+                if (magnetGun->isStateDisconnected()) {
+                    if (const auto transform = target->getComponent<TransformComponent>()) {
+                        const auto localPoint = transform->getInverseModelMatrix() * glm::vec4(event.m_touchPoint, 1.0);
+                        magnetGun->m_localAttachmentMatrixB = glm::translate(glm::mat4(1.0), glm::vec3(localPoint));
+                    }
+                    magnetGun->connectToEntity(target->m_Name);
+                } else {
+                    magnetGun->requestDisconnectState();
+                }
+            }
+            if (auto chainLinkGun = gun->getComponent<PhysicsDistanceJointComponent>("chainLinkGun")) {
+                if (auto chainLinkEnd = m_EntityContext->findEntityComponent<PhysicsDistanceJointComponent>("ChainLink4")) {
+                    if (chainLinkEnd->isStateDisconnected()) {
+                        if (const auto transform = target->getComponent<TransformComponent>()) {
+                            const auto localPoint = transform->getInverseModelMatrix() * glm::vec4(event.m_touchPoint, 1.0);
+                            chainLinkEnd->m_localAttachmentMatrixB = glm::translate(glm::mat4(1.0), glm::vec3(localPoint));
+                        }
+                        chainLinkEnd->connectToEntity(target->m_Name);
+                    } else {
+                        chainLinkEnd->requestDisconnectState();
+                    }
+                }
+            }
         }
     }
 }

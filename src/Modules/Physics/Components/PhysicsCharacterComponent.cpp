@@ -9,6 +9,8 @@
 #include "Jolt/Physics/Collision/CastResult.h"
 #include <Jolt/Physics/Collision/PhysicsMaterialSimple.h>
 
+#include "../../../Core/Helper/Math.h"
+
 PhysicsCharacterComponent::PhysicsCharacterComponent() : PhysicsComponent(),
                                                          m_height(1.75),
                                                          m_radius(0.25),
@@ -111,7 +113,6 @@ void PhysicsCharacterComponent::update(TransformComponent &transform, bool isSim
         auto transformMatrix = glm::mat4(1.0);
         transformMatrix = glm::translate(transformMatrix, capsulePosition - glm::vec3(0, m_stepTolerance, 0));
 
-
         auto rot = t.GetRotation().GetQuaternion();
         glm::quat glmQuat(rot.GetW(), rot.GetX(), rot.GetY(), rot.GetZ());
 
@@ -122,6 +123,8 @@ void PhysicsCharacterComponent::update(TransformComponent &transform, bool isSim
         updateGroundSpring(capsulePosition);
 
         updateMove();
+
+        // Log::write(Math::getTranslation(transformMatrix), " / ", capsulePosition);
     }
 }
 
