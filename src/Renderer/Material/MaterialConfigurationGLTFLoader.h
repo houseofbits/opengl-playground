@@ -9,8 +9,9 @@ public:
     MaterialConfigurationGLTFLoader();
 
     static MaterialConfiguration createFromGLTFMaterial(const tinygltf::Model &model,
-                                                        const tinygltf::Material &material);
+                                                        const tinygltf::Material &material,
+                                                        const std::string &basePath = "");
 
 private:
-    static std::string getTextureUri(const tinygltf::Model &model, int textureIndex);
+    static std::string getTextureUri(const tinygltf::Model &model, int textureIndex, const std::string &basePath = "");
 };

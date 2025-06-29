@@ -15,7 +15,8 @@ public:
     void destroy() override;
 
     void fetchFromGLTF(ResourceManager &resourceManager, const tinygltf::Model &model,
-                       const tinygltf::Material &material);
+                       const tinygltf::Material &material,
+                       const std::string& basePath = "");
 
     void fetchDefault(ResourceManager &resourceManager);
 

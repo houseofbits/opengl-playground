@@ -36,6 +36,8 @@ void MaterialResource::bind(ShaderProgramResource &shader) {
         shader.setUniform("emissiveSampler", m_Emissive().m_handleId);
     }
 
+    shader.setUniform("roughnessFactor", m_materialConfiguration.roughnessFactor);
+    shader.setUniform("metallicFactor", m_materialConfiguration.metallicFactor);
     shader.setUniform("diffuseColor", m_materialConfiguration.diffuseColor);
     shader.setUniform("emissiveColor", m_materialConfiguration.emissiveColor);
     shader.setUniform("selfIllumination", m_materialConfiguration.selfIllumination);
@@ -48,8 +50,9 @@ void MaterialResource::bind(ShaderProgramResource &shader) {
 }
 
 void MaterialResource::fetchFromGLTF(ResourceManager &resourceManager, const tinygltf::Model &model,
-                                     const tinygltf::Material &material) {
-    m_materialConfiguration = MaterialConfigurationGLTFLoader::createFromGLTFMaterial(model, material);
+                                     const tinygltf::Material &material,
+                                     const std::string &basePath) {
+    m_materialConfiguration = MaterialConfigurationGLTFLoader::createFromGLTFMaterial(model, material, basePath);
 
     requestTextureResource(resourceManager, m_Diffuse, m_materialConfiguration.diffuseTextureUri);
     requestTextureResource(resourceManager, m_Normal, m_materialConfiguration.normalTextureUri);
@@ -60,13 +63,16 @@ void MaterialResource::fetchFromGLTF(ResourceManager &resourceManager, const tin
 }
 
 void MaterialResource::requestTextureResource(ResourceManager &resourceManager,
-                                              ResourceHandle<TextureResource> &resource, const std::string &fileUri) {
+                                              ResourceHandle<TextureResource> &resource,
+                                              const std::string &fileUri) {
+    auto uri = fileUri;
+
     if (fileUri.empty()) {
         return;
     }
 
-    addDependency(fileUri);
-    resourceManager.request(resource, fileUri);
+    addDependency(uri);
+    resourceManager.request(resource, uri);
 }
 
 void MaterialResource::fetchDefault(ResourceManager &resourceManager) {

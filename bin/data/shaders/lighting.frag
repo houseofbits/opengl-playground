@@ -49,6 +49,10 @@ layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotL
 
 uniform uint SpotLightStorageBuffer_size;
 uniform vec3 viewPosition;
+
+//MaterialResource::bind
+uniform float roughnessFactor;
+uniform float metallicFactor;
 uniform vec3 diffuseColor;
 uniform vec3 emissiveColor;
 uniform int hasDiffuseSampler;
@@ -211,8 +215,8 @@ void main()
         emissive = texture(emissiveSampler, texCoords).xyz;
     }
 
-    float roughness = 1.0;
-    float metallic = 0.1;
+    float roughness = roughnessFactor;
+    float metallic = metallicFactor;
     if (hasRoughnessSampler == 1) {
         vec2 metallicRoughness = texture(roughnessSampler, texCoords).gb;
         roughness = metallicRoughness.x;

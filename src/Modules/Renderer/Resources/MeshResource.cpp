@@ -6,6 +6,7 @@
 #include "../../../Renderer/Model/ModelGLTFLoader.h"
 #include "../../../Renderer/Model/GLTFFileLoader.h"
 #include "../../../Renderer/Model/RenderModelBuilder.h"
+#include <filesystem>
 
 #define BUFFER_OFFSET(i) ((char *) NULL + (i))
 
@@ -66,12 +67,16 @@ void MeshResource::render(const glm::mat4& worldTransform, ShaderProgramResource
 }
 
 void MeshResource::preloadMaterials(tinygltf::Model &model, ResourceManager &resourceManager) {
+
+    std::filesystem::path pathObj(m_Path);
+    std::filesystem::path dirPath = pathObj.parent_path();
+
     m_materials.reserve(model.materials.size());
     for (const auto &material: model.materials) {
         auto &materialResource = m_materials.emplace_back();
         resourceManager.requestWith(materialResource, material.name,
                                     [&](MaterialResource &resource) {
-                                        resource.fetchFromGLTF(resourceManager, model, material);
+                                        resource.fetchFromGLTF(resourceManager, model, material, dirPath.string());
                                     });
     }
 }

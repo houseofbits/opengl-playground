@@ -4,6 +4,7 @@
 #include "../../Physics/Components/PhysicsCharacterComponent.h"
 #include "../../Behaviours/Components/MainCharacterBehaviourComponent.h"
 #include "../../Physics/Components/PhysicsDistanceJointComponent.h"
+#include "../../Physics/Components/PhysicsFixedJointComponent.h"
 
 GunBehaviourSystem::GunBehaviourSystem() : EntitySystem() {
     m_registry = useEntityUniqueComponentRegistry<GunBehaviourComponent>();
@@ -39,11 +40,13 @@ void GunBehaviourSystem::registerEventHandlers(EventManager &eventManager) {
 }
 
 void GunBehaviourSystem::handlePhysicsPickingEvent(const PhysicsPickingEvent &event) {
-    if (m_registry->contains(event.m_entityId) && event.m_distance < 10.0) {
+    if (m_registry->contains(event.m_entityId) && event.m_distance < 5.0) {
         const auto behaviour = m_registry->get(event.m_entityId);
         const auto entity = m_EntityContext->getEntity(behaviour->m_EntityId.id());
         auto joint = entity->getComponent<PhysicsSwingTwistJointComponent>();
-        if (joint) {
+
+        const auto activeGun = findActiveGunEntity();
+        if (activeGun == nullptr && joint) {
             if (joint->isStateDisconnected()) {
                 joint->connectToEntityTarget("CharacterController", "GunAttachment");
             }
@@ -75,6 +78,17 @@ void GunBehaviourSystem::handlePhysicsPickingEvent(const PhysicsPickingEvent &ev
                     } else {
                         chainLinkEnd->requestDisconnectState();
                     }
+                }
+            }
+            if (auto fixedGun = gun->getComponent<PhysicsFixedJointComponent>("fixedGun")) {
+                if (fixedGun->isStateDisconnected()) {
+                    // if (const auto transform = target->getComponent<TransformComponent>()) {
+                    //     const auto localPoint = transform->getInverseModelMatrix() * glm::vec4(event.m_touchPoint, 1.0);
+                    //     fixedtGun->m_localAttachmentMatrixB = glm::translate(glm::mat4(1.0), glm::vec3(localPoint));
+                    // }
+                    fixedGun->connectToEntity(target->m_Name);
+                } else {
+                    fixedGun->requestDisconnectState();
                 }
             }
         }

@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     // return 0;
 
     // std::string filename(argv[1]);
-    std::string filename("tower.json"); //filename(argv[2]); //"data/scenes/physics.json"
+    std::string filename("test.json"); //filename(argv[2]); //"data/scenes/physics.json"
 
     // if (argc > 1 && std::string(argv[1]) == "-e") {
     EditorApplication app;

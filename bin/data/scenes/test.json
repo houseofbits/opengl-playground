@@ -1,0 +1,209 @@
+[
+    {
+        "EditorCameraComponent": {
+            "firstPersonCtrl": true,
+            "isActive": true,
+            "mouseLookSpeed": 0.15000000596046448,
+            "moveSpeed": 3.0,
+            "orthoScale": 1.0,
+            "position": [
+                5.230987548828125,
+                4.334721565246582,
+                -10.394116401672363
+            ],
+            "reposition": false,
+            "type": 0,
+            "upDirection": [
+                -0.4373971223831177,
+                0.7315830588340759,
+                0.5229435563087463
+            ],
+            "viewDirection": [
+                -0.46936747431755066,
+                -0.6817523837089539,
+                0.5611666440963745
+            ]
+        },
+        "name": "EditorCamera"
+    },
+    {
+        "SkyComponent": {
+            "cubeMap": "resources/textures/sky2/*.png"
+        },
+        "name": "Sky"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/blockhouse/parts.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.8576937317848206,
+                0.0,
+                -0.915906548500061
+            ]
+        },
+        "name": "RenderMesh"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 13.800016403198242,
+            "blurRadius": 7.889999866485596,
+            "castShadows": true,
+            "color": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "intensity": 3.899998426437378,
+            "isEnabled": true,
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                5.386377334594727,
+                1.8418856859207153,
+                -3.1801297664642334
+            ]
+        },
+        "name": "OmniLight"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 19.800039291381836,
+            "blurRadius": 7.889999866485596,
+            "castShadows": true,
+            "color": [
+                0.6519607901573181,
+                0.754325270652771,
+                1.0
+            ],
+            "intensity": 4.399998188018799,
+            "isEnabled": true,
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                3.4192724227905273,
+                4.869967460632324,
+                11.15062141418457
+            ]
+        },
+        "name": "OmniLight-COPY"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 19.800039291381836,
+            "blurRadius": 7.889999866485596,
+            "castShadows": true,
+            "color": [
+                1.0,
+                0.9897635579109192,
+                0.6519607901573181
+            ],
+            "intensity": 7.799994945526123,
+            "isEnabled": true,
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -5.8312835693359375,
+                4.869981288909912,
+                10.298677444458008
+            ]
+        },
+        "name": "OmniLight-COPY-COPY1"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 10.800004959106445,
+            "blurRadius": 7.889999866485596,
+            "castShadows": true,
+            "color": [
+                0.6519607901573181,
+                0.754325270652771,
+                1.0
+            ],
+            "intensity": 9.299999237060547,
+            "isEnabled": true,
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                2.3708555698394775,
+                2.5569353103637695,
+                -8.161704063415527
+            ]
+        },
+        "name": "OmniLight-COPY-COPY"
+    }
+]

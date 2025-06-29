@@ -70,4 +70,20 @@ namespace StringUtils {
         return tokens;
     }
 
+    inline std::string trimSlashes(const std::string& path) {
+        size_t start = 0;
+        size_t end = path.length();
+
+        // Trim leading slashes
+        while (start < end && (path[start] == '/' || path[start] == '\\')) {
+            ++start;
+        }
+
+        while (end > start && (path[end - 1] == '/' || path[end - 1] == '\\')) {
+            --end;
+        }
+
+        return path.substr(start, end - start);
+    }
+
 } // namespace StringUtils

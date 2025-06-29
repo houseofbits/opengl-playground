@@ -3,26 +3,30 @@
 #include "../../Core/Json/Json.h"
 #include "MaterialConfiguration.h"
 #include "../../Core/Helper/File.h"
+#include "../../Core/Helper/StringUtils.h"
 
 MaterialConfigurationGLTFLoader::MaterialConfigurationGLTFLoader() = default;
 
 MaterialConfiguration MaterialConfigurationGLTFLoader::createFromGLTFMaterial(
-    const tinygltf::Model &model, const tinygltf::Material &material) {
-
+    const tinygltf::Model &model, const tinygltf::Material &material, const std::string &basePath) {
     MaterialConfiguration config;
 
     if (material.emissiveTexture.index >= 0) {
-        config.emissiveTextureUri = getTextureUri(model, material.emissiveTexture.index);
+        config.emissiveTextureUri = getTextureUri(model, material.emissiveTexture.index, basePath);
     }
     if (material.normalTexture.index >= 0) {
-        config.normalTextureUri = getTextureUri(model, material.normalTexture.index);
+        config.normalTextureUri = getTextureUri(model, material.normalTexture.index, basePath);
     }
     if (material.pbrMetallicRoughness.baseColorTexture.index >= 0) {
-        config.diffuseTextureUri = getTextureUri(model, material.pbrMetallicRoughness.baseColorTexture.index);
+        config.diffuseTextureUri = getTextureUri(model, material.pbrMetallicRoughness.baseColorTexture.index, basePath);
     }
     if (material.pbrMetallicRoughness.metallicRoughnessTexture.index >= 0) {
-        config.roughnessMetallicTextureUri = getTextureUri(model, material.pbrMetallicRoughness.metallicRoughnessTexture.index);
+        config.roughnessMetallicTextureUri = getTextureUri(
+            model, material.pbrMetallicRoughness.metallicRoughnessTexture.index, basePath);
     }
+
+    config.roughnessFactor = material.pbrMetallicRoughness.roughnessFactor;
+    config.metallicFactor = material.pbrMetallicRoughness.metallicFactor;
 
     config.emissiveColor = {
         material.emissiveFactor[0],
@@ -39,15 +43,26 @@ MaterialConfiguration MaterialConfigurationGLTFLoader::createFromGLTFMaterial(
     return config;
 }
 
-std::string MaterialConfigurationGLTFLoader::getTextureUri(const tinygltf::Model &model, int textureIndex) {
+std::string MaterialConfigurationGLTFLoader::getTextureUri(const tinygltf::Model &model, int textureIndex,
+                                                           const std::string &basePath) {
     if (const auto source = model.textures[textureIndex].source; source >= 0) {
         if (model.images.size() <= source) {
             return "";
         }
-        if (!File::exists(model.images[source].uri)) {
-            return "";
+
+        std::string textureUri = model.images[source].uri;
+
+        if (!basePath.empty()) {
+            textureUri = StringUtils::trimSlashes(basePath) + std::filesystem::path::preferred_separator +
+                         StringUtils::trimSlashes(textureUri);
         }
-        return model.images[source].uri;
+
+        // Add error log if checking here for file existence.
+        // if (!File::exists(textureUri)) {
+        //     return "";
+        // }
+
+        return textureUri;
     }
 
     return "";

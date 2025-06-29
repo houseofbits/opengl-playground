@@ -114,5 +114,5 @@ vec3 calculateReflectionColorFromEnvironmentProbes(vec3 fragmentWorldPos, vec3 v
         return selectedColor[0];
     }
 
-    return texture(environmentSampler, viewReflection).rgb;
+    return textureLod(environmentSampler, viewReflection, roughnessToLod(roughness)).rgb;
 }

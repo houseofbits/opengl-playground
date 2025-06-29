@@ -14,6 +14,8 @@ public:
 
     glm::vec3 diffuseColor{1, 1, 1};
     glm::vec3 emissiveColor{0, 0, 0};
+    float roughnessFactor{1.0};
+    float metallicFactor{0.0};
     std::string diffuseTextureUri;
     std::string normalTextureUri;
     std::string roughnessMetallicTextureUri;

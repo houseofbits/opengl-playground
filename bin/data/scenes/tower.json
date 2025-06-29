@@ -5,23 +5,23 @@
             "isActive": false,
             "mouseLookSpeed": 0.11999999731779099,
             "moveSpeed": 0.5600000023841858,
-            "orthoScale": 23.479984283447266,
+            "orthoScale": 6.119985580444336,
             "position": [
-                -20.879980087280273,
-                6.080214500427246,
-                10.95025634765625
+                -22.32108497619629,
+                18.457860946655273,
+                5.949568748474121
             ],
             "reposition": true,
             "type": 1,
             "upDirection": [
-                0.6129709482192993,
-                0.7900663018226624,
-                -0.00787483248859644
+                0.757749080657959,
+                0.5129914283752441,
+                0.4033064544200897
             ],
             "viewDirection": [
-                0.7900010943412781,
-                -0.6130214929580688,
-                -0.01014914270490408
+                0.45284444093704224,
+                -0.8583937883377075,
+                0.24102316796779633
             ]
         },
         "name": "EditorCamera"
@@ -95,21 +95,21 @@
             "moveSpeed": 10.0,
             "orthoScale": 48.49983215332031,
             "position": [
-                -14.975438117980957,
-                2.1024465560913086,
-                11.501824378967285
+                -11.09616756439209,
+                9.824578285217285,
+                -9.493019104003906
             ],
             "reposition": false,
             "type": 0,
             "upDirection": [
-                0.48362600803375244,
-                0.8751894235610962,
-                0.012218892574310303
+                0.5100046992301941,
+                0.8570420742034912,
+                0.07330770790576935
             ],
             "viewDirection": [
-                0.874910295009613,
-                -0.4837803542613983,
-                0.022104764357209206
+                0.8483233451843262,
+                -0.5152463912963867,
+                0.12193737924098969
             ]
         },
         "name": "PerspectiveEditorCamera"
@@ -288,9 +288,9 @@
             ],
             "cameraName": "",
             "lookDirection": [
-                -0.1559809148311615,
-                -0.8260146379470825,
-                -0.5416361093521118
+                -0.3486534655094147,
+                -0.43496569991111755,
+                0.8302081823348999
             ],
             "mlookSpeed": 0.003000000026077032,
             "moveSpeed": 10.0
@@ -330,9 +330,9 @@
                 1.0
             ],
             "translation": [
-                -12.294679641723633,
-                2.1756279468536377,
-                8.923778533935547
+                -2.8280117511749268,
+                2.1756386756896973,
+                -15.119322776794434
             ]
         },
         "name": "CharacterController"
@@ -402,8 +402,8 @@
             ],
             "scale": [
                 1.0,
-                0.9999923706054688,
-                0.9999923706054688
+                0.999991774559021,
+                0.999991774559021
             ],
             "translation": [
                 -10.17956829071045,
@@ -441,8 +441,8 @@
             ],
             "scale": [
                 1.0,
-                0.999992311000824,
-                0.999992311000824
+                0.9999917149543762,
+                0.9999917149543762
             ],
             "translation": [
                 -1.57035231590271,
@@ -480,8 +480,8 @@
             ],
             "scale": [
                 1.0,
-                0.9999922513961792,
-                0.9999922513961792
+                0.9999916553497314,
+                0.9999916553497314
             ],
             "translation": [
                 6.383544445037842,
@@ -573,7 +573,7 @@
         "PhysicsBodyComponent": {
             "damping": [
                 0.699999988079071,
-                0.699999988079071
+                0.9900000095367432
             ],
             "friction": [
                 0.5,
@@ -581,7 +581,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 0.10000000149011612,
+            "mass": 50.0,
             "restitution": 0.5,
             "type": 1
         },
@@ -634,7 +634,7 @@
         "PhysicsBodyComponent": {
             "damping": [
                 0.699999988079071,
-                0.699999988079071
+                0.9900000095367432
             ],
             "friction": [
                 0.5,
@@ -642,7 +642,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 0.10000000149011612,
+            "mass": 50.0,
             "restitution": 0.5,
             "type": 1
         },
@@ -695,7 +695,7 @@
         "PhysicsBodyComponent": {
             "damping": [
                 0.699999988079071,
-                0.699999988079071
+                0.9900000095367432
             ],
             "friction": [
                 0.5,
@@ -703,7 +703,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 0.10000000149011612,
+            "mass": 50.0,
             "restitution": 0.5,
             "type": 1
         },
@@ -755,8 +755,8 @@
         },
         "PhysicsBodyComponent": {
             "damping": [
-                0.699999988079071,
-                0.699999988079071
+                10.0,
+                10.0
             ],
             "friction": [
                 0.5,
@@ -764,8 +764,8 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 0.10000000149011612,
-            "restitution": 0.5,
+            "mass": 100.0,
+            "restitution": 0.8999999761581421,
             "type": 1
         },
         "PhysicsJointAttachmentComponent#Attach1": {
@@ -820,7 +820,7 @@
                 8.572257041931152
             ]
         },
-        "name": "Static1"
+        "name": "HeawyObject1"
     },
     {
         "EnvironmentProbeComponent": {
@@ -961,23 +961,19 @@
             "restitution": 0.5,
             "type": 1
         },
-        "PhysicsDistanceJointComponent#magnetGun": {
+        "PhysicsFixedJointComponent#fixedGun": {
             "attachmentAPosition": [
                 0.0,
                 0.0,
-                0.524205207824707
+                0.7488431930541992
             ],
             "attachmentBPosition": [
-                -0.2072296142578125,
-                0.4999985694885254,
-                0.17944379150867462
+                -0.46222496032714844,
+                0.4999399185180664,
+                -0.14978408813476563
             ],
             "initiallyConnected": false,
-            "limits": [
-                1.0,
-                3.0
-            ],
-            "targetEntity": "GunMock2",
+            "targetEntity": "HeawyObject1",
             "targetEntityComponent": ""
         },
         "PhysicsShapeComponent": {
@@ -1030,8 +1026,8 @@
             "enableSwingMotorSettings": true,
             "initiallyConnected": false,
             "lookAtBehaviour": true,
-            "swingMotorDamping": 50.0,
-            "swingMotorFrequency": 100.0,
+            "swingMotorDamping": 100.0,
+            "swingMotorFrequency": 50.0,
             "targetEntity": "CharacterController",
             "targetEntityComponent": "GunAttachment",
             "twistLimits": [
@@ -1058,7 +1054,7 @@
                 10.731459617614746
             ]
         },
-        "name": "GunMock1"
+        "name": "FixedGun"
     },
     {
         "ScriptingComponent": {
@@ -1073,8 +1069,8 @@
         },
         "PhysicsBodyComponent": {
             "damping": [
-                0.699999988079071,
-                0.699999988079071
+                0.8999999761581421,
+                0.8999999761581421
             ],
             "friction": [
                 0.5,
@@ -1082,7 +1078,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 0.009999999776482582,
+            "mass": 1.0,
             "restitution": 0.5,
             "type": 1
         },
@@ -1153,8 +1149,8 @@
         },
         "PhysicsBodyComponent": {
             "damping": [
-                0.699999988079071,
-                0.699999988079071
+                0.8999999761581421,
+                0.8999999761581421
             ],
             "friction": [
                 0.5,
@@ -1162,7 +1158,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 0.009999999776482582,
+            "mass": 1.0,
             "restitution": 0.5,
             "type": 1
         },
@@ -1233,8 +1229,8 @@
         },
         "PhysicsBodyComponent": {
             "damping": [
-                0.699999988079071,
-                0.699999988079071
+                0.8999999761581421,
+                0.8999999761581421
             ],
             "friction": [
                 0.5,
@@ -1242,7 +1238,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 0.009999999776482582,
+            "mass": 1.0,
             "restitution": 0.5,
             "type": 1
         },
@@ -1313,8 +1309,8 @@
         },
         "PhysicsBodyComponent": {
             "damping": [
-                0.699999988079071,
-                0.699999988079071
+                0.8999999761581421,
+                0.8999999761581421
             ],
             "friction": [
                 0.5,
@@ -1322,7 +1318,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 0.009999999776482582,
+            "mass": 1.0,
             "restitution": 0.5,
             "type": 1
         },
@@ -1330,19 +1326,19 @@
             "attachmentAPosition": [
                 0.0,
                 0.0,
-                0.0
+                0.2417011260986328
             ],
             "attachmentBPosition": [
-                -0.3889628052711487,
-                -0.06424975395202637,
-                0.29779911041259766
+                0.42416906356811523,
+                0.5000022649765015,
+                -0.36637210845947266
             ],
             "initiallyConnected": false,
             "limits": [
                 0.0,
                 0.009999999776482582
             ],
-            "targetEntity": "Sphere2",
+            "targetEntity": "HeawyObject1",
             "targetEntityComponent": ""
         },
         "PhysicsShapeComponent": {
@@ -1428,6 +1424,25 @@
             "targetEntity": "ChainLink1",
             "targetEntityComponent": ""
         },
+        "PhysicsDistanceJointComponent#magnetGun": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "attachmentBPosition": [
+                0.42416906356811523,
+                0.5000022649765015,
+                -0.36637210845947266
+            ],
+            "initiallyConnected": false,
+            "limits": [
+                0.0,
+                2.0
+            ],
+            "targetEntity": "HeawyObject1",
+            "targetEntityComponent": ""
+        },
         "PhysicsShapeComponent": {
             "mesh": "data/models/unit-cube.gltf",
             "meshScale": [
@@ -1452,7 +1467,7 @@
             "attachmentAPosition": [
                 0.0,
                 0.0,
-                -0.22026824951171875
+                -0.07173442840576172
             ],
             "attachmentARotation": [
                 0.500000536441803,
@@ -1461,9 +1476,9 @@
                 -0.499999463558197
             ],
             "attachmentBPosition": [
-                0.0,
-                0.0,
-                -0.22026824951171875
+                -0.6854534149169922,
+                -2.2232248783111572,
+                1.3591432571411133
             ],
             "attachmentBRotation": [
                 0.500000536441803,
@@ -1507,5 +1522,288 @@
             ]
         },
         "name": "ChainLinkGun"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.8999999761581421,
+                0.8999999761581421
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.0010000000474974513,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsJointAttachmentComponent#Attach1": {
+            "attachmentPosition": [
+                0.0,
+                -0.4750819206237793,
+                0.0
+            ],
+            "attachmentRotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.6424866914749146,
+                0.21818184852600098,
+                0.5280402302742004
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.6424866914749146,
+                0.21818184852600098,
+                0.5280402302742004
+            ],
+            "translation": [
+                -10.614887237548828,
+                -0.050050992518663406,
+                12.564271926879883
+            ]
+        },
+        "name": "LightObject1"
+    },
+    {
+        "GunBehaviourComponent": {
+            "active": true
+        },
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.10000000149011612,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent#magnetGun": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.7086029052734375
+            ],
+            "attachmentBPosition": [
+                0.31151580810546875,
+                0.4995596408843994,
+                0.14821910858154297
+            ],
+            "initiallyConnected": false,
+            "limits": [
+                0.0,
+                0.009999999776482582
+            ],
+            "targetEntity": "FixedGun",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.2076299786567688,
+                0.18589003384113312,
+                0.4408055543899536
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "PhysicsSwingTwistJointComponent#characterAttachment": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                -0.24875831604003906
+            ],
+            "attachmentARotation": [
+                0.500000536441803,
+                0.499999463558197,
+                0.5000004172325134,
+                -0.499999463558197
+            ],
+            "attachmentBPosition": [
+                -0.2071371078491211,
+                0.06192612648010254,
+                0.3306884765625
+            ],
+            "attachmentBRotation": [
+                0.4999997615814209,
+                0.5000002384185791,
+                0.5000002384185791,
+                -0.4999997615814209
+            ],
+            "coneHalfAngles": [
+                1.5707963705062866,
+                1.5707963705062866
+            ],
+            "enableSwingMotorSettings": true,
+            "initiallyConnected": false,
+            "lookAtBehaviour": true,
+            "swingMotorDamping": 100.0,
+            "swingMotorFrequency": 50.0,
+            "targetEntity": "CharacterController",
+            "targetEntityComponent": "GunAttachment",
+            "twistLimits": [
+                0.0,
+                0.0
+            ]
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.2076299786567688,
+                0.18589003384113312,
+                1.0
+            ],
+            "translation": [
+                -10.486995697021484,
+                2.316741943359375,
+                10.731459617614746
+            ]
+        },
+        "name": "MagnetGun"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/blockhouse/parts.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -12.202153205871582,
+                0.0,
+                -13.381335258483887
+            ]
+        },
+        "name": "Floor1_S0"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/blockhouse/collision-mesh.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/blockhouse/collision-mesh.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -1.3479206562042236,
+                0.0,
+                -13.827154159545898
+            ]
+        },
+        "name": "Floor1_S0-COLLISION"
     }
 ]
