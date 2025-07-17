@@ -28,7 +28,7 @@ public:
 private:
     static void setTime();
 
-    void loadEntitiesFromFile(const std::string &fileName);
+    void loadEntitiesFromFile(const std::string &fileName) const;
 
     void saveEntitiesToFile() const;
 

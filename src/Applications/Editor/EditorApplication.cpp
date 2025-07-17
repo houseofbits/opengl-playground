@@ -13,13 +13,11 @@ EditorApplication::EditorApplication() : Application() {
 }
 
 void EditorApplication::initialize(const std::string &fileName, const std::string &entityDefinitionFileName) {
-    std::ifstream file(entityDefinitionFileName);
-    if (file.fail()) {
-        Log::error("Application::Application: Failed to read " + entityDefinitionFileName);
+    auto json = Json::readFile(entityDefinitionFileName);
+    if (!json) {
         return;
     }
-    auto json = nlohmann::json::parse(file);
-    m_EntityContext.deserializeEntityMap(json);
+    m_EntityContext.deserializeEntityMap(json.value());
 
     m_EntityContext.scriptingManager.init();
 

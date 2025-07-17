@@ -10,17 +10,27 @@ class MaterialResource : public Resource {
 public:
     MaterialResource();
 
-    Status build() override;
+    inline static const std::string MATERIAL_PATH = "data/materials/";
 
     void destroy() override;
 
     void fetchFromGLTF(ResourceManager &resourceManager, const tinygltf::Model &model,
                        const tinygltf::Material &material,
-                       const std::string& basePath = "");
+                       const std::string &basePath = "");
 
     void fetchDefault(ResourceManager &resourceManager);
 
+    Status fetchData(ResourceManager &) override;
+
+    Status build() override;
+
     void bind(ShaderProgramResource &shader);
+
+    static std::string getFullPath(const std::string &name) {
+        return MATERIAL_PATH + name + ".json";
+    }
+
+    std::string getFullPath() const;
 
     MaterialConfiguration m_materialConfiguration;
     ResourceHandle<TextureResource> m_Diffuse;

@@ -1,16 +1,14 @@
 #include "MaterialResource.h"
 #include <fstream>
 #include "../../../Renderer/Material/MaterialConfigurationGLTFLoader.h"
+#include "../../../Renderer/Material/MaterialConfigurationSerializer.h"
 
 MaterialResource::MaterialResource() : Resource(),
                                        m_materialConfiguration(),
                                        m_Diffuse(),
                                        m_Normal(),
-                                       m_Roughness() {
-}
-
-Resource::Status MaterialResource::build() {
-    return STATUS_READY;
+                                       m_Roughness(),
+                                       m_Emissive() {
 }
 
 void MaterialResource::destroy() {
@@ -83,4 +81,28 @@ void MaterialResource::fetchDefault(ResourceManager &resourceManager) {
     resourceManager.request(m_Diffuse, m_materialConfiguration.diffuseTextureUri);
 
     setDataReady();
+}
+
+Resource::Status MaterialResource::fetchData(ResourceManager &resourceManager) {
+    auto json = Json::readFile(getFullPath());
+    if (!json) {
+        return STATUS_FETCH_ERROR;
+    }
+
+    m_materialConfiguration = MaterialConfigurationSerializer::deserialize(json.value());
+
+    requestTextureResource(resourceManager, m_Diffuse, m_materialConfiguration.diffuseTextureUri);
+    requestTextureResource(resourceManager, m_Normal, m_materialConfiguration.normalTextureUri);
+    requestTextureResource(resourceManager, m_Roughness, m_materialConfiguration.roughnessMetallicTextureUri);
+    requestTextureResource(resourceManager, m_Emissive, m_materialConfiguration.emissiveTextureUri);
+
+    return STATUS_DATA_READY;
+}
+
+Resource::Status MaterialResource::build() {
+    return STATUS_READY;
+}
+
+std::string MaterialResource::getFullPath() const {
+    return getFullPath(m_Path);
 }

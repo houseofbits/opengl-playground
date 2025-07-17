@@ -25,10 +25,10 @@ public:
     void render(ShaderProgramResource &);
 
     std::vector<ResourceHandle<MaterialResource> > m_materials;
+    ModelConfigurationLoader::ModelConfiguration m_modelConfig;
 
 private:
     void preloadMaterials(tinygltf::Model &model, ResourceManager &resourceManager);
 
     Model m_model;
-    ModelConfigurationLoader::ModelConfiguration m_modelConfig;
 };

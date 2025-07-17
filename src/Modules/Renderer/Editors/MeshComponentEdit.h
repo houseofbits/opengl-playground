@@ -18,21 +18,17 @@ inline void processMeshComponentEditor(Component *c, Entity *e, EditorUISystem &
         component->m_Mesh.invalidate();
         system.m_ResourceManager->request(component->m_Mesh, m_meshPath);
     }
-    //
-    // if (FileInput("ChooseMaterialFile", "Choose JSON Material file", ".json", "Material", m_materialPath,
-    //               component->m_Material().m_Path)) {
-    //     component->m_Material.invalidate();
-    //     system.m_ResourceManager->request(component->m_Material, m_materialPath);
-    // }
-    //
-    // if (component->m_Material.isValid()) {
-    //     if (ImGui::Button("Edit material")) {
-    //         system.openMaterialEditor(component->m_Material);
-    //     }
-    // }
-    //
-    // if (TextPromptHelper::textPrompt("New material", "New material", "Filename")) {
-    //     system.m_ResourceManager->request(component->m_Material,
-    //                                                "data/materials/" + TextPromptHelper::m_InputValue);
-    // }
+
+    if (ImGui::TreeNode("Nodes")) {
+        for (const auto &node: component->m_Mesh().m_modelConfig.nodes) {
+            std::string material_name = "";
+            if (node.materialIndex >= 0) {
+                material_name = " - " + component->m_Mesh().m_materials[node.materialIndex].get().m_Path;
+            }
+            std::string line = node.name + material_name;
+
+            ImGui::Text("%s", line.c_str());
+        }
+        ImGui::TreePop();
+    }
 }

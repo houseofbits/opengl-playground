@@ -37,8 +37,6 @@ public:
 
     TransformComponent *getSelectedTransformComponent();
 
-    void openMaterialEditor(ResourceHandle<MaterialResource> &handle);
-
     template<class ComponentT, class EditorT>
     void registerTransformComponentEditor() {
         m_componentEditors[ComponentT::TypeName()] = new EditorT(*this);

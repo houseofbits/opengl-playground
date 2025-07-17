@@ -33,7 +33,9 @@ void EditorUISystem::process(EventManager &eventManager) {
         m_EditWindowUI.process();
     }
 
-    // m_MaterialEditWindowUI.process();
+    if (m_MainToolbarUI.m_showMaterialEditor) {
+        m_MaterialEditWindowUI.process();
+    }
 
     TexturePreviewHelper::process();
 
@@ -67,7 +69,7 @@ void EditorUISystem::initialize(ResourceManager &manager, EventManager &) {
 
     //    ImGui::StyleColorsLight();
 
-    ImGuiStyle& style = ImGui::GetStyle();
+    ImGuiStyle &style = ImGui::GetStyle();
     style.WindowPadding.x = 0;
     style.WindowPadding.y = 0;
 
@@ -125,11 +127,6 @@ TransformComponent *EditorUISystem::getSelectedTransformComponent() {
     return nullptr;
 }
 
-void EditorUISystem::openMaterialEditor(ResourceHandle<MaterialResource> &handle) {
-    if (handle.isValid()) {
-        m_MaterialEditWindowUI.open(handle);
-    }
-}
 
 void EditorUISystem::processDockSpaceWindow() {
     ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;

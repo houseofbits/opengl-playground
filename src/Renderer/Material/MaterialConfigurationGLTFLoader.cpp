@@ -1,6 +1,6 @@
 #include "MaterialConfigurationGLTFLoader.h"
 #include <fstream>
-#include "../../Core/Json/Json.h"
+#include "../../Core/Json/JsonTypes.h"
 #include "MaterialConfiguration.h"
 #include "../../Core/Helper/File.h"
 #include "../../Core/Helper/StringUtils.h"

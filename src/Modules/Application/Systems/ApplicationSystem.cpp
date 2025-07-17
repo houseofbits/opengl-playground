@@ -91,24 +91,16 @@ void ApplicationSystem::setTime() {
     Time::timestamp = currentTime;
 }
 
-void ApplicationSystem::loadEntitiesFromFile(const std::string &fileName) {
-    m_EntitySourceFileName = fileName;
-    std::ifstream file(fileName);
-    if (file.fail()) {
-        Log::error("Application::loadEntitiesFromFile: Failed to read " + fileName);
+void ApplicationSystem::loadEntitiesFromFile(const std::string &fileName) const {
+    auto json = Json::readFile(fileName);
+    if (!json) {
         return;
     }
-    auto json = nlohmann::json::parse(file);
-    m_EntityContext->deserializeEntities(json, *m_ResourceManager);
+    m_EntityContext->deserializeEntities(json.value(), *m_ResourceManager);
 }
 
 void ApplicationSystem::saveEntitiesToFile() const {
     nlohmann::json j;
     m_EntityContext->serializeEntities(j);
-
-    std::ofstream file;
-    file.open(m_EntitySourceFileName);
-
-    std::string data(j.dump(4));
-    file << data;
+    Json::writeFile(m_EntitySourceFileName, j);
 }

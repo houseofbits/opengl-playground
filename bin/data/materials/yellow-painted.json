@@ -1,0 +1,21 @@
+{
+    "diffuseColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "diffuseTexture": "data/models/walker/material_diffuseOriginal-4.png",
+    "doesCastShadows": true,
+    "doesReceiveShadows": true,
+    "emiSsiveColor": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emissiveTexture": null,
+    "metallicFactor": 1.0,
+    "normalTexture": "data/models/walker/material_normal-4.png",
+    "roughnessFactor": 1.0,
+    "roughnessMetallicTexture": "data/models/walker/material_metallic_png-material_smoothness_png-2.png",
+    "selfIlluminationFactor": 0.0
+}

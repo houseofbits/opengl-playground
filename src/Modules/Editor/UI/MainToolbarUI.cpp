@@ -40,6 +40,16 @@ void MainToolbarUI::process() {
             if (ImGui::MenuItem("Update probes")) {
                 sendUIEvent(EditorUIEvent::TRIGGER_PROBE_RENDER);
             }
+
+            if (ImGui::MenuItem("Edit materials", nullptr, m_showMaterialEditor)) {
+                m_showMaterialEditor = !m_showMaterialEditor;
+                if (m_showMaterialEditor) {
+                    sendUIEvent(EditorUIEvent::SHOW_MATERIAL_EDITOR);
+                } else {
+                    sendUIEvent(EditorUIEvent::HIDE_MATERIAL_EDITOR);
+                }
+            }
+
             ImGui::EndMenu();
         }
 

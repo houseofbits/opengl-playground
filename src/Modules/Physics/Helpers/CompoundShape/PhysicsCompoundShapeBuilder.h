@@ -4,7 +4,7 @@
 #include <vector>
 #include <glm/fwd.hpp>
 #include <glm/detail/type_quat.hpp>
-#include "../../../../Core/Json/Json.h"
+#include "../../../../Core/Json/JsonTypes.h"
 
 class PhysicsBaseShape {
 public:

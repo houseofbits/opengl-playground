@@ -74,9 +74,10 @@ void MeshResource::preloadMaterials(tinygltf::Model &model, ResourceManager &res
     m_materials.reserve(model.materials.size());
     for (const auto &material: model.materials) {
         auto &materialResource = m_materials.emplace_back();
-        resourceManager.requestWith(materialResource, material.name,
-                                    [&](MaterialResource &resource) {
-                                        resource.fetchFromGLTF(resourceManager, model, material, dirPath.string());
-                                    });
+        // resourceManager.requestWith(materialResource, material.name,
+        //                             [&](MaterialResource &resource) {
+        //                                 resource.fetchFromGLTF(resourceManager, model, material, dirPath.string());
+        //                             });
+        resourceManager.request(materialResource, material.name);
     }
 }

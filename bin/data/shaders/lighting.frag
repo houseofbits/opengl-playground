@@ -316,8 +316,8 @@ void main()
 
     //Add fog
     vec3 fog = textureLod(environmentSampler, view, 5).rgb;
-    float zd = min(1.0, length(viewDepth) / 20.0);
-    vec3 lightFogColor = lightedColor + (fog * (zd * zd));
+    float zd = min(1.0, length(viewDepth) / 100.0);
+    vec3 lightFogColor = lightedColor;// + (fog * fog * (zd * zd));
 
     fragColor = vec4(lightFogColor, 1.0);
 }

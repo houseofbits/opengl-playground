@@ -19,6 +19,8 @@ public:
         TOGGLE_RENDER_PHYSICS,
         SHOW_PHYSICS_SHAPES,
         HIDE_PHYSICS_SHAPES,
+        SHOW_MATERIAL_EDITOR,
+        HIDE_MATERIAL_EDITOR,
     } Type;
 
     EditorUIEvent() : BaseEvent() {

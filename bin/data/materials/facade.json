@@ -1,0 +1,21 @@
+{
+    "diffuseColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "diffuseTexture": "data/models/blockhouse/textures/Texturelabs_Concrete_189M.jpg",
+    "doesCastShadows": true,
+    "doesReceiveShadows": true,
+    "emiSsiveColor": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emissiveTexture": null,
+    "metallicFactor": 1.0,
+    "normalTexture": "data/models/blockhouse/textures/material_normal-4.jpg",
+    "roughnessFactor": 1.0,
+    "roughnessMetallicTexture": "data/models/blockhouse/textures/material_metallic-material_smoothness-1.jpg",
+    "selfIlluminationFactor": 0.0
+}

@@ -12,6 +12,7 @@ public:
 
     int m_renderShaderType;
     bool m_showPhysicsShapesWireframe{true};
+    bool m_showMaterialEditor{false};
 
     void selectCameraByIndex(unsigned int index) const;
 
