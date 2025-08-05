@@ -8,7 +8,8 @@ MaterialResource::MaterialResource() : Resource(),
                                        m_Diffuse(),
                                        m_Normal(),
                                        m_Roughness(),
-                                       m_Emissive() {
+                                       m_Emissive(),
+                                       m_materialBufferIndex(0) {
 }
 
 void MaterialResource::destroy() {
@@ -18,33 +19,35 @@ void MaterialResource::destroy() {
 }
 
 void MaterialResource::bind(ShaderProgramResource &shader) {
-    if (m_Diffuse().isReady()) {
-        shader.setUniform("diffuseSampler", m_Diffuse().m_handleId);
-    }
+    // if (m_Diffuse().isReady()) {
+    //     shader.setUniform("diffuseSampler", m_Diffuse().m_handleId);
+    // }
+    //
+    // if (m_Normal().isReady()) {
+    //     shader.setUniform("normalSampler", m_Normal().m_handleId);
+    // }
+    //
+    // if (m_Roughness().isReady()) {
+    //     shader.setUniform("roughnessSampler", m_Roughness().m_handleId);
+    // }
+    //
+    // if (m_Emissive().isReady()) {
+    //     shader.setUniform("emissiveSampler", m_Emissive().m_handleId);
+    // }
+    //
+    // shader.setUniform("roughnessFactor", m_materialConfiguration.roughnessFactor);
+    // shader.setUniform("metallicFactor", m_materialConfiguration.metallicFactor);
+    // shader.setUniform("diffuseColor", m_materialConfiguration.diffuseColor);
+    // shader.setUniform("emissiveColor", m_materialConfiguration.emissiveColor);
+    // shader.setUniform("selfIllumination", m_materialConfiguration.selfIllumination);
+    // shader.setUniform("hasDiffuseSampler", static_cast<int>(m_Diffuse().isReady()));
+    // shader.setUniform("hasNormalSampler", static_cast<int>(m_Normal().isReady()));
+    // shader.setUniform("hasRoughnessSampler", static_cast<int>(m_Roughness().isReady()));
+    // shader.setUniform("hasEmissivesSampler", static_cast<int>(m_Emissive().isReady()));
+    // shader.setUniform("doesReceiveShadows", static_cast<int>(m_materialConfiguration.doesReceiveShadows));
+    // shader.setUniform("wrappingType", (int) m_materialConfiguration.diffuseTextureWrappingType);
 
-    if (m_Normal().isReady()) {
-        shader.setUniform("normalSampler", m_Normal().m_handleId);
-    }
-
-    if (m_Roughness().isReady()) {
-        shader.setUniform("roughnessSampler", m_Roughness().m_handleId);
-    }
-
-    if (m_Emissive().isReady()) {
-        shader.setUniform("emissiveSampler", m_Emissive().m_handleId);
-    }
-
-    shader.setUniform("roughnessFactor", m_materialConfiguration.roughnessFactor);
-    shader.setUniform("metallicFactor", m_materialConfiguration.metallicFactor);
-    shader.setUniform("diffuseColor", m_materialConfiguration.diffuseColor);
-    shader.setUniform("emissiveColor", m_materialConfiguration.emissiveColor);
-    shader.setUniform("selfIllumination", m_materialConfiguration.selfIllumination);
-    shader.setUniform("hasDiffuseSampler", static_cast<int>(m_Diffuse().isReady()));
-    shader.setUniform("hasNormalSampler", static_cast<int>(m_Normal().isReady()));
-    shader.setUniform("hasRoughnessSampler", static_cast<int>(m_Roughness().isReady()));
-    shader.setUniform("hasEmissivesSampler", static_cast<int>(m_Emissive().isReady()));
-    shader.setUniform("doesReceiveShadows", static_cast<int>(m_materialConfiguration.doesReceiveShadows));
-    shader.setUniform("wrappingType", (int) m_materialConfiguration.diffuseTextureWrappingType);
+    shader.setUniform("primaryMaterialIndex", m_materialBufferIndex);
 }
 
 void MaterialResource::fetchFromGLTF(ResourceManager &resourceManager, const tinygltf::Model &model,

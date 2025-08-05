@@ -5,18 +5,24 @@
 
 StorageBufferUpdateSystem::StorageBufferUpdateSystem() : EntitySystem(),
                                                          m_LightsBuffer(),
+                                                         m_MaterialsBuffer(),
+                                                         m_defaultMaterial(),
+                                                         m_ResourceManager(nullptr),
                                                          m_ProbesBuffer() {
     m_probeComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, EnvironmentProbeComponent>();
     m_lightComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, LightComponent>();
 }
 
-void StorageBufferUpdateSystem::initialize(ResourceManager &resourceManager, EventManager&) {
+void StorageBufferUpdateSystem::initialize(ResourceManager &resourceManager, EventManager &) {
+    m_ResourceManager = &resourceManager;
+
     resourceManager.request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager.request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
-//
-//    std::cout<<sizeof(std::uint64_t)<<std::endl;
-//    std::cout<<sizeof(glm::mat4)<<std::endl;
-//    std::cout<<sizeof(LightsBufferResource::LightStructure)<<std::endl;
+    resourceManager.request(m_MaterialsBuffer, "MaterialsStorageBuffer");
+    resourceManager.requestWith(m_defaultMaterial, "defaultMaterial",
+                                [&](MaterialResource &resource) {
+                                    resource.fetchDefault(resourceManager);
+                                });
 }
 
 void StorageBufferUpdateSystem::process(EventManager &eventManager) {
@@ -36,4 +42,12 @@ void StorageBufferUpdateSystem::process(EventManager &eventManager) {
         m_ProbesBuffer().appendProbe(*transform, *probe);
     }
     m_ProbesBuffer().m_StorageBuffer.updateAll();
+
+    m_MaterialsBuffer().m_StorageBuffer.reset();
+    m_MaterialsBuffer().appendMaterial(m_defaultMaterial());
+    auto materials = m_ResourceManager->getAllReadyOfType<MaterialResource>();
+    for (auto material: materials) {
+        m_MaterialsBuffer().appendMaterial(*material);
+    }
+    m_MaterialsBuffer().m_StorageBuffer.updateAll();
 }

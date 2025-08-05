@@ -17,7 +17,6 @@ namespace Json {
     inline void writeFile(const std::string &filePath, const nlohmann::json &j) {
         std::ofstream file;
         file.open(filePath);
-
         const std::string data(j.dump(4));
         file << data;
     }

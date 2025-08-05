@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.4.56",
+		"generator":"Khronos glTF Blender I/O v4.5.47",
 		"version":"2.0"
 	},
 	"extensionsUsed":[
@@ -18,18 +18,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Plane475",
-			"rotation":[
-				0,
-				0.47382229566574097,
-				0,
-				0.8806204795837402
-			],
-			"translation":[
-				-2.0065648555755615,
-				0.6202692985534668,
-				0.3245367109775543
-			]
+			"name":"Plane475.001"
 		}
 	],
 	"materials":[
@@ -40,23 +29,20 @@
 					"specularFactor":0
 				}
 			},
-			"name":"13 - Default",
-			"normalTexture":{
-				"index":0
-			},
+			"name":"terrain",
 			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":1
-				},
-				"metallicRoughnessTexture":{
-					"index":2
-				}
+				"baseColorFactor":[
+					0.5882353186607361,
+					0.5882353186607361,
+					0.5882353186607361,
+					1
+				]
 			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"Mesh.904",
+			"name":"Mesh.001",
 			"primitives":[
 				{
 					"attributes":{
@@ -70,64 +56,33 @@
 			]
 		}
 	],
-	"textures":[
-		{
-			"sampler":0,
-			"source":0
-		},
-		{
-			"sampler":0,
-			"source":1
-		},
-		{
-			"sampler":0,
-			"source":2
-		}
-	],
-	"images":[
-		{
-			"mimeType":"image/png",
-			"name":"material_normal",
-			"uri":"textures/material_normal.png"
-		},
-		{
-			"mimeType":"image/png",
-			"name":"material_diffuseOriginal",
-			"uri":"textures/material_diffuseOriginal.png"
-		},
-		{
-			"mimeType":"image/png",
-			"name":"material_metallic-material_smoothness",
-			"uri":"textures/material_metallic-material_smoothness.png"
-		}
-	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":48986,
+			"count":10992,
 			"max":[
-				954.2819213867188,
-				279.3586120605469,
-				995.7122802734375
+				753.472412109375,
+				272.2223205566406,
+				663.2348022460938
 			],
 			"min":[
-				-953.4557495117188,
-				-2.7330360412597656,
-				-964.996337890625
+				-731.3973388671875,
+				-1.5507361888885498,
+				-646.3511962890625
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":48986,
+			"count":10992,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":48986,
+			"count":10992,
 			"type":"VEC2"
 		},
 		{
@@ -140,38 +95,32 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":587832,
+			"byteLength":131904,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":587832,
-			"byteOffset":587832,
+			"byteLength":131904,
+			"byteOffset":131904,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":391888,
-			"byteOffset":1175664,
+			"byteLength":87936,
+			"byteOffset":263808,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":122244,
-			"byteOffset":1567552,
+			"byteOffset":351744,
 			"target":34963
-		}
-	],
-	"samplers":[
-		{
-			"magFilter":9729,
-			"minFilter":9987
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":1689796,
+			"byteLength":473988,
 			"uri":"terrain.bin"
 		}
 	]

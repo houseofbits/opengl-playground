@@ -47,6 +47,9 @@ void LightsBufferResource::appendLight(TransformComponent &transform, LightCompo
         structure.isPointSource = light.m_Type == LightComponent::DIRECT ? 0 : 1;
         structure.bias = light.m_shadowBias;
         structure.blurRadius = light.m_blurRadius;
+        structure.isAtmosphericEffectsEnabled = light.m_isAtmosphericEffectsEnabled;
+        structure.mieColor = glm::vec4(light.m_atmosphericMieColor, 1.0);
+        structure.rayleightFactor = light.m_atmosphericRayleightIntensity;
 
         if (light.m_Projection().isReady()) {
             structure.projectorSamplerHandle = light.m_Projection().m_handleId;

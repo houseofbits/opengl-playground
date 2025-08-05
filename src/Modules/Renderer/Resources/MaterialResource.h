@@ -30,7 +30,7 @@ public:
         return MATERIAL_PATH + name + ".json";
     }
 
-    std::string getFullPath() const;
+    [[nodiscard]] std::string getFullPath() const;
 
     MaterialConfiguration m_materialConfiguration;
     ResourceHandle<TextureResource> m_Diffuse;
@@ -38,6 +38,7 @@ public:
     ResourceHandle<TextureResource> m_Roughness;
     ResourceHandle<TextureResource> m_Emissive;
 
+    int m_materialBufferIndex;
 private:
     void requestTextureResource(ResourceManager &, ResourceHandle<TextureResource> &, const std::string &);
 };

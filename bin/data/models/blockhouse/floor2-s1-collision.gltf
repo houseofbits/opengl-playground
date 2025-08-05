@@ -1,11 +1,8 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.4.56",
+		"generator":"Khronos glTF Blender I/O v4.5.47",
 		"version":"2.0"
 	},
-	"extensionsUsed":[
-		"KHR_materials_specular"
-	],
 	"scene":0,
 	"scenes":[
 		{
@@ -18,32 +15,12 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Plane167"
-		}
-	],
-	"materials":[
-		{
-			"doubleSided":true,
-			"extensions":{
-				"KHR_materials_specular":{
-					"specularFactor":0
-				}
-			},
-			"name":"19 - Default.004",
-			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.9921569228172302,
-					0,
-					0,
-					1
-				],
-				"roughnessFactor":0.858578622341156
-			}
+			"name":"floor2-s1-collision"
 		}
 	],
 	"meshes":[
 		{
-			"name":"Mesh.160",
+			"name":"Mesh.094",
 			"primitives":[
 				{
 					"attributes":{
@@ -51,8 +28,7 @@
 						"NORMAL":1,
 						"TEXCOORD_0":2
 					},
-					"indices":3,
-					"material":0
+					"indices":3
 				}
 			]
 		}
@@ -61,67 +37,67 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":264,
+			"count":266,
 			"max":[
-				4.245857238769531,
-				2.0294556617736816,
-				5.618399620056152
+				4.271627426147461,
+				2.0283901691436768,
+				5.596372127532959
 			],
 			"min":[
-				-2.362035036087036,
-				-1.275853157043457,
-				-5.805290222167969
+				-2.3362650871276855,
+				-1.276918649673462,
+				-5.827317714691162
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":264,
+			"count":266,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":264,
+			"count":266,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":396,
+			"count":402,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":3168,
+			"byteLength":3192,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":3168,
-			"byteOffset":3168,
+			"byteLength":3192,
+			"byteOffset":3192,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":2112,
-			"byteOffset":6336,
+			"byteLength":2128,
+			"byteOffset":6384,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":792,
-			"byteOffset":8448,
+			"byteLength":804,
+			"byteOffset":8512,
 			"target":34963
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":9240,
+			"byteLength":9316,
 			"uri":"floor2-s1-collision.bin"
 		}
 	]

@@ -78,4 +78,10 @@ inline void processLightComponentEditor(Component *c, Entity *e, EditorUISystem 
         //     }
         // }
     }
+
+    ImGui::Checkbox("Atmospheric effects", &component->m_isAtmosphericEffectsEnabled);
+    if (component->m_isAtmosphericEffectsEnabled) {
+        ImGui::ColorEdit3("Mie Color##MIE_COLOR", reinterpret_cast<float *>(&component->m_atmosphericMieColor));
+        ImGui::InputFloat("Rayleight intensity##RAYLEIGH_INTENSITY", &component->m_atmosphericRayleightIntensity, 0.1f, 1.0f, "%.1f");
+    }
 }

@@ -13,6 +13,7 @@ MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_ShaderPrograms(),
                                        m_defaultMaterial(),
                                        m_LightsBuffer(),
+                                       m_MaterialsBuffer(),
                                        m_ProbesBuffer(),
                                        m_brdfLUTTexture(),
                                        m_activeCameraHelper() {
@@ -65,11 +66,17 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
                                 "EnvironmentProbesCubeMapArray"
                             });
 
-    resourceManager.request(m_ShaderPrograms[SHADER_SKY], "data/shaders/skybox.|vert|frag");
+    resourceManager.request(m_ShaderPrograms[SHADER_SKY], "data/shaders/skybox.|vert|frag",
+                            {
+                                "SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer",
+                                "EnvironmentProbesCubeMapArray"
+                            }
+    );
 
     resourceManager.request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager.request(m_ProbesBuffer, "EnvironmentProbeStorageBuffer");
     resourceManager.request(m_ProbesCubeMapArray, "EnvironmentProbesCubeMapArray");
+    resourceManager.request(m_MaterialsBuffer, "MaterialsStorageBuffer");
 
     resourceManager.requestWith(m_defaultMaterial, "defaultMaterial",
                                 [&](MaterialResource &resource) {
@@ -85,9 +92,9 @@ void MainRenderSystem::process(EventManager &eventManager) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-    if (!m_deferredRenderTarget().isReady()) {
-        return;
-    }
+    // if (!m_deferredRenderTarget().isReady()) {
+    //     return;
+    // }
 
     // m_deferredRenderTarget().bindRenderTarget();
     // glViewport(0,
@@ -109,6 +116,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
         glDisable(GL_CULL_FACE);
 
         m_ShaderPrograms[SHADER_SKY]().use();
+        m_LightsBuffer().bind(m_ShaderPrograms[SHADER_SKY].get());
         m_ShaderPrograms[SHADER_SKY]().setUniform("environmentSampler", sky->second->m_cubeMap().m_handleId);
         camera->bind(m_ShaderPrograms[SHADER_SKY]());
         sky->second->m_box.draw();
@@ -127,6 +135,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
     currentProgram.use();
     camera->bind(currentProgram);
     m_LightsBuffer().bind(currentProgram);
+    m_MaterialsBuffer().bind(currentProgram);
     m_ProbesBuffer().bind(currentProgram);
     if (m_ProbesCubeMapArray().isReady()) {
         currentProgram.setUniform("probesCubeArraySampler", m_ProbesCubeMapArray().m_handleId);

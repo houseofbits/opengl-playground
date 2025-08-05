@@ -7,6 +7,7 @@
 #include "../Resources/EnvironmentProbesBufferResource.h"
 #include "../Resources/EnvironmentProbesCubeMapArrayResource.h"
 #include "../Resources/LightsBufferResource.h"
+#include "../Resources/MaterialsBufferResource.h"
 #include "../Resources/ShaderProgramResource.h"
 #include "../../Common/Events/CameraActivationEvent.h"
 #include "../../Common/Helpers/ActiveCameraHelper.h"
@@ -49,6 +50,7 @@ private:
     int m_viewportHeight;
     ResourceHandle<ShaderProgramResource> m_ShaderPrograms[ShaderType::NUM_SHADERS];
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
+    ResourceHandle<MaterialsBufferResource> m_MaterialsBuffer;
     ResourceHandle<EnvironmentProbesBufferResource> m_ProbesBuffer;
     ResourceHandle<EnvironmentProbesCubeMapArrayResource> m_ProbesCubeMapArray;
     ActiveCameraHelper m_activeCameraHelper;

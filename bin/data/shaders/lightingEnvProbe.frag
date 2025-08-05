@@ -4,31 +4,33 @@
 
 layout (location=0) out vec4 fragColor;
 
-struct SpotLightStructure {
-    vec3 color;
-    float intensity;
-    vec3 position;
-    float attenuation;
-    mat4 projectionViewMatrix;
-    vec3 direction;
-    int isPointSource;
-    uvec2 projectorSamplerHandle;
-    uvec2 _PLACEHOLDER1;
-    uvec2 shadowSamplerHandle;
-    float bias;
-    float _PLACEHOLDER2;
-};
-
-layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
-    SpotLightStructure spotLights[100];
-};
+#include include/lightsBlock.glsl
+//
+//struct SpotLightStructure {
+//    vec3 color;
+//    float intensity;
+//    vec3 position;
+//    float attenuation;
+//    mat4 projectionViewMatrix;
+//    vec3 direction;
+//    int isPointSource;
+//    uvec2 projectorSamplerHandle;
+//    uvec2 _PLACEHOLDER1;
+//    uvec2 shadowSamplerHandle;
+//    float bias;
+//    float _PLACEHOLDER2;
+//};
+//
+//layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
+//    SpotLightStructure spotLights[100];
+//};
 
 in vec3 vsNormal;
 in vec4 vsPosition;
 in vec2 vsTexcoord;
 in mat3 vsInvTBN;
 
-uniform uint SpotLightStorageBuffer_size;
+//uniform uint SpotLightStorageBuffer_size;
 uniform int hasDiffuseSampler;
 uniform int hasNormalSampler;
 uniform int hasRoughnessSampler;

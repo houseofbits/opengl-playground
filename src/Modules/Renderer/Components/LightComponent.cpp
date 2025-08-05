@@ -15,7 +15,10 @@ LightComponent::LightComponent() : Component(),
                                    m_Projection(),
                                    m_doesCastShadows(false),
                                    m_shadowResolution(512),
+                                   m_isAtmosphericEffectsEnabled(false),
                                    m_shadowBias(0),
+                                   m_atmosphericMieColor(1.0, 1.0, 1.0),
+                                   m_atmosphericRayleightIntensity(1.0),
                                    m_lightBufferIndices() {
     m_TypeNameMap[Type::OMNI] = "OMNI";
     m_TypeNameMap[Type::SPOT] = "SPOT";
@@ -29,6 +32,9 @@ void LightComponent::serialize(nlohmann::json &j) {
     j[INTENSITY_KEY] = m_Intensity;
     j[ATTENUATION_KEY] = m_Attenuation;
     j[CAST_SHADOWS_KEY] = m_doesCastShadows;
+    j[ATMOSPHERIC_EFFECTS_KEY] = m_isAtmosphericEffectsEnabled;
+    j[ATMOSPHERIC_MIE_COLOR_KEY] = m_atmosphericMieColor;
+    j[ATMOSPHERIC_RAYLEIGHT_FACTOR_KEY] = m_atmosphericRayleightIntensity;
     if (m_doesCastShadows) {
         j[SHADOW_RESOLUTION_KEY] = m_shadowResolution;
         j[SHADOW_BIAS_KEY] = m_shadowBias;
@@ -54,6 +60,9 @@ void LightComponent::deserialize(const nlohmann::json &j, ResourceManager &resou
     m_shadowResolution = j.value(SHADOW_RESOLUTION_KEY, m_shadowResolution);
     m_shadowBias = j.value(SHADOW_BIAS_KEY, m_shadowBias);
     m_blurRadius = j.value(SHADOW_BLUR_RADIUS_KEY, m_blurRadius);
+    m_isAtmosphericEffectsEnabled = j.value(ATMOSPHERIC_EFFECTS_KEY, m_isAtmosphericEffectsEnabled);
+    m_atmosphericMieColor = j.value(ATMOSPHERIC_MIE_COLOR_KEY, m_atmosphericMieColor);
+    m_atmosphericRayleightIntensity = j.value(ATMOSPHERIC_RAYLEIGHT_FACTOR_KEY, m_atmosphericRayleightIntensity);
 
     if (j.contains(PROJECTION_TEXTURE_KEY)) {
         std::string filename = j.value(PROJECTION_TEXTURE_KEY, m_Projection().m_Path);

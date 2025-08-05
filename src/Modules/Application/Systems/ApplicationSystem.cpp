@@ -91,7 +91,8 @@ void ApplicationSystem::setTime() {
     Time::timestamp = currentTime;
 }
 
-void ApplicationSystem::loadEntitiesFromFile(const std::string &fileName) const {
+void ApplicationSystem::loadEntitiesFromFile(const std::string &fileName) {
+    m_EntitySourceFileName = fileName;
     auto json = Json::readFile(fileName);
     if (!json) {
         return;

@@ -1,0 +1,21 @@
+{
+    "diffuseColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "diffuseTexture": "data/materials/graded-floor/diffuse.png",
+    "doesCastShadows": true,
+    "doesReceiveShadows": true,
+    "emiSsiveColor": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emissiveTexture": null,
+    "metallicFactor": 0.0,
+    "normalTexture": "data/materials/graded-floor/normal.png",
+    "roughnessFactor": 1.0,
+    "roughnessMetallicTexture": "data/materials/graded-floor/mro.png",
+    "selfIlluminationFactor": 0.0
+}

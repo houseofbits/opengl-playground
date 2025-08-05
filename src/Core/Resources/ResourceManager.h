@@ -68,6 +68,18 @@ public:
         return vec;
     }
 
+    template<class T>
+    std::vector<T *> getAllReadyOfType() const {
+        std::vector<T *> vec;
+        for (auto resource: m_Resources) {
+            if (resource->isReady() && isOfType<T>(resource)) {
+                vec.push_back(static_cast<T *>(resource));
+            }
+        }
+
+        return vec;
+    }
+
     /**
      * @tparam T Instance of ResourceHandle
      * @param hand Resource handle

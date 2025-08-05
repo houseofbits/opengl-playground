@@ -23,7 +23,12 @@ inline void processMeshComponentEditor(Component *c, Entity *e, EditorUISystem &
         for (const auto &node: component->m_Mesh().m_modelConfig.nodes) {
             std::string material_name = "";
             if (node.materialIndex >= 0) {
-                material_name = " - " + component->m_Mesh().m_materials[node.materialIndex].get().m_Path;
+                std::string isMaterialValid = "";
+                if (!component->m_Mesh().m_materials[node.materialIndex].get().isReady()) {
+                    isMaterialValid = " *";
+                }
+                material_name = " - " + component->m_Mesh().m_materials[node.materialIndex].get().m_Path +
+                                isMaterialValid;
             }
             std::string line = node.name + material_name;
 

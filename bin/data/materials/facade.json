@@ -4,7 +4,7 @@
         1.0,
         1.0
     ],
-    "diffuseTexture": "data/models/blockhouse/textures/Texturelabs_Concrete_189M.jpg",
+    "diffuseTexture": "data/materials/dirty-facede/diffuse.png",
     "doesCastShadows": true,
     "doesReceiveShadows": true,
     "emiSsiveColor": [
@@ -14,8 +14,8 @@
     ],
     "emissiveTexture": null,
     "metallicFactor": 1.0,
-    "normalTexture": "data/models/blockhouse/textures/material_normal-4.jpg",
+    "normalTexture": "data/materials/dirty-facede/normal.png",
     "roughnessFactor": 1.0,
-    "roughnessMetallicTexture": "data/models/blockhouse/textures/material_metallic-material_smoothness-1.jpg",
+    "roughnessMetallicTexture": "data/materials/dirty-facede/mro.png",
     "selfIlluminationFactor": 0.0
 }

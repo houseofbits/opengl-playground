@@ -2,7 +2,11 @@
 
 #extension GL_ARB_bindless_texture : require
 
+#include include/commonBlock.glsl
+#include include/lightsBlock.glsl
 #include include/probeBlock.glsl
+#include include/materialBlock.glsl
+#include include/fogBlock.glsl
 
 const float PI = 3.14159265359;
 
@@ -28,44 +32,9 @@ const vec2 poissonDisk[NUM_PCF_SAMPLES] = {
     vec2(0.14383161, -0.14100790)
 };
 
-struct SpotLightStructure {
-    vec3 color;
-    float intensity;
-    vec3 position;
-    float attenuation;
-    mat4 projectionViewMatrix;
-    vec3 direction;
-    int isPointSource;
-    uvec2 projectorSamplerHandle;
-    uvec2 _PLACEHOLDER1;
-    uvec2 shadowSamplerHandle;
-    float bias;
-    float blurRadius;
-};
-
-layout (binding = ${INDEX_SpotLightStorageBuffer}, std430) readonly buffer SpotLightStorageBuffer {
-    SpotLightStructure spotLights[100];
-};
-
-uniform uint SpotLightStorageBuffer_size;
 uniform vec3 viewPosition;
+uniform int primaryMaterialIndex;
 
-//MaterialResource::bind
-uniform float roughnessFactor;
-uniform float metallicFactor;
-uniform vec3 diffuseColor;
-uniform vec3 emissiveColor;
-uniform int hasDiffuseSampler;
-uniform int hasNormalSampler;
-uniform int hasRoughnessSampler;
-uniform int hasEmissiveSampler;
-uniform int doesReceiveShadows;
-uniform int wrappingType;
-
-layout(bindless_sampler) uniform sampler2D diffuseSampler;
-layout(bindless_sampler) uniform sampler2D normalSampler;
-layout(bindless_sampler) uniform sampler2D roughnessSampler;
-layout(bindless_sampler) uniform sampler2D emissiveSampler;
 layout(bindless_sampler) uniform samplerCube environmentSampler;
 layout(bindless_sampler) uniform sampler2D brdfLUT;
 
@@ -74,36 +43,6 @@ in vec4 vsPosition;
 in vec2 vsTexcoord;
 in mat3 vsInvTBN;
 in vec3 vsTangentViewDirection;
-
-bool isSamplerHandleValid(uvec2 handle) {
-    return (handle.x != 0 || handle.y != 0);
-}
-
-vec3 calculateProjectedCoords(vec4 lightSpacePos)
-{
-    vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
-    projCoords = projCoords * 0.5 + 0.5;
-
-    return projCoords;
-}
-
-bool isProjCoordsClipping(vec2 uv)
-{
-    if (uv.x < 0
-    || uv.x > 1.0
-    || uv.y < 0
-    || uv.y > 1.0) {
-
-        return false;
-    }
-
-    return true;
-}
-
-float sampleShadow(in sampler2DShadow shadowMap, vec2 uv, float bias, float fragmentDepth)
-{
-    return texture(shadowMap, vec3(uv, fragmentDepth - bias)).x;
-}
 
 float pcssShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndotl)
 {
@@ -122,17 +61,17 @@ float pcssShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndo
     return shadow / NUM_PCF_SAMPLES;
 }
 
-vec3 triplanarDiffuseTexture(in sampler2D diffuseSampler, vec3 surfaceNormal)
-{
-    vec3 blendWeights = abs(surfaceNormal);
-    blendWeights /= (blendWeights.x + blendWeights.y + blendWeights.z);
-
-    vec3 xaxis = texture2D( diffuseSampler, vsPosition.yz).rgb;
-    vec3 yaxis = texture2D( diffuseSampler, vsPosition.xz).rgb;
-    vec3 zaxis = texture2D( diffuseSampler, vsPosition.xy).rgb;
-
-    return xaxis * blendWeights.x + yaxis * blendWeights.y + zaxis * blendWeights.z;
-}
+//vec3 triplanarDiffuseTexture(in sampler2D diffuseSampler, vec3 surfaceNormal)
+//{
+//    vec3 blendWeights = abs(surfaceNormal);
+//    blendWeights /= (blendWeights.x + blendWeights.y + blendWeights.z);
+//
+//    vec3 xaxis = texture2D( diffuseSampler, vsPosition.yz).rgb;
+//    vec3 yaxis = texture2D( diffuseSampler, vsPosition.xz).rgb;
+//    vec3 zaxis = texture2D( diffuseSampler, vsPosition.xy).rgb;
+//
+//    return xaxis * blendWeights.x + yaxis * blendWeights.y + zaxis * blendWeights.z;
+//}
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
@@ -191,40 +130,20 @@ void main()
 {
     vec3 viewDepth = vsPosition.xyz - viewPosition;
     vec3 view = normalize(viewDepth);
+    float distToFragment = length(viewDepth);
 
     vec2 texCoords = vsTexcoord;
 //    vec2 texCoords = parallaxMapping(roughnessSampler, vsTexcoord, normalize(vsTangentViewDirection));
 
-    vec3 diffuse = diffuseColor;
-    if (hasDiffuseSampler == 1) {
-        if (wrappingType == 0) {
-            diffuse = texture(diffuseSampler, texCoords).xyz;
-        } else {
-            diffuse = triplanarDiffuseTexture(diffuseSampler, vsNormal);
-        }
-    }
+    MaterialStructure material = materials[primaryMaterialIndex];
 
-    vec3 normal = normalize(vsNormal);
-    if (hasNormalSampler == 1) {
-        normal = texture(normalSampler, texCoords).xyz;
-        normal = vsInvTBN * normalize(normal * 2.0 - 1.0);
-    }
-
-    vec3 emissive = emissiveColor;
-    if (hasEmissiveSampler == 1) {
-        emissive = texture(emissiveSampler, texCoords).xyz;
-    }
-
-    float roughness = roughnessFactor;
-    float metallic = metallicFactor;
-    if (hasRoughnessSampler == 1) {
-        vec2 metallicRoughness = texture(roughnessSampler, texCoords).gb;
-        roughness = metallicRoughness.x;
-        metallic = metallicRoughness.y;
-    }
+    vec3 diffuse = getPrimaryDiffuseColor(material, texCoords).xyz;
+    vec3 normal = getPrimaryNormal(material, texCoords, vsInvTBN, normalize(vsNormal));
+    vec3 emissive = getPrimaryEmissiveFactor(material, texCoords);
+    vec3 mro = getPrimaryMROFactor(material, texCoords);
 
     vec3 viewReflection = reflect(view, normal);
-    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(vsPosition.xyz, viewReflection, roughness, normal, environmentSampler);
+    vec3 reflectionColor = calculateReflectionColorFromEnvironmentProbes(vsPosition.xyz, viewReflection, mro.y, normal, environmentSampler);
 
     vec3 color = vec3(0.0);
     vec3 falloff;
@@ -237,8 +156,10 @@ void main()
 
     //IBL
     vec3 F0 = vec3(0.04);
-    F0 = mix(F0, diffuse, metallic);
+    F0 = mix(F0, diffuse, mro.x);
     vec3 V = normalize(viewPosition - vsPosition.xyz);
+
+    vec3 fogColor = vec3(0.0);
 
     for (int lightIndex = 0; lightIndex < SpotLightStorageBuffer_size; lightIndex++) {
         SpotLightStructure light = spotLights[lightIndex];
@@ -253,6 +174,10 @@ void main()
             } else {
                 distToLight = dot(normalize(light.direction), light.position - vsPosition.xyz);
                 lightDir = normalize(light.direction);
+            }
+
+            if (light.isAtmosphericEffectsEnabled == 1) {
+                fogColor += calculateFog(light, viewPosition, view, distToFragment, lightDir);
             }
 
             float ndotlSurf = dot(lightDir, surfaceNormal);
@@ -271,7 +196,7 @@ void main()
             }
 
             float shadow = 1.0;
-            if (doesReceiveShadows == 1 && isSamplerHandleValid(light.shadowSamplerHandle)) {
+            if (material.doesReceiveShadows == 1 && isSamplerHandleValid(light.shadowSamplerHandle)) {
                 shadow = pcssShadowCalculation(light, lightProjectedPosition, dot(lightDir, vsNormal)); //depth > lightProjectedPosition.z;
             }
 
@@ -284,8 +209,8 @@ void main()
             vec3 L = lightDir;
             vec3 H = normalize(V + L);
 
-            float NDF = DistributionGGX(normal, H, roughness);
-            float G   = GeometrySmith(normal, V, L, roughness);
+            float NDF = DistributionGGX(normal, H, mro.y);
+            float G   = GeometrySmith(normal, V, L, mro.y);
             vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
 
             vec3 numerator    = NDF * G * F;
@@ -294,7 +219,7 @@ void main()
 
             vec3 kS = F;
             vec3 kD = vec3(1.0) - kS;
-            kD *= 1.0 - metallic;
+            kD *= 1.0 - mro.x;
 
             lightColor += (kD * diffuse / PI + specular) * attenuation * shadow * diffuseLight;
         }
@@ -302,22 +227,19 @@ void main()
 
     //Ambient IBL
     float NdotV = max(dot(normal, V), 0.0);
-    vec2 brdf = texture2D(brdfLUT, vec2(NdotV, roughness)).xy;
-    vec3 F = fresnelSchlickRoughness(NdotV, F0, roughness);
+    vec2 brdf = texture2D(brdfLUT, vec2(NdotV, mro.y)).xy;
+    vec3 F = fresnelSchlickRoughness(NdotV, F0, mro.y);
     vec3 specular = reflectionColor * (F * brdf.x + brdf.y);
 
     vec3 kS = F;
     vec3 kD = 1.0 - kS;
-    kD *= 1.0 - metallic;
+    kD *= 1.0 - mro.x;
 
     vec3 lightedColor = emissive * diffuse;
-    lightedColor = (kD * lightedColor + specular);// * ao;
+    lightedColor = (kD * lightedColor + specular) * mro.z;
     lightedColor += lightColor;
 
-    //Add fog
-    vec3 fog = textureLod(environmentSampler, view, 5).rgb;
-    float zd = min(1.0, length(viewDepth) / 100.0);
-    vec3 lightFogColor = lightedColor;// + (fog * fog * (zd * zd));
+    vec3 finalColor = lightedColor * (1.0 - fogColor) + fogColor;
 
-    fragColor = vec4(lightFogColor, 1.0);
+    fragColor = vec4(finalColor, 1.0);
 }

@@ -20,6 +20,9 @@ public:
     inline static const std::string SHADOW_RESOLUTION_KEY = "shadowResolution";
     inline static const std::string SHADOW_BIAS_KEY = "shadowBias";
     inline static const std::string SHADOW_BLUR_RADIUS_KEY = "blurRadius";
+    inline static const std::string ATMOSPHERIC_EFFECTS_KEY = "enableAtmosphericEffects";
+    inline static const std::string ATMOSPHERIC_MIE_COLOR_KEY = "atmosphericMieColor";
+    inline static const std::string ATMOSPHERIC_RAYLEIGHT_FACTOR_KEY = "atmosphericRayleightFactor";
 
     enum Type {
         OMNI = 0,
@@ -59,9 +62,13 @@ public:
     int m_shadowResolution;
     float m_shadowBias;
     float m_blurRadius;
+    bool m_isAtmosphericEffectsEnabled;
     ResourceHandle<TextureResource> m_Projection;
     std::vector<ResourceHandle<ShadowMapResource> *> m_ShadowMaps;
     std::vector<int> m_lightBufferIndices;
+
+    glm::vec3 m_atmosphericMieColor;
+    float m_atmosphericRayleightIntensity;
 
 private:
     std::string getShadowMapResourceName(int viewIndex);
