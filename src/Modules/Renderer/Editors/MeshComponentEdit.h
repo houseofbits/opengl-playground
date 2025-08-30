@@ -19,11 +19,22 @@ inline void processMeshComponentEditor(Component *c, Entity *e, EditorUISystem &
         system.m_ResourceManager->request(component->m_Mesh, m_meshPath);
     }
 
+    ImGui::Checkbox("Override material", &component->m_shouldOverrideMaterial);
+    if (component->m_shouldOverrideMaterial) {
+        if (ImGui::InputText("Material name", &m_materialPath)) {
+            if (m_materialPath.empty()) {
+                component->m_Material.invalidate();
+            } else {
+                system.m_ResourceManager->request(component->m_Material, m_materialPath);
+            }
+        }
+    }
+
     if (ImGui::TreeNode("Nodes")) {
         for (const auto &node: component->m_Mesh().m_modelConfig.nodes) {
-            std::string material_name = "";
+            std::string material_name;
             if (node.materialIndex >= 0) {
-                std::string isMaterialValid = "";
+                std::string isMaterialValid;
                 if (!component->m_Mesh().m_materials[node.materialIndex].get().isReady()) {
                     isMaterialValid = " *";
                 }

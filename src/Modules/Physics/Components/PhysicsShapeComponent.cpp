@@ -7,7 +7,7 @@
 #include "../Helpers/PhysicsTypeCast.h"
 #include "../Helpers/PhysicsShapeUserData.h"
 
-PhysicsShapeComponent::PhysicsShapeComponent() : Component() {
+PhysicsShapeComponent::PhysicsShapeComponent() : Component(), m_doMergeMeshNodes(true) {
 }
 
 void PhysicsShapeComponent::serialize(nlohmann::json &j) {
@@ -23,6 +23,7 @@ void PhysicsShapeComponent::serialize(nlohmann::json &j) {
     if (m_type == TYPE_MESH) {
         j[MESH_FILE_KEY] = m_meshResource().m_Path;
         j[MESH_SCALE_KEY] = m_meshScale;
+        j[MERGE_MESH_KEY] = m_doMergeMeshNodes;
     }
 }
 
@@ -35,6 +36,7 @@ void PhysicsShapeComponent::deserialize(const nlohmann::json &j, ResourceManager
         std::string path = j.value(MESH_FILE_KEY, m_meshResource().m_Path);
         resourceManager.request(m_meshResource, path);
         m_meshScale = j.value(MESH_SCALE_KEY, m_meshScale);
+        m_doMergeMeshNodes = j.value(MERGE_MESH_KEY, m_doMergeMeshNodes);
     }
     if (m_type == TYPE_BOX) {
         m_boxSize = j.value(BOX_SIZE_KEY, m_boxSize);
@@ -65,7 +67,7 @@ glm::mat4 PhysicsShapeComponent::getWorldTransform(const glm::mat4 &parentTransf
     return Math::rescaleMatrix(parentTransform) * localTransform;
 }
 
-JPH::Shape *PhysicsShapeComponent::createShape(bool isDynamic, const glm::vec3 debugColor) {
+JPH::Shape *PhysicsShapeComponent::createMergedShape(bool isDynamic, const glm::vec3 debugColor) {
     const auto material = new JPH::PhysicsMaterialSimple(
         "Material", JPH::Color(static_cast<unsigned short>(255.0f * debugColor.x),
                                static_cast<unsigned short>(255.0f * debugColor.y),
@@ -74,11 +76,11 @@ JPH::Shape *PhysicsShapeComponent::createShape(bool isDynamic, const glm::vec3 d
     if (m_type == TYPE_MESH) {
         if (isDynamic) {
             const auto shapeSettings = new JPH::ConvexHullShapeSettings(
-                m_meshResource().createConvexMeshShape(m_meshScale),
+                m_meshResource().getAllMeshVertices(m_meshScale),
                 JPH::cDefaultConvexRadius, material);
 
             const auto shape = shapeSettings->Create().Get().GetPtr();
-            setUserData(shape);
+            setUserData(shape, m_Name);
 
             return shape;
         } else {
@@ -86,11 +88,11 @@ JPH::Shape *PhysicsShapeComponent::createShape(bool isDynamic, const glm::vec3 d
             materials.push_back(material);
 
             const auto shapeSettings = new JPH::MeshShapeSettings(
-                m_meshResource().createTriangleMeshShape(m_meshScale),
+                m_meshResource().getAllMeshTriangles(m_meshScale),
                 std::move(materials));
 
             const auto shape = shapeSettings->Create().Get().GetPtr();
-            setUserData(shape);
+            setUserData(shape, m_Name);
 
             return shape;
         }
@@ -99,17 +101,16 @@ JPH::Shape *PhysicsShapeComponent::createShape(bool isDynamic, const glm::vec3 d
         const auto shape = new JPH::BoxShape(PhysicsTypeCast::glmToJPH(m_boxSize * 0.5f),
                                              0.0f,
                                              material);
-        setUserData(shape);
+        setUserData(shape, m_Name);
 
         return shape;
     }
     if (m_type == TYPE_SPHERE) {
-
         auto sensorShape = new JPH::SphereShapeSettings(2.0f);
 
 
         const auto shape = new JPH::SphereShape(m_sphereRadius, material);
-        setUserData(shape);
+        setUserData(shape, m_Name);
 
         return shape;
     }
@@ -117,7 +118,46 @@ JPH::Shape *PhysicsShapeComponent::createShape(bool isDynamic, const glm::vec3 d
     return nullptr;
 }
 
-void PhysicsShapeComponent::setUserData(JPH::Shape *shape) const {
-    auto *userData = new PhysicsShapeUserData(m_Id.id(), m_Name);
+void PhysicsShapeComponent::addCompoundShape(JPH::StaticCompoundShapeSettings &compound, const bool isDynamic,
+                                             const glm::vec3 debugColor) {
+    if (m_type == TYPE_MESH && m_doMergeMeshNodes == false) {
+        const auto material = new JPH::PhysicsMaterialSimple(
+            "Material", JPH::Color(static_cast<unsigned short>(255.0f * debugColor.x),
+                                   static_cast<unsigned short>(255.0f * debugColor.y),
+                                   static_cast<unsigned short>(255.0f * debugColor.z)));
+
+        for (const auto &meshNode: m_meshResource().m_model.nodes) {
+            const auto vertices = m_meshResource().getMeshNodeVertices(meshNode, m_meshScale);
+
+            const auto shapeSettings = new JPH::ConvexHullShapeSettings(
+                vertices,
+                JPH::cDefaultConvexRadius, material);
+
+            const auto shape = shapeSettings->Create().Get().GetPtr();
+            setUserData(shape, meshNode.name);
+
+            compound.AddShape(
+                JPH::Vec3::sZero(),
+                JPH::Quat::sIdentity(),
+                shape
+            );
+        }
+    } else {
+        const auto shape = createMergedShape(isDynamic, debugColor);
+
+        if (shape == nullptr) {
+            return;
+        }
+
+        compound.AddShape(
+            PhysicsTypeCast::glmToJPH(m_localPosition),
+            PhysicsTypeCast::glmToJPH(m_localRotation),
+            shape
+        );
+    }
+}
+
+void PhysicsShapeComponent::setUserData(JPH::Shape *shape, const std::string &name) const {
+    auto *userData = new PhysicsShapeUserData(m_Id.id(), name);
     shape->SetUserData(reinterpret_cast<unsigned long>(userData));
 }

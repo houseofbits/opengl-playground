@@ -23,11 +23,16 @@ public:
         float metallicFactor{0.0};
         int doesCastShadows{true};
         int doesReceiveShadows{true};
+
+        int doesUseTriplanarMapping{false};
+        int _PLACEHOLDER1{0};
+        int _PLACEHOLDER2{0};
+        int _PLACEHOLDER3{0};
     };
 
     ShaderStorageBuffer<MaterialStructure> m_StorageBuffer;
 
-    void appendMaterial(MaterialResource& material);
+    void appendMaterial(MaterialResource &material);
 
     Status build() override;
 

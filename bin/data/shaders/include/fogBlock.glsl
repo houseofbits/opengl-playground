@@ -36,7 +36,7 @@ float hgPhase(float cosTheta, float g) {
 vec3 computeScatteredFogColor(vec3 samplePos, vec3 lightDir, vec3 viewDir, float height, vec3 mieColor, float rayleighFactor) {
     // Parameters
     float g = 0.8; // Mie scattering
-    vec3 rayleighColor = vec3(0.6, 0.6, 0.8) * rayleighFactor;
+    vec3 rayleighColor = vec3(0.2, 0.2, 0.4) * rayleighFactor;
 
     // View-light angle
     float cosTheta = dot(lightDir, viewDir);
@@ -68,7 +68,7 @@ float getShadow(in sampler2DShadow shadowMap, mat4 lightMatrix, vec3 worldPos, f
     return 1.0;
 }
 
-vec3 calculateFog(SpotLightStructure light, vec3 viewPos, vec3 viewDir, float distToFragment, vec3 lightDir) {
+vec4 calculateFog(SpotLightStructure light, vec3 viewPos, vec3 viewDir, float distToFragment, vec3 lightDir) {
     const int steps = 64;
     const float fogDensity = 0.03;
     const float stepSize = 100.0 / float(steps);
@@ -76,6 +76,8 @@ vec3 calculateFog(SpotLightStructure light, vec3 viewPos, vec3 viewDir, float di
     vec3 fogColorAccum = vec3(0.0);
 
     int i = 0;
+    float fogDensityAccum = 0.0;
+
     for (float t = 0; t < distToFragment; t+=stepSize) {
         if (i > steps) {
             break;
@@ -91,10 +93,14 @@ vec3 calculateFog(SpotLightStructure light, vec3 viewPos, vec3 viewDir, float di
 
         vec3 fogCol = computeScatteredFogColor(samplePos, lightDir, viewDir, samplePos.y, light.mieColor, light.rayleightFactor);
 
-        fogColorAccum += fogDensity * fogCol * shadow;
+//        fogColorAccum += 0.005 * shadow + (fogDensity * fogCol * shadow);
+//        fogDensityAccum += 0.005 * shadow + length(fogCol) * fogDensity * shadow;
+
+        fogColorAccum += 0.005 * shadow + (fogDensity * fogCol * shadow);
+        fogDensityAccum += length(fogCol) * fogDensity * shadow;
 
         i++;
     }
 
-    return clamp(fogColorAccum, 0.0, 1.0);
+    return vec4(clamp(fogColorAccum, 0.0, 1.0), clamp(fogDensityAccum, 0.0, 1.0));
 }

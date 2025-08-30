@@ -22,7 +22,7 @@ void main()
     float distToFragment = 100;//length(viewDepth);
     vec3 sky = texture(environmentSampler, view).rgb;
 
-    vec3 fogColor = vec3(0.0);
+    vec4 fogColor = vec4(0.0);
     vec3 lightDir;
 
     for (int lightIndex = 0; lightIndex < SpotLightStorageBuffer_size; lightIndex++) {
@@ -44,7 +44,8 @@ void main()
         }
     }
 
-    vec3 finalColor = sky * (1.0 - fogColor) + fogColor;
+    vec3 finalColor = sky * (1.0 - fogColor.rgb) + fogColor.rgb;
+//    vec3 finalColor = mix(sky, fogColor.rgb, fogColor.a);
 
     FragColor = vec4(finalColor, 1.0);
 

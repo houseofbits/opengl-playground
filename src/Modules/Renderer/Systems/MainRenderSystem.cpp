@@ -158,7 +158,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
 
     for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
         if (const auto &[transform, mesh] = components.get(); mesh->m_Mesh().isReady()) {
-            mesh->m_Mesh().render(transform->getWorldTransform(), currentProgram, m_defaultMaterial.get());
+            mesh->render(transform->getWorldTransform(), currentProgram, m_defaultMaterial());
         }
     }
 

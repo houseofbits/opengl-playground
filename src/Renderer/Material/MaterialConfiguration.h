@@ -22,8 +22,8 @@ public:
     std::string emissiveTextureUri;
     float selfIllumination{0};
     TextureWrappingType diffuseTextureWrappingType{WRAPPING_UV0};
-    TextureWrappingType normalTextureWrappingType{WRAPPING_UV0};
-    TextureWrappingType roughnessMetallicTextureWrappingType{WRAPPING_UV0};
+    // TextureWrappingType normalTextureWrappingType{WRAPPING_UV0};
+    // TextureWrappingType roughnessMetallicTextureWrappingType{WRAPPING_UV0};
     bool doesCastShadows{true};
     bool doesReceiveShadows{true};
 };

@@ -60,6 +60,7 @@ inline void processPhysicsHingeJointComponentEditor(Component *c, Entity *e, Edi
     ImGui::Checkbox("Motor settings", &component->m_isMotorSettingsEnabled);
     if (component->m_isMotorSettingsEnabled) {
         ImGui::InputFloat("Force limit", &component->m_motorForceLimit);
+        ImGui::InputFloat("Torque limit", &component->m_motorTorqueLimit);
         ImGui::InputFloat("Damping", &component->m_motorDamping);
         ImGui::InputFloat("Frequency", &component->m_motorFrequency);
     }

@@ -47,7 +47,8 @@ void MeshResource::render(ShaderProgramResource &shader) {
     glBindVertexArray(0);
 }
 
-void MeshResource::render(const glm::mat4& worldTransform, ShaderProgramResource &shader, MaterialResource &defaultMaterial) {
+void MeshResource::render(const glm::mat4 &worldTransform, ShaderProgramResource &shader,
+                          MaterialResource &defaultMaterial) {
     glBindVertexArray(m_model.m_vertexArrayObject);
 
     for (const auto &mesh: m_model.m_meshNodes) {
@@ -60,14 +61,46 @@ void MeshResource::render(const glm::mat4& worldTransform, ShaderProgramResource
         auto m = mesh.modelMatrix * worldTransform;
         shader.setUniform("modelMatrix", m);
 
-        glDrawElements(GL_TRIANGLES, mesh.size, GL_UNSIGNED_INT, reinterpret_cast<void *>(mesh.offset * sizeof(GLuint)));
+        glDrawElements(GL_TRIANGLES, mesh.size, GL_UNSIGNED_INT,
+                       reinterpret_cast<void *>(mesh.offset * sizeof(GLuint)));
+    }
+
+    glBindVertexArray(0);
+}
+
+void MeshResource::render(const glm::mat4 &worldTransform, ShaderProgramResource &shader, bool overrideMaterial,
+                          MaterialResource &defaultMaterial) {
+    glBindVertexArray(m_model.m_vertexArrayObject);
+
+    if (overrideMaterial) {
+        glm::mat4 m;
+        for (const auto &mesh: m_model.m_meshNodes) {
+            m = mesh.modelMatrix * worldTransform;
+            shader.setUniform("modelMatrix", m);
+
+            glDrawElements(GL_TRIANGLES, mesh.size, GL_UNSIGNED_INT,
+                           reinterpret_cast<void *>(mesh.offset * sizeof(GLuint)));
+        }
+    } else {
+        for (const auto &mesh: m_model.m_meshNodes) {
+            if (mesh.materialIndex >= 0 && m_materials[mesh.materialIndex].isReady()) {
+                m_materials[mesh.materialIndex].get().bind(shader);
+            } else {
+                defaultMaterial.bind(shader);
+            }
+
+            auto m = mesh.modelMatrix * worldTransform;
+            shader.setUniform("modelMatrix", m);
+
+            glDrawElements(GL_TRIANGLES, mesh.size, GL_UNSIGNED_INT,
+                           reinterpret_cast<void *>(mesh.offset * sizeof(GLuint)));
+        }
     }
 
     glBindVertexArray(0);
 }
 
 void MeshResource::preloadMaterials(tinygltf::Model &model, ResourceManager &resourceManager) {
-
     std::filesystem::path pathObj(m_Path);
     std::filesystem::path dirPath = pathObj.parent_path();
 
@@ -80,4 +113,16 @@ void MeshResource::preloadMaterials(tinygltf::Model &model, ResourceManager &res
         //                             });
         resourceManager.request(materialResource, material.name);
     }
+}
+
+std::string MeshResource::getNodeMaterial(const std::string &nodeName) {
+    for (const auto &node: m_model.m_meshNodes) {
+        if (node.name == nodeName) {
+            if (node.materialIndex >= 0 && node.materialIndex < m_materials.size()) {
+                return m_materials[node.materialIndex].get().m_Path;
+            }
+        }
+    }
+
+    return "";
 }

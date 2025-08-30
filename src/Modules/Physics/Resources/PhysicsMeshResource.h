@@ -15,9 +15,11 @@ public:
 
     void destroy() override;
 
-    [[nodiscard]] JPH::TriangleList createTriangleMeshShape(glm::vec3 scale);
+    [[nodiscard]] JPH::TriangleList getAllMeshTriangles(glm::vec3 scale) const;
 
-    [[nodiscard]] JPH::Array<JPH::Vec3> createConvexMeshShape(glm::vec3 scale);
+    [[nodiscard]] JPH::Array<JPH::Vec3> getAllMeshVertices(glm::vec3 scale);
+
+    [[nodiscard]] JPH::Array<JPH::Vec3> getMeshNodeVertices(const Model::MeshNode &node, glm::vec3 scale) const;
 
     ModelConfigurationLoader::ModelConfiguration m_model;
 

@@ -60,6 +60,8 @@ void MaterialEditWindowUI::process() {
             m_newMaterialName = "";
             m_selectedMaterial = nullptr;
             m_isNewMaterialSelected = true;
+            m_triplanarDiffuseMap = m_selectedMaterial->m_materialConfiguration.diffuseTextureWrappingType ==
+                                    MaterialConfiguration::WRAPPING_TRIPLANAR;
         }
 
         if (m_isNewMaterialSelected) {
@@ -116,10 +118,12 @@ void MaterialEditWindowUI::processMaterial() {
                        &m_selectedMaterial->m_materialConfiguration.selfIllumination, 0.0f, 1.0f,
                        "%.3f");
 
-
     ImGui::Checkbox("Does cast shadows", &m_selectedMaterial->m_materialConfiguration.doesCastShadows);
     ImGui::Checkbox("Does receive shadows", &m_selectedMaterial->m_materialConfiguration.doesReceiveShadows);
-
+    if (ImGui::Checkbox("Triplanar diffuse map wrapping", &m_triplanarDiffuseMap)) {
+        m_selectedMaterial->m_materialConfiguration.diffuseTextureWrappingType =
+                m_triplanarDiffuseMap ? MaterialConfiguration::WRAPPING_TRIPLANAR : MaterialConfiguration::WRAPPING_UV0;
+    }
 
     ImGui::Text("Diffuse texture");
     processTexture("DiffuseTexturePicker", m_selectedMaterial->m_Diffuse);

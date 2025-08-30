@@ -1,16 +1,25 @@
 
 struct MaterialStructure {
     vec4 diffuseColor;
+
     vec3 emissiveColor;
     float selfIllumination;
+
     uvec2 diffuseTextureHandle;
     uvec2 normalTextureHandle;
+
     uvec2 roughnessTextureHandle;
     uvec2 emissiveTextureHandle;
+
     float roughnessFactor;
     float metallicFactor;
     int doesCastShadows;
     int doesReceiveShadows;
+
+    int doesUseTriplanarMapping;
+    int _PLACEHOLDER1;
+    int _PLACEHOLDER2;
+    int _PLACEHOLDER3;
 };
 
 layout (binding = ${INDEX_MaterialsStorageBuffer}, std430) readonly buffer MaterialsStorageBuffer {
@@ -19,8 +28,24 @@ layout (binding = ${INDEX_MaterialsStorageBuffer}, std430) readonly buffer Mater
 
 uniform uint MaterialsStorageBuffer_size;
 
-vec4 getPrimaryDiffuseColor(MaterialStructure material, vec2 uv) {
+vec3 triplanarDiffuseTexture(in sampler2D diffuseSampler, vec3 surfaceNormal, vec3 position)
+{
+    vec3 blendWeights = abs(surfaceNormal);
+    blendWeights /= (blendWeights.x + blendWeights.y + blendWeights.z);
+
+    vec3 xaxis = texture2D( diffuseSampler, position.yz).rgb;
+    vec3 yaxis = texture2D( diffuseSampler, position.xz).rgb;
+    vec3 zaxis = texture2D( diffuseSampler, position.xy).rgb;
+
+    return xaxis * blendWeights.x + yaxis * blendWeights.y + zaxis * blendWeights.z;
+}
+
+vec4 getPrimaryDiffuseColor(MaterialStructure material, vec2 uv, vec3 surfaceNormal, vec3 position) {
     if (material.diffuseTextureHandle.x != 0 || material.diffuseTextureHandle.y != 0) {
+        if (material.doesUseTriplanarMapping == 1) {
+            return vec4(triplanarDiffuseTexture(sampler2D(material.diffuseTextureHandle), surfaceNormal, position), 1.0);
+        }
+
         return texture(sampler2D(material.diffuseTextureHandle), uv);
     }
 

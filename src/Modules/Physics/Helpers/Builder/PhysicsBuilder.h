@@ -182,6 +182,7 @@ class PhysicsBuilder {
         float m_motorFrequency1 = 0;
         float m_motorDamping1 = 0;
         float m_motorForceLimit = FLT_MAX;
+        float m_motorTorqueLimit = FLT_MAX;
         bool m_isMotorSettings2Enabled = false;
         float m_motorFrequency2 = 0;
         float m_motorDamping2 = 0;
@@ -192,6 +193,18 @@ class PhysicsBuilder {
             glm::vec2 m_twistAngleLimits{0, 0};
             glm::vec2 m_coneHalfAngle{0, 0};
         } m_swingTwistSettings{};
+
+        JPH::Vec3 getCOMOffset1() const {
+            const auto comPos = m_physicsSystem->GetBodyInterface().GetCenterOfMassPosition(m_bodyId1);
+            const auto worldPos = m_physicsSystem->GetBodyInterface().GetPosition(m_bodyId1);
+            return worldPos - comPos;
+        }
+
+        JPH::Vec3 getCOMOffset2() const {
+            const auto comPos = m_physicsSystem->GetBodyInterface().GetCenterOfMassPosition(m_bodyId2);
+            const auto worldPos = m_physicsSystem->GetBodyInterface().GetPosition(m_bodyId2);
+            return worldPos - comPos;
+        }
 
     public:
         explicit PhysicsJointBuilder(JPH::PhysicsSystem &physicsSystem): m_physicsSystem(&physicsSystem), m_limits() {
@@ -256,6 +269,13 @@ class PhysicsBuilder {
             return *this;
         }
 
+        PhysicsJointBuilder &setMotorTorqueLimit(const float limit) {
+            m_motorTorqueLimit = limit;
+            m_isMotorSettings1Enabled = true;
+
+            return *this;
+        }
+
         PhysicsJointBuilder &setTwistAngleLimits(const glm::vec2 limit) {
             m_swingTwistSettings.m_twistAngleLimits = limit;
 
@@ -286,16 +306,14 @@ class PhysicsBuilder {
                 lock2.ReleaseLock();
             }
 
-            // Log::write("Hinge joint params: ", body1, " ,", body2);
-
             if (!body1 || !body2) {
                 return nullptr;
             }
 
             JPH::FixedConstraintSettings settings;
             settings.mAutoDetectPoint = true;
-            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
-            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
+            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1)) + getCOMOffset1();
+            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2)) + getCOMOffset2();
             const auto joint = settings.Create(*body1, *body2);
 
             m_physicsSystem->AddConstraint(joint);
@@ -329,8 +347,8 @@ class PhysicsBuilder {
 
             JPH::DistanceConstraintSettings settings;
             settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
-            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
-            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
+            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1)) + getCOMOffset1();
+            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2)) + getCOMOffset2();
             settings.mMinDistance = m_limits.x;
             settings.mMaxDistance = m_limits.y;
 
@@ -368,8 +386,8 @@ class PhysicsBuilder {
             JPH::SliderConstraintSettings settings;
             settings.mAutoDetectPoint = true;
             settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
-            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
-            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
+            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1)) + getCOMOffset1();
+            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2)) + getCOMOffset2();
             settings.mSliderAxis1 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment1));
             settings.mSliderAxis2 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment2));
             settings.mNormalAxis1 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment1));
@@ -401,8 +419,8 @@ class PhysicsBuilder {
 
             JPH::HingeConstraintSettings settings;
             settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
-            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
-            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
+            settings.mPoint1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1)) + getCOMOffset1();
+            settings.mPoint2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2)) + getCOMOffset2();
             settings.mHingeAxis1 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment1));
             settings.mHingeAxis2 = PhysicsTypeCast::glmToJPH(Math::getXAxis(m_attachment2));
             settings.mNormalAxis1 = PhysicsTypeCast::glmToJPH(Math::getYAxis(m_attachment1));
@@ -444,9 +462,8 @@ class PhysicsBuilder {
                 motor_settings.mSpringSettings.mFrequency = m_motorFrequency1;
                 motor_settings.mSpringSettings.mDamping = m_motorDamping1;
                 motor_settings.SetForceLimit(m_motorForceLimit);
+                motor_settings.SetTorqueLimit(m_motorTorqueLimit);
             }
-
-            // Log::write("Create hinge joint: ", body1, " ", body2);
 
             return joint;
         }
@@ -475,8 +492,8 @@ class PhysicsBuilder {
 
             JPH::SwingTwistConstraintSettings settings;
             settings.mSpace = JPH::EConstraintSpace::LocalToBodyCOM;
-            settings.mPosition1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1));
-            settings.mPosition2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2));
+            settings.mPosition1 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment1)) + getCOMOffset1();
+            settings.mPosition2 = PhysicsTypeCast::glmToJPH(Math::getTranslation(m_attachment2)) + getCOMOffset2();
             settings.mTwistAxis1 = PhysicsTypeCast::glmToJPH(twistAxis1);
             settings.mTwistAxis2 = PhysicsTypeCast::glmToJPH(twistAxis2);
             settings.mPlaneAxis1 = PhysicsTypeCast::glmToJPH(planeAxis1);

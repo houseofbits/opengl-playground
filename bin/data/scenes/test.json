@@ -2,26 +2,26 @@
     {
         "EditorCameraComponent": {
             "firstPersonCtrl": true,
-            "isActive": true,
+            "isActive": false,
             "mouseLookSpeed": 0.15000000596046448,
             "moveSpeed": 3.0,
-            "orthoScale": 60.20000076293945,
+            "orthoScale": 6.200000762939453,
             "position": [
-                -18.24039077758789,
-                -1.7399647235870361,
-                19.323570251464844
+                -37.91653823852539,
+                1.520709753036499,
+                -3.5864884853363037
             ],
             "reposition": false,
             "type": 0,
             "upDirection": [
-                0.08606904000043869,
-                0.9960852265357971,
-                -0.020157434046268463
+                0.26168009638786316,
+                0.8616371154785156,
+                0.434862345457077
             ],
             "viewDirection": [
-                0.9698423743247986,
-                -0.08839797228574753,
-                -0.22713783383369446
+                0.4442603290081024,
+                -0.5075250267982483,
+                0.7382757663726807
             ]
         },
         "name": "EditorCamera"
@@ -53,6 +53,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/base-s0-collision.gltf",
             "meshScale": [
                 1.0,
@@ -215,9 +216,9 @@
                 1.0
             ],
             "translation": [
-                -5.8312835693359375,
-                4.869981288909912,
-                10.48060131072998
+                -5.9225897789001465,
+                4.8699822425842285,
+                14.089902877807617
             ]
         },
         "name": "OmniLight-COPY-COPY1"
@@ -287,6 +288,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/base-s1-collision.gltf",
             "meshScale": [
                 1.0,
@@ -348,6 +350,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/floor1-s0-collision.gltf",
             "meshScale": [
                 1.0,
@@ -409,6 +412,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/floor2-s0-collision.gltf",
             "meshScale": [
                 1.0,
@@ -470,6 +474,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/floor1-s1-collision.gltf",
             "meshScale": [
                 1.0,
@@ -531,6 +536,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/floor2-s1-collision.gltf",
             "meshScale": [
                 1.0,
@@ -573,8 +579,7 @@
     },
     {
         "MeshComponent": {
-            "material": "",
-            "model": "data/models/terrain/terrain.gltf"
+            "model": "data/models/terrain/terrain-flatter.gltf"
         },
         "PhysicsBodyComponent": {
             "damping": [
@@ -592,11 +597,12 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
-            "mesh": "data/models/terrain/terrain.gltf",
+            "mergeMesh": true,
+            "mesh": "data/models/terrain/terrain-flatter.gltf",
             "meshScale": [
-                0.499999463558197,
-                0.5,
-                0.499999463558197
+                0.49999943375587463,
+                0.30000001192092896,
+                0.49999943375587463
             ],
             "position": [
                 0.0,
@@ -620,13 +626,13 @@
                 0.8169997930526733
             ],
             "scale": [
-                0.499999463558197,
-                0.5,
-                0.499999463558197
+                0.49999943375587463,
+                0.30000001192092896,
+                0.49999943375587463
             ],
             "translation": [
                 0.0,
-                -4.88425350189209,
+                -3.554734706878662,
                 16.60553550720215
             ]
         },
@@ -726,20 +732,20 @@
         "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
-                0.015088288113474846,
-                0.10262461006641388,
-                0.026051096618175507,
+                0.015088353306055069,
+                0.10262494534254074,
+                0.026051141321659088,
                 0.9942644834518433
             ],
             "scale": [
-                0.9999999403953552,
+                0.9999991655349731,
                 0.9999998211860657,
-                0.9999996423721313
+                0.9999990463256836
             ],
             "translation": [
-                -3.953824043273926,
-                -3.9905004501342773,
-                -20.543006896972656
+                -0.4008512496948242,
+                -3.7018213272094727,
+                39.841033935546875
             ]
         },
         "name": "walker"
@@ -747,7 +753,7 @@
     {
         "CameraComponent": {
             "disableRelRotation": true,
-            "isActive": false,
+            "isActive": true,
             "position": [
                 0.0,
                 0.0,
@@ -773,9 +779,9 @@
             ],
             "cameraName": "",
             "lookDirection": [
-                0.28562265634536743,
-                -0.27923572063446045,
-                -0.9167587757110596
+                0.47314709424972534,
+                -0.4829322099685669,
+                0.7368231415748596
             ],
             "mlookSpeed": 0.0010000000474974513,
             "moveSpeed": 10.0
@@ -802,9 +808,9 @@
                 1.0
             ],
             "translation": [
-                -4.260368347167969,
-                1.6425238847732544,
-                24.579362869262695
+                -30.038549423217773,
+                14.451337814331055,
+                -5.369299411773682
             ]
         },
         "name": "CharacterController"
@@ -830,6 +836,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/floor2-s0-collision.gltf",
             "meshScale": [
                 1.0,
@@ -891,6 +898,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/floor2-s1-collision.gltf",
             "meshScale": [
                 1.0,
@@ -952,6 +960,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/floor2-s0-collision.gltf",
             "meshScale": [
                 1.0,
@@ -1013,6 +1022,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/floor2-s1-collision.gltf",
             "meshScale": [
                 1.0,
@@ -1074,6 +1084,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/floor2-s0-collision.gltf",
             "meshScale": [
                 1.0,
@@ -1135,6 +1146,7 @@
             "type": 0
         },
         "PhysicsShapeComponent": {
+            "mergeMesh": true,
             "mesh": "data/models/blockhouse/floor2-s1-collision.gltf",
             "meshScale": [
                 1.0,
@@ -1270,5 +1282,1255 @@
             ]
         },
         "name": "OmniLight-indoor"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-body.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                2.0,
+                2.0
+            ],
+            "friction": [
+                0.949999988079071,
+                0.949999988079071
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 100.0,
+            "restitution": 0.0,
+            "type": 1
+        },
+        "PhysicsShapeComponent#Base": {
+            "mergeMesh": false,
+            "mesh": "data/models/walker/walker-collision.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                1.5146665077736543e-07,
+                1.774452300651319e-07,
+                -1.271884286779823e-07,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -27.70209503173828,
+                8.506643295288086,
+                8.884852409362793
+            ]
+        },
+        "name": "walker-body"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.8314030170440674,
+                0.0,
+                -0.555669903755188
+            ],
+            "scale": [
+                0.9999995231628418,
+                1.0,
+                0.9999995231628418
+            ],
+            "translation": [
+                -19.51198959350586,
+                -3.153557777404785,
+                -85.46270751953125
+            ]
+        },
+        "name": "house-01"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.8478366732597351,
+                0.0,
+                -0.5302574634552002
+            ],
+            "scale": [
+                1.0000001192092896,
+                1.0,
+                1.0000001192092896
+            ],
+            "translation": [
+                -37.480865478515625,
+                -3.7195611000061035,
+                -44.51754379272461
+            ]
+        },
+        "name": "house-01-COPY"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                -0.4863452613353729,
+                0.0,
+                0.8737667202949524
+            ],
+            "scale": [
+                1.0000001192092896,
+                1.0,
+                1.0000001192092896
+            ],
+            "translation": [
+                31.325084686279297,
+                -3.0327811241149902,
+                43.007652282714844
+            ]
+        },
+        "name": "house-01-COPY-COPY"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                -0.543908953666687,
+                0.0,
+                0.839144229888916
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                48.93306350708008,
+                -2.848595380783081,
+                76.07363891601563
+            ]
+        },
+        "name": "house-01-COPY-COPY-COPY"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.8786682486534119,
+                0.0,
+                0.47743281722068787
+            ],
+            "scale": [
+                0.9999997615814209,
+                1.0,
+                0.9999997615814209
+            ],
+            "translation": [
+                12.862969398498535,
+                -3.2175936698913574,
+                91.5630874633789
+            ]
+        },
+        "name": "house-01-COPY-COPY-COPY-COPY"
+    },
+    {
+        "LightComponent": {
+            "atmosphericMieColor": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "atmosphericRayleightFactor": 1.0,
+            "attenuation": 50.0,
+            "blurRadius": 7.889999866485596,
+            "castShadows": true,
+            "color": [
+                1.0,
+                0.9897635579109192,
+                0.6519607901573181
+            ],
+            "enableAtmosphericEffects": false,
+            "intensity": 1.000000238418579,
+            "isEnabled": true,
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                14.611272811889648,
+                4.869989395141602,
+                63.497764587402344
+            ]
+        },
+        "name": "OmniLight-COPY-COPY1-COPY"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-base.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                5.0,
+                5.0
+            ],
+            "friction": [
+                10.0,
+                10.0
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 100.0,
+            "restitution": 0.0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent#motor": {
+            "attachmentAPosition": [
+                -0.01963043212890625,
+                2.222566604614258,
+                0.0
+            ],
+            "attachmentARotation": [
+                0.0,
+                0.0,
+                0.7071067690849304,
+                0.7071067690849304
+            ],
+            "attachmentBPosition": [
+                2.9605579376220703,
+                2.1143360137939453,
+                0.03925895690917969
+            ],
+            "attachmentBRotation": [
+                0.0,
+                0.0,
+                0.7071067690849304,
+                0.7071067690849304
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntity": "walker-body",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent#Base": {
+            "mergeMesh": false,
+            "mesh": "data/models/walker/walker-base-collision.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                1.5146665077736543e-07,
+                1.774452300651319e-07,
+                -1.271884286779823e-07,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -24.721906661987305,
+                8.398412704467773,
+                8.924111366271973
+            ]
+        },
+        "name": "walker-base"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-ramp.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                2.0,
+                2.0
+            ],
+            "friction": [
+                0.949999988079071,
+                0.949999988079071
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent": {
+            "attachmentAPosition": [
+                -1.9611186981201172,
+                0.0005006790161132813,
+                0.0
+            ],
+            "attachmentARotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                6.282447814941406,
+                2.873210906982422,
+                7.790755271911621
+            ],
+            "attachmentBRotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "enableLimits": true,
+            "enableLockingLimits": false,
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                0.6981316804885864
+            ],
+            "targetEntity": "walker-body",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent#Base": {
+            "boxSize": [
+                4.009372234344482,
+                0.1367211639881134,
+                0.9108835458755493
+            ],
+            "position": [
+                -0.013195037841796875,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                1.5146665077736543e-07,
+                1.7744537217367906e-07,
+                -1.2718847131054645e-07,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -19.458528518676758,
+                11.379353523254395,
+                16.675607681274414
+            ]
+        },
+        "name": "walker-ramp"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-foot.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                2.0,
+                2.0
+            ],
+            "friction": [
+                50.0,
+                0.949999988079071
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 30.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent": {
+            "attachmentAPosition": [
+                -0.01778411865234375,
+                0.8551836013793945,
+                0.0
+            ],
+            "attachmentARotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                0.8539562225341797,
+                -2.3442134857177734,
+                0.00865548849105835
+            ],
+            "attachmentBRotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "enableLimits": true,
+            "enableLockingLimits": false,
+            "initiallyConnected": true,
+            "limits": [
+                -0.5235987901687622,
+                0.5235987901687622
+            ],
+            "targetEntity": "walker-leg-right",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent#Base": {
+            "boxSize": [
+                12.84034252166748,
+                0.34870290756225586,
+                2.0493714809417725
+            ],
+            "position": [
+                0.10363006591796875,
+                0.3130488395690918,
+                0.0
+            ],
+            "rotation": [
+                1.5146679288591258e-07,
+                1.7744554270393564e-07,
+                -1.2718865605165774e-07,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -27.523962020874023,
+                8.895434379577637,
+                0.26875096559524536
+            ]
+        },
+        "name": "walker-foot-right"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-leg-right.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                2.0,
+                2.0
+            ],
+            "friction": [
+                0.0,
+                0.0
+            ],
+            "gravityFactor": 0.0,
+            "isSensor": false,
+            "mass": 50.0,
+            "restitution": 0.0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent#joint1": {
+            "attachmentAPosition": [
+                0.9949913024902344,
+                2.9266653060913086,
+                0.0
+            ],
+            "attachmentARotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                1.671966552734375,
+                -0.09772586822509766,
+                -0.2218485176563263
+            ],
+            "attachmentBRotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntity": "walker-joint1-right",
+            "targetEntityComponent": ""
+        },
+        "PhysicsHingeJointComponent#joint2": {
+            "attachmentAPosition": [
+                0.01703643798828125,
+                0.01703643798828125,
+                -0.04259234666824341
+            ],
+            "attachmentARotation": [
+                1.2868815701949643e-06,
+                -0.7071066498756409,
+                1.2868817975686397e-06,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                0.7858638763427734,
+                -0.02165699005126953,
+                -0.9145633578300476
+            ],
+            "attachmentBRotation": [
+                9.497071573605353e-07,
+                -0.7071066498756409,
+                9.497066457697656e-07,
+                0.70710688829422
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntity": "walker-joint2-right",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent#Base": {
+            "boxSize": [
+                1.3142261505126953,
+                3.9039597511291504,
+                0.5400522351264954
+            ],
+            "position": [
+                0.5876388549804688,
+                0.3130488395690918,
+                -0.13674354553222656
+            ],
+            "rotation": [
+                1.514671907898446e-07,
+                1.774459690295771e-07,
+                -1.2718882658191433e-07,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -28.395702362060547,
+                12.094831466674805,
+                0.260095477104187
+            ]
+        },
+        "name": "walker-leg-right"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-joint1-right.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                2.0,
+                2.0
+            ],
+            "friction": [
+                0.0,
+                0.0
+            ],
+            "gravityFactor": 0.0,
+            "isSensor": false,
+            "mass": 50.0,
+            "restitution": 0.0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent": {
+            "attachmentAPosition": [
+                0.010824203491210938,
+                -0.01722240447998047,
+                0.0
+            ],
+            "attachmentARotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                -1.3597583770751953,
+                6.5953569412231445,
+                -8.402908325195313
+            ],
+            "attachmentBRotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "initiallyConnected": true,
+            "limits": [
+                -0.6981316804885864,
+                0.6981316804885864
+            ],
+            "targetEntity": "walker-body",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent#Base": {
+            "boxSize": [
+                1.3142261505126953,
+                0.5119996666908264,
+                0.5400522351264954
+            ],
+            "position": [
+                0.6658916473388672,
+                -0.07407379150390625,
+                -0.13674354553222656
+            ],
+            "rotation": [
+                1.5146723342240875e-07,
+                1.774459690295771e-07,
+                -1.2718882658191433e-07,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -29.072677612304688,
+                15.119222640991211,
+                0.4819439947605133
+            ]
+        },
+        "name": "walker-joint1-right"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-joint2-right.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                2.0,
+                10.0
+            ],
+            "friction": [
+                0.0,
+                0.0
+            ],
+            "gravityFactor": 0.0,
+            "isSensor": false,
+            "mass": 200.0,
+            "restitution": 0.0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent#motor": {
+            "attachmentAPosition": [
+                0.10554695129394531,
+                -0.04018592834472656,
+                0.6559263467788696
+            ],
+            "attachmentARotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                -1.3568878173828125,
+                3.586695671081543,
+                -7.096859455108643
+            ],
+            "attachmentBRotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "enableMotorSettings": true,
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "motorDamping": 10.0,
+            "motorFrequency": 200.0,
+            "motorMaxForce": 1.0,
+            "motorMaxTorque": 3000.0,
+            "targetEntity": "walker-body",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent#Base": {
+            "boxSize": [
+                1.6977264881134033,
+                0.531745433807373,
+                0.2384634017944336
+            ],
+            "position": [
+                0.5847759246826172,
+                -0.07407379150390625,
+                -0.2754220962524414
+            ],
+            "rotation": [
+                1.5146733289839176e-07,
+                1.774462532466714e-07,
+                -1.2718885500362376e-07,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -29.16452980041504,
+                12.133524894714355,
+                1.1320664882659912
+            ]
+        },
+        "name": "walker-joint2-right"
+    },
+    {
+        "ScriptingComponent": {
+            "scriptFile": "data/scripts/main-ship.lua"
+        },
+        "name": "main-script"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-foot.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                2.0,
+                2.0
+            ],
+            "friction": [
+                50.0,
+                0.949999988079071
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 30.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent": {
+            "attachmentAPosition": [
+                -0.01778411865234375,
+                0.8666658401489258,
+                0.0
+            ],
+            "attachmentARotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                0.8539562225341797,
+                -2.332731246948242,
+                0.08713340759277344
+            ],
+            "attachmentBRotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "enableLimits": true,
+            "enableLockingLimits": false,
+            "initiallyConnected": true,
+            "limits": [
+                -0.5235987901687622,
+                0.5235987901687622
+            ],
+            "targetEntity": "walker-leg-left",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent#Base": {
+            "boxSize": [
+                12.84034252166748,
+                0.34870290756225586,
+                2.0493714809417725
+            ],
+            "position": [
+                0.10363006591796875,
+                0.3130488395690918,
+                0.0
+            ],
+            "rotation": [
+                1.5146679288591258e-07,
+                1.7744554270393564e-07,
+                -1.2718865605165774e-07,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -27.523962020874023,
+                8.895434379577637,
+                17.593835830688477
+            ]
+        },
+        "name": "walker-foot-left"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-joint1-left.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                2.0,
+                2.0
+            ],
+            "friction": [
+                0.0,
+                0.0
+            ],
+            "gravityFactor": 0.0,
+            "isSensor": false,
+            "mass": 50.0,
+            "restitution": 0.0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent": {
+            "attachmentAPosition": [
+                0.010824203491210938,
+                -0.01722240447998047,
+                0.029912948608398438
+            ],
+            "attachmentARotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                -1.3597583770751953,
+                6.5953569412231445,
+                8.424954414367676
+            ],
+            "attachmentBRotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "initiallyConnected": true,
+            "limits": [
+                -0.6981316804885864,
+                0.6981316804885864
+            ],
+            "targetEntity": "walker-body",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent#Base": {
+            "boxSize": [
+                1.3142261505126953,
+                0.5119996666908264,
+                0.5400522351264954
+            ],
+            "position": [
+                0.6658916473388672,
+                -0.07407379150390625,
+                0.24282169342041016
+            ],
+            "rotation": [
+                1.5146723342240875e-07,
+                1.774459690295771e-07,
+                -1.2718882658191433e-07,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -29.072677612304688,
+                15.119222640991211,
+                17.27989387512207
+            ]
+        },
+        "name": "walker-joint1-left"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-joint2-left.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                2.0,
+                10.0
+            ],
+            "friction": [
+                0.0,
+                0.0
+            ],
+            "gravityFactor": 0.0,
+            "isSensor": false,
+            "mass": 200.0,
+            "restitution": 0.0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent#motor": {
+            "attachmentAPosition": [
+                0.07460212707519531,
+                -0.04018688201904297,
+                0.5240764617919922
+            ],
+            "attachmentARotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                -1.3878326416015625,
+                3.5866947174072266,
+                8.284222602844238
+            ],
+            "attachmentBRotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "enableMotorSettings": true,
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "motorDamping": 10.0,
+            "motorFrequency": 200.0,
+            "motorMaxForce": 1.0,
+            "motorMaxTorque": 3000.0,
+            "targetEntity": "walker-body",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent#Base": {
+            "boxSize": [
+                1.6977264881134033,
+                0.531745433807373,
+                0.2384634017944336
+            ],
+            "position": [
+                0.5847759246826172,
+                -0.07407379150390625,
+                0.3360919952392578
+            ],
+            "rotation": [
+                1.5146733289839176e-07,
+                1.774462532466714e-07,
+                -1.2718885500362376e-07,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -29.16452980041504,
+                12.133524894714355,
+                16.64499855041504
+            ]
+        },
+        "name": "walker-joint2-left"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/walker/walker-leg-left.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                2.0,
+                2.0
+            ],
+            "friction": [
+                0.0,
+                0.0
+            ],
+            "gravityFactor": 0.0,
+            "isSensor": false,
+            "mass": 50.0,
+            "restitution": 0.0,
+            "type": 1
+        },
+        "PhysicsHingeJointComponent#joint1": {
+            "attachmentAPosition": [
+                1.0064735412597656,
+                2.9266653060913086,
+                0.0
+            ],
+            "attachmentARotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                1.6834487915039063,
+                -0.09772586822509766,
+                0.2268085479736328
+            ],
+            "attachmentBRotation": [
+                7.811196383045171e-07,
+                -0.7071066498756409,
+                7.811196383045171e-07,
+                0.70710688829422
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntity": "walker-joint1-left",
+            "targetEntityComponent": ""
+        },
+        "PhysicsHingeJointComponent#joint2": {
+            "attachmentAPosition": [
+                0.00555419921875,
+                0.01703643798828125,
+                -0.04259300231933594
+            ],
+            "attachmentARotation": [
+                1.2868815701949643e-06,
+                -0.7071066498756409,
+                1.2868817975686397e-06,
+                0.70710688829422
+            ],
+            "attachmentBPosition": [
+                0.7743816375732422,
+                -0.02165699005126953,
+                0.8191108703613281
+            ],
+            "attachmentBRotation": [
+                1.2868815701949643e-06,
+                -0.7071066498756409,
+                1.2868817975686397e-06,
+                0.70710688829422
+            ],
+            "enableLimits": false,
+            "enableLockingLimits": false,
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                1.0
+            ],
+            "targetEntity": "walker-joint2-left",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent#Base": {
+            "boxSize": [
+                1.3142261505126953,
+                3.9039597511291504,
+                0.5400522351264954
+            ],
+            "position": [
+                0.5876388549804688,
+                0.31304931640625,
+                0.04649925231933594
+            ],
+            "rotation": [
+                1.514671907898446e-07,
+                1.774459690295771e-07,
+                -1.2718882658191433e-07,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999998211860657,
+                0.9999994039535522
+            ],
+            "translation": [
+                -28.395702362060547,
+                12.094831466674805,
+                17.506702423095703
+            ]
+        },
+        "name": "walker-leg-left"
     }
 ]

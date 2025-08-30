@@ -46,8 +46,10 @@ Resource::Status TextureResource::build() {
 
     //Direct state access 4.5 or ARB_direct_state_access
     glTextureParameteri(m_textureId, GL_TEXTURE_MAX_LEVEL, maxMipMapLevels);
-    glTextureParameteri(m_textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTextureParameteri(m_textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // glTextureParameteri(m_textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    // glTextureParameteri(m_textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureParameteri(m_textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTextureParameteri(m_textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTextureStorage2D(m_textureId, maxMipMapLevels, GL_RGBA8, m_width, m_height);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

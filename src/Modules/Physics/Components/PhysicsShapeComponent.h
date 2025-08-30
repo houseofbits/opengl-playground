@@ -2,6 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../Resources/PhysicsMeshResource.h"
+#include "Jolt/Physics/Collision/Shape/StaticCompoundShape.h"
 
 class PhysicsShapeComponent : public Component {
     TYPE_DEFINITION(PhysicsShapeComponent);
@@ -13,6 +14,7 @@ class PhysicsShapeComponent : public Component {
     inline static const std::string MESH_SCALE_KEY = "meshScale";
     inline static const std::string SPHERE_RADIUS_KEY = "sphereRadius";
     inline static const std::string MESH_FILE_KEY = "mesh";
+    inline static const std::string MERGE_MESH_KEY = "mergeMesh";
 
 public:
     PhysicsShapeComponent();
@@ -28,9 +30,12 @@ public:
 
     void deserialize(const nlohmann::json &j, ResourceManager &) override;
 
-    JPH::Shape* createShape(bool isDynamic, glm::vec3 debugColor = {0.5, 0.5, 0.5});
+    JPH::Shape *createMergedShape(bool isDynamic, glm::vec3 debugColor = {0.5, 0.5, 0.5});
 
-    [[nodiscard]] glm::mat4 getWorldTransform(const glm::mat4& parentTransform) const;
+    void addCompoundShape(JPH::StaticCompoundShapeSettings &compound, bool isDynamic,
+                          glm::vec3 debugColor = {0.5, 0.5, 0.5});
+
+    [[nodiscard]] glm::mat4 getWorldTransform(const glm::mat4 &parentTransform) const;
 
     Type m_type{TYPE_UNDEFINED};
     glm::vec3 m_localPosition{0.0};
@@ -39,7 +44,8 @@ public:
     glm::vec3 m_boxSize{1.0};
     glm::vec3 m_meshScale{1.0};
     ResourceHandle<PhysicsMeshResource> m_meshResource;
+    bool m_doMergeMeshNodes;
 
 private:
-    void setUserData(JPH::Shape* shape) const;
+    void setUserData(JPH::Shape *shape, const std::string &name) const;
 };

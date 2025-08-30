@@ -48,7 +48,7 @@ Resource::Status PhysicsMeshResource::build() {
 void PhysicsMeshResource::destroy() {
 }
 
-JPH::TriangleList PhysicsMeshResource::createTriangleMeshShape(const glm::vec3 scale) {
+JPH::TriangleList PhysicsMeshResource::getAllMeshTriangles(const glm::vec3 scale) const {
     JPH::TriangleList triangles;
     for (int i = 0; i < m_model.indices.size(); i += 3) {
         JPH::Vec3 pv[3];
@@ -68,10 +68,24 @@ JPH::TriangleList PhysicsMeshResource::createTriangleMeshShape(const glm::vec3 s
     return triangles;
 }
 
-JPH::Array<JPH::Vec3> PhysicsMeshResource::createConvexMeshShape(const glm::vec3 scale) {
+JPH::Array<JPH::Vec3> PhysicsMeshResource::getAllMeshVertices(const glm::vec3 scale) {
     JPH::Array<JPH::Vec3> points;
     for (const auto &vertex: m_model.vertices) {
         const auto pos = vertex.position;
+        points.push_back({
+            pos.x * scale.x,
+            pos.y * scale.y,
+            pos.z * scale.z
+        });
+    }
+
+    return points;
+}
+
+JPH::Array<JPH::Vec3> PhysicsMeshResource::getMeshNodeVertices(const Model::MeshNode &node, const glm::vec3 scale) const {
+    JPH::Array<JPH::Vec3> points;
+    for (int i = node.offset; i < node.offset + node.size; ++i) {
+        auto pos = m_model.vertices[m_model.indices[i]].position;
         points.push_back({
             pos.x * scale.x,
             pos.y * scale.y,

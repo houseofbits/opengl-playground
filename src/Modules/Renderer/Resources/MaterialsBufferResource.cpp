@@ -10,8 +10,8 @@ Resource::Status MaterialsBufferResource::build() {
     }
 
     m_StorageBuffer.create(
-            MAX_MATERIALS,
-            ShaderSourceLoader::registerBindingIndex(m_Path));
+        MAX_MATERIALS,
+        ShaderSourceLoader::registerBindingIndex(m_Path));
 
     return STATUS_READY;
 }
@@ -39,6 +39,9 @@ void MaterialsBufferResource::appendMaterial(MaterialResource &material) {
     if (material.m_Emissive().isReady()) {
         structure.emissiveTextureHandle = material.m_Emissive().m_handleId;
     }
+
+    structure.doesUseTriplanarMapping = material.m_materialConfiguration.diffuseTextureWrappingType ==
+                                        MaterialConfiguration::WRAPPING_TRIPLANAR;
 
     material.m_materialBufferIndex = static_cast<int>(m_StorageBuffer.currentSize);
 

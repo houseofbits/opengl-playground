@@ -74,7 +74,7 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
 
     m_physicsBody = m_PhysicsResource().getInterface().CreateBody(characterSettings);
 
-    // m_physicsBody->SetFriction(0.5);
+    m_physicsBody->SetFriction(0);
     // m_physicsBody->SetRestitution(0);
 
     auto *userData = new PhysicsBodyUserData(m_EntityId.id());

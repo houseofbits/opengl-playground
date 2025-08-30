@@ -83,17 +83,7 @@ void PhysicsBodyComponent::createPhysics(EntityContext &ctx) {
 
     JPH::StaticCompoundShapeSettings compoundShapeSettings;
     for (const auto &shapeComponent: shapeComponents) {
-        auto shape = shapeComponent->createShape(m_BodyType == BODY_TYPE_DYNAMIC, color);
-
-        if (shape == nullptr) {
-            continue;
-        }
-
-        compoundShapeSettings.AddShape(
-            PhysicsTypeCast::glmToJPH(shapeComponent->m_localPosition),
-            PhysicsTypeCast::glmToJPH(shapeComponent->m_localRotation),
-            shape
-        );
+        shapeComponent->addCompoundShape(compoundShapeSettings, m_BodyType == BODY_TYPE_DYNAMIC, color);
     }
 
     auto createdShape = compoundShapeSettings.Create();

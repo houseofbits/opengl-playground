@@ -17,6 +17,7 @@ public:
     inline static const std::string LIMITS_KEY = "limits";
     inline static const std::string ENABLE_MOTOR_SETTINGS_KEY = "enableMotorSettings";
     inline static const std::string MOTOR_MAX_FORCE_KEY = "motorMaxForce";
+    inline static const std::string MOTOR_MAX_TORQUE_KEY = "motorMaxTorque";
     inline static const std::string MOTOR_DAMPING_KEY = "motorDamping";
     inline static const std::string MOTOR_FREQUENCY_KEY = "motorFrequency";
     inline static const std::string ATTACHMENT_A_POSITION_KEY = "attachmentAPosition";
@@ -42,6 +43,8 @@ public:
 
     [[nodiscard]] float getUnitPosition() const override;
 
+    float getJointAngle() const;
+
     void lockInPlace() override;
 
     void unLock() override;
@@ -56,6 +59,7 @@ public:
     glm::vec2 m_angularLimits;
     bool m_isMotorSettingsEnabled;
     float m_motorForceLimit;
+    float m_motorTorqueLimit;
     float m_motorDamping;
     float m_motorFrequency;
 

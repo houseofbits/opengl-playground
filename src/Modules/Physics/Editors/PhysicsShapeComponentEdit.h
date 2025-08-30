@@ -59,5 +59,7 @@ inline void processPhysicsShapeComponentEditor(Component *c, Entity *e, EditorUI
                 component->m_meshScale = t->getScale();
             }
         }
+
+        ImGui::Checkbox("Merge mesh nodes", &component->m_doMergeMeshNodes);
     }
 }

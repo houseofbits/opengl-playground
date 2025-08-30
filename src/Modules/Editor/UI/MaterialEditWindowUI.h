@@ -26,4 +26,5 @@ private:
     bool m_isNewMaterialSelected;
     std::string m_newMaterialName;
     ResourceHandle<MaterialResource> m_newMaterialResource;
+    bool m_triplanarDiffuseMap;
 };

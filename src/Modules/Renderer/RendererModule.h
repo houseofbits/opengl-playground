@@ -42,6 +42,11 @@ public:
         scriptingManager.registerComponentType<LightComponent>("isEnabled", &LightComponent::m_isEnabled,
                                                                "intensity", &LightComponent::m_Intensity
         );
+
+        scriptingManager.registerComponentType<MeshComponent>(
+            "setMaterial", &MeshComponent::setNodeMaterial,
+            "getMaterial", &MeshComponent::getNodeMaterial
+        );
     }
 
     void postRegister(EntityContext &ctx) override {

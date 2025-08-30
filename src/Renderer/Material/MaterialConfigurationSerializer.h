@@ -17,6 +17,7 @@ private:
     inline static const std::string KEY_SELF_ILLUMINATION_FACTOR = "selfIlluminationFactor";
     inline static const std::string KEY_DOES_CAST_SHADOWS = "doesCastShadows";
     inline static const std::string KEY_DOES_RECEIVE_SHADOWS = "doesReceiveShadows";
+    inline static const std::string KEY_DIFFUSE_WRAPPING_TYPE = "diffuseTextureWrapping";
 
 public:
     MaterialConfigurationSerializer();

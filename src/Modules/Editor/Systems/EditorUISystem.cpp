@@ -2,6 +2,7 @@
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
+#include "../../Physics/Components/PhysicsHingeJointComponent.h"
 #include "../Helpers/TexturePreviewHelper.h"
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
@@ -50,6 +51,34 @@ void EditorUISystem::process(EventManager &eventManager) {
             // auto transform = glm::mat4(1.0);
             // m_wireframeRenderer.renderCube(transform, {0, 0, 1, 1});
             // m_wireframeRenderer.renderSphere(transform, {0, 1, 0, 1});
+        }
+    } else {
+        const auto motorJointRight = m_EntityContext->findEntityComponent<PhysicsHingeJointComponent>("walker-joint2-right");
+        const auto motorJointLeft = m_EntityContext->findEntityComponent<PhysicsHingeJointComponent>("walker-joint2-left");
+
+        if (motorJointRight && motorJointLeft) {
+
+            auto posLeft = motorJointLeft->getJointAngle();
+            auto posRight = motorJointRight->getJointAngle();
+
+            ImGui::SetNextWindowPos(ImVec2(20, 40), ImGuiCond_Always);
+            ImGui::SetNextWindowBgAlpha(0.0f);
+
+            ImGuiWindowFlags flags =
+                ImGuiWindowFlags_NoDecoration |
+                ImGuiWindowFlags_AlwaysAutoResize |
+                ImGuiWindowFlags_NoSavedSettings |
+                ImGuiWindowFlags_NoFocusOnAppearing |
+                ImGuiWindowFlags_NoNav |
+                ImGuiWindowFlags_NoBackground;
+
+            ImGui::Begin("TransparentOverlay", nullptr, flags);
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0, 0, 0, 1));
+
+            ImGui::Text("Motor pos: %.0f %.0f", posLeft, posRight);
+
+            ImGui::PopStyleColor();
+            ImGui::End();
         }
     }
 }

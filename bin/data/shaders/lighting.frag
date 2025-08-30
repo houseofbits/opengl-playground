@@ -61,18 +61,6 @@ float pcssShadowCalculation(SpotLightStructure light, vec3 projCoords, float ndo
     return shadow / NUM_PCF_SAMPLES;
 }
 
-//vec3 triplanarDiffuseTexture(in sampler2D diffuseSampler, vec3 surfaceNormal)
-//{
-//    vec3 blendWeights = abs(surfaceNormal);
-//    blendWeights /= (blendWeights.x + blendWeights.y + blendWeights.z);
-//
-//    vec3 xaxis = texture2D( diffuseSampler, vsPosition.yz).rgb;
-//    vec3 yaxis = texture2D( diffuseSampler, vsPosition.xz).rgb;
-//    vec3 zaxis = texture2D( diffuseSampler, vsPosition.xy).rgb;
-//
-//    return xaxis * blendWeights.x + yaxis * blendWeights.y + zaxis * blendWeights.z;
-//}
-
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
     float a = roughness*roughness;
@@ -137,8 +125,10 @@ void main()
 
     MaterialStructure material = materials[primaryMaterialIndex];
 
-    vec3 diffuse = getPrimaryDiffuseColor(material, texCoords).xyz;
-    vec3 normal = getPrimaryNormal(material, texCoords, vsInvTBN, normalize(vsNormal));
+    vec3 surfaceNormal = normalize(vsNormal);
+
+    vec3 diffuse = getPrimaryDiffuseColor(material, texCoords, surfaceNormal, vsPosition.xyz).xyz;
+    vec3 normal = getPrimaryNormal(material, texCoords, vsInvTBN, surfaceNormal);
     vec3 emissive = getPrimaryEmissiveFactor(material, texCoords);
     vec3 mro = getPrimaryMROFactor(material, texCoords);
 
@@ -152,14 +142,13 @@ void main()
     vec3 lightColor = vec3(0);
 
     vec3 diffuseSpecular = diffuse.rgb + reflectionColor;
-    vec3 surfaceNormal = normalize(vsNormal);
 
     //IBL
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, diffuse, mro.x);
     vec3 V = normalize(viewPosition - vsPosition.xyz);
 
-    vec3 fogColor = vec3(0.0);
+    vec4 fogColor = vec4(0.0);
 
     for (int lightIndex = 0; lightIndex < SpotLightStorageBuffer_size; lightIndex++) {
         SpotLightStructure light = spotLights[lightIndex];
@@ -239,7 +228,8 @@ void main()
     lightedColor = (kD * lightedColor + specular) * mro.z;
     lightedColor += lightColor;
 
-    vec3 finalColor = lightedColor * (1.0 - fogColor) + fogColor;
+//    vec3 finalColor = mix(lightedColor, fogColor.rgb, fogColor.a);  //lightedColor * (1.0 - fogColor.rgb) + fogColor.rgb;
+    vec3 finalColor = lightedColor * (1.0 - fogColor.rgb) + fogColor.rgb;
 
     fragColor = vec4(finalColor, 1.0);
 }

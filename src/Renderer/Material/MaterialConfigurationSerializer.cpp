@@ -15,11 +15,14 @@ MaterialConfiguration MaterialConfigurationSerializer::deserialize(const nlohman
     config.diffuseTextureUri = Json::getValue(json, KEY_DIFFUSE_TEXTURE, config.diffuseTextureUri);
     config.normalTextureUri = Json::getValue(json, KEY_NORMAL_TEXTURE, config.normalTextureUri);
     config.roughnessMetallicTextureUri = Json::getValue(json, KEY_ROUGHNESS_METALLIC_TEXTURE,
-                                                                config.roughnessMetallicTextureUri);
+                                                        config.roughnessMetallicTextureUri);
     config.emissiveTextureUri = Json::getValue(json, KEY_EMISSIVE_TEXTURE, config.emissiveTextureUri);
     config.selfIllumination = Json::getValue(json, KEY_SELF_ILLUMINATION_FACTOR, config.selfIllumination);
     config.doesCastShadows = Json::getValue(json, KEY_DOES_CAST_SHADOWS, config.doesCastShadows);
     config.doesReceiveShadows = Json::getValue(json, KEY_DOES_RECEIVE_SHADOWS, config.doesReceiveShadows);
+
+    config.diffuseTextureWrappingType = Json::getValue(json, KEY_DIFFUSE_WRAPPING_TYPE,
+                                                       config.diffuseTextureWrappingType);
 
     return config;
 }
@@ -56,4 +59,6 @@ void MaterialConfigurationSerializer::serialize(MaterialConfiguration &config, n
     } else {
         json[KEY_EMISSIVE_TEXTURE] = nullptr;
     }
+
+    json[KEY_DIFFUSE_WRAPPING_TYPE] = config.diffuseTextureWrappingType;
 }

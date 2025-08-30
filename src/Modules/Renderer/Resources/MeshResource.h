@@ -20,9 +20,13 @@ public:
         //TODO Unload the mesh resource
     }
 
-    void render(const glm::mat4& worldTransform, ShaderProgramResource &, MaterialResource &);
+    void render(const glm::mat4 &worldTransform, ShaderProgramResource &, MaterialResource &);
 
     void render(ShaderProgramResource &);
+
+    void render(const glm::mat4 &worldTransform, ShaderProgramResource &, bool overrideMaterial, MaterialResource &);
+
+    std::string getNodeMaterial(const std::string &nodeName);
 
     std::vector<ResourceHandle<MaterialResource> > m_materials;
     ModelConfigurationLoader::ModelConfiguration m_modelConfig;
