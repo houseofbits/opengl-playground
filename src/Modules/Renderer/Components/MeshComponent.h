@@ -9,6 +9,7 @@ class MeshComponent : public Component {
 
     inline static const std::string MODEL_KEY = "model";
     inline static const std::string OVERRIDE_MATERIAL_KEY = "material";
+    inline static const std::string IS_VISIBLE_KEY = "isVisible";
 
 public:
     MeshComponent();
@@ -26,4 +27,5 @@ public:
     ResourceHandle<MeshResource> m_Mesh;
     ResourceHandle<MaterialResource> m_Material;
     bool m_shouldOverrideMaterial;
+    bool m_isVisible;
 };

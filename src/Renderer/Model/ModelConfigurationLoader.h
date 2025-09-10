@@ -38,14 +38,14 @@ private:
                          const tinygltf::Node &node,
                          const glm::mat4 &parentTransform,
                          ModelConfiguration &modelOut,
-                         const LoaderConfiguration& configuration);
+                         const LoaderConfiguration &configuration);
 
     static void loadMesh(const tinygltf::Model &model,
                          const tinygltf::Mesh &mesh,
                          glm::mat4 &transform,
                          ModelConfiguration &modelOut,
                          Model::MeshNode &meshNode,
-                         const LoaderConfiguration& configuration);
+                         const LoaderConfiguration &configuration);
 
     static int loadMeshIndices(const tinygltf::Model &model,
                                int indicesAccessor,
@@ -73,6 +73,8 @@ private:
     }
 
     static glm::mat4 getNodeTransform(const tinygltf::Node &node);
+
+    static glm::vec3 getNodeScaling(const tinygltf::Node &node);
 
     static glm::mat4 convertDoubleArrayToGlmMat4(const double arr[16]);
 };

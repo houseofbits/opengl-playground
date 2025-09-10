@@ -16,6 +16,7 @@
 #include "Systems/GunBehaviourSystem.h"
 #include "Systems/MotorBehaviourSystem.h"
 #include "Systems/ScriptingEventsSystem.h"
+#include "Events/ScriptUpdateEvent.h"
 
 class BehavioursModule final : public EntityModule {
 public:
@@ -49,5 +50,11 @@ public:
             editorSystem->registerComponentEditor<GunBehaviourComponent>(processGunBehaviourComponentEditor);
             editorSystem->registerComponentEditor<ScriptingComponent>(processScriptingComponentEditor);
         }
+    }
+
+    void registerScriptableTypes(ScriptingManager &scriptingManager) override {
+        scriptingManager.registerEventType<ScriptUpdateEvent>("ScriptUpdateEvent",
+                                                              "timestamp", &ScriptUpdateEvent::m_timestamp
+        );
     }
 };

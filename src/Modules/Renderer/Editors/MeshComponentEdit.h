@@ -19,6 +19,8 @@ inline void processMeshComponentEditor(Component *c, Entity *e, EditorUISystem &
         system.m_ResourceManager->request(component->m_Mesh, m_meshPath);
     }
 
+    ImGui::Checkbox("Visible", &component->m_isVisible);
+
     ImGui::Checkbox("Override material", &component->m_shouldOverrideMaterial);
     if (component->m_shouldOverrideMaterial) {
         if (ImGui::InputText("Material name", &m_materialPath)) {

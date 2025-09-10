@@ -2,38 +2,39 @@
     {
         "EditorCameraComponent": {
             "firstPersonCtrl": true,
-            "isActive": false,
+            "isActive": true,
             "mouseLookSpeed": 0.15000000596046448,
             "moveSpeed": 3.0,
-            "orthoScale": 6.200000762939453,
+            "orthoScale": 105.19999694824219,
             "position": [
-                -37.91653823852539,
-                1.520709753036499,
-                -3.5864884853363037
+                22.42084312438965,
+                -0.17871904373168945,
+                37.763694763183594
             ],
             "reposition": false,
             "type": 0,
             "upDirection": [
-                0.26168009638786316,
-                0.8616371154785156,
-                0.434862345457077
+                0.07434636354446411,
+                0.9967993497848511,
+                0.029387660324573517
             ],
             "viewDirection": [
-                0.4442603290081024,
-                -0.5075250267982483,
-                0.7382757663726807
+                -0.9270060062408447,
+                0.07994383573532104,
+                -0.36642730236053467
             ]
         },
         "name": "EditorCamera"
     },
     {
         "SkyComponent": {
-            "cubeMap": "resources/textures/sky2/*.png"
+            "cubeMap": "resources/textures/sky-dark/*.png"
         },
         "name": "Sky"
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/base-s0.gltf"
         },
@@ -269,6 +270,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/base-s1.gltf"
         },
@@ -331,6 +333,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/floor1-s0.gltf"
         },
@@ -393,6 +396,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/floor2-s0.gltf"
         },
@@ -455,6 +459,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/floor1-s1.gltf"
         },
@@ -517,6 +522,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/floor2-s1.gltf"
         },
@@ -579,6 +585,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "model": "data/models/terrain/terrain-flatter.gltf"
         },
         "PhysicsBodyComponent": {
@@ -641,13 +648,13 @@
     {
         "LightComponent": {
             "atmosphericMieColor": [
-                0.07099079340696335,
-                0.07843136787414551,
-                0.04229142516851425
+                0.009521253407001495,
+                0.009803950786590576,
+                0.008842779323458672
             ],
-            "atmosphericRayleightFactor": 0.8999999761581421,
+            "atmosphericRayleightFactor": 0.49999937415122986,
             "attenuation": 5000.0,
-            "blurRadius": 0.9700000286102295,
+            "blurRadius": 0.5,
             "castShadows": true,
             "color": [
                 0.9730772972106934,
@@ -655,9 +662,9 @@
                 0.5699250102043152
             ],
             "enableAtmosphericEffects": true,
-            "intensity": 5.299997329711914,
+            "intensity": 4.999998569488525,
             "isEnabled": true,
-            "radius": 300.0,
+            "radius": 400.0,
             "shadowBias": 0.00015999999595806003,
             "shadowResolution": 2048,
             "type": "DIRECT"
@@ -725,35 +732,9 @@
         "name": "SkySecondary-COPY"
     },
     {
-        "MeshComponent": {
-            "material": "",
-            "model": "data/models/walker/walker.gltf"
-        },
-        "TransformComponent": {
-            "disableRelRotation": false,
-            "rotation": [
-                0.015088353306055069,
-                0.10262494534254074,
-                0.026051141321659088,
-                0.9942644834518433
-            ],
-            "scale": [
-                0.9999991655349731,
-                0.9999998211860657,
-                0.9999990463256836
-            ],
-            "translation": [
-                -0.4008512496948242,
-                -3.7018213272094727,
-                39.841033935546875
-            ]
-        },
-        "name": "walker"
-    },
-    {
         "CameraComponent": {
             "disableRelRotation": true,
-            "isActive": true,
+            "isActive": false,
             "position": [
                 0.0,
                 0.0,
@@ -779,14 +760,15 @@
             ],
             "cameraName": "",
             "lookDirection": [
-                0.47314709424972534,
-                -0.4829322099685669,
-                0.7368231415748596
+                -0.939295768737793,
+                0.07792095839977264,
+                0.3341434597969055
             ],
             "mlookSpeed": 0.0010000000474974513,
             "moveSpeed": 10.0
         },
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/character-capsule.gltf"
         },
@@ -817,6 +799,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/floor2-s0.gltf"
         },
@@ -879,6 +862,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/floor2-s1.gltf"
         },
@@ -941,6 +925,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/floor2-s0.gltf"
         },
@@ -1003,6 +988,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/floor2-s1.gltf"
         },
@@ -1065,6 +1051,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/floor2-s0.gltf"
         },
@@ -1127,6 +1114,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/floor2-s1.gltf"
         },
@@ -1189,6 +1177,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/roof-s0.gltf"
         },
@@ -1215,6 +1204,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/roof-s1.gltf"
         },
@@ -1285,6 +1275,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-body.gltf"
         },
@@ -1347,68 +1338,51 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "boxSize": [
+                34.043304443359375,
+                29.63102912902832,
+                11.806907653808594
+            ],
+            "position": [
+                1.4931640625,
+                0.0,
+                -1.0559806823730469
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 1
         },
         "TransformComponent": {
             "disableRelRotation": false,
             "rotation": [
                 0.0,
-                0.8314030170440674,
                 0.0,
-                -0.555669903755188
-            ],
-            "scale": [
-                0.9999995231628418,
-                1.0,
-                0.9999995231628418
-            ],
-            "translation": [
-                -19.51198959350586,
-                -3.153557777404785,
-                -85.46270751953125
-            ]
-        },
-        "name": "house-01"
-    },
-    {
-        "MeshComponent": {
-            "material": "",
-            "model": "data/models/blockhouse/blockhouse.gltf"
-        },
-        "TransformComponent": {
-            "disableRelRotation": false,
-            "rotation": [
                 0.0,
-                0.8478366732597351,
-                0.0,
-                -0.5302574634552002
-            ],
-            "scale": [
-                1.0000001192092896,
-                1.0,
-                1.0000001192092896
-            ],
-            "translation": [
-                -37.480865478515625,
-                -3.7195611000061035,
-                -44.51754379272461
-            ]
-        },
-        "name": "house-01-COPY"
-    },
-    {
-        "MeshComponent": {
-            "material": "",
-            "model": "data/models/blockhouse/blockhouse.gltf"
-        },
-        "TransformComponent": {
-            "disableRelRotation": false,
-            "rotation": [
-                0.0,
-                -0.4863452613353729,
-                0.0,
-                0.8737667202949524
+                1.0
             ],
             "scale": [
                 1.0000001192092896,
@@ -1416,86 +1390,34 @@
                 1.0000001192092896
             ],
             "translation": [
-                31.325084686279297,
-                -3.0327811241149902,
-                43.007652282714844
+                -24.889562606811523,
+                -3.7195682525634766,
+                -15.118844985961914
             ]
         },
-        "name": "house-01-COPY-COPY"
-    },
-    {
-        "MeshComponent": {
-            "material": "",
-            "model": "data/models/blockhouse/blockhouse.gltf"
-        },
-        "TransformComponent": {
-            "disableRelRotation": false,
-            "rotation": [
-                0.0,
-                -0.543908953666687,
-                0.0,
-                0.839144229888916
-            ],
-            "scale": [
-                0.9999999403953552,
-                1.0,
-                0.9999999403953552
-            ],
-            "translation": [
-                48.93306350708008,
-                -2.848595380783081,
-                76.07363891601563
-            ]
-        },
-        "name": "house-01-COPY-COPY-COPY"
-    },
-    {
-        "MeshComponent": {
-            "material": "",
-            "model": "data/models/blockhouse/blockhouse.gltf"
-        },
-        "TransformComponent": {
-            "disableRelRotation": false,
-            "rotation": [
-                0.0,
-                0.8786682486534119,
-                0.0,
-                0.47743281722068787
-            ],
-            "scale": [
-                0.9999997615814209,
-                1.0,
-                0.9999997615814209
-            ],
-            "translation": [
-                12.862969398498535,
-                -3.2175936698913574,
-                91.5630874633789
-            ]
-        },
-        "name": "house-01-COPY-COPY-COPY-COPY"
+        "name": "house-00"
     },
     {
         "LightComponent": {
             "atmosphericMieColor": [
-                1.0,
-                1.0,
-                1.0
+                0.0,
+                0.0,
+                0.0
             ],
-            "atmosphericRayleightFactor": 1.0,
-            "attenuation": 50.0,
+            "atmosphericRayleightFactor": 0.09999998658895493,
+            "attenuation": 100.0,
             "blurRadius": 7.889999866485596,
             "castShadows": true,
             "color": [
                 1.0,
-                0.9897635579109192,
-                0.6519607901573181
+                0.9803921580314636,
+                0.6666666269302368
             ],
             "enableAtmosphericEffects": false,
-            "intensity": 1.000000238418579,
+            "intensity": 3.4999990463256836,
             "isEnabled": true,
-            "shadowBias": 9.999999747378752e-05,
-            "shadowResolution": 512,
+            "shadowBias": 9.999999747378752e-06,
+            "shadowResolution": 1024,
             "type": "OMNI"
         },
         "TransformComponent": {
@@ -1512,15 +1434,16 @@
                 1.0
             ],
             "translation": [
-                14.611272811889648,
-                4.869989395141602,
-                63.497764587402344
+                -19.725421905517578,
+                4.4412522315979,
+                30.578414916992188
             ]
         },
         "name": "OmniLight-COPY-COPY1-COPY"
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-base.gltf"
         },
@@ -1530,7 +1453,7 @@
                 5.0
             ],
             "friction": [
-                10.0,
+                50.0,
                 10.0
             ],
             "gravityFactor": 1.0,
@@ -1542,7 +1465,7 @@
         "PhysicsHingeJointComponent#motor": {
             "attachmentAPosition": [
                 -0.01963043212890625,
-                2.222566604614258,
+                2.3194847106933594,
                 0.0
             ],
             "attachmentARotation": [
@@ -1553,7 +1476,7 @@
             ],
             "attachmentBPosition": [
                 2.9605579376220703,
-                2.1143360137939453,
+                2.442964553833008,
                 0.03925895690917969
             ],
             "attachmentBRotation": [
@@ -1608,7 +1531,7 @@
             ],
             "translation": [
                 -24.721906661987305,
-                8.398412704467773,
+                8.630123138427734,
                 8.924111366271973
             ]
         },
@@ -1616,6 +1539,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-ramp.gltf"
         },
@@ -1634,7 +1558,7 @@
             "restitution": 0.5,
             "type": 1
         },
-        "PhysicsHingeJointComponent": {
+        "PhysicsHingeJointComponent#motor": {
             "attachmentAPosition": [
                 -1.9611186981201172,
                 0.0005006790161132813,
@@ -1709,6 +1633,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-foot.gltf"
         },
@@ -1723,7 +1648,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 30.0,
+            "mass": 50.0,
             "restitution": 0.5,
             "type": 1
         },
@@ -1802,6 +1727,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-leg-right.gltf"
         },
@@ -1928,6 +1854,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-joint1-right.gltf"
         },
@@ -2021,6 +1948,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-joint2-right.gltf"
         },
@@ -2125,6 +2053,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-foot.gltf"
         },
@@ -2139,7 +2068,7 @@
             ],
             "gravityFactor": 1.0,
             "isSensor": false,
-            "mass": 30.0,
+            "mass": 50.0,
             "restitution": 0.5,
             "type": 1
         },
@@ -2218,6 +2147,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-joint1-left.gltf"
         },
@@ -2311,6 +2241,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-joint2-left.gltf"
         },
@@ -2409,6 +2340,7 @@
     },
     {
         "MeshComponent": {
+            "isVisible": true,
             "material": "",
             "model": "data/models/walker/walker-leg-left.gltf"
         },
@@ -2532,5 +2464,916 @@
             ]
         },
         "name": "walker-leg-left"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "material": "",
+            "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "boxSize": [
+                33.33610153198242,
+                29.63102912902832,
+                10.989130020141602
+            ],
+            "position": [
+                1.4931640625,
+                0.0,
+                -1.0559806823730469
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0000001192092896,
+                1.0,
+                1.0000001192092896
+            ],
+            "translation": [
+                -63.03697967529297,
+                -3.7195682525634766,
+                -12.783295631408691
+            ]
+        },
+        "name": "house-01"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "material": "",
+            "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "boxSize": [
+                33.01110076904297,
+                29.63102912902832,
+                11.289801597595215
+            ],
+            "position": [
+                1.4931621551513672,
+                0.0,
+                -1.0559806823730469
+            ],
+            "rotation": [
+                0.0,
+                -6.056657753106265e-08,
+                0.0,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.8903449177742004,
+                0.0,
+                0.4552866518497467
+            ],
+            "scale": [
+                1.0000003576278687,
+                1.0,
+                1.0000003576278687
+            ],
+            "translation": [
+                -52.65825271606445,
+                -3.7195682525634766,
+                34.39522171020508
+            ]
+        },
+        "name": "house-02"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "material": "",
+            "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "boxSize": [
+                34.043304443359375,
+                29.63102912902832,
+                11.806907653808594
+            ],
+            "position": [
+                1.4931640625,
+                0.0,
+                -1.0559806823730469
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.8903449177742004,
+                0.0,
+                0.4552866518497467
+            ],
+            "scale": [
+                1.0000003576278687,
+                1.0,
+                1.0000003576278687
+            ],
+            "translation": [
+                -13.406442642211914,
+                -3.7195682525634766,
+                53.97465515136719
+            ]
+        },
+        "name": "house-03"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "material": "",
+            "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "boxSize": [
+                34.043304443359375,
+                29.63102912902832,
+                11.806907653808594
+            ],
+            "position": [
+                1.4931640625,
+                0.0,
+                -1.0559806823730469
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.8903449177742004,
+                0.0,
+                0.4552866518497467
+            ],
+            "scale": [
+                1.0000003576278687,
+                1.0,
+                1.0000003576278687
+            ],
+            "translation": [
+                -119.09038543701172,
+                -3.7195682525634766,
+                -9.863916397094727
+            ]
+        },
+        "name": "house-04"
+    },
+    {
+        "EditorCameraComponent": {
+            "firstPersonCtrl": false,
+            "isActive": false,
+            "mouseLookSpeed": 0.15000000596046448,
+            "moveSpeed": 3.0,
+            "orthoScale": 90.19999694824219,
+            "position": [
+                -11.787497520446777,
+                21.0,
+                22.412933349609375
+            ],
+            "reposition": false,
+            "type": 1,
+            "upDirection": [
+                0.0,
+                0.0,
+                -1.0
+            ],
+            "viewDirection": [
+                0.0,
+                -1.0,
+                0.0
+            ]
+        },
+        "name": "EditorCameraIsometic"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "material": "",
+            "model": "data/models/blockhouse/blockhouse.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "boxSize": [
+                34.043304443359375,
+                29.63102912902832,
+                11.806907653808594
+            ],
+            "position": [
+                1.4931640625,
+                0.0,
+                -1.0559806823730469
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 1
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.2344798892736435,
+                0.0,
+                0.972121000289917
+            ],
+            "scale": [
+                1.0000005960464478,
+                1.0,
+                1.0000005960464478
+            ],
+            "translation": [
+                23.67666244506836,
+                -3.7195682525634766,
+                -6.082623481750488
+            ]
+        },
+        "name": "house-04-COPY"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/wires.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.32175254821777344,
+                0.0,
+                0.94682377576828
+            ],
+            "scale": [
+                0.8871203660964966,
+                0.6618210673332214,
+                0.7124108076095581
+            ],
+            "translation": [
+                -7.0497941970825195,
+                10.191993713378906,
+                -6.607314586639404
+            ]
+        },
+        "name": "wires-01"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/wires.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.7573016285896301,
+                0.0,
+                0.6530652642250061
+            ],
+            "scale": [
+                0.8871209621429443,
+                0.6618210673332214,
+                0.9810625910758972
+            ],
+            "translation": [
+                -33.83146667480469,
+                10.482770919799805,
+                43.360843658447266
+            ]
+        },
+        "name": "wires-02"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/wires.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.7573016285896301,
+                0.0,
+                0.6530652642250061
+            ],
+            "scale": [
+                0.8489610552787781,
+                0.37486034631729126,
+                0.35079634189605713
+            ],
+            "translation": [
+                -42.31351089477539,
+                9.849084854125977,
+                -13.72746467590332
+            ]
+        },
+        "name": "wires-031"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/wires.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.6217734217643738,
+                0.0,
+                0.7831971645355225
+            ],
+            "scale": [
+                0.8489608764648438,
+                0.6618210673332214,
+                0.35079601407051086
+            ],
+            "translation": [
+                -42.38054275512695,
+                9.661991119384766,
+                -14.397506713867188
+            ]
+        },
+        "name": "wires-04"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/wires.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.7573016285896301,
+                0.0,
+                0.6530652642250061
+            ],
+            "scale": [
+                0.8871209621429443,
+                0.9457288384437561,
+                0.9810625910758972
+            ],
+            "translation": [
+                -34.88485336303711,
+                10.0732421875,
+                43.360843658447266
+            ]
+        },
+        "name": "wires-05"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/antenna.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -3.2721580112138327e-08,
+                0.7573017477989197,
+                -3.2721580112138327e-08,
+                0.6530651450157166
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -20.47100257873535,
+                9.602415084838867,
+                39.24561309814453
+            ]
+        },
+        "name": "antenna-01"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/antenna.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -3.2721580112138327e-08,
+                0.7573017477989197,
+                -3.2721580112138327e-08,
+                0.6530651450157166
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -59.64414978027344,
+                9.602425575256348,
+                19.687822341918945
+            ]
+        },
+        "name": "antenna-02"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/antenna.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -3.2721580112138327e-08,
+                0.7573017477989197,
+                -3.2721580112138327e-08,
+                0.6530651450157166
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -43.80026626586914,
+                9.602425575256348,
+                41.748939514160156
+            ]
+        },
+        "name": "antenna-03"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/antenna.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -3.2721580112138327e-08,
+                0.7573017477989197,
+                -3.2721580112138327e-08,
+                0.6530651450157166
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -46.27378463745117,
+                9.602425575256348,
+                -9.660136222839355
+            ]
+        },
+        "name": "antenna-04"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/antenna.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -3.2721580112138327e-08,
+                0.7573017477989197,
+                -3.2721580112138327e-08,
+                0.6530651450157166
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -3.2880401611328125,
+                9.602425575256348,
+                3.442826271057129
+            ]
+        },
+        "name": "antenna-05"
+    },
+    {
+        "LightComponent": {
+            "atmosphericMieColor": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atmosphericRayleightFactor": 0.09999998658895493,
+            "attenuation": 20.0,
+            "blurRadius": 7.889999866485596,
+            "castShadows": true,
+            "color": [
+                1.0,
+                0.9803921580314636,
+                0.6666666269302368
+            ],
+            "enableAtmosphericEffects": false,
+            "intensity": 2.4000000953674316,
+            "isEnabled": true,
+            "shadowBias": 9.999999747378752e-06,
+            "shadowResolution": 1024,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -30.410594940185547,
+                4.003289699554443,
+                50.037845611572266
+            ]
+        },
+        "name": "OmniLight-COPY-COPY1-COPY-COPY"
+    },
+    {
+        "EditorCameraComponent": {
+            "firstPersonCtrl": true,
+            "isActive": false,
+            "mouseLookSpeed": 0.15000000596046448,
+            "moveSpeed": 3.0,
+            "orthoScale": 105.19999694824219,
+            "position": [
+                -36.52130889892578,
+                -1.5350885391235352,
+                50.0981330871582
+            ],
+            "reposition": false,
+            "type": 0,
+            "upDirection": [
+                0.013170603662729263,
+                0.962449848651886,
+                0.27113980054855347
+            ],
+            "viewDirection": [
+                -0.046695902943611145,
+                0.2714594900608063,
+                -0.9613164663314819
+            ]
+        },
+        "name": "EditorCamera-02"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/tower.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -3.2721580112138327e-08,
+                0.7573017477989197,
+                -3.2721580112138327e-08,
+                0.6530651450157166
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -76.90782165527344,
+                9.904475212097168,
+                85.62052917480469
+            ]
+        },
+        "name": "tower-01"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/tower.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -3.2721580112138327e-08,
+                0.7573017477989197,
+                -3.2721580112138327e-08,
+                0.6530651450157166
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                123.08091735839844,
+                12.320406913757324,
+                22.5344295501709
+            ]
+        },
+        "name": "tower-02"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/tower.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -3.2721580112138327e-08,
+                0.7573017477989197,
+                -3.2721580112138327e-08,
+                0.6530651450157166
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -76.59751892089844,
+                23.324153900146484,
+                -232.52772521972656
+            ]
+        },
+        "name": "tower-03"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/antenna.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -8.338152390763298e-09,
+                0.2521957755088806,
+                -4.5517882796275444e-08,
+                0.9676762223243713
+            ],
+            "scale": [
+                1.0000003576278687,
+                1.0,
+                1.0000003576278687
+            ],
+            "translation": [
+                11.997886657714844,
+                9.602425575256348,
+                2.7583866119384766
+            ]
+        },
+        "name": "antenna-06"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/lantern.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -2.6775710537663144e-08,
+                0.6372424364089966,
+                -3.774255574739982e-08,
+                0.7706633806228638
+            ],
+            "scale": [
+                1.5,
+                1.5,
+                1.5
+            ],
+            "translation": [
+                16.788198471069336,
+                -3.1577212810516357,
+                41.2403564453125
+            ]
+        },
+        "name": "lantern-01"
+    },
+    {
+        "MeshComponent": {
+            "isVisible": true,
+            "model": "data/models/blockhouse/lantern.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -2.6775710537663144e-08,
+                0.6372424364089966,
+                -3.774255219468614e-08,
+                0.7706633806228638
+            ],
+            "scale": [
+                1.5,
+                1.5,
+                1.5
+            ],
+            "translation": [
+                -19.985816955566406,
+                -3.6177480220794678,
+                31.9373836517334
+            ]
+        },
+        "name": "lantern-02"
+    },
+    {
+        "LightComponent": {
+            "atmosphericMieColor": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atmosphericRayleightFactor": 0.09999998658895493,
+            "attenuation": 20.0,
+            "beamAngle": 120.0,
+            "blurRadius": 10.770000457763672,
+            "castShadows": true,
+            "color": [
+                1.0,
+                0.9803921580314636,
+                0.6666666269302368
+            ],
+            "enableAtmosphericEffects": false,
+            "intensity": 7.499995231628418,
+            "isEnabled": true,
+            "projectionTexture": "resources/textures/spot-proj-4.png",
+            "shadowBias": 9.999999747378752e-06,
+            "shadowResolution": 1024,
+            "type": "SPOT"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -0.6150730848312378,
+                0.016256315633654594,
+                -0.013006467372179031,
+                0.7881951928138733
+            ],
+            "scale": [
+                1.0000003576278687,
+                1.000000238418579,
+                0.9999999403953552
+            ],
+            "translation": [
+                16.956558227539063,
+                2.4232001304626465,
+                40.36145782470703
+            ]
+        },
+        "name": "LanternLight-01"
+    },
+    {
+        "LightComponent": {
+            "atmosphericMieColor": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atmosphericRayleightFactor": 0.09999998658895493,
+            "attenuation": 20.0,
+            "beamAngle": 120.0,
+            "blurRadius": 10.770000457763672,
+            "castShadows": true,
+            "color": [
+                1.0,
+                0.9803921580314636,
+                0.6666666269302368
+            ],
+            "enableAtmosphericEffects": false,
+            "intensity": 7.499995231628418,
+            "isEnabled": true,
+            "projectionTexture": "resources/textures/spot-proj-4.png",
+            "shadowBias": 9.999999747378752e-06,
+            "shadowResolution": 1024,
+            "type": "SPOT"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -0.6150730848312378,
+                0.016256315633654594,
+                -0.013006467372179031,
+                0.7881951928138733
+            ],
+            "scale": [
+                1.0000003576278687,
+                1.000000238418579,
+                0.9999998807907104
+            ],
+            "translation": [
+                -19.822898864746094,
+                2.024580955505371,
+                31.002548217773438
+            ]
+        },
+        "name": "LanternLight-02"
     }
 ]

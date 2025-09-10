@@ -82,4 +82,8 @@ private:
     Identity::Type m_selectedEntityId;
 
     WireframeRenderer m_wireframeRenderer;
+
+    glm::vec3 walkerPrevPosition;
+    float prevTime;
+    float walkerAverageSpeed;
 };

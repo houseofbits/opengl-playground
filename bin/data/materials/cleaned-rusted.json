@@ -1,0 +1,22 @@
+{
+    "diffuseColor": [
+        0.4901960492134094,
+        0.4901960492134094,
+        0.4901960492134094
+    ],
+    "diffuseTexture": null,
+    "diffuseTextureWrapping": 0,
+    "doesCastShadows": true,
+    "doesReceiveShadows": true,
+    "emiSsiveColor": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emissiveTexture": null,
+    "metallicFactor": 0.0,
+    "normalTexture": null,
+    "roughnessFactor": 1.0,
+    "roughnessMetallicTexture": null,
+    "selfIlluminationFactor": 0.0
+}

@@ -23,6 +23,7 @@ public:
         std::string name{};
         int materialIndex{-1};
         glm::mat4 modelMatrix{1.0};
+        glm::vec3 scaling{1.0};
         int offset{0};
         int size{0};
     };

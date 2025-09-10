@@ -6,6 +6,7 @@
 #include "../../Application/Events/InputEvent.h"
 #include "../../Application/Events/SystemEvent.h"
 #include "../Components/ScriptingComponent.h"
+#include "../Events/ScriptUpdateEvent.h"
 
 class ScriptingEventsSystem final : public EntitySystem {
 public:
@@ -21,9 +22,12 @@ public:
 
     void handleSystemEvent(const SystemEvent &event);
 
+    void process(EventManager &) override;
+
 private:
     void runAllScripts() const;
 
     bool m_isSimulationDisabled{true};
     SameComponentRegistry<ScriptingComponent> *m_registry;
+    ScriptUpdateEvent m_scriptUpdateEvent;
 };

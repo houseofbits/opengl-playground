@@ -1,6 +1,6 @@
 #include "MeshComponent.h"
 
-MeshComponent::MeshComponent() : Component(), m_Mesh(), m_Material(), m_shouldOverrideMaterial(false) {
+MeshComponent::MeshComponent() : Component(), m_Mesh(), m_Material(), m_shouldOverrideMaterial(false), m_isVisible(true) {
 }
 
 void MeshComponent::serialize(nlohmann::json &j) {
@@ -9,6 +9,8 @@ void MeshComponent::serialize(nlohmann::json &j) {
     if (m_shouldOverrideMaterial) {
         j[OVERRIDE_MATERIAL_KEY] = m_Material().m_Path;
     }
+
+    j[IS_VISIBLE_KEY] = m_isVisible;
 }
 
 void MeshComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -21,6 +23,8 @@ void MeshComponent::deserialize(const nlohmann::json &j, ResourceManager &resour
         path = j.value(OVERRIDE_MATERIAL_KEY, m_Material().m_Path);
         resourceManager.request(m_Material, path);
     }
+
+    m_isVisible = j.value(IS_VISIBLE_KEY, m_isVisible);
 }
 
 void MeshComponent::setNodeMaterial(const std::string &nodeName, const std::string &materialName) {
@@ -32,6 +36,10 @@ std::string MeshComponent::getNodeMaterial(const std::string &nodeName) {
 
 void MeshComponent::render(const glm::mat4 &worldTransform, ShaderProgramResource &shader,
                            MaterialResource &defaultMaterial) {
+    if (!m_isVisible) {
+        return;
+    }
+
     if (m_shouldOverrideMaterial && m_Material.isReady()) {
         m_Material().bind(shader);
         m_Mesh().render(worldTransform, shader, true, defaultMaterial);

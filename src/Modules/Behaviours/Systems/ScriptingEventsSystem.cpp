@@ -1,6 +1,8 @@
 #include "ScriptingEventsSystem.h"
 
-ScriptingEventsSystem::ScriptingEventsSystem() : EntitySystem() {
+#include "../../../Core/Helper/Time.h"
+
+ScriptingEventsSystem::ScriptingEventsSystem() : EntitySystem(), m_scriptUpdateEvent(0) {
     m_registry = useSameComponentRegistry<ScriptingComponent>();
 }
 
@@ -54,4 +56,9 @@ void ScriptingEventsSystem::runAllScripts() const {
             m_EntityContext->scriptingManager.runScript(component->m_scriptSource);
         }
     }
+}
+
+void ScriptingEventsSystem::process(EventManager &) {
+    m_scriptUpdateEvent.m_timestamp = Time::timestamp;
+    m_EntityContext->scriptingManager.handleEvent("ScriptUpdateEvent", m_scriptUpdateEvent);
 }
