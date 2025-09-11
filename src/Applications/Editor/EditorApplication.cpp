@@ -1,5 +1,5 @@
 #include "EditorApplication.h"
-#include "../../Core/Entity/EntitySerializer.h"
+// #include "../../Core/Entity/EntitySerializer.h"
 #include "../../Modules/Common/CommonModule.h"
 #include "../../Modules/Editor/EditorUIModule.h"
 #include "../../Modules/Physics/PhysicsModule.h"
@@ -11,6 +11,8 @@
 
 EditorApplication::EditorApplication() : Application() {
 }
+
+EditorApplication::~EditorApplication() = default;
 
 void EditorApplication::initialize(const std::string &fileName, const std::string &entityDefinitionFileName) {
     auto json = Json::readFile(entityDefinitionFileName);

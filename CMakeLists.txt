@@ -224,9 +224,25 @@ IF (WIN32)
     include_directories(${CMAKE_SOURCE_DIR}/libs/SDL2/x86_64-w64-mingw32/include)
     target_link_libraries(SDLWindow ${SDL2_LIBRARIES})
 
-    find_package(GLEW REQUIRED)
-    include_directories(${GLEW_INCLUDE_DIRS})
-    target_link_libraries(SDLWindow ${GLEW_LIBRARIES})
+    include_directories(${CMAKE_SOURCE_DIR}/libs/glew/include)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/glew/lib/Debug/x64/glew32d.lib)
+#    find_package(GLEW REQUIRED)
+#    include_directories(${GLEW_INCLUDE_DIRS})
+#    target_link_libraries(SDLWindow ${GLEW_LIBRARIES})
+
+    add_compile_definitions(JPH_PROFILE_ENABLED)
+    add_compile_definitions(JPH_DEBUG_RENDERER)
+    add_compile_definitions(JPH_OBJECT_STREAM)
+
+    include_directories(${CMAKE_SOURCE_DIR}/libs/Jolt)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/Jolt/libJolt.a)
+
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/libtinygltf.a)
+
+    include_directories(${CMAKE_SOURCE_DIR}/libs/lua/include)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/sol2/include)
+
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/sol2/liblua-5.4.4.dll.a)
 
 ELSE ()
     #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -frtti")

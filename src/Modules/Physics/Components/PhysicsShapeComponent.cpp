@@ -1,3 +1,5 @@
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include "PhysicsShapeComponent.h"
 #include "../../../Core/Helper/Math.h"
 #include <glm/gtx/quaternion.hpp>
@@ -159,5 +161,5 @@ void PhysicsShapeComponent::addCompoundShape(JPH::StaticCompoundShapeSettings &c
 
 void PhysicsShapeComponent::setUserData(JPH::Shape *shape, const std::string &name) const {
     auto *userData = new PhysicsShapeUserData(m_Id.id(), name);
-    shape->SetUserData(reinterpret_cast<unsigned long>(userData));
+    shape->SetUserData(reinterpret_cast<unsigned long long>(userData));
 }

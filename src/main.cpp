@@ -1,18 +1,8 @@
 #include "Applications/Editor/EditorApplication.h"
-#include "Applications/Main/MainApplication.h"
-#include "Renderer/Model/GLTFFileLoader.h"
+// #include "Applications/Main/MainApplication.h"
+// #include "Renderer/Model/GLTFFileLoader.h"
 #include "Renderer/Model/ModelConfigurationLoader.h"
-
-// template <typename Last>
-// void type_name2 () {
-//     std::cout << "Type: " << typeid(Last).name() << std::endl;
-// }
-//
-// template <typename First, typename Second, typename ...Rest>
-// void type_name2 () {
-//     type_name2<First>();
-//     type_name2<Second, Rest...>();
-// }
+#include "Modules/Application/Helpers/Window.h"
 
 int main(int argc, char *argv[]) {
     // // typesp<MainApplication, int>();
@@ -35,3 +25,17 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
+//
+// #include "Modules/Application/Helpers/Window.h"
+// #include "Applications/Editor/EditorApplication.h"
+//
+// int main(int argc, char *argv[]) {
+//   EditorApplication app;
+//
+//   std::string filename("test.json");
+//   app.initialize("data/scenes/" + filename, "data/entityMap.json");
+//
+//   return 1;
+// }
+

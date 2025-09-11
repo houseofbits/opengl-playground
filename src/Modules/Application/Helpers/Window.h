@@ -24,7 +24,7 @@ public:
 
     void destroy() const;
 
-    SDL_Window *getSDLWindow() const {
+    [[nodiscard]] SDL_Window *getSDLWindow() const {
         return sdlWindow;
     }
 
