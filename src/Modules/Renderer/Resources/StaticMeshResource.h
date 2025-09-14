@@ -14,5 +14,5 @@ public:
 
     void render();
 
-    VertexArray m_VertexArray;
+    // VertexArray m_VertexArray;
 };

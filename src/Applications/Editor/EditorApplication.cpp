@@ -1,5 +1,5 @@
 #include "EditorApplication.h"
-// #include "../../Core/Entity/EntitySerializer.h"
+#include "../../Core/Entity/EntitySerializer.h"
 #include "../../Modules/Common/CommonModule.h"
 #include "../../Modules/Editor/EditorUIModule.h"
 #include "../../Modules/Physics/PhysicsModule.h"

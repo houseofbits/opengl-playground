@@ -3,6 +3,8 @@ project(SDLWindow VERSION 0.1.0 LANGUAGES C CXX)
 
 file(GLOB_RECURSE sources src/*.cpp src/*.h)
 
+add_compile_options(-g -gdwarf-4)
+
 add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Texture/TextureCube.cpp
         src/Renderer/Texture/TextureCube.h
@@ -207,11 +209,14 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/Behaviours/LookAtJointBehaviour.h
         src/Modules/Renderer/Resources/MaterialsBufferResource.cpp
         src/Modules/Renderer/Resources/MaterialsBufferResource.h
+        src/Modules/Physics/PhysicsModule.cpp
 )
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 
 IF (WIN32)
+    set_source_files_properties(src/Modules/Physics/PhysicsModule.cpp PROPERTIES COMPILE_FLAGS "-g0")
+
     set(CMAKE_EXE_LINKER_FLAGS "-static")
 
     target_link_libraries(SDLWindow OPENGL32.LIB)
