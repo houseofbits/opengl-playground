@@ -25,6 +25,11 @@ void PhysicsModule::registerScriptableTypes(ScriptingManager &scriptingManager) 
         "connectToEntityTarget", &PhysicsHingeJointComponent::connectToEntityTarget,
         "disconnect", &PhysicsHingeJointComponent::requestDisconnectState,
         "isConnected", &PhysicsHingeJointComponent::isStateConnected
+        // "toggleState", [](PhysicsHingeJointComponent &self) {
+        //     if (self.m_useStatefulJointBehaviour) {
+        //         self.m_statefulJointBehaviour.toggleJointState(&self);
+        //     }
+        // }
     );
 
     scriptingManager.registerComponentType<PhysicsSliderJointComponent>(

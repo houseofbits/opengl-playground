@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "../../../libs/tinygltf/tiny_gltf.h"
 
 class GLTFFileLoader 

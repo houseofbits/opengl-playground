@@ -1,13 +1,12 @@
 #include "StaticMeshResource.h"
-//#include "../../../SourceLibs/tinygltf/tiny_gltf.h"
+// //#include "../../../SourceLibs/tinygltf/tiny_gltf.h"
 // #include "../../../../libs/tinygltf/tiny_gltf.h"
 // #include <GL/glew.h>
 // #include <iostream>
 
 // #define BUFFER_OFFSET(i) ((char *) NULL + (i))
 
-StaticMeshResource::StaticMeshResource()// : m_VertexArray()
-{
+StaticMeshResource::StaticMeshResource() {
 }
 
 Resource::Status StaticMeshResource::build() {

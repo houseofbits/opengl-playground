@@ -42,7 +42,7 @@
   * include/sol (includes)
   * liblua-5.4.4.dll.a
   * dll file in the /bin
-* lua (same version as for sol2)
+* lua (same version as for int sol2)
   * include
   * liblua54.a
   

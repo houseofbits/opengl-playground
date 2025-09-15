@@ -28,7 +28,7 @@
 #include "Editors/PhysicsSwingTwistJointComponentTransformEdit.h"
 #include "Editors/PhysicsJointAttachmentComponentTransformEdit.h"
 #include "Events/PhysicsPickingEvent.h"
-// #include "Events/PhysicsTriggerShapeEvent.h"
+#include "Events/PhysicsTriggerShapeEvent.h"
 #include "Components/PhysicsShapeComponent.h"
 #include "Editors/PhysicsJointAttachmentComponentEdit.h"
 #include "Editors/PhysicsShapeComponentTransformEdit.h"

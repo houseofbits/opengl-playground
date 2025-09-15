@@ -1,8 +1,6 @@
 #pragma once
 
-#include <utility>
-
-// #include "../../../Core/API.h"
+#include "../../../Core/API.h"
 
 class PhysicsPickingEvent : public BaseEvent {
     TYPE_DEFINITION(PhysicsPickingEvent);
@@ -17,14 +15,14 @@ public:
                         const glm::vec3 point,
                         const bool activate,
                         const Identity::Type shapeComponentId,
-                        std::string shapeName) : BaseEvent(),
+                        const std::string &shapeName) : BaseEvent(),
                                                         m_entityId(entityId),
-                                                        m_entityName(std::move(entityName)),
+                                                        m_entityName(entityName),
                                                         m_distance(distance),
                                                         m_touchPoint(point),
                                                         m_doActivate(activate),
                                                         m_shapeComponentId(shapeComponentId),
-                                                        m_shapeComponentName(std::move(shapeName)) {
+                                                        m_shapeComponentName(shapeName) {
     }
 
     Identity::Type m_entityId{0};
