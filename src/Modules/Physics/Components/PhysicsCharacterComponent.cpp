@@ -312,7 +312,7 @@ void PhysicsCharacterComponent::updateMove() {
 
     auto angularVel = m_physicsBody->GetAngularVelocity();
     constexpr float angularDampingFactor = 0.0001f;
-    constexpr float rotationSpeed = 0.5f;
+    constexpr float rotationSpeed = 0.3f;
     const float yVel = m_rotationDirection * rotationSpeed;
 
     // angularVel.SetY(angularDampingFactor * angularVel.GetY() + (1.0 - angularDampingFactor) * yVel);

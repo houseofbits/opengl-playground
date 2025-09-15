@@ -734,7 +734,7 @@
     {
         "CameraComponent": {
             "disableRelRotation": true,
-            "isActive": false,
+            "isActive": true,
             "position": [
                 0.0,
                 0.0,
@@ -760,16 +760,15 @@
             ],
             "cameraName": "",
             "lookDirection": [
-                -0.939295768737793,
-                0.07792095839977264,
-                0.3341434597969055
+                -0.2790132761001587,
+                0.4900086522102356,
+                0.8258590698242188
             ],
             "mlookSpeed": 0.0010000000474974513,
-            "moveSpeed": 10.0
+            "moveSpeed": 2.0
         },
         "MeshComponent": {
-            "isVisible": true,
-            "material": "",
+            "isVisible": false,
             "model": "data/models/character-capsule.gltf"
         },
         "PhysicsCharacterComponent": {
@@ -3104,7 +3103,7 @@
     {
         "EditorCameraComponent": {
             "firstPersonCtrl": true,
-            "isActive": true,
+            "isActive": false,
             "mouseLookSpeed": 0.15000000596046448,
             "moveSpeed": 3.0,
             "orthoScale": 105.19999694824219,
@@ -3117,13 +3116,13 @@
             "type": 0,
             "upDirection": [
                 0.004896565340459347,
-                0.9627764821052551,
-                0.27025488018989563
+                0.9627764225006104,
+                0.27025485038757324
             ],
             "viewDirection": [
-                -0.017441030591726303,
-                0.27029919624328613,
-                -0.962618350982666
+                -0.017441032454371452,
+                0.2702992260456085,
+                -0.9626184701919556
             ]
         },
         "name": "EditorCamera-02"
@@ -3320,7 +3319,7 @@
             "scale": [
                 1.0000003576278687,
                 1.000000238418579,
-                0.9999998211860657
+                0.9999997615814209
             ],
             "translation": [
                 16.956558227539063,
@@ -3366,7 +3365,7 @@
             "scale": [
                 1.0000003576278687,
                 1.000000238418579,
-                0.9999997615814209
+                0.9999997019767761
             ],
             "translation": [
                 -19.822898864746094,
