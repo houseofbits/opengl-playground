@@ -78,7 +78,7 @@ void PhysicsCharacterComponent::create(TransformComponent &transform) {
     // m_physicsBody->SetRestitution(0);
 
     auto *userData = new PhysicsBodyUserData(m_EntityId.id());
-    m_physicsBody->SetUserData(reinterpret_cast<unsigned long>(userData));
+    m_physicsBody->SetUserData(reinterpret_cast<unsigned long long>(userData));
 
     m_PhysicsResource().getInterface().AddBody(m_physicsBody->GetID(), JPH::EActivation::Activate);
 }
@@ -312,7 +312,7 @@ void PhysicsCharacterComponent::updateMove() {
 
     auto angularVel = m_physicsBody->GetAngularVelocity();
     constexpr float angularDampingFactor = 0.0001f;
-    constexpr float rotationSpeed = 0.5f;
+    constexpr float rotationSpeed = 0.3f;
     const float yVel = m_rotationDirection * rotationSpeed;
 
     // angularVel.SetY(angularDampingFactor * angularVel.GetY() + (1.0 - angularDampingFactor) * yVel);

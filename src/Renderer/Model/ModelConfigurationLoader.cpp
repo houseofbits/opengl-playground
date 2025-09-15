@@ -1,3 +1,5 @@
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include "ModelConfigurationLoader.h"
 #include "../../Core/Helper/Log.h"
 #include <glm/glm.hpp>

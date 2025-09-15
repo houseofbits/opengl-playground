@@ -39,7 +39,7 @@ class PhysicsBuilder {
 
             if (m_entityId != 0) {
                 auto *userData = new PhysicsBodyUserData(m_entityId);
-                physicsBody->SetUserData(reinterpret_cast<unsigned long>(userData));
+                physicsBody->SetUserData(reinterpret_cast<unsigned long long>(userData));
             }
 
             m_physicsSystem->GetBodyInterface().AddBody(physicsBody->GetID(), JPH::EActivation::Activate);

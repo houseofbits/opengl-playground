@@ -2,6 +2,7 @@
 
 #include "../../../Core/API.h"
 #include "../Resources/WindowResource.h"
+#include "../Events/InputEvent.h"
 
 class ApplicationEventsSystem : public EntitySystem {
 public:

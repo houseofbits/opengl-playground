@@ -10,7 +10,7 @@ inline void processMainCharacterBehaviourComponentEditor(Component *c, Entity *e
     if (ImGui::Checkbox("Active##MAIN_CHARACTER_ACTIVE", &component->m_isActive)) {
     }
 
-    ImGui::InputFloat("Mouse look speed", &component->m_mouseLookSpeed);
+    ImGui::InputFloat("Mouse look speed", &component->m_mouseLookSpeed, 0.0001f, 0.001f, "%.7f");
     ImGui::InputFloat("Movement speed", &component->m_movementSpeed);
 
     if (EntityLinkedComponentEdit::processBasic<CameraComponent>(

@@ -4,9 +4,12 @@
 
 class EditorApplication : public Application {
 public:
-    EditorApplication();
+  EditorApplication();
 
-    void run() override;
+  ~EditorApplication() override;
 
-    void initialize(const std::string &FileName, const std::string &entityDefinitionFileName);
+  void run() override;
+
+  void initialize(const std::string &FileName,
+                  const std::string &entityDefinitionFileName);
 };
