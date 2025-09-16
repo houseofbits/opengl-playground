@@ -232,5 +232,5 @@ void main()
     vec3 finalColor = lightedColor * (1.0 - fogColor.rgb) + fogColor.rgb;
 
     fragColor = vec4(finalColor, 1.0);
-//    fragColor = vec4(surfaceNormal, 1.0);
+//    fragColor = vec4(reflectionColor, 1.0);
 }
