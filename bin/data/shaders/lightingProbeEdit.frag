@@ -12,10 +12,10 @@ uniform int hasDiffuseSampler;
 layout(bindless_sampler) uniform sampler2D diffuseSampler;
 layout(bindless_sampler) uniform samplerCube environmentSampler;
 
-in vec3 gsNormal;
-in vec4 gsPosition;
-in vec2 gsTexcoord;
-in mat3 gsInvTBN;
+in vec3 vsNormal;
+in vec4 vsPosition;
+in vec2 vsTexcoord;
+in mat3 vsInvTBN;
 
 vec3 calculateProjectedCoords(vec4 lightSpacePos)
 {
@@ -42,10 +42,10 @@ void main()
 {
     vec3 diffuse = vec3(0.7);
     if (hasDiffuseSampler == 1) {
-        diffuse = texture(diffuseSampler, gsTexcoord).xyz;
+        diffuse = texture(diffuseSampler, vsTexcoord).xyz;
     }
 
-    vec3 fragmentWorldPos = gsPosition.xyz;
+    vec3 fragmentWorldPos = vsPosition.xyz;
     vec3 probeColor = vec3(diffuse.xyz);
 
     vec3 selectedColor[4];

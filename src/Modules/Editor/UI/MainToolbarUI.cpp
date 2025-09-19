@@ -1,36 +1,32 @@
 #include "MainToolbarUI.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
-#include "../../Physics/Components/CharacterControllerComponent.h"
+#include "../../Physics/Components/PhysicsCharacterComponent.h"
 #include "../Systems/EditorUISystem.h"
-
+#include "../Components/EditorCameraComponent.h"
+#include "../../Common/Events/CameraActivationEvent.h"
 
 MainToolbarUI::MainToolbarUI(EditorUISystem *editor) : m_EditorUISystem(editor),
-                                                       m_isEditWindowVisible(true),
-                                                       m_isSimulationEnabled(true),
-                                                       m_renderShaderType(0),
-                                                       m_previousSelectedCameraComponentId(0),
-                                                       m_selectedCameraComponentId(0) {
+                                                       m_renderShaderType(0) {
 }
 
 void MainToolbarUI::process() {
-
     if (ImGui::BeginMainMenuBar()) {
         ImGui::PushID(0);
-        if (!m_isSimulationEnabled) {
+        if (m_EditorUISystem->m_isEditorModeEnabled) {
             ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor(0, 200, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4) ImColor(0, 170, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4) ImColor(0, 150, 0));
-            if (ImGui::Button("Run")) {
-                runSimulation();
+            if (ImGui::Button("Run (F1)")) {
+                enableGameMode();
             }
             ImGui::PopStyleColor(3);
         } else {
             ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor(200, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4) ImColor(170, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4) ImColor(150, 0, 0));
-            if (ImGui::Button("Stop")) {
-                stopSimulation();
+            if (ImGui::Button("Stop (F1)")) {
+                enableEditorMode();
             }
             ImGui::PopStyleColor(3);
         }
@@ -38,24 +34,22 @@ void MainToolbarUI::process() {
 
         if (ImGui::BeginMenu("Edit")) {
             if (ImGui::MenuItem("Save")) {
-                sendSaveEvent();
-            }
-            if (ImGui::MenuItem("Edit components", nullptr, m_isEditWindowVisible)) {
-                m_isEditWindowVisible = !m_isEditWindowVisible;
-                sendEditorStateEvent();
-            }
-            if (ImGui::MenuItem("Simulation enabled", nullptr, m_isSimulationEnabled)) {
-                m_isSimulationEnabled = !m_isSimulationEnabled;
-                sendUIEvent(m_isSimulationEnabled ? EditorUIEvent::TOGGLE_SIMULATION_ENABLED : EditorUIEvent::TOGGLE_SIMULATION_DISABLED);
-            }
-            if (ImGui::MenuItem("Reset rigid bodies")) {
-                m_isSimulationEnabled = false;
-                sendUIEvent(EditorUIEvent::RESET_TO_INITIAL_TRANSFORM);
+                m_EditorUISystem->m_EventManager->queueEvent<EditorUIEvent>(EditorUIEvent::SAVE);
             }
             ImGui::Separator();
             if (ImGui::MenuItem("Update probes")) {
                 sendUIEvent(EditorUIEvent::TRIGGER_PROBE_RENDER);
             }
+
+            if (ImGui::MenuItem("Edit materials", nullptr, m_showMaterialEditor)) {
+                m_showMaterialEditor = !m_showMaterialEditor;
+                if (m_showMaterialEditor) {
+                    sendUIEvent(EditorUIEvent::SHOW_MATERIAL_EDITOR);
+                } else {
+                    sendUIEvent(EditorUIEvent::HIDE_MATERIAL_EDITOR);
+                }
+            }
+
             ImGui::EndMenu();
         }
 
@@ -63,40 +57,29 @@ void MainToolbarUI::process() {
 
         ImGui::Spacing();
 
-        if (!m_isSimulationEnabled) {
-            m_EditorUISystem->m_transformGizmo.processToolbar(*m_EditorUISystem->m_EntityContext);
+        if (m_EditorUISystem->m_isEditorModeEnabled) {
+            // m_EditorUISystem->m_transformGizmo.processToolbar(*m_EditorUISystem->m_EntityContext);
+            m_EditorUISystem->m_transformHelper.processToolbar();
         }
 
         ImGui::EndMainMenuBar();
     }
 }
 
-void MainToolbarUI::sendSaveEvent() {
-    auto evt = new EditorUIEvent();
-    evt->m_Type = EditorUIEvent::SAVE;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
-}
-
-void MainToolbarUI::sendEditorStateEvent() {
-    auto evt = new EditorUIEvent();
-    evt->m_Type = m_isEditWindowVisible ? EditorUIEvent::EDITOR_ENABLED : EditorUIEvent::EDITOR_DISABLED;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
-}
-
-void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) {
-    auto evt = new EditorUIEvent();
-    evt->m_Type = type;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+void MainToolbarUI::sendUIEvent(EditorUIEvent::Type type) const {
+    m_EditorUISystem->m_EventManager->queueEvent<EditorUIEvent>(type);
 }
 
 void MainToolbarUI::processViewMenu() {
-    for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
-        if (comp.second->m_isActive) {
-            m_selectedCameraComponentId = (int) comp.first;
-        }
-    }
-
     if (ImGui::BeginMenu("View")) {
+        if (ImGui::MenuItem("View physics wireframe", nullptr, m_showPhysicsShapesWireframe)) {
+            m_showPhysicsShapesWireframe = !m_showPhysicsShapesWireframe;
+            if (m_showPhysicsShapesWireframe) {
+                sendUIEvent(EditorUIEvent::SHOW_PHYSICS_SHAPES);
+            } else {
+                sendUIEvent(EditorUIEvent::HIDE_PHYSICS_SHAPES);
+            }
+        }
         if (ImGui::MenuItem("View shaded", nullptr, m_renderShaderType == 0)) {
             sendUIEvent(EditorUIEvent::TOGGLE_RENDER_SHADED);
             m_renderShaderType = 0;
@@ -109,55 +92,83 @@ void MainToolbarUI::processViewMenu() {
             sendUIEvent(EditorUIEvent::TOGGLE_RENDER_REFLECTIONS);
             m_renderShaderType = 2;
         }
+        if (ImGui::MenuItem("View physics", nullptr, m_renderShaderType == 3)) {
+            sendUIEvent(EditorUIEvent::TOGGLE_RENDER_PHYSICS);
+            m_renderShaderType = 3;
+        }
         ImGui::SeparatorText("Cameras");
 
-        for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
-            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(comp.first);
-            if (ImGui::MenuItem(e->getListName().c_str(), nullptr, comp.second->m_isActive)) {
-                m_selectedCameraComponentId = (int) comp.first;
+        unsigned int index = 1;
+        for (const auto &[id, camera]: m_EditorUISystem->m_editorCameraComponentRegistry->container()) {
+            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(id);
+            std::string name = e->getListName() + " (" + std::to_string(index) + ")";
+            if (ImGui::MenuItem(name.c_str(), nullptr, camera->m_isActive)) {
+                m_EditorUISystem->m_EventManager->queueEvent<CameraActivationEvent>(id);
+            }
+
+            index++;
+        }
+
+        for (const auto &[id, camera]: m_EditorUISystem->m_cameraComponentRegistry->container()) {
+            Entity *e = m_EditorUISystem->m_EntityContext->getEntity(id);
+            std::string name = e->getListName() + " (" + std::to_string(index) + ")";
+            if (ImGui::MenuItem(name.c_str(), nullptr, camera->m_isActive)) {
+                m_EditorUISystem->m_EventManager->queueEvent<CameraActivationEvent>(id);
+            }
+
+            index++;
+        }
+
+        ImGui::SeparatorText("Views");
+
+        for (const auto &[id, camera]: m_EditorUISystem->m_editorCameraComponentRegistry->container()) {
+            if (camera->m_isActive && camera->isOrthographic()) {
+                for (const auto &[type, name]: EditorCameraComponent::OrthographicViewNames) {
+                    if (ImGui::MenuItem(name.c_str())) {
+                        camera->setOrthographicViewType(type);
+
+                        // if (m_EditorUISystem->m_selectedEntityId > 0) {
+                        //     if (auto selectedTransformComponent = m_EditorUISystem->m_EntityContext->getEntityComponent<
+                        //         TransformComponent>(m_EditorUISystem->m_selectedEntityId)) {
+                        //         camera->setOrthographicViewTypeFocused(type, *selectedTransformComponent);
+                        //     }
+                        // }
+                    }
+                }
+
+                break;
             }
         }
 
         ImGui::EndMenu();
     }
-
-    activateCameras();
 }
 
-void MainToolbarUI::runSimulation() {
-    m_isSimulationEnabled = true;
-    sendUIEvent(EditorUIEvent::TOGGLE_SIMULATION_ENABLED);
-    m_isEditWindowVisible = false;
-    sendEditorStateEvent();
+void MainToolbarUI::enableGameMode() const {
+    m_EditorUISystem->m_EventManager->queueEvent<SystemEvent>(SystemEvent::REQUEST_GAME_MODE);
+}
 
-    m_previousSelectedCameraComponentId = m_selectedCameraComponentId;
-    auto cc = m_EditorUISystem->getComponentContainer<CharacterControllerComponent>();
-    if (!cc.empty()) {
-        auto* ccCam = m_EditorUISystem->getComponent<CameraComponent>(cc.begin()->first);
-        if (ccCam!= nullptr) {
-            m_selectedCameraComponentId = (int) ccCam->m_EntityId.id();
+void MainToolbarUI::enableEditorMode() const {
+    m_EditorUISystem->m_EventManager->queueEvent<SystemEvent>(SystemEvent::REQUEST_EDITOR_MODE);
+}
+
+void MainToolbarUI::selectCameraByIndex(const unsigned int index) const {
+    unsigned int i = 0;
+    for (const auto &[id, camera]: m_EditorUISystem->m_editorCameraComponentRegistry->container()) {
+        if (index == i) {
+            m_EditorUISystem->m_EventManager->queueEvent<CameraActivationEvent>(id);
+
+            return;
         }
+        i++;
     }
 
-    activateCameras();
-}
+    for (const auto &[id, camera]: m_EditorUISystem->m_cameraComponentRegistry->container()) {
+        if (index == i) {
+            m_EditorUISystem->m_EventManager->queueEvent<CameraActivationEvent>(id);
 
-void MainToolbarUI::stopSimulation() {
-    m_isSimulationEnabled = false;
-    sendUIEvent(EditorUIEvent::TOGGLE_SIMULATION_DISABLED);
-    sendUIEvent(EditorUIEvent::RESET_TO_INITIAL_TRANSFORM);
-    m_isEditWindowVisible = true;
-    sendEditorStateEvent();
-
-    if (m_previousSelectedCameraComponentId) {
-        m_selectedCameraComponentId = m_previousSelectedCameraComponentId;
-        m_previousSelectedCameraComponentId = 0;
-        activateCameras();
-    }
-}
-
-void MainToolbarUI::activateCameras() {
-    for (const auto comp: m_EditorUISystem->getComponentContainer<CameraComponent>()) {
-        comp.second->m_isActive = m_selectedCameraComponentId == comp.first;
+            return;
+        }
+        i++;
     }
 }

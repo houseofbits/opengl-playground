@@ -1,34 +1,42 @@
 [
     {
-        "name": "StaticMesh",
+        "name": "Script",
+        "components": {
+            "ScriptingComponent": {
+                "class": "ScriptingComponent"
+            }
+        }
+    },
+    {
+        "name": "Render Mesh",
         "components": {
             "transform": {
                 "class": "TransformComponent"
             },
             "mesh": {
-                "class": "StaticMeshComponent"
-            },
-            "physicsBody": {
-                "class": "PhysicsBodyComponent"
+                "class": "MeshComponent"
             }
         }
     },
     {
-        "name": "RigidBody",
+        "name": "Rigid Body",
         "components": {
             "transform": {
                 "class": "TransformComponent"
             },
             "mesh": {
-                "class": "StaticMeshComponent"
+                "class": "MeshComponent"
             },
             "physicsBody": {
                 "class": "PhysicsBodyComponent"
+            },
+            "physicsShape": {
+                "class": "PhysicsShapeComponent"
             }
         }
     },
     {
-        "name": "SpotLight",
+        "name": "Spot Light",
         "components": {
             "transform": {
                 "class": "TransformComponent",
@@ -45,7 +53,7 @@
         }
     },
     {
-        "name": "DirectLight",
+        "name": "Direct Light",
         "components": {
             "transform": {
                 "class": "TransformComponent",
@@ -62,7 +70,7 @@
         }
     },
     {
-        "name": "OmniLight",
+        "name": "Omni Light",
         "components": {
             "transform": {
                 "class": "TransformComponent",
@@ -80,7 +88,7 @@
         }
     },
     {
-        "name": "EnvironmentProbe",
+        "name": "Environment Probe",
         "components": {
             "probe": {
                 "class": "EnvironmentProbeComponent"
@@ -102,6 +110,14 @@
         }
     },
     {
+        "name": "Editor Camera",
+        "components": {
+            "editorCamera": {
+                "class": "EditorCameraComponent"
+            }
+        }
+    },
+    {
         "name": "Sky",
         "components": {
             "sky": {
@@ -110,7 +126,7 @@
         }
     },
     {
-        "name": "CharacterController",
+        "name": "Character Controller",
         "components": {
             "transform": {
                 "class": "TransformComponent",
@@ -120,33 +136,36 @@
                 }
             },
             "mesh": {
-                "class": "StaticMeshComponent"
+                "class": "MeshComponent",
+                "default": {
+                    "model": "data/models/character-capsule.gltf"
+                }
             },
             "cct": {
-                "class": "CharacterControllerComponent"
+                "class": "PhysicsCharacterComponent",
+                "default": {
+                    "height": 1.75,
+                    "radius": 0.25
+                }
             },
             "camera": {
                 "class": "CameraComponent"
-            }
-        }
-    },
-    {
-        "name": "Door",
-        "components": {
-            "transform": {
-                "class": "TransformComponent",
+            },
+            "characterBehaviour": {
+                "class": "MainCharacterBehaviourComponent",
                 "default": {
-                    "allowScaling": false
+                    "cameraAttachment": [
+                        0.0,
+                        1.7,
+                        0.0
+                    ],
+                    "cameraName": "",
+                    "lookDirection": [
+                        1,
+                        0,
+                        0
+                    ]
                 }
-            },
-            "mesh": {
-                "class": "StaticMeshComponent"
-            },
-            "physicsBody": {
-                "class": "PhysicsBodyComponent"
-            },
-            "physicsJoint": {
-                "class": "PhysicsJointComponent"
             }
         }
     }

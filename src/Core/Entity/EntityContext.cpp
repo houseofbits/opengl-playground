@@ -1,15 +1,11 @@
 #include "EntityContext.h"
 #include "EntitySerializer.h"
-#include <iostream>
 #include <memory>
 
 EntityContext::EntityContext() : m_ComponentFactory(),
                                  m_EntityConfiguration(m_ComponentFactory),
                                  m_Entities(),
-                                 m_Systems(),
-                                 m_entityBehavioursReadyToInitialize(),
-                                 m_entityBehavioursForRemoval(),
-                                 m_EntityBehaviourFactory() {
+                                 scriptingManager(*this) {
 }
 
 Entity::TEntityPtr EntityContext::addEntity() {
@@ -41,31 +37,20 @@ EntityContext::createEntityFromJson(nlohmann::json &entityJson) {
             continue;
         }
 
-        Component *c = m_ComponentFactory.createInstance(key);
+        const auto [type, name] = EntitySerializer::getComponentTypeAndNameFromNameKey(key);
+
+        Component *c = m_ComponentFactory.createInstance(type);
         if (c == nullptr) {
             Log::error("Component class not found " + key);
             continue;
         }
 
         c->m_Id = Identity::create(Identity::COMPONENT);
-        c->m_Name = key;
         c->m_EntityId = e->m_Id;
+        c->m_Status = Component::STATUS_CREATED;
+        c->m_Name = name;
 
         e->addComponent(*c);
-    }
-
-    if (entityJson.contains("behaviours") && entityJson["behaviours"].is_object()) {
-        nlohmann::json behavioursJson = entityJson["behaviours"];
-        for (auto &[key, value]: behavioursJson.items()) {
-            EntityBehaviour *b = m_EntityBehaviourFactory.createInstance(key);
-            if (b == nullptr) {
-                Log::error("Behaviour class not found ", key);
-                continue;
-            }
-
-            b->setEntity(e.get());
-            e->addBehaviour(*b);
-        }
     }
 
     return e;
@@ -74,7 +59,7 @@ EntityContext::createEntityFromJson(nlohmann::json &entityJson) {
 void EntityContext::removeEntity(int entityId) {
     Entity *e = getEntity(entityId);
     if (e != nullptr) {
-        e->unregisterFromSystems(*this);
+        unregisterEntityFromSystems(*e);
 
         for (const auto &entity: m_Entities) {
             if (entity->m_Id.id() == entityId) {
@@ -85,7 +70,7 @@ void EntityContext::removeEntity(int entityId) {
     }
 }
 
-void EntityContext::serializeEntities(nlohmann::json &j) {
+void EntityContext::serializeEntities(nlohmann::json &j) const {
     for (const auto &e: m_Entities) {
         nlohmann::json entityJson;
         EntitySerializer::serialize(*e, entityJson);
@@ -100,47 +85,53 @@ void EntityContext::deserializeEntities(nlohmann::json &j, ResourceManager &reso
     }
 }
 
-void EntityContext::unregisterComponentFromSystems(Component *component) {
-    for (const auto &system: m_Systems) {
-        system->unregisterComponent(component);
-    }
+void EntityContext::unregisterEntityFromSystems(Entity &entity) const {
+    entitySystemRegistry.unregisterEntityFromSystems(entity);
 }
 
-void EntityContext::registerEntitiesWithSystems(EventManager &eventManager) {
+void EntityContext::initializeEntities(EventManager &eventManager) {
     for (const auto &e: m_Entities) {
-        if (e->m_Status == Entity::CREATED && e->isReadyToRegister()) {
-            if (!e->m_Behaviours.empty()) {
-                for (const auto &behaviour: e->m_Behaviours) {
-                    behaviour->setEventManager(&eventManager);
-                    behaviour->registerEventHandlers(eventManager);
-                }
-            }
+        if (e->m_Status == Entity::ACTIVE) {
+            continue;
+        }
 
-            e->registerWithSystems(*this);
+        e->initializeComponents(*this);
+
+        if (e->isReadyToRegister()) {
+            registerEntityWithSystems(*e);
+            e->setStatus(Entity::ACTIVE);
         }
     }
 }
 
-void EntityContext::initializeSystems(ResourceManager &resourceManager, EventManager &eventManager) {
-    m_Systems.sort(
-            [](const EntitySystem *a, const EntitySystem *b) { return a->m_processPriority < b->m_processPriority; });
+void EntityContext::registerEntityWithSystems(Entity &entity) const {
+    entitySystemRegistry.registerEntityWithSystems(entity);
+}
 
-    for (const auto &system: m_Systems) {
-        system->m_EventManager = &eventManager;
-        system->initialize(resourceManager);
+void EntityContext::initializeSystems(ResourceManager &resourceManager, EventManager &eventManager) {
+    for (const auto &[system, processType]: m_systemInitializers) {
+        system->m_EventManager = &eventManager; //Remove
+
         system->registerEventHandlers(eventManager);
+        entitySystemRegistry.registerEntitySystem(*system, processType);
     }
+
+    for (const auto &[system, processType]: m_systemInitializers) {
+        system->initialize(resourceManager, eventManager);
+    }
+
+    postRegisterModules();
+
+    m_systemInitializers.clear();
 }
 
 void EntityContext::processSystems(EventManager &eventManager) {
-    registerEntitiesWithSystems(eventManager);
+    initializeEntities(eventManager);
 
-    for (const auto &system: m_Systems) {
-        system->process(eventManager);
-    }
+    entitySystemRegistry.processMain();
 }
 
-Entity *EntityContext::getEntity(Identity::Type id) {
+Entity *EntityContext::getEntity(const Identity::Type id) const {
     for (const auto &e: m_Entities) {
         if (e->m_Id.id() == id) {
             return e.get();
@@ -158,7 +149,7 @@ Entity *EntityContext::findEntity(const std::string &name) {
     return nullptr;
 }
 
-void EntityContext::createComponentInplace(Identity::Type entityId, const std::string& componentName) {
+void EntityContext::createComponentInplace(Identity::Type entityId, const std::string &componentName) {
     Entity *e = getEntity(entityId);
     if (e != nullptr) {
         Component *c = m_ComponentFactory.createInstance(componentName);
@@ -168,87 +159,56 @@ void EntityContext::createComponentInplace(Identity::Type entityId, const std::s
             return;
         }
 
-        if (e->getComponent(componentName) != nullptr) {
-            delete c;
-            Log::error("Entity already has component " + componentName);
-
-            return;
-        }
+        //TODO: Add is-unique check
+        // if (e->getComponent(componentName) != nullptr) {
+        //     delete c;
+        //     Log::error("Entity already has component " + componentName);
+        //
+        //     return;
+        // }
 
         c->m_Id = Identity::create(Identity::COMPONENT);
-        c->m_Name = componentName;
         c->m_EntityId = e->m_Id;
+        c->m_Status = Component::STATUS_DESERIALIZED;
 
+        unregisterEntityFromSystems(*e);
         e->addComponent(*c);
-        c->registerWithSystems(*this);
+        e->setStatus(Entity::CREATED);
     }
 }
 
-void EntityContext::removeComponent(Identity::Type entityId, const std::string& componentName) {
+void EntityContext::removeComponent(const Identity::Type entityId, const Identity::Type componentId) {
     Entity *e = getEntity(entityId);
     if (e != nullptr) {
-        auto *c = e->getComponent(componentName);
+        auto *c = e->getComponent(componentId);
         if (c != nullptr) {
-            unregisterComponentFromSystems(c);
+            unregisterEntityFromSystems(*e);
             e->removeComponent(*c);
-            delete c;
+            e->setStatus(Entity::CREATED);
+            //            delete c;
         }
     }
 }
 
-std::vector<std::string> EntityContext::getBehaviourTypes() {
-    return m_EntityBehaviourFactory.getNames();
+std::vector<std::string> EntityContext::getAllConfigurationNames() {
+    return m_EntityConfiguration.getAllConfigurationNames();
 }
 
-void EntityContext::addBehaviour(Identity::Type entityId, const std::string& type) {
-    auto *e = getEntity(entityId);
-    if (e == nullptr) {
-        return;
-    }
-
-    if (e->findBehaviour(type) != nullptr) {
-        Log::warn("Cannot add behaviour. Behaviour already exists on entity");
-
-        return;
-    }
-
-    auto *b = m_EntityBehaviourFactory.createInstance(type);
-    if (b == nullptr) {
-        return;
-    }
-
-    b->setEntity(e);
-    e->addBehaviour(*b);
-    m_entityBehavioursReadyToInitialize.push_back(b);
+std::vector<std::string> EntityContext::getAllComponentTypeNames() {
+    return m_ComponentFactory.getNames();
 }
 
-void EntityContext::removeBehaviour(Identity::Type entityId, const std::string& type) {
-    auto *e = getEntity(entityId);
-    if (e == nullptr) {
-        return;
+Entity *EntityContext::findEntity(std::function<bool(Entity *)> functor) {
+    auto it = std::find_if(
+        m_Entities.begin(),
+        m_Entities.end(),
+        [&functor](const auto &v) {
+            return functor(v.get());
+        });
+
+    if (it == m_Entities.end()) {
+        return nullptr;
     }
 
-    auto b = e->findBehaviour(type);
-    if (b == nullptr) {
-        Log::warn("Cannot remove behaviour. Behaviour not found on entity");
-
-        return;
-    }
-
-    m_entityBehavioursForRemoval.push_back(b);
-}
-
-void EntityContext::processBehaviours(ResourceManager &resourceManager, EventManager &eventManager) {
-    for (const auto &behaviour: m_entityBehavioursReadyToInitialize) {
-        behaviour->initialize(resourceManager);
-        behaviour->registerEventHandlers(eventManager);
-    }
-    m_entityBehavioursReadyToInitialize.clear();
-
-    for (const auto &behaviour: m_entityBehavioursForRemoval) {
-        eventManager.removeEventHandler((EventHandler *) behaviour);
-        behaviour->detachFromEntity();
-        delete behaviour;
-    }
-    m_entityBehavioursForRemoval.clear();
+    return it->get();
 }

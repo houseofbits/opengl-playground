@@ -4,36 +4,23 @@
 Entity::Entity() : m_Id(),
                    m_Name(),
                    m_Status(CREATED),
-                   m_Components(),
-                   m_Behaviours(),
-                   m_Systems() {
-
+                   m_Components() {
 }
 
 void Entity::addComponent(Component &component) {
     m_Components.push_back(Component::TComponentPtr(&component));
 }
 
-void Entity::registerWithSystems(EntityContext &ctx) {
-    for (const auto &component: m_Components) {
-        component->registerWithSystems(ctx);
-    }
-
-    m_Status = ACTIVE;
-}
-
-void Entity::unregisterFromSystems(EntityContext &ctx) {
-    for (const auto &component: m_Components) {
-        ctx.unregisterComponentFromSystems(component.get());
-    }
+void Entity::setStatus(Status status) {
+    m_Status = status;
 }
 
 bool Entity::isReadyToRegister() {
     return std::all_of(m_Components.begin(), m_Components.end(),
-                       [](const auto &component) { return component->isReady(); });
+                       [](const auto &component) { return component->isReadyToRegister(); });
 }
 
-void Entity::removeComponent(Component &c) {
+void Entity::removeComponent(const Component &c) {
     for (auto it = m_Components.begin(); it != m_Components.end(); ++it) {
         if ((*it)->m_Id == c.m_Id) {
             m_Components.erase(it);
@@ -43,38 +30,14 @@ void Entity::removeComponent(Component &c) {
     }
 }
 
-void Entity::addBehaviour(EntityBehaviour &behaviour) {
-    m_Behaviours.push_back(&behaviour);
-}
-
-void Entity::removeBehaviour(EntityBehaviour *behaviour) {
-    for (auto it = m_Behaviours.begin(); it != m_Behaviours.end(); ++it) {
-        if ((*it)->getTypeId() == behaviour->getTypeId()) {
-            m_Behaviours.erase(it);
-
-            return;
+void Entity::initializeComponents(EntityContext &ctx) const {
+    for (const auto &component: m_Components) {
+        if (component->isDeserialized() && component->isReadyToInitialize(ctx)) {
+            if (component->initialize(ctx)) {
+                component->m_Status = Component::STATUS_INITIALIZED;
+            } else {
+                component->m_Status = Component::STATUS_INITIALIZATION_ERROR;
+            }
         }
     }
-}
-
-void Entity::registerBehaviourEventHandlers(EventManager &eventManager) {
-    if (!m_Behaviours.empty()) {
-        for (const auto &behaviour: m_Behaviours) {
-            behaviour->registerEventHandlers(eventManager);
-        }
-    }
-}
-
-EntityBehaviour *Entity::findBehaviour(std::string typeName) {
-    auto it = std::find_if(
-            m_Behaviours.begin(),
-            m_Behaviours.end(),
-            [&](EntityBehaviour *p) {
-                return p->getTypeName() == typeName;
-            });
-    if (it != m_Behaviours.end()) {
-        return (*it);
-    }
-
-    return nullptr;
 }

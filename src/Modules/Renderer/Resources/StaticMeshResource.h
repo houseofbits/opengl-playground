@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../../../Renderer/Model/VertexArray.h"
+// #include "../../../Renderer/Model/VertexArray.h"
 
 class StaticMeshResource : public Resource {
 public:
@@ -14,5 +14,5 @@ public:
 
     void render();
 
-    VertexArray m_VertexArray;
+    // VertexArray m_VertexArray;
 };

@@ -1,21 +1,20 @@
+#include <cstdarg>
 #include "PhysicsResource.h"
 #include "../Helpers/PhysicsTypeCast.h"
-#include "Jolt/Physics/Collision/CastResult.h"
-#include "Jolt/Physics/Collision/RayCast.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Core/TempAllocator.h>
 #include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Physics/PhysicsSettings.h>
-#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+
+#include "../../../Renderer/Shader/WireframeRenderer.h"
 
 JPH_SUPPRESS_WARNINGS
 using namespace JPH;
 using namespace JPH::literals;
 
 static void TraceImpl(const char *inFMT, ...) {
-    // Format the message
     va_list list;
     va_start(list, inFMT);
     char buffer[1024];
@@ -33,22 +32,18 @@ static bool AssertFailedImpl(const char *inExpression, const char *inMessage, co
 
 PhysicsResource::PhysicsResource() : Resource(),
                                      m_PhysicsSystem(),
-                                     m_objectPairFilter(),
                                      m_broadPhaseFilter(),
                                      m_broadPhaseLayerMapper(),
                                      m_contactListener(),
                                      m_jobPool(nullptr),
-                                     m_tempAllocator(nullptr) {
+                                     m_tempAllocator(nullptr),
+                                     m_debugRenderer(nullptr) {
 }
 
 Resource::Status PhysicsResource::fetchData(ResourceManager &) {
     return Resource::STATUS_DATA_READY;
 }
 
-/**
- * Note: Physics simulation configuration and details can be loaded from the json config file. So that each scene could
- * have its own physics settings applied.
- */
 Resource::Status PhysicsResource::build() {
     RegisterDefaultAllocator();
     Trace = TraceImpl;
@@ -56,13 +51,14 @@ Resource::Status PhysicsResource::build() {
     JPH::Factory::sInstance = new JPH::Factory();
     RegisterTypes();
 
-    m_jobPool = new JobSystemThreadPool(cMaxPhysicsJobs, cMaxPhysicsBarriers, (int) thread::hardware_concurrency() - 1);
+    m_jobPool = new JobSystemThreadPool(cMaxPhysicsJobs, cMaxPhysicsBarriers,
+                                        static_cast<int>(thread::hardware_concurrency()) - 1);
     m_tempAllocator = new TempAllocatorImpl(10 * 1024 * 1024);
 
-    const uint cMaxBodies = 1024;
-    const uint cNumBodyMutexes = 0;
-    const uint cMaxBodyPairs = 1024;
-    const uint cMaxContactConstraints = 1024;
+    constexpr uint cMaxBodies = 1024;
+    constexpr uint cNumBodyMutexes = 0;
+    constexpr uint cMaxBodyPairs = 1024;
+    constexpr uint cMaxContactConstraints = 1024;
 
     m_PhysicsSystem.Init(cMaxBodies,
                          cNumBodyMutexes,
@@ -74,6 +70,9 @@ Resource::Status PhysicsResource::build() {
 
     m_PhysicsSystem.SetGravity({0, -9.8, 0});
     m_PhysicsSystem.SetContactListener(&m_contactListener);
+    m_contactListener.setPhysicsResource(*this);
+
+    m_debugRenderer = PhysicsDebugRenderer::getInstance();
 
     return Resource::STATUS_READY;
 }
@@ -82,6 +81,20 @@ void PhysicsResource::destroy() {
     UnregisterTypes();
     delete JPH::Factory::sInstance;
     JPH::Factory::sInstance = nullptr;
+}
+
+void PhysicsResource::destroyAllBodies() {
+    auto constraints = m_PhysicsSystem.GetConstraints();
+    for (const auto &constraint: constraints) {
+        m_PhysicsSystem.RemoveConstraint(constraint);
+    }
+
+    BodyIDVector bodyIDs;
+    m_PhysicsSystem.GetBodies(bodyIDs);
+    for (JPH::BodyID bodyID: bodyIDs) {
+        m_PhysicsSystem.GetBodyInterface().RemoveBody(bodyID);
+        m_PhysicsSystem.GetBodyInterface().DestroyBody(bodyID);
+    }
 }
 
 void PhysicsResource::addContactPoint(Identity::Type entityId, glm::vec3 point) {
@@ -106,6 +119,30 @@ JPH::BodyInterface &PhysicsResource::getInterface() {
     return m_PhysicsSystem.GetBodyInterface();
 }
 
+const JPH::BodyLockInterfaceLocking &PhysicsResource::getLockInterface() const {
+    return m_PhysicsSystem.GetBodyLockInterface();
+}
+
 JPH::PhysicsSystem &PhysicsResource::getSystem() {
     return m_PhysicsSystem;
+}
+
+void PhysicsResource::drawDebug(ShaderProgramResource &shader) {
+    m_debugRenderer->NextFrame();
+
+    JPH::BodyManager::DrawSettings drawSettings;
+
+    drawSettings.mDrawShapeColor = BodyManager::EShapeColor::MaterialColor;
+
+    m_debugRenderer->m_shader = &shader;
+
+    m_PhysicsSystem.DrawBodies(drawSettings, m_debugRenderer);
+}
+
+
+void PhysicsResource::drawDebugWireframe(WireframeRenderer &wireframeRenderer) {
+    m_PhysicsSystem.DrawConstraints(m_debugRenderer);
+    m_debugRenderer->m_wireModel.build();
+
+    wireframeRenderer.render(glm::mat4(1.0), m_debugRenderer->m_wireModel);
 }

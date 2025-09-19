@@ -1,26 +1,28 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../../Common/Components/CameraComponent.h"
-#include "../../Editor/Events/EditorUIEvent.h"
-#include "../Components/CharacterControllerComponent.h"
+#include "../../../Modules/Application/Events/SystemEvent.h"
 #include "../Resources/PhysicsResource.h"
-#include "../Helpers/DebugRendererImpl.h"
+#include "../Helpers/PhysicsComponent.h"
 
 class PhysicsSystem : public EntitySystem {
 public:
     PhysicsSystem();
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void process(EventManager &) override;
 
     void registerEventHandlers(EventManager &) override;
 
-    void handleEditorUIEvent(const EditorUIEvent *);
+    void handleSystemEvent(const SystemEvent &);
 
 private:
+    void processCreation() const;
+
+    void recreateAll() const;
+
     ResourceHandle<PhysicsResource> m_PhysicsResource;
+    SameComponentRegistry<PhysicsComponent> *m_physicsComponentRegistry;
     bool m_isSimulationDisabled;
-    DebugRendererImpl m_debugRenderer;
 };

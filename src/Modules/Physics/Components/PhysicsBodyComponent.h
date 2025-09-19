@@ -1,54 +1,73 @@
 #pragma once
 
+#include "PhysicsShapeComponent.h"
 #include "../../../Core/API.h"
 #include "../../Common/Components/TransformComponent.h"
 #include "../Resources/PhysicsMeshResource.h"
 #include "../Resources/PhysicsResource.h"
+#include "../Helpers/PhysicsComponent.h"
 
-class PhysicsBodyComponent : public Component {
+class PhysicsBodyComponent : public PhysicsComponent {
     TYPE_DEFINITION(PhysicsBodyComponent);
 
+    static constexpr glm::vec3 STATIC_COLOR = glm::vec3(0.5, 0.5, 0.5);
+    static constexpr glm::vec3 DYNAMIC_COLOR = glm::vec3(0.0, 1.0, 0.0);
+    static constexpr glm::vec3 STATIC_SENSOR_COLOR = glm::vec3(1, 0.0, 0.0);
+    static constexpr glm::vec3 DYNAMIC_SENSOR_COLOR = glm::vec3(1, 0.5, 0.0);
+
 public:
-    inline static const std::string MODEL_KEY = "model";
+    inline static const std::string DAMPING_KEY = "damping";
     inline static const std::string TYPE_KEY = "type";
-    inline static const std::string SHAPE_KEY = "shape";
     inline static const std::string RESTITUTION_KEY = "restitution";
     inline static const std::string FRICTION_KEY = "friction";
     inline static const std::string MASS_KEY = "mass";
+    inline static const std::string SENSOR_KEY = "isSensor";
+    inline static const std::string GRAVITY_KEY = "gravityFactor";
 
     enum BodyType {
         BODY_TYPE_STATIC,
         BODY_TYPE_DYNAMIC,
     };
 
-    enum MeshType {
-        MESH_TYPE_CONVEX,
-        MESH_TYPE_TRIANGLE,
-    };
-
     PhysicsBodyComponent();
+
     ~PhysicsBodyComponent() override;
 
     void serialize(nlohmann::json &j) override;
+
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
-    void registerWithSystems(EntityContext &ctx) override;
-    bool isReady() override;
-    void create(TransformComponent &transform);
-    void createMeshShape(TransformComponent &transform);
+
+    void createPhysics(EntityContext &ctx) override;
+
+    bool isReadyToCreate(EntityContext &ctx) const override;
+
     void update(TransformComponent &transform, bool isSimulationEnabled);
-    [[nodiscard]] bool isCreated() const;
-    void wakeUp();
+
+    void wakeUp() override;
+
+    const JPH::Body *getReadableBody();
+
+    [[nodiscard]] bool isValid() const;
+
+    bool isDynamic() const override {
+        return m_BodyType == BODY_TYPE_DYNAMIC;
+    }
+
+    JPH::BodyID getId() override {
+        return m_physicsBodyId;
+    }
 
     BodyType m_BodyType;
-    MeshType m_MeshType;
+    bool m_isSensor;
+    bool m_excludeSensorFromActionHit;
     glm::vec2 m_friction;
+    glm::vec2 m_damping;
     float m_restitution;
     float m_mass;
-    ResourceHandle<PhysicsMeshResource> m_meshResource;
+    float m_gravityFactor;
     ResourceHandle<PhysicsResource> m_PhysicsResource;
-    JPH::Body*  m_physicsBody;
+    JPH::BodyID m_physicsBodyId;
 
 private:
-    void releaseShapes();
-    void updateMass();
+    void release();
 };

@@ -30,18 +30,26 @@ void LightsBufferResource::destroy() {
 
 void LightsBufferResource::appendLight(TransformComponent &transform, LightComponent &light) {
 
+    if (!light.m_isEnabled) {
+        return;
+    }
+
     light.m_lightBufferIndices.clear();
     for (int i = 0; i < light.getNumberOfBufferLights(); i++) {
         LightStructure structure;
         structure.color = light.m_Color;
         structure.intensity = light.m_Intensity;
-        structure.position = transform.getTranslation();
+        structure.position = transform.getWorldPosition();
         structure.direction = transform.getDirection();
         structure.attenuation = light.m_Attenuation;
         structure.projectorSamplerHandle = 0;
         structure.shadowSamplerHandle = 0;
         structure.isPointSource = light.m_Type == LightComponent::DIRECT ? 0 : 1;
         structure.bias = light.m_shadowBias;
+        structure.blurRadius = light.m_blurRadius;
+        structure.isAtmosphericEffectsEnabled = light.m_isAtmosphericEffectsEnabled;
+        structure.mieColor = glm::vec4(light.m_atmosphericMieColor, 1.0);
+        structure.rayleightFactor = light.m_atmosphericRayleightIntensity;
 
         if (light.m_Projection().isReady()) {
             structure.projectorSamplerHandle = light.m_Projection().m_handleId;
@@ -53,7 +61,7 @@ void LightsBufferResource::appendLight(TransformComponent &transform, LightCompo
 
         switch (light.m_Type) {
             case LightComponent::OMNI:
-                structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(CUBE_DIRECTIONS[i], transform.getTranslation(), light.m_Attenuation);
+                structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(CUBE_DIRECTIONS[i], transform.getWorldPosition(), light.m_Attenuation);
                 break;
             case LightComponent::SPOT:
                 structure.projectionViewMatrix = createPerspectiveProjectionViewMatrix(transform, light);

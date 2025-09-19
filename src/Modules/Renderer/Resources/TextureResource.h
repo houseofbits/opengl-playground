@@ -3,14 +3,25 @@
 #include "../../../Core/API.h"
 #include "../../../Core/Helper/Log.h"
 #include <cstdint>
+#include "ShaderProgramResource.h"
 
-class TextureResource : public Resource {
+class TextureResource final : public Resource {
 public:
     explicit TextureResource();
 
-    Resource::Status fetchData(ResourceManager&) override;
-    Resource::Status build() override;
+    Status fetchData(ResourceManager &) override;
+
+    Status build() override;
+
     void destroy() override;
+
+    void bind(ShaderProgramResource &shader, int unit = 0) const;
+
+    [[nodiscard]] std::uint64_t getHandle() const {
+        return m_handleId;
+    }
+
+    void bindImageTexture(unsigned int unit) const;
 
     int m_width;
     int m_height;

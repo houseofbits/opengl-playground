@@ -7,7 +7,7 @@ TextureRenderTarget::TextureRenderTarget() : Texture(), framebufferId(0), render
 
 }
 
-void TextureRenderTarget::create(unsigned int width, unsigned int height, Texture::Type type)
+void TextureRenderTarget::create(const unsigned int width, const unsigned int height, const Texture::Type type)
 {
     glGenFramebuffers(1, &framebufferId);
 
@@ -34,6 +34,8 @@ void TextureRenderTarget::create(unsigned int width, unsigned int height, Textur
         std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    Texture::createHandle();
 }
 
 void TextureRenderTarget::bind()

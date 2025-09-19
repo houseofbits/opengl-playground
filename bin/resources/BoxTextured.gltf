@@ -87,6 +87,12 @@
             "name": "Texture"
         }
     ],
+    "images": [
+        {
+            "name": "Map #2",
+            "uri": "resources/textures/grid-gray.png"
+        }
+    ],
     "textures": [
         {
             "sampler": 0,

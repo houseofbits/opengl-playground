@@ -1,17 +1,23 @@
 #pragma once
 
+#ifdef EVENTMANAGER_V1
+
 #include "Event.h"
 #include "../Reflection/Identity.h"
-#include "../Helper/Log.h"
-#include <iostream>
 #include <list>
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <mutex>
+#include <queue>
 
-class EventHandler {
+class EventListener {
 public:
-    virtual Identity::Type getId() = 0;
+    virtual ~EventListener() = default;
+
+    virtual Identity::Type getId() {
+        return 0;
+    }
 };
 
 class BaseHandlerFunction {
@@ -22,15 +28,15 @@ public:
 
     virtual Identity::Type getId() = 0;
 
-    virtual bool compare(EventHandler *other) {
+    virtual bool compare(EventListener *other) {
         return false;
     }
 };
 
 template<class T, class EventT>
-class HandlerFunctionInstance : public BaseHandlerFunction {
+class HandlerFunctionInstance final : public BaseHandlerFunction {
 public:
-    typedef void (T::*EventHandlerFunction)(const EventT *const);
+    typedef void (T::*EventHandlerFunction)(const EventT &);
 
     HandlerFunctionInstance() : handlerFunction(), instance(nullptr) {}
 
@@ -40,14 +46,14 @@ public:
     }
 
     void call(BaseEvent *event) override {
-        (instance->*handlerFunction)((EventT *) event);
+        (instance->*handlerFunction)(static_cast<const EventT &>(*event));
     }
 
     Identity::Type getId() override {
         return instance->getId();
     }
 
-    bool compare(EventHandler *other) override {
+    bool compare(EventListener *other) override {
         return other == instance;
     }
 
@@ -67,7 +73,7 @@ public:
     typedef std::list<BaseEvent *> TEventList;
 
     template<class T, class EventT>
-    void registerEventReceiver(T *const instance, void (T::*function)(const EventT *const)) {
+    void registerEventReceiver(T *const instance, void (T::*function)(const EventT &)) {
         if (eventReceivers.find(EventT::TypeId()) == eventReceivers.end()) {
             eventReceivers[EventT::TypeId()] = new THandlerFunctionsList();
         }
@@ -75,32 +81,42 @@ public:
         eventReceivers[EventT::TypeId()]->push_back(new HandlerFunctionInstance<T, EventT>(instance, function));
     }
 
-    template<class EventT>
-    EventT *createEvent() {
-        auto evt = new EventT();
+    template<class EventT, class... Ts>
+    EventT &createEvent(Ts... args) {
+        auto evt = new EventT(args...);
         evt->m_EventManager = this;
 
-        return evt;
+        return *evt;
     }
 
+    // template<typename EventT>
+    // void triggerEvent(EventT &event) {
+    //     const THandlerFunctionsList *handlers = eventReceivers[event.getTypeId()];
+    //
+    //     if (!handlers) {
+    //         return;
+    //     }
+    //
+    //     for (const auto &handler: *handlers) {
+    //         if (handler) {
+    //             handler->call(&event);
+    //         }
+    //     }
+    // }
+    //
+    // template<class EventT, class... Ts>
+    // void triggerEvent(Ts... args) {
+    //     triggerEvent(createEvent<EventT>(args...));
+    // }
+
     template<typename EventT>
-    void triggerEvent(EventT *const event) {
-        THandlerFunctionsList *handlers = eventReceivers[event->getTypeId()];
-
-        if (!handlers) {
-            return;
-        }
-
-        for (auto &handler: *handlers) {
-            if (handler) {
-                handler->call(event);
-            }
-        }
+    void queueEvent(EventT &event) {
+        next->push_back(&event);
     }
 
-    template<typename EventT>
-    void queueEvent(EventT *const event) {
-        next->push_back(event);
+    template<class EventT, class... Ts>
+    void queueEvent(Ts... args) {
+        queueEvent(createEvent<EventT>(args...));
     }
 
     void processEvents() {
@@ -108,11 +124,11 @@ public:
 
         current->sort(SortEventsByTypeName());
 
-        THandlerFunctionsList *handlers;
-        int previousEventType = -1, eventType;
+        THandlerFunctionsList *handlers = nullptr;
+        int previousEventType = -1;
 
         for (auto const &event: *current) {
-            eventType = (int) event->getTypeId();
+            const int eventType = static_cast<int>(event->getTypeId());
 
             if (eventReceivers.find(eventType) == eventReceivers.end()) {
                 delete event;
@@ -123,8 +139,11 @@ public:
                 handlers = eventReceivers[eventType];
             }
 
-            for (auto const &handler: *handlers) {
+            if (handlers == nullptr) {
+                continue;
+            }
 
+            for (auto const &handler: *handlers) {
                 handler->call(event);
             }
 
@@ -136,7 +155,7 @@ public:
         current->clear();
     }
 
-    void removeEventHandler(EventHandler *handler) {
+    void removeEventHandler(EventListener *handler) const {
         for (const auto &functorList: eventReceivers) {
             auto it = std::find_if(functorList.second->begin(), functorList.second->end(),
                                    [&](BaseHandlerFunction *functor) {
@@ -156,8 +175,11 @@ private:
     TEventList *next;
 
     struct SortEventsByTypeName {
-        inline bool operator()(BaseEvent *lhs, BaseEvent *rhs) {
+        inline bool operator()(BaseEvent *lhs, BaseEvent *rhs) const {
             return lhs->getTypeId() < rhs->getTypeId();
         }
     };
+
 };
+
+#endif

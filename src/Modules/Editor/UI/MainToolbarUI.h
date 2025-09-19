@@ -10,20 +10,17 @@ public:
 
     void process();
 
-    bool m_isEditWindowVisible;
     int m_renderShaderType;
-    bool m_isSimulationEnabled;
-    int m_selectedCameraComponentId;
-    int m_previousSelectedCameraComponentId;
+    bool m_showPhysicsShapesWireframe{true};
+    bool m_showMaterialEditor{false};
+
+    void selectCameraByIndex(unsigned int index) const;
 
 private:
     void processViewMenu();
-    void sendUIEvent(EditorUIEvent::Type type);
-    void sendSaveEvent();
-    void sendEditorStateEvent();
-    void runSimulation();
-    void stopSimulation();
-    void activateCameras();
+    void sendUIEvent(EditorUIEvent::Type type) const;
+    void enableGameMode() const;
+    void enableEditorMode() const;
 
     EditorUISystem *m_EditorUISystem;
 };

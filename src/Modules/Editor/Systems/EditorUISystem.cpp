@@ -1,28 +1,27 @@
 #include "EditorUISystem.h"
+
+#include "../../../Core/Helper/Time.h"
 #include "../../../SourceLibs/imgui/imgui.h"
 #include "../../../SourceLibs/imgui/imgui_impl_opengl3.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
-#include "../../Physics/Components/CharacterControllerComponent.h"
-#include "../../Physics/Components/PhysicsBodyComponent.h"
-#include "../../Physics/Components/PhysicsJointComponent.h"
-#include "../UI/TexturePreviewHelper.h"
+#include "../../Physics/Components/PhysicsHingeJointComponent.h"
+#include "../Helpers/TexturePreviewHelper.h"
 
 EditorUISystem::EditorUISystem() : EntitySystem(),
-                                   m_transformGizmo(),
+                                   m_transformHelper(*this),
+                                   // m_transformGizmo(),
                                    m_ResourceManager(nullptr),
                                    m_isImUIInitialized(false),
-                                   m_isDemoWindowVisible(false),
                                    m_MainToolbarUI(this),
                                    m_EditWindowUI(this),
-                                   m_MaterialEditWindowUI(this) {
-    usesComponent<StaticMeshComponent>();
-    usesComponent<LightComponent>();
-    usesComponent<TransformComponent>();
-    usesComponent<CameraComponent>();
-    usesComponent<EnvironmentProbeComponent>();
-    usesComponent<CharacterControllerComponent>();
-    usesComponent<PhysicsBodyComponent>();
-    usesComponent<PhysicsJointComponent>();
+                                   m_MaterialEditWindowUI(this),
+                                   m_selectedEntityId(0),
+                                   m_isEditorModeEnabled(false),
+                                   m_componentEditors(),
+                                   m_wireframeRenderer(),
+                                   m_activeCameraHelper() {
+    m_editorCameraComponentRegistry = useEntityUniqueComponentRegistry<EditorCameraComponent>();
+    m_cameraComponentRegistry = useEntityUniqueComponentRegistry<CameraComponent>();
 }
 
 void EditorUISystem::process(EventManager &eventManager) {
@@ -33,25 +32,98 @@ void EditorUISystem::process(EventManager &eventManager) {
     processDockSpaceWindow();
 
     m_MainToolbarUI.process();
-    if (m_MainToolbarUI.m_isEditWindowVisible) {
+    if (m_isEditorModeEnabled) {
         m_EditWindowUI.process();
     }
 
-    m_MaterialEditWindowUI.process();
+    if (m_MainToolbarUI.m_showMaterialEditor) {
+        m_MaterialEditWindowUI.process();
+    }
 
     TexturePreviewHelper::process();
 
-    if (!m_MainToolbarUI.m_isSimulationEnabled) {
-        Camera *camera = findActiveCamera();
-        assert(camera != nullptr);
-        m_transformGizmo.processGizmo(*m_EntityContext, m_EditWindowUI.m_selectedEntityId, *camera);
-    }
+    if (m_isEditorModeEnabled) {
+        Camera *camera = m_activeCameraHelper.find(*m_EntityContext);
+        if (camera != nullptr) {
+            m_wireframeRenderer.setCamera(*camera);
 
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+            m_transformHelper.processGizmo(*camera);
+            m_transformHelper.processDebugHelpers(m_wireframeRenderer);
+
+            // auto transform = glm::mat4(1.0);
+            // m_wireframeRenderer.renderCube(transform, {0, 0, 1, 1});
+            // m_wireframeRenderer.renderSphere(transform, {0, 1, 0, 1});
+        }
+    } else {
+        const auto motorJointRight = m_EntityContext->findEntityComponent<PhysicsHingeJointComponent>(
+            "walker-joint2-right");
+        const auto motorJointLeft = m_EntityContext->findEntityComponent<PhysicsHingeJointComponent>(
+            "walker-joint2-left");
+
+        if (motorJointRight && motorJointLeft) {
+            const auto bodyTransform = m_EntityContext->findEntityComponent<TransformComponent>("walker-body");
+
+            auto posLeft = motorJointLeft->getJointAngle();
+            auto posRight = motorJointRight->getJointAngle();
+
+            ImGui::SetNextWindowPos(ImVec2(20, 40), ImGuiCond_Always);
+            ImGui::SetNextWindowBgAlpha(0.0f);
+
+            ImGuiWindowFlags flags =
+                    ImGuiWindowFlags_NoDecoration |
+                    ImGuiWindowFlags_AlwaysAutoResize |
+                    ImGuiWindowFlags_NoSavedSettings |
+                    ImGuiWindowFlags_NoFocusOnAppearing |
+                    ImGuiWindowFlags_NoNav |
+                    ImGuiWindowFlags_NoBackground;
+
+            ImGui::Begin("TransparentOverlay", nullptr, flags);
+
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
+            ImGui::TextUnformatted("Walker properties");
+            ImGui::PopStyleColor();
+
+            ImGui::Text("Joint position: %.0f %.0f degrees", posLeft, posRight);
+
+            if (bodyTransform) {
+                glm::vec3 euler = glm::eulerAngles(bodyTransform->getRotation());
+                const float pitch = glm::degrees(euler.x);
+                const float yaw = glm::degrees(euler.y);
+                const float roll = glm::degrees(euler.z);
+
+                ImGui::Text("Heading: %.0f degrees", yaw);
+                ImGui::Text("Pitch: %.0f degrees", pitch);
+                ImGui::Text("Roll: %.0f degrees", roll);
+
+                const auto pos = bodyTransform->getWorldPosition();
+                const auto t = Time::timestamp;
+                float dt = t - prevTime;
+                prevTime = t;
+                auto dst = glm::length(pos - walkerPrevPosition);
+                walkerPrevPosition = pos;
+                const float speed_kmh = (dst / dt) * 3.6f;
+                constexpr auto alpha = 0.1f;
+                walkerAverageSpeed = (1.0f - alpha) * walkerAverageSpeed + alpha * speed_kmh;
+
+                ImGui::Text("Avg speed: %.1f km/h", walkerAverageSpeed);
+            }
+
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
+            ImGui::TextUnformatted("Left leg ON/OFF: [Z]");
+            ImGui::TextUnformatted("Right leg ON/OFF: [X]");
+            ImGui::TextUnformatted("Rotation ON/OFF: [C]");
+            ImGui::TextUnformatted("Toggle motor direction: [V]");
+            ImGui::TextUnformatted("Speed 1,2,3: [Keypad-1,2.3]");
+            ImGui::TextUnformatted("Ramp up ON/OFF: [B]");
+            ImGui::TextUnformatted("Ramp down ON/OFF: [N]");
+            ImGui::PopStyleColor();
+
+            ImGui::End();
+        }
+    }
 }
 
-void EditorUISystem::initialize(ResourceManager &manager) {
+void EditorUISystem::initialize(ResourceManager &manager, EventManager &) {
     m_ResourceManager = &manager;
 
     IMGUI_CHECKVERSION();
@@ -60,70 +132,115 @@ void EditorUISystem::initialize(ResourceManager &manager) {
     (void) io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-//    ImGui::StyleColorsLight();
+    //    ImGui_ImplSDL2_Init();
+    //    ImGui_ImplOpenGL3_Init();
+    //
 
-//    ImGuiStyle& style = ImGui::GetStyle();
-//    style.WindowPadding.x = 0;
-//    style.WindowPadding.y = 0;
+    //    ImGui::StyleColorsLight();
+
+    ImGuiStyle &style = ImGui::GetStyle();
+    style.WindowPadding.x = 0;
+    style.WindowPadding.y = 0;
+
+    m_wireframeRenderer.initialize();
 }
 
 void EditorUISystem::registerEventHandlers(EventManager &eventManager) {
-    eventManager.registerEventReceiver(this, &EditorUISystem::handleWindowEvent);
+    eventManager.registerEventReceiver(this, &EditorUISystem::handleSystemEvent);
     eventManager.registerEventReceiver(this, &EditorUISystem::handleRawSDLEvent);
+    eventManager.registerEventReceiver(this, &EditorUISystem::handleCameraActivationEvent);
+    eventManager.registerEventReceiver(this, &EditorUISystem::handleInputEvent);
 }
 
-void EditorUISystem::handleWindowEvent(const WindowEvent *const event) {
-    if (event->eventType == WindowEvent::OPENGL_CONTEXT_CREATED) {
-        ImGui_ImplSDL2_InitForOpenGL(event->window->getSDLWindow(), event->window->getSDLContext());
+void EditorUISystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::WINDOW_CONTEXT_CREATED) {
+        ImGui_ImplSDL2_InitForOpenGL(event.window->getSDLWindow(), event.window->getSDLContext());
         ImGui_ImplOpenGL3_Init("#version 410");
         m_isImUIInitialized = true;
+    } else if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
+        m_isEditorModeEnabled = true;
+    } else if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
+        m_isEditorModeEnabled = false;
     }
 }
 
-void EditorUISystem::handleRawSDLEvent(const RawSDLEvent *const event) {
+void EditorUISystem::handleInputEvent(const InputEvent &event) {
+    if (event.type == InputEvent::KEYUP) {
+        // Log::write(event.keyCode);
+        //F1
+        if (event.keyCode == 58) {
+            if (m_isEditorModeEnabled) {
+                m_EventManager->queueEvent<SystemEvent>(SystemEvent::REQUEST_GAME_MODE);
+                m_isEditorModeEnabled = false;
+            } else {
+                m_EventManager->queueEvent<SystemEvent>(SystemEvent::REQUEST_EDITOR_MODE);
+                m_isEditorModeEnabled = true;
+            }
+        }
+        if (event.keyCode >= 30 && event.keyCode <= 39) {
+            m_MainToolbarUI.selectCameraByIndex(event.keyCode - 30);
+        }
+    }
+}
+
+void EditorUISystem::handleRawSDLEvent(const RawSDLEvent &event) {
     if (m_isImUIInitialized) {
-        ImGui_ImplSDL2_ProcessEvent(&event->sdlEvent);
+        ImGui_ImplSDL2_ProcessEvent(&event.sdlEvent);
     }
-}
-
-Camera *EditorUISystem::findActiveCamera() {
-    auto *c = findComponent<CameraComponent>([](CameraComponent *camera) {
-        return camera->m_isActive;
-    });
-
-    if (c != nullptr) {
-        return &c->m_Camera;
-    }
-
-    return nullptr;
 }
 
 TransformComponent *EditorUISystem::getSelectedTransformComponent() {
     if (m_EditWindowUI.isTransformComponentSelected()) {
-        return getComponent<TransformComponent>(m_EditWindowUI.m_selectedEntityId);
+        return m_EntityContext->getEntityComponent<TransformComponent>(m_selectedEntityId);
     }
     return nullptr;
 }
 
-void EditorUISystem::openMaterialEditor(ResourceHandle<MaterialResource>& handle) {
-    if (handle.isValid()) {
-        m_MaterialEditWindowUI.open(handle);
-    }
-}
-
 void EditorUISystem::processDockSpaceWindow() {
     ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGuiViewport *viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->Pos);
     ImGui::SetNextWindowSize(viewport->Size);
     ImGui::SetNextWindowViewport(viewport->ID);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoMove;
     windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
     ImGui::Begin("Dockspace Window", nullptr, windowFlags);
     ImGui::PopStyleVar(2);
     ImGuiID dockspaceID = ImGui::GetID("MainDockspace");
     ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
     ImGui::End();
+}
+
+void EditorUISystem::selectEntity(Entity &e) {
+    updateEditorCameraTarget(e);
+    m_transformHelper.handleEntitySelection(e);
+    m_selectedEntityId = e.m_Id.id();
+}
+
+void EditorUISystem::clearEntitySelection() {
+    m_selectedEntityId = 0;
+    m_transformHelper.handleEntityDeselection();
+}
+
+Entity *EditorUISystem::getSelectedEntity() const {
+    return m_EntityContext->getEntity(m_selectedEntityId);
+}
+
+void EditorUISystem::updateEditorCameraTarget(Entity &selectedEntity) const {
+    auto cameraEntity = m_EntityContext->findEntity([](Entity *e) {
+        auto c = e->getComponent<EditorCameraComponent>();
+
+        return c != nullptr && (c->m_isActive && c->m_positionOnSelection);
+    });
+
+    if (cameraEntity) {
+        if (const auto editorCamera = cameraEntity->getComponent<EditorCameraComponent>(); editorCamera != nullptr) {
+            if (const auto transform = selectedEntity.getComponent<TransformComponent>()) {
+                editorCamera->setViewTarget(transform->getWorldPosition());
+            }
+        }
+    }
 }

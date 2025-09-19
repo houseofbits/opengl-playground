@@ -1,48 +1,73 @@
 [
     {
-        "behaviours": {
-            "CameraControlInputBehaviour": null
-        },
-        "camera": {
+        "EditorCameraComponent": {
+            "firstPersonCtrl": false,
             "isActive": false,
+            "mouseLookSpeed": 0.11999999731779099,
+            "moveSpeed": 0.5600000023841858,
+            "orthoScale": 6.119985580444336,
             "position": [
-                -14.759984970092773,
-                5.166041851043701,
-                13.490117073059082
+                -22.32108497619629,
+                18.457860946655273,
+                5.949568748474121
             ],
-            "type": "FP",
+            "reposition": true,
+            "type": 1,
             "upDirection": [
-                0.472490131855011,
-                0.8713725209236145,
-                -0.13214750587940216
+                0.757749080657959,
+                0.5129914283752441,
+                0.4033064544200897
             ],
             "viewDirection": [
-                0.8391695022583008,
-                -0.49062204360961914,
-                -0.2347015142440796
+                0.45284444093704224,
+                -0.8583937883377075,
+                0.24102316796779633
             ]
         },
-        "name": "main-camera"
+        "name": "EditorCamera"
     },
     {
-        "mesh": {
-            "material": "data/materials/concrete1.json",
-            "model": "resources/scenes/scene1/walls1.gltf",
-            "renderer": "SOLID"
+        "MeshComponent": {
+            "material": "data/materials/grid-gray.json",
+            "model": "data/models/scene1.gltf"
         },
-        "name": "walls1-mesh",
-        "physicsBody": {
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
             "friction": [
                 0.5,
                 0.5
             ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
             "mass": 0.0,
-            "model": "resources/scenes/scene1/walls1.gltf",
             "restitution": 0.5,
-            "shape": 1,
             "type": 0
         },
-        "transform": {
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/scene1.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -59,989 +84,119 @@
                 0.0,
                 0.0
             ]
-        }
+        },
+        "name": "Scene1CompositeMesh"
     },
     {
-        "mesh": {
-            "material": "data/materials/tiles1.json",
-            "model": "resources/scenes/scene1/floor1.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "floor1-mesh",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
+        "EditorCameraComponent": {
+            "firstPersonCtrl": true,
+            "isActive": true,
+            "mouseLookSpeed": 0.1599999964237213,
+            "moveSpeed": 10.0,
+            "orthoScale": 48.49983215332031,
+            "position": [
+                -11.09616756439209,
+                9.824578285217285,
+                -9.493019104003906
             ],
-            "mass": 0.0,
-            "model": "resources/scenes/scene1/floor1.gltf",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
+            "reposition": false,
+            "type": 0,
+            "upDirection": [
+                0.5100046992301941,
+                0.8570420742034912,
+                0.07330770790576935
             ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
+            "viewDirection": [
+                0.8483233451843262,
+                -0.5152463912963867,
+                0.12193737924098969
             ]
-        }
+        },
+        "name": "PerspectiveEditorCamera"
     },
     {
-        "mesh": {
-            "material": "data/materials/grass1.json",
-            "model": "resources/scenes/scene1/floor2.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "floor2-mesh",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/scenes/scene1/floor2.gltf",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/bricks1.json",
-            "model": "resources/scenes/scene1/columns1.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "columns1-mesh",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/scenes/scene1/columns1.gltf",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 40.29991912841797,
+        "LightComponent": {
+            "attenuation": 30.0,
+            "blurRadius": 2.869999885559082,
             "castShadows": true,
             "color": [
                 1.0,
-                1.0,
-                0.6666666269302368
+                0.9613609910011292,
+                0.6715686321258545
             ],
-            "intensity": 5.0,
+            "intensity": 19.40003776550293,
             "isEnabled": true,
             "projectionTexture": "resources/textures/spot-clouds.png",
-            "radius": 18.20022201538086,
-            "shadowBias": 0.006000000052154064,
-            "shadowResolution": 1024,
+            "radius": 15.69996452331543,
+            "shadowBias": 0.004999999888241291,
+            "shadowResolution": 2048,
             "type": "DIRECT"
         },
-        "name": "sun light",
-        "transform": {
+        "TransformComponent": {
+            "disableRelRotation": false,
             "rotation": [
-                0.9023646712303162,
-                0.21179169416427612,
-                -0.12387675791978836,
-                -0.3543117344379425
+                0.9028082489967346,
+                -0.05540781468153,
+                -0.17812089622020721,
+                -0.3874792754650116
             ],
             "scale": [
                 1.0,
-                0.9999998211860657,
-                0.9999998211860657
+                1.0000007152557373,
+                0.9999998807907104
             ],
             "translation": [
-                -7.542536735534668,
-                9.044886589050293,
-                -4.291332244873047
+                -10.680068969726563,
+                9.38753604888916,
+                -1.9205152988433838
             ]
-        }
+        },
+        "name": "SunDirectLight"
     },
     {
-        "light": {
-            "attenuation": 4.499958038330078,
-            "beamAngle": 76.5,
-            "castShadows": false,
-            "color": [
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/shadow-mask.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
                 1.0,
                 1.0,
                 1.0
             ],
-            "intensity": 2.800002098083496,
-            "isEnabled": true,
-            "projectionTexture": "resources/textures/spot-proj-4.png",
-            "type": "SPOT"
-        },
-        "name": "wall-light1",
-        "transform": {
-            "rotation": [
-                -0.1215289980173111,
-                0.7079582810401917,
-                0.684270441532135,
-                0.12569718062877655
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.000000238418579
-            ],
             "translation": [
-                -4.424610137939453,
-                4.0966668128967285,
-                17.764089584350586
+                0.0,
+                -0.6545529365539551,
+                -0.5227241516113281
             ]
-        }
+        },
+        "name": "ShadowMaskMesh"
     },
     {
-        "light": {
-            "attenuation": 6.099956512451172,
+        "LightComponent": {
+            "attenuation": 11.400196075439453,
+            "blurRadius": 1.0,
             "castShadows": true,
-            "color": [
-                0.0,
-                0.11764693260192871,
-                1.0
-            ],
-            "intensity": 3.9999983310699463,
-            "isEnabled": true,
-            "shadowBias": 9.999999747378752e-05,
-            "shadowResolution": 512,
-            "type": "OMNI"
-        },
-        "name": "blue light",
-        "transform": {
-            "rotation": [
-                -0.001272625639103353,
-                0.9821755886077881,
-                -0.006669886410236359,
-                -0.1878431886434555
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                -9.983325958251953,
-                2.123302936553955,
-                19.30268096923828
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 40.0,
-            "beamAngle": 130.5,
-            "castShadows": false,
-            "color": [
-                0.46568626165390015,
-                0.6228376626968384,
-                1.0
-            ],
-            "intensity": 1.7000001668930054,
-            "isEnabled": true,
-            "projectionTexture": "resources/textures/spot-proj-4.png",
-            "type": "SPOT"
-        },
-        "name": "random light",
-        "transform": {
-            "rotation": [
-                0.0,
-                -0.18981803953647614,
-                0.0,
-                0.9818192720413208
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                -13.09209156036377,
-                5.310904502868652,
-                33.922630310058594
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 5.199997425079346,
-            "beamAngle": 63.0,
-            "castShadows": false,
-            "color": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "intensity": 7.0,
-            "isEnabled": true,
-            "projectionTexture": "resources/textures/spot-proj-4.png",
-            "type": "SPOT"
-        },
-        "name": "wall-light2",
-        "transform": {
-            "rotation": [
-                0.7088420987129211,
-                -0.00433990778401494,
-                0.08069344609975815,
-                -0.7007229924201965
-            ],
-            "scale": [
-                1.0,
-                1.000000238418579,
-                1.0
-            ],
-            "translation": [
-                -6.254361629486084,
-                4.4917521476745605,
-                14.794235229492188
-            ]
-        }
-    },
-    {
-        "name": "Probe1",
-        "probe": {
-            "debugColor": [
-                0.9852941036224365,
-                0.0,
-                0.0
-            ]
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                14.367939949035645,
-                9.38873291015625,
-                13.1962890625
-            ],
-            "translation": [
-                -9.31067943572998,
-                4.579742431640625,
-                11.3203125
-            ]
-        }
-    },
-    {
-        "name": "Probe2",
-        "probe": {
-            "debugColor": [
-                0.3382353186607361,
-                0.43555372953414917,
-                1.0
-            ]
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                4.685288906097412,
-                4.1868133544921875,
-                7.6854472160339355
-            ],
-            "translation": [
-                -9.394306182861328,
-                1.3236310482025146,
-                0.6450009346008301
-            ]
-        }
-    },
-    {
-        "name": "Probe3",
-        "probe": {
-            "debugColor": [
-                0.9117647409439087,
-                1.0,
-                0.0
-            ]
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                2.8820197582244873,
-                3.5224077701568604,
-                4.458099365234375
-            ],
-            "translation": [
-                -9.9647216796875,
-                1.3304481506347656,
-                4.850318431854248
-            ]
-        }
-    },
-    {
-        "name": "probe",
-        "probe": {
-            "debugColor": [
-                1.0,
-                1.0,
-                1.0
-            ]
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                7.472172737121582,
-                7.2311930656433105,
-                8.248688697814941
-            ],
-            "translation": [
-                -5.509370803833008,
-                1.959407925605774,
-                3.3094944953918457
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 14.899980545043945,
-            "castShadows": true,
-            "color": [
-                0.8135332465171814,
-                0.8343397378921509,
-                0.9019607901573181
-            ],
-            "intensity": 0.5999999046325684,
-            "isEnabled": true,
-            "shadowBias": 9.999999747378752e-05,
-            "shadowResolution": 64,
-            "type": "OMNI"
-        },
-        "name": "front jard omni",
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                -11.563852310180664,
-                1.8277146816253662,
-                10.230901718139648
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/solid-wall.json",
-            "model": "resources/scenes/scene1/shadow-mask.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "Shadow mask",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
-            ]
-        }
-    },
-    {
-        "name": "Sky box",
-        "sky": {
-            "cubeMap": "resources/textures/sky2/*.png"
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/walls2.json",
-            "model": "resources/scenes/scene1/walls2.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "walls2-mesh",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/scenes/scene1/walls2.gltf",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/walls3.json",
-            "model": "resources/scenes/scene1/walls3.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "walls3-mesh",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/scenes/scene1/walls3.gltf",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/columns2.json",
-            "model": "resources/scenes/scene1/columns2_fix.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "columns2-mesh",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/scenes/scene1/columns2_fix.gltf",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 11.399967193603516,
-            "castShadows": true,
-            "color": [
-                1.0,
-                0.0,
-                0.0
-            ],
-            "intensity": 1.0,
-            "isEnabled": true,
-            "shadowBias": 9.999999747378752e-05,
-            "shadowResolution": 512,
-            "type": "OMNI"
-        },
-        "name": "red light",
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                -9.889822959899902,
-                2.2082037925720215,
-                2.3219029903411865
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/light-column.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "box-column",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/BoxTextured.gltf",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                0.4285169839859009,
-                9.2031888961792,
-                0.4251149892807007
-            ],
-            "translation": [
-                -10.594083786010742,
-                0.0,
-                11.97381591796875
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/columns3.json",
-            "model": "resources/scenes/scene1/columns3.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "columns3-mesh",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/scenes/scene1/columns3.gltf",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
-            ]
-        }
-    },
-    {
-        "mesh": {
-            "material": "data/materials/floor3.json",
-            "model": "resources/scenes/scene1/floor3.gltf",
-            "renderer": "SOLID"
-        },
-        "name": "floor3-mesh",
-        "physicsBody": {
-            "friction": [
-                0.5,
-                0.5
-            ],
-            "mass": 0.0,
-            "model": "resources/scenes/scene1/floor3.gltf",
-            "restitution": 0.5,
-            "shape": 1,
-            "type": 0
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                0.0,
-                0.0
-            ]
-        }
-    },
-    {
-        "name": "Column probe",
-        "probe": {
-            "debugColor": [
-                1.0,
-                1.0,
-                1.0
-            ]
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                3.3414528369903564,
-                4.763458728790283,
-                3.0171029567718506
-            ],
-            "translation": [
-                -11.796375274658203,
-                2.006850242614746,
-                10.885322570800781
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 10.0,
-            "castShadows": true,
-            "color": [
-                0.6911764740943909,
-                0.85467129945755,
-                1.0
-            ],
-            "intensity": 1.0,
-            "isEnabled": true,
-            "shadowBias": 9.999999747378752e-05,
-            "shadowResolution": 512,
-            "type": "OMNI"
-        },
-        "name": "right room light 1",
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                2.1224589347839355,
-                2.2220237255096436,
-                24.584806442260742
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 20.0,
-            "beamAngle": 90.0,
-            "castShadows": true,
-            "color": [
-                0.9325259327888489,
-                1.0,
-                0.4264705777168274
-            ],
-            "intensity": 8.599996566772461,
-            "isEnabled": true,
-            "projectionTexture": "resources/textures/spot-proj-4.png",
-            "shadowBias": 9.999999747378752e-06,
-            "shadowResolution": 1024,
-            "type": "SPOT"
-        },
-        "name": "center hall spot",
-        "transform": {
-            "rotation": [
-                -0.6451743841171265,
-                -0.13445493578910828,
-                0.004954136908054352,
-                0.7520953416824341
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                1.092221975326538,
-                13.885767936706543,
-                11.494955062866211
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 17.499990463256836,
-            "castShadows": false,
             "color": [
                 0.8235294222831726,
-                0.8442906141281128,
+                0.9273356199264526,
                 1.0
             ],
-            "intensity": 0.7999999523162842,
-            "isEnabled": true,
-            "type": "OMNI"
-        },
-        "name": "center hall omni",
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                4.959404945373535,
-                6.784326076507568,
-                10.591165542602539
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 4.999995708465576,
-            "castShadows": false,
-            "color": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "intensity": 0.7999999523162842,
-            "isEnabled": true,
-            "type": "OMNI"
-        },
-        "name": "NEW ENTITY",
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                0.0,
-                2.395040273666382,
-                -2.4674956798553467
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 9.000000953674316,
-            "castShadows": true,
-            "color": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "intensity": 1.6000003814697266,
-            "isEnabled": true,
-            "shadowBias": 9.999999747378752e-05,
-            "shadowResolution": 256,
-            "type": "OMNI"
-        },
-        "name": "NEW ENTITY",
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "translation": [
-                6.707377910614014,
-                1.513628602027893,
-                -1.8155949115753174
-            ]
-        }
-    },
-    {
-        "name": "Left room probe",
-        "probe": {
-            "debugColor": [
-                0.9950980544090271,
-                0.7784604430198669,
-                0.2585304081439972
-            ]
-        },
-        "transform": {
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                16.733154296875,
-                3.370819091796875,
-                5.43939208984375
-            ],
-            "translation": [
-                4.112120628356934,
-                1.482956051826477,
-                -1.544281244277954
-            ]
-        }
-    },
-    {
-        "light": {
-            "attenuation": 4.699997901916504,
-            "castShadows": true,
-            "color": [
-                1.0,
-                0.5722317695617676,
-                0.36764705181121826
-            ],
-            "intensity": 1.4000000953674316,
-            "isEnabled": true,
+            "intensity": 0.6999999284744263,
+            "isEnabled": false,
             "shadowBias": 9.999999747378752e-05,
             "shadowResolution": 512,
             "type": "OMNI"
         },
-        "name": "NEW ENTITY",
-        "transform": {
+        "TransformComponent": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -1054,47 +209,115 @@
                 1.0
             ],
             "translation": [
-                -4.922957897186279,
-                2.1879842281341553,
-                -2.449687957763672
+                -1.3757010698318481,
+                1.0908311605453491,
+                -2.4926178455352783
             ]
-        }
+        },
+        "name": "InteriorOmniLight1"
     },
     {
-        "behaviours": {
-            "CharacterControlBehaviour": null,
-            "CharacterMouseLookBehaviour": null
+        "LightComponent": {
+            "attenuation": 56.39990234375,
+            "blurRadius": 20.0,
+            "castShadows": true,
+            "color": [
+                0.24019604921340942,
+                0.6871398091316223,
+                1.0
+            ],
+            "intensity": 1.200000286102295,
+            "isEnabled": true,
+            "shadowBias": 0.0001500000071246177,
+            "shadowResolution": 128,
+            "type": "OMNI"
         },
-        "camera": {
-            "isActive": true,
-            "position": [
-                -10.1979398727417,
-                1.7421599626541138,
-                17.626001358032227
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
             ],
-            "type": "FP",
-            "upDirection": [
-                -0.046471014618873596,
-                0.9781312346458435,
-                0.2027309387922287
+            "scale": [
+                1.0,
+                1.0,
+                1.0
             ],
-            "viewDirection": [
-                0.2185440957546234,
-                0.2079889327287674,
-                -0.9534040093421936
+            "translation": [
+                -10.257477760314941,
+                7.709251403808594,
+                19.444978713989258
             ]
         },
-        "cct": {
+        "name": "OutdoorOmniLight"
+    },
+    {
+        "SkyComponent": {
+            "cubeMap": "resources/textures/sky2/*.png"
+        },
+        "name": "Sky"
+    },
+    {
+        "CameraComponent": {
+            "disableRelRotation": true,
+            "isActive": false,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "upDirection": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "viewDirection": [
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "MainCharacterBehaviourComponent": {
+            "active": true,
+            "cameraAttachment": [
+                0.0,
+                1.7000000476837158,
+                0.0
+            ],
+            "cameraName": "",
+            "lookDirection": [
+                -0.3486534655094147,
+                -0.43496569991111755,
+                0.8302081823348999
+            ],
+            "mlookSpeed": 0.003000000026077032,
+            "moveSpeed": 10.0
+        },
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/character-capsule.gltf"
+        },
+        "PhysicsCharacterComponent": {
             "height": 1.75,
             "radius": 0.25
         },
-        "mesh": {
-            "material": "data/materials/character.json",
-            "model": "data/models/character-capsule.gltf",
-            "renderer": "SOLID"
+        "PhysicsJointAttachmentComponent#GunAttachment": {
+            "attachmentPosition": [
+                -0.2617959976196289,
+                -0.025617361068725586,
+                0.21116924285888672
+            ],
+            "attachmentRotation": [
+                -6.181228684454254e-08,
+                0.7159999012947083,
+                -6.181228684454254e-08,
+                -0.6981004476547241
+            ]
         },
-        "name": "NEW CharacterController",
-        "transform": {
+        "TransformComponent": {
+            "disableRelRotation": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -1107,36 +330,288 @@
                 1.0
             ],
             "translation": [
-                -13.057733535766602,
-                1.386629343032837,
-                11.07086181640625
+                -2.8280117511749268,
+                2.1756386756896973,
+                -15.119322776794434
             ]
-        }
+        },
+        "name": "CharacterController"
     },
     {
-        "mesh": {
-            "material": "data/materials/solid-green.json",
-            "model": "resources/BoxTextured.gltf",
-            "renderer": "SOLID"
+        "LightComponent": {
+            "attenuation": 16.80002784729004,
+            "blurRadius": 1.0,
+            "castShadows": true,
+            "color": [
+                0.06372547149658203,
+                0.3666378855705261,
+                1.0
+            ],
+            "intensity": 5.899998664855957,
+            "isEnabled": true,
+            "shadowBias": 9.999999747378752e-05,
+            "shadowResolution": 512,
+            "type": "OMNI"
         },
-        "name": "NEW RigidBody",
-        "physicsBody": {
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -1.60272216796875,
+                3.5718843936920166,
+                11.040018081665039
+            ]
+        },
+        "name": "CenterLight"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 9.19999885559082,
+            "beamAngle": 113.0,
+            "blurRadius": 10.25,
+            "castShadows": true,
+            "color": [
+                0.6929066181182861,
+                0.6519607901573181,
+                1.0
+            ],
+            "intensity": 10.500003814697266,
+            "isEnabled": true,
+            "projectionTexture": "resources/textures/spot-proj-4.png",
+            "shadowBias": 5.999999848427251e-05,
+            "shadowResolution": 512,
+            "type": "SPOT"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -0.7071066498756409,
+                0.0,
+                0.0,
+                0.70710688829422
+            ],
+            "scale": [
+                1.0,
+                0.999991774559021,
+                0.999991774559021
+            ],
+            "translation": [
+                -10.17956829071045,
+                2.244713068008423,
+                18.81990623474121
+            ]
+        },
+        "name": "SpotLight1"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 9.19999885559082,
+            "beamAngle": 135.5,
+            "blurRadius": 10.25,
+            "castShadows": true,
+            "color": [
+                0.6929066181182861,
+                0.6519607901573181,
+                1.0
+            ],
+            "intensity": 15.100021362304688,
+            "isEnabled": true,
+            "projectionTexture": "resources/textures/spot-proj-4.png",
+            "shadowBias": 5.999999848427251e-05,
+            "shadowResolution": 512,
+            "type": "SPOT"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -0.7071066498756409,
+                0.0,
+                0.0,
+                0.70710688829422
+            ],
+            "scale": [
+                1.0,
+                0.9999917149543762,
+                0.9999917149543762
+            ],
+            "translation": [
+                -1.57035231590271,
+                2.2475357055664063,
+                24.009462356567383
+            ]
+        },
+        "name": "SpotLight2"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 9.19999885559082,
+            "beamAngle": 136.5,
+            "blurRadius": 10.25,
+            "castShadows": true,
+            "color": [
+                0.6929066181182861,
+                0.6519607901573181,
+                1.0
+            ],
+            "intensity": 15.100021362304688,
+            "isEnabled": true,
+            "projectionTexture": "resources/textures/spot-proj-4.png",
+            "shadowBias": 5.999999848427251e-05,
+            "shadowResolution": 512,
+            "type": "SPOT"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                -0.7071066498756409,
+                0.0,
+                0.0,
+                0.70710688829422
+            ],
+            "scale": [
+                1.0,
+                0.9999916553497314,
+                0.9999916553497314
+            ],
+            "translation": [
+                6.383544445037842,
+                2.1242868900299072,
+                24.009462356567383
+            ]
+        },
+        "name": "SpotLight3"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 4.5999979972839355,
+            "blurRadius": 19.489999771118164,
+            "castShadows": true,
+            "color": [
+                1.0,
+                0.8044982552528381,
+                0.44607841968536377
+            ],
+            "intensity": 2.500001907348633,
+            "isEnabled": true,
+            "shadowBias": 0.0002800000074785203,
+            "shadowResolution": 256,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                7.129344463348389,
+                -0.3636370897293091,
+                23.973054885864258
+            ]
+        },
+        "name": "CenterLight-COPY"
+    },
+    {
+        "LightComponent": {
+            "attenuation": 4.5999979972839355,
+            "blurRadius": 19.489999771118164,
+            "castShadows": true,
+            "color": [
+                1.0,
+                0.8044982552528381,
+                0.44607841968536377
+            ],
+            "intensity": 6.399998188018799,
+            "isEnabled": true,
+            "shadowBias": 0.0005300000193528831,
+            "shadowResolution": 512,
+            "type": "OMNI"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                7.129344463348389,
+                1.886443018913269,
+                -1.8970401287078857
+            ]
+        },
+        "name": "CenterLight-COPY-COPY"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-sphere.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.9900000095367432
+            ],
             "friction": [
                 0.5,
                 0.5
             ],
-            "mass": 0.0,
-            "model": "resources/BoxTextured.gltf",
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 50.0,
             "restitution": 0.5,
-            "shape": 1,
-            "type": 0
+            "type": 1
         },
-        "transform": {
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-sphere.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
             "rotation": [
-                -0.1411503106355667,
-                -0.040820177644491196,
-                -0.27479615807533264,
-                0.9502091407775879
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
             ],
             "scale": [
                 1.0,
@@ -1144,10 +619,1191 @@
                 1.0
             ],
             "translation": [
-                -10.563946723937988,
-                3.036065101623535,
-                9.710917472839355
+                -10.555780410766602,
+                5.4349870681762695,
+                11.057801246643066
             ]
-        }
+        },
+        "name": "Sphere1"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-sphere.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.9900000095367432
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 50.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-sphere.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -10.810494422912598,
+                7.075390338897705,
+                11.393325805664063
+            ]
+        },
+        "name": "Sphere2"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-sphere.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.9900000095367432
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 50.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-sphere.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -11.426129341125488,
+                4.330872535705566,
+                11.956686973571777
+            ]
+        },
+        "name": "Sphere3"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                10.0,
+                10.0
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 100.0,
+            "restitution": 0.8999999761581421,
+            "type": 1
+        },
+        "PhysicsJointAttachmentComponent#Attach1": {
+            "attachmentPosition": [
+                0.0,
+                -0.4750819206237793,
+                0.0
+            ],
+            "attachmentRotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                1.8346970081329346,
+                0.23372489213943481,
+                1.1837844848632813
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.8346970081329346,
+                0.23372489213943481,
+                1.1837844848632813
+            ],
+            "translation": [
+                -12.55898380279541,
+                -0.05000000074505806,
+                8.572257041931152
+            ]
+        },
+        "name": "HeawyObject1"
+    },
+    {
+        "EnvironmentProbeComponent": {
+            "debugColor": [
+                1.0,
+                0.0,
+                0.0
+            ]
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                10.0,
+                10.0,
+                14.483795166015625
+            ],
+            "translation": [
+                -11.216730117797852,
+                -0.3459022045135498,
+                11.084373474121094
+            ]
+        },
+        "name": "EnvironmentProbe1"
+    },
+    {
+        "EnvironmentProbeComponent": {
+            "debugColor": [
+                0.0,
+                0.08823537826538086,
+                1.0
+            ]
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                10.0,
+                10.0,
+                10.0
+            ],
+            "translation": [
+                6.488656044006348,
+                -0.345807284116745,
+                -3.448207378387451
+            ]
+        },
+        "name": "EnvironmentProbe2"
+    },
+    {
+        "EnvironmentProbeComponent": {
+            "debugColor": [
+                0.0,
+                1.0,
+                0.8823528289794922
+            ]
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                10.0,
+                10.0,
+                10.0
+            ],
+            "translation": [
+                0.1389552354812622,
+                -0.345807284116745,
+                -3.448207378387451
+            ]
+        },
+        "name": "EnvironmentProbe3"
+    },
+    {
+        "EnvironmentProbeComponent": {
+            "debugColor": [
+                0.9160898923873901,
+                0.04901963472366333,
+                1.0
+            ]
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                26.43960189819336,
+                14.568767547607422,
+                21.804468154907227
+            ],
+            "translation": [
+                5.504447937011719,
+                4.584569931030273,
+                11.084373474121094
+            ]
+        },
+        "name": "EnvironmentProbe4"
+    },
+    {
+        "GunBehaviourComponent": {
+            "active": true
+        },
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.10000000149011612,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsFixedJointComponent#fixedGun": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.7488431930541992
+            ],
+            "attachmentBPosition": [
+                -0.46222496032714844,
+                0.4999399185180664,
+                -0.14978408813476563
+            ],
+            "initiallyConnected": false,
+            "targetEntity": "HeawyObject1",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.2076299786567688,
+                0.18589003384113312,
+                0.4408055543899536
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "PhysicsSwingTwistJointComponent#characterAttachment": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                -0.24875831604003906
+            ],
+            "attachmentARotation": [
+                0.500000536441803,
+                0.4999995231628418,
+                0.5000004768371582,
+                -0.4999995231628418
+            ],
+            "attachmentBPosition": [
+                -0.2071371078491211,
+                0.06192612648010254,
+                0.3306884765625
+            ],
+            "attachmentBRotation": [
+                0.4999997615814209,
+                0.5000002384185791,
+                0.5000002384185791,
+                -0.4999997615814209
+            ],
+            "coneHalfAngles": [
+                1.5707963705062866,
+                1.5707963705062866
+            ],
+            "enableSwingMotorSettings": true,
+            "initiallyConnected": false,
+            "lookAtBehaviour": true,
+            "swingMotorDamping": 100.0,
+            "swingMotorFrequency": 50.0,
+            "targetEntity": "CharacterController",
+            "targetEntityComponent": "GunAttachment",
+            "twistLimits": [
+                0.0,
+                0.0
+            ]
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.2076299786567688,
+                0.18589003384113312,
+                1.0
+            ],
+            "translation": [
+                -11.516408920288086,
+                2.316741943359375,
+                10.731459617614746
+            ]
+        },
+        "name": "FixedGun"
+    },
+    {
+        "ScriptingComponent": {
+            "scriptFile": "data/scripts/joints.lua"
+        },
+        "name": "MainScript"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.8999999761581421,
+                0.8999999761581421
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.26379871368408203
+            ],
+            "attachmentBPosition": [
+                0.0,
+                0.0,
+                -0.28160572052001953
+            ],
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                0.009999999776482582
+            ],
+            "targetEntity": "ChainLink2",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "translation": [
+                -12.979969024658203,
+                -0.05000000074505806,
+                10.84876537322998
+            ]
+        },
+        "name": "ChainLink1"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.8999999761581421,
+                0.8999999761581421
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.27272701263427734
+            ],
+            "attachmentBPosition": [
+                0.0,
+                0.0,
+                -0.2646608352661133
+            ],
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                0.009999999776482582
+            ],
+            "targetEntity": "ChainLink3",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "translation": [
+                -12.979969024658203,
+                -0.05000000074505806,
+                11.394169807434082
+            ]
+        },
+        "name": "ChainLink2"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.8999999761581421,
+                0.8999999761581421
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.2850666046142578
+            ],
+            "attachmentBPosition": [
+                0.0,
+                0.0,
+                -0.25092029571533203
+            ],
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                0.009999999776482582
+            ],
+            "targetEntity": "ChainLink4",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "translation": [
+                -12.979969024658203,
+                -0.05000000074505806,
+                11.931557655334473
+            ]
+        },
+        "name": "ChainLink3"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.8999999761581421,
+                0.8999999761581421
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.2417011260986328
+            ],
+            "attachmentBPosition": [
+                0.42416906356811523,
+                0.5000022649765015,
+                -0.36637210845947266
+            ],
+            "initiallyConnected": false,
+            "limits": [
+                0.0,
+                0.009999999776482582
+            ],
+            "targetEntity": "HeawyObject1",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.5
+            ],
+            "translation": [
+                -12.979969024658203,
+                -0.05000000074505806,
+                12.467544555664063
+            ]
+        },
+        "name": "ChainLink4"
+    },
+    {
+        "GunBehaviourComponent": {
+            "active": true
+        },
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.10000000149011612,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent#chainLinkGun": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.21432209014892578
+            ],
+            "attachmentBPosition": [
+                -0.000164031982421875,
+                0.0024030692875385284,
+                -0.2797870635986328
+            ],
+            "initiallyConnected": true,
+            "limits": [
+                0.0,
+                0.10000000149011612
+            ],
+            "targetEntity": "ChainLink1",
+            "targetEntityComponent": ""
+        },
+        "PhysicsDistanceJointComponent#magnetGun": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "attachmentBPosition": [
+                0.42416906356811523,
+                0.5000022649765015,
+                -0.36637210845947266
+            ],
+            "initiallyConnected": false,
+            "limits": [
+                0.0,
+                2.0
+            ],
+            "targetEntity": "HeawyObject1",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.18919706344604492,
+                0.1456083059310913,
+                0.3670596778392792
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "PhysicsSwingTwistJointComponent#characterAttachment": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                -0.07173442840576172
+            ],
+            "attachmentARotation": [
+                0.500000536441803,
+                0.499999463558197,
+                0.5000004172325134,
+                -0.499999463558197
+            ],
+            "attachmentBPosition": [
+                -0.6854534149169922,
+                -2.2232248783111572,
+                1.3591432571411133
+            ],
+            "attachmentBRotation": [
+                0.500000536441803,
+                0.499999463558197,
+                0.5000004172325134,
+                -0.499999463558197
+            ],
+            "coneHalfAngles": [
+                1.5707963705062866,
+                1.5707963705062866
+            ],
+            "enableSwingMotorSettings": true,
+            "initiallyConnected": false,
+            "lookAtBehaviour": true,
+            "swingMotorDamping": 50.0,
+            "swingMotorFrequency": 100.0,
+            "targetEntity": "CharacterController",
+            "targetEntityComponent": "GunAttachment",
+            "twistLimits": [
+                0.0,
+                0.0
+            ]
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.18919706344604492,
+                0.1456083059310913,
+                0.3670596778392792
+            ],
+            "translation": [
+                -12.980133056640625,
+                -0.04759693145751953,
+                10.354656219482422
+            ]
+        },
+        "name": "ChainLinkGun"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.8999999761581421,
+                0.8999999761581421
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.0010000000474974513,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsJointAttachmentComponent#Attach1": {
+            "attachmentPosition": [
+                0.0,
+                -0.4750819206237793,
+                0.0
+            ],
+            "attachmentRotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.6424866914749146,
+                0.21818184852600098,
+                0.5280402302742004
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.6424866914749146,
+                0.21818184852600098,
+                0.5280402302742004
+            ],
+            "translation": [
+                -10.614887237548828,
+                -0.050050992518663406,
+                12.564271926879883
+            ]
+        },
+        "name": "LightObject1"
+    },
+    {
+        "GunBehaviourComponent": {
+            "active": true
+        },
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/unit-cube.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.10000000149011612,
+            "restitution": 0.5,
+            "type": 1
+        },
+        "PhysicsDistanceJointComponent#magnetGun": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                0.7086029052734375
+            ],
+            "attachmentBPosition": [
+                0.31151580810546875,
+                0.4995596408843994,
+                0.14821910858154297
+            ],
+            "initiallyConnected": false,
+            "limits": [
+                0.0,
+                0.009999999776482582
+            ],
+            "targetEntity": "FixedGun",
+            "targetEntityComponent": ""
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/unit-cube.gltf",
+            "meshScale": [
+                0.2076299786567688,
+                0.18589003384113312,
+                0.4408055543899536
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "PhysicsSwingTwistJointComponent#characterAttachment": {
+            "attachmentAPosition": [
+                0.0,
+                0.0,
+                -0.24875831604003906
+            ],
+            "attachmentARotation": [
+                0.500000536441803,
+                0.499999463558197,
+                0.5000004172325134,
+                -0.499999463558197
+            ],
+            "attachmentBPosition": [
+                -0.2071371078491211,
+                0.06192612648010254,
+                0.3306884765625
+            ],
+            "attachmentBRotation": [
+                0.4999997615814209,
+                0.5000002384185791,
+                0.5000002384185791,
+                -0.4999997615814209
+            ],
+            "coneHalfAngles": [
+                1.5707963705062866,
+                1.5707963705062866
+            ],
+            "enableSwingMotorSettings": true,
+            "initiallyConnected": false,
+            "lookAtBehaviour": true,
+            "swingMotorDamping": 100.0,
+            "swingMotorFrequency": 50.0,
+            "targetEntity": "CharacterController",
+            "targetEntityComponent": "GunAttachment",
+            "twistLimits": [
+                0.0,
+                0.0
+            ]
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                0.2076299786567688,
+                0.18589003384113312,
+                1.0
+            ],
+            "translation": [
+                -10.486995697021484,
+                2.316741943359375,
+                10.731459617614746
+            ]
+        },
+        "name": "MagnetGun"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/blockhouse/parts.gltf"
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -12.202153205871582,
+                0.0,
+                -13.381335258483887
+            ]
+        },
+        "name": "Floor1_S0"
+    },
+    {
+        "MeshComponent": {
+            "material": "",
+            "model": "data/models/blockhouse/collision-mesh.gltf"
+        },
+        "PhysicsBodyComponent": {
+            "damping": [
+                0.699999988079071,
+                0.699999988079071
+            ],
+            "friction": [
+                0.5,
+                0.5
+            ],
+            "gravityFactor": 1.0,
+            "isSensor": false,
+            "mass": 0.0,
+            "restitution": 0.5,
+            "type": 0
+        },
+        "PhysicsShapeComponent": {
+            "mesh": "data/models/blockhouse/collision-mesh.gltf",
+            "meshScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "type": 3
+        },
+        "TransformComponent": {
+            "disableRelRotation": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -1.3479206562042236,
+                0.0,
+                -13.827154159545898
+            ]
+        },
+        "name": "Floor1_S0-COLLISION"
     }
 ]

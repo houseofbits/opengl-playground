@@ -7,18 +7,20 @@ class ResourceManager;
 template<class T>
 class ResourceHandle {
 public:
-    ResourceHandle() : m_ResourceManager(nullptr) {}
+    ResourceHandle() : m_Resource(nullptr), m_ResourceManager(nullptr) {
+    }
+
     ~ResourceHandle() {
         invalidate();
     }
 
     typedef T TYPE;
 
-    bool isValid() {
+    [[nodiscard]] bool isValid() const {
         return m_ResourceManager != nullptr && m_Resource != nullptr;
     }
 
-    bool isReady() {
+    [[nodiscard]] bool isReady() const {
         return isValid() && m_Resource->isReady();
     }
 
@@ -37,7 +39,7 @@ public:
 
     void invalidate() {
         if (isValid()) {
-            m_Resource->m_ReferenceCount--;
+            --m_Resource->m_ReferenceCount;
             if (m_Resource->m_ReferenceCount <= 0) {
                 m_ResourceManager->remove(m_Resource);
             }
@@ -52,7 +54,7 @@ public:
 
         m_ResourceManager = m;
         m_Resource = r;
-        m_Resource->m_ReferenceCount++;
+        ++m_Resource->m_ReferenceCount;
     }
 
     void createDefaultInstance() {

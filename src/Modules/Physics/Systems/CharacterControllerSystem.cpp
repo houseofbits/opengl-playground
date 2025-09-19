@@ -2,14 +2,12 @@
 #include "CharacterControllerSystem.h"
 
 CharacterControllerSystem::CharacterControllerSystem() : EntitySystem(),
-                                                         m_isSimulationDisabled(false),
-                                                         m_PhysicsResource() {
-    usesComponent<TransformComponent>();
-    usesComponent<CameraComponent>();
-    usesComponent<CharacterControllerComponent>();
+                                                         m_PhysicsResource(),
+                                                         m_isSimulationDisabled(true) {
+    m_registry = useEntityRelatedComponentsRegistry<TransformComponent, PhysicsCharacterComponent>();
 }
 
-void CharacterControllerSystem::initialize(ResourceManager &resourceManager) {
+void CharacterControllerSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
@@ -22,35 +20,31 @@ void CharacterControllerSystem::process(EventManager &eventManager) {
 }
 
 void CharacterControllerSystem::registerEventHandlers(EventManager &eventManager) {
-    eventManager.registerEventReceiver(this, &CharacterControllerSystem::handleEditorUIEvent);
+    eventManager.registerEventReceiver(this, &CharacterControllerSystem::handleSystemEvent);
 }
 
-void CharacterControllerSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
-    if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_ENABLED) {
+void CharacterControllerSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
         m_isSimulationDisabled = false;
-    } else if (event->m_Type == EditorUIEvent::TOGGLE_SIMULATION_DISABLED) {
-        m_isSimulationDisabled = true;
-    } else if (event->m_Type == EditorUIEvent::RESET_TO_INITIAL_TRANSFORM) {
+    } else if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
         resetToInitialTransform();
         m_isSimulationDisabled = true;
     }
 }
 
-void CharacterControllerSystem::resetToInitialTransform() {
-    for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
-        auto *transform = getComponent<TransformComponent>(component.first);
-        transform->m_transform = transform->m_initialTransform;
+void CharacterControllerSystem::resetToInitialTransform() const {
+    for (const auto [id, components]: m_registry->container()) {
+        const auto &[transform, cct] = components.get();
+        transform->resetToInitialTransform();
     }
 }
 
-void CharacterControllerSystem::updateCCTs() {
-    for (const auto component: getComponentContainer<CharacterControllerComponent>()) {
-        auto *transform = getComponent<TransformComponent>(component.first);
+void CharacterControllerSystem::updateCCTs() const {
+    for (const auto [id, components]: m_registry->container()) {
+        const auto &[transform, cct] = components.get();
 
-        if (!component.second->isCreated()) {
-            component.second->create(*transform);
-        } else {
-            component.second->update(*transform, !m_isSimulationDisabled);
+        if (cct->isPhysicsCreated()) {
+            cct->update(*transform, !m_isSimulationDisabled);
         }
     }
 }

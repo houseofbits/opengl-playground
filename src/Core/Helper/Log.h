@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 #include <iostream>
 #include <string>
+#include <glm/gtc/quaternion.hpp>
 #include <glm/vec4.hpp>
 
 class Log {
@@ -50,6 +51,10 @@ private:
     }
 
     static void print(const glm::vec4 &t) {
+        std::cout << t.x << "," << t.y << "," << t.z<<","<<t.w;
+    }
+
+    static void print(const glm::quat &t) {
         std::cout << t.x << "," << t.y << "," << t.z<<","<<t.w;
     }
 

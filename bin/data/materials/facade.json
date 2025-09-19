@@ -1,0 +1,21 @@
+{
+    "diffuseColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "diffuseTexture": "data/materials/dirty-facede/diffuse.png",
+    "doesCastShadows": true,
+    "doesReceiveShadows": true,
+    "emiSsiveColor": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emissiveTexture": null,
+    "metallicFactor": 1.0,
+    "normalTexture": "data/materials/dirty-facede/normal.png",
+    "roughnessFactor": 1.0,
+    "roughnessMetallicTexture": "data/materials/dirty-facede/mro.png",
+    "selfIlluminationFactor": 0.0
+}

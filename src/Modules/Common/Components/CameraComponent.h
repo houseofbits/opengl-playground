@@ -2,50 +2,46 @@
 
 #include "../../../Core/API.h"
 #include "../../../Renderer/Camera/Camera.h"
-#include "../../../Core/Helper/ComponentTransformEdit.h"
+#include "BaseCameraComponent.h"
 
-class CameraComponent : public Component, public ComponentTransformEdit {
-TYPE_DEFINITION(CameraComponent);
+class CameraComponent : public Component, public BaseCameraComponent {
+    friend class CameraComponentTransformEdit;
+
+    TYPE_DEFINITION(CameraComponent);
+    inline static const std::string POSITION_KEY = "position";
+    inline static const std::string VIEW_KEY = "viewDirection";
+    inline static const std::string UP_KEY = "upDirection";
+    inline static const std::string REL_ROTATION_KEY = "disableRelRotation";
+    inline static const std::string ACTIVE_KEY = "isActive";
 
 public:
-    enum Type {
-        TYPE_FP,
-        TYPE_FREE,
-    };
-
-    inline static std::map<Type, std::string> m_TypeNameMap = {
-            {Type::TYPE_FP,   "FP"},
-            {Type::TYPE_FREE, "FREE"},
-    };
-
     CameraComponent();
 
     void serialize(nlohmann::json &j) override;
 
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
 
-    void registerWithSystems(EntityContext &ctx) override;
-
     void rotateView(glm::vec2 viewChangeAlongScreenAxis);
 
     void moveView(glm::vec3 direction);
 
-    glm::mat4 getEditorTransform() override;
+    glm::mat4 getWorldTransform();
 
-    void setFromEditorTransform(const glm::mat4 &) override;
+    void setWorldTransform(const glm::mat4 &);
 
     void updateTransformFromParent(const glm::mat4 &parent);
 
     void updateTransformWorld();
 
-    Camera m_Camera;
-    bool m_isActive;
-    Type m_type;
+    glm::vec3 getWorldPosition() {
+        return m_currentTransformWorld[3];
+    }
+
+    void setPositionAndDirection(glm::vec3 position, glm::vec3 direction, glm::vec3 up);
+
+    bool m_isRelativeRotationDisabled;;
 
 private:
-
-    static Type getTypeFromName(const std::string &name);
-
     glm::mat4 m_initialTransformLocal;
     glm::mat4 m_currentTransformWorld;
     bool m_shouldSyncWorldTransformToLocal;

@@ -1,8 +1,7 @@
 #pragma once
 
 #include "../Reflection/Identity.h"
-#include "../System/EntitySystem.h"
-#include "../Behaviour/EntityBehaviour.h"
+#include "./Component.h"
 #include <list>
 #include <string>
 
@@ -23,26 +22,20 @@ public:
 
     void addComponent(Component &);
 
-    void removeComponent(Component &);
+    void removeComponent(const Component &);
 
-    void registerWithSystems(EntityContext &);
-
-    void unregisterFromSystems(EntityContext &);
-
-    void addBehaviour(EntityBehaviour &);
-
-    void removeBehaviour(EntityBehaviour *);
+    void setStatus(Status);
 
     bool isReadyToRegister();
 
-    void registerBehaviourEventHandlers(EventManager &eventManager);
+    void initializeComponents(EntityContext &) const;
 
     [[nodiscard]] std::string getListName() const {
-        return m_Name;
+        return m_Name; // + " (" + std::to_string(m_Id.id()) + ")";
     }
 
     template<class T>
-    bool hasComponent() {
+    [[nodiscard]] bool hasComponent() const {
         for (const auto &c: m_Components) {
             if (dynamic_cast<T *>(c.get())) {
                 return true;
@@ -63,9 +56,21 @@ public:
         return nullptr;
     }
 
-    Component *getComponent(const std::string &className) {
+    template<class T>
+    std::vector<T *> getAllComponents() {
+        std::vector<T *> components;
         for (const auto &c: m_Components) {
-            if (c->m_Name == className || c->getTypeName() == className) {
+            if (dynamic_cast<T *>(c.get())) {
+                components.push_back(dynamic_cast<T *>(c.get()));
+            }
+        }
+
+        return components;
+    }
+
+    [[nodiscard]] Component *getComponent(const std::string &className) const {
+        for (const auto &c: m_Components) {
+            if (c->getTypeName() == className) {
                 return c.get();
             }
         }
@@ -73,12 +78,66 @@ public:
         return nullptr;
     }
 
-    EntityBehaviour* findBehaviour(std::string typeName);
+    [[nodiscard]] Component *getComponent(const Identity::Type componentId) const {
+        for (const auto &c: m_Components) {
+            if (c->m_Id.id() == componentId) {
+                return c.get();
+            }
+        }
+
+        return nullptr;
+    }
+
+    template<class T>
+    T *getComponent(const Identity::Type componentId) {
+        for (const auto &c: m_Components) {
+            if (c->m_Id.id() == componentId) {
+                if (dynamic_cast<T *>(c.get())) {
+                    return dynamic_cast<T *>(c.get());
+                }
+
+                return nullptr;
+            }
+        }
+        return nullptr;
+    }
+
+    template<class T>
+    T *getComponent(const std::string &name) {
+        for (const auto &c: m_Components) {
+            if (c->m_Name == name) {
+                if (dynamic_cast<T *>(c.get())) {
+                    return dynamic_cast<T *>(c.get());
+                }
+
+                return nullptr;
+            }
+        }
+        return nullptr;
+    }
+
+    [[nodiscard]] Component *findComponentByName(const std::string &name) const {
+        for (const auto &c: m_Components) {
+            if (c->m_Name == name) {
+                return c.get();
+            }
+        }
+
+        return nullptr;
+    }
+
+    [[nodiscard]] Component *findComponentByTypeName(const std::string &typeName) const {
+        for (const auto &c: m_Components) {
+            if (c->getTypeName() == typeName) {
+                return c.get();
+            }
+        }
+
+        return nullptr;
+    }
 
     Identity m_Id;
     std::string m_Name;
     Status m_Status;
     std::list<Component::TComponentPtr> m_Components;
-    std::list<EntityBehaviour*> m_Behaviours;
-    std::list<EntitySystem::TEntitySystemPtr> m_Systems;
 };

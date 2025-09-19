@@ -37,12 +37,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/Application/Application.h
         src/Modules/Common/Components/CameraComponent.cpp
         src/Modules/Common/Components/CameraComponent.h
-        src/Core/Json/Json.cpp
-        src/Core/Json/Json.h
-        src/Core/Json/Json.cpp
-        src/Core/Json/Json.h
-        src/Applications/Main/MainApplication.cpp
-        src/Applications/Main/MainApplication.h
+        src/Applications/Editor/EditorApplication.cpp
+        src/Applications/Editor/EditorApplication.h
         src/Core/Reflection/Identity.h
         src/Core/Resources/Resource.cpp
         src/Core/Resources/Resource.h
@@ -86,17 +82,15 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Systems/ShadowMapRenderSystem.h
         src/Modules/Renderer/Resources/ShadowMapResource.cpp
         src/Modules/Renderer/Resources/ShadowMapResource.h
-        src/Modules/Editor/UI/FileDialogHelper.h
+        src/Modules/Editor/Helpers/FileDialogHelper.h
         src/Modules/Editor/UI/MaterialEditWindowUI.cpp
         src/Modules/Editor/UI/MaterialEditWindowUI.h
-        src/Modules/Editor/UI/TexturePreviewHelper.h
-        src/Modules/Editor/UI/TextPromptHelper.h
+        src/Modules/Editor/Helpers/TexturePreviewHelper.h
+        src/Modules/Editor/Helpers/TextPromptHelper.h
         src/Modules/Physics/Systems/PhysicsSystem.cpp
         src/Modules/Physics/Systems/PhysicsSystem.h
-        src/Modules/Editor/UI/ComponentEdit/BaseComponentEdit.h
-        src/Modules/Editor/UI/ComponentEdit/TransformComponentEdit.h
-        src/Modules/Physics/Components/CharacterControllerComponent.cpp
-        src/Modules/Physics/Components/CharacterControllerComponent.h
+        src/Modules/Physics/Components/PhysicsCharacterComponent.cpp
+        src/Modules/Physics/Components/PhysicsCharacterComponent.h
         src/Core/Helper/Types.h
         src/Modules/Physics/Resources/PhysicsMeshResource.cpp
         src/Modules/Physics/Resources/PhysicsMeshResource.h
@@ -106,13 +100,12 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Systems/PhysicsBodyProcessingSystem.h
         src/Modules/Physics/Systems/CharacterControllerSystem.cpp
         src/Modules/Physics/Systems/CharacterControllerSystem.h
-        src/Modules/Physics/Helpers/PhysicsUserData.h
         src/Modules/Physics/Helpers/PhysicsRayCastResult.h
         src/Modules/Physics/Events/PhysicsPickingEvent.h
         src/Modules/Physics/Components/PhysicsBodyComponent.cpp
         src/Modules/Physics/Components/PhysicsBodyComponent.h
-        src/Modules/Physics/Components/PhysicsJointComponent.cpp
-        src/Modules/Physics/Components/PhysicsJointComponent.h
+        src/Modules/Physics/Components/PhysicsHingeJointComponent.cpp
+        src/Modules/Physics/Components/PhysicsHingeJointComponent.h
         src/Modules/Physics/Systems/JointsProcessingSystem.cpp
         src/Modules/Physics/Systems/JointsProcessingSystem.h
         src/Modules/Physics/Helpers/PhysicsTypeCast.h
@@ -121,28 +114,105 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Physics/Helpers/BroadPhaseLayerMapper.h
         src/Modules/Physics/Helpers/ObjectVsBroadPhaseLayerFilterImpl.h
         src/Modules/Physics/Helpers/ContactListenerImpl.h
-        src/Modules/Physics/Helpers/DebugRendererImpl.cpp
-        src/Modules/Physics/Helpers/DebugRendererImpl.h
+        src/Modules/Renderer/Helpers/PhysicsDebugRenderer.cpp
+        src/Modules/Renderer/Helpers/PhysicsDebugRenderer.h
         src/Modules/Renderer/Systems/OverlayRenderSystem.cpp
         src/Modules/Renderer/Systems/OverlayRenderSystem.h
-        src/Modules/Common/Behaviours/CameraControlInputBehaviour.cpp
-        src/Modules/Common/Behaviours/CameraControlInputBehaviour.h
-        src/Core/Behaviour/EntityBehaviour.cpp
-        src/Core/Behaviour/EntityBehaviour.h
-        src/Modules/Physics/Behaviours/CharacterControlBehaviour.cpp
-        src/Modules/Physics/Behaviours/CharacterControlBehaviour.h
-        src/Modules/Common/Behaviours/CameraViewportBehaviour.cpp
-        src/Modules/Common/Behaviours/CameraViewportBehaviour.h
-        src/Modules/Physics/Behaviours/CharacterMouseLookBehaviour.cpp
-        src/Modules/Physics/Behaviours/CharacterMouseLookBehaviour.h
-        src/Modules/Physics/Behaviours/CharacterPickingBehaviour.cpp
-        src/Modules/Physics/Behaviours/CharacterPickingBehaviour.h
-        src/Modules/Editor/UI/TransformGizmoHelper.cpp
-        src/Modules/Editor/UI/TransformGizmoHelper.h
-        src/Core/Helper/ComponentTransformEdit.h
         src/Modules/Common/Systems/TransformHierarchyProcessingSystem.cpp
         src/Modules/Common/Systems/TransformHierarchyProcessingSystem.h
+        src/Modules/Physics/Components/PhysicsFixedJointComponent.cpp
+        src/Modules/Physics/Components/PhysicsFixedJointComponent.h
+        src/Modules/Physics/Helpers/BasePhysicsJoint.h
+        src/Modules/Editor/Helpers/TargetEntityHelper.h
+        src/Modules/Renderer/Systems/PhysicsDebugRenderSystem.cpp
+        src/Modules/Renderer/Systems/PhysicsDebugRenderSystem.h
+        src/Modules/Editor/Components/EditorCameraComponent.cpp
+        src/Modules/Editor/Components/EditorCameraComponent.h
+        src/Modules/Editor/Systems/EditorCameraSystem.cpp
+        src/Modules/Editor/Systems/EditorCameraSystem.h
+        src/Modules/Common/Events/CameraActivationEvent.h
+        src/Modules/Common/Systems/CameraSystem.cpp
+        src/Modules/Common/Systems/CameraSystem.h
+        src/Modules/Common/Components/BaseCameraComponent.h
+        src/Modules/Common/Helpers/ActiveCameraHelper.h
+        src/Modules/Behaviours/Components/MainCharacterBehaviourComponent.cpp
+        src/Modules/Behaviours/Components/MainCharacterBehaviourComponent.h
+        src/Modules/Behaviours/Systems/MainCharacterBehaviourSystem.cpp
+        src/Modules/Behaviours/Systems/MainCharacterBehaviourSystem.h
+        src/Modules/Behaviours/Components/DoorBehaviourComponent.cpp
+        src/Modules/Behaviours/Components/DoorBehaviourComponent.h
+        src/Modules/Behaviours/Systems/DoorBehaviourSystem.cpp
+        src/Modules/Behaviours/Systems/DoorBehaviourSystem.h
+        src/Core/System/ComponentsTuple.cpp
+        src/Core/System/ComponentsTuple.h
+        src/Core/System/AbstractComponentRegistry.h
+        src/Modules/Common/Helpers/EntityLinkedComponent.h
+        src/Modules/Common/Systems/EntityLinkingSystem.cpp
+        src/Modules/Common/Systems/EntityLinkingSystem.h
+        src/Modules/Common/Editors/EntityLinkedComponentEdit.h
+        src/Modules/Physics/Helpers/ContactListenerImpl.cpp
+        src/Modules/Physics/Helpers/SensorLayerFilter.h
+        src/Core/System/EntitySystemRegistry.h
+        src/Core/System/BaseSystemProcess.h
+        src/Core/System/ContinuousSystemProcess.cpp
+        src/Core/System/ContinuousSystemProcess.h
+        src/Modules/Application/ApplicationModule.h
+        src/Modules/Application/Resources/WindowResource.cpp
+        src/Modules/Application/Resources/WindowResource.h
+        src/Modules/Physics/Helpers/Builder/PhysicsBuilder.cpp
+        src/Modules/Physics/Helpers/Builder/PhysicsBuilder.h
+        src/Modules/Renderer/Resources/MeshResource.cpp
+        src/Modules/Renderer/Resources/MeshResource.h
+        src/Modules/Application/Events/EntityPersistenceEvent.h
+        src/Modules/Physics/Helpers/BasePhysicsJoint.cpp
+        src/Modules/Physics/Helpers/PhysicsComponent.h
+        src/Core/System/EntitySystem.cpp
+        src/Core/System/EntitySystemRegistry.cpp
+        src/Core/System/BaseSystemProcess.cpp
+        src/Renderer/Model/WireModel.cpp
+        src/Renderer/Model/WireModel.h
+        src/Renderer/Model/WireCube.cpp
+        src/Renderer/Model/WireCube.h
+        src/Renderer/Model/WireSphere.cpp
+        src/Renderer/Model/WireSphere.h
+        src/Core/Helper/Math.h
+        src/Modules/Editor/Helpers/TransformHelper.h
+        src/Modules/Editor/Helpers/TransformHelper.h
+        src/Modules/Common/Editors/TransformComponentEdit.h
+        src/Modules/Common/Editors/CameraComponentEdit.h
+        src/Modules/Physics/Editors/PhysicsSliderJointComponentTransformEdit.cpp
+        src/Modules/Physics/Editors/PhysicsSliderJointComponentTransformEdit.h
+        src/Renderer/Material/MaterialConfiguration.h
+        src/Renderer/Model/ModelGLTFLoader.cpp
+        src/Renderer/Model/ModelGLTFLoader.h
+        src/Renderer/Model/GLTFFileLoader.cpp
+        src/Renderer/Model/GLTFFileLoader.h
+        src/Core/Helper/File.h
+        src/Renderer/Model/RenderModelBuilder.cpp
+        src/Renderer/Model/RenderModelBuilder.h
+        src/Core/Helper/DoubleBuffer.h
+        src/Core/Scripting/ScriptingManager.cpp
+        src/Core/Scripting/ScriptingManager.h
+        src/Core/Scripting/ScriptingEventCallback.h
+        src/Modules/Physics/Helpers/CompoundShape/PhysicsCompoundShapeBuilder.cpp
+        src/Modules/Physics/Helpers/CompoundShape/PhysicsCompoundShapeBuilder.h
+        src/Modules/Physics/Editors/PhysicsShapeComponentTransformEdit.cpp
+        src/Modules/Physics/Editors/PhysicsShapeComponentTransformEdit.h
+        src/Modules/Physics/Helpers/Behaviours/StatefulJointBehaviour.cpp
+        src/Modules/Physics/Helpers/Behaviours/StatefulJointBehaviour.h
+        src/Modules/Physics/Editors/StatefulJointBehaviourEdit.h
+        src/Modules/Renderer/Resources/DeferredRenderTargetResource.cpp
+        src/Modules/Renderer/Resources/DeferredRenderTargetResource.h
+        src/Modules/Physics/Helpers/Behaviours/LookAtJointBehaviour.cpp
+        src/Modules/Physics/Helpers/Behaviours/LookAtJointBehaviour.h
+        src/Modules/Renderer/Resources/MaterialsBufferResource.cpp
+        src/Modules/Renderer/Resources/MaterialsBufferResource.h
+        src/Modules/Physics/PhysicsModule.cpp
 )
+
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -gdwarf-4")
+
+set_source_files_properties(src/Modules/Physics/PhysicsModule.cpp PROPERTIES COMPILE_FLAGS "-g0")
 
 target_compile_features(SDLWindow PRIVATE cxx_std_17)
 
@@ -159,15 +229,25 @@ IF (WIN32)
     include_directories(${CMAKE_SOURCE_DIR}/libs/SDL2/x86_64-w64-mingw32/include)
     target_link_libraries(SDLWindow ${SDL2_LIBRARIES})
 
-    find_package(GLEW REQUIRED)
-    include_directories(${GLEW_INCLUDE_DIRS})
-    target_link_libraries(SDLWindow ${GLEW_LIBRARIES})
+    include_directories(${CMAKE_SOURCE_DIR}/libs/glew/include)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/glew/lib/Debug/x64/glew32d.lib)
+#    find_package(GLEW REQUIRED)
+#    include_directories(${GLEW_INCLUDE_DIRS})
+#    target_link_libraries(SDLWindow ${GLEW_LIBRARIES})
 
-    #    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3)
-    #    include_directories(${CMAKE_SOURCE_DIR}/libs/bullet3/bullet)
-    #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletDynamics_Debug.a)
-    #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libBulletCollision_Debug.a)
-    #    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/bullet3/lib/libLinearMath_Debug.a)
+    add_compile_definitions(JPH_PROFILE_ENABLED)
+    add_compile_definitions(JPH_DEBUG_RENDERER)
+    add_compile_definitions(JPH_OBJECT_STREAM)
+
+    include_directories(${CMAKE_SOURCE_DIR}/libs/Jolt)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/Jolt/libJolt.a)
+
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/libtinygltf.a)
+
+    include_directories(${CMAKE_SOURCE_DIR}/libs/lua/include)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/sol2/include)
+
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/sol2/liblua-5.4.4.dll.a)
 
 ELSE ()
     #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -frtti")
@@ -191,9 +271,17 @@ ELSE ()
 
     include_directories(${CMAKE_SOURCE_DIR}/libs/Jolt)
     target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/Jolt/libJolt.a)
-ENDIF ()
 
-target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/build/libtinygltf.a)
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/tinygltf/cmake-build-release/libtinygltf.a)
+
+    include_directories(${CMAKE_SOURCE_DIR}/libs/lua/lua)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/sol2/include)
+
+    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/sol2/liblua-5.4.4.so)
+
+    #    include_directories(${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/include)
+#    target_link_libraries(SDLWindow ${CMAKE_SOURCE_DIR}/libs/fbxsdk/Linux/2019.2/lib/debug/libfbxsdk.so)
+ENDIF ()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

@@ -1,10 +1,8 @@
 #pragma once
 
 #include "../Helper/Log.h"
-#include <algorithm>
 #include <map>
 #include <string>
-#include <utility>
 #include <vector>
 
 template<class G>
@@ -12,13 +10,15 @@ class Factory {
 private:
     class VObjectConstructor {
     public:
-        virtual G *createInstance() { return 0; };
+        virtual ~VObjectConstructor() = default;
+
+        virtual G *createInstance() { return nullptr; }
     };
 
     template<class T>
-    class RObjectConstructor : public VObjectConstructor {
+    class RObjectConstructor final : public VObjectConstructor {
     public:
-        G *createInstance() { return new T(); };
+        G *createInstance() override { return new T(); }
     };
 
 public:

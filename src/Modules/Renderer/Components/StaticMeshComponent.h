@@ -5,7 +5,7 @@
 #include "../Resources/StaticMeshResource.h"
 
 class StaticMeshComponent : public Component {
-    TYPE_DEFINITION(StaticMeshComponent);
+TYPE_DEFINITION(StaticMeshComponent);
 
 public:
     enum TargetRenderPass {
@@ -32,15 +32,15 @@ public:
         path = j.value(MATERIAL_KEY, m_Material().m_Path);
         resourceManager.request(m_Material, path);
 
-        m_targetRenderer = getTargetRendererTypeFromName(j.value(TARGET_RENDERER_KEY, m_TargetRenderNameMap.begin()->second));
+        m_targetRenderer = getTargetRendererTypeFromName(
+                j.value(TARGET_RENDERER_KEY, m_TargetRenderNameMap.begin()->second));
     }
 
-    void registerWithSystems(EntityContext &ctx) override;
-    std::string getListName(Entity* e) {
+    std::string getListName(Entity *e) {
         return e->m_Name + " " + " STATIC MESH";
     }
 
-    TargetRenderPass getTargetRendererTypeFromName(const std::string& name) {
+    TargetRenderPass getTargetRendererTypeFromName(const std::string &name) {
         for (const auto &[key, value]: m_TargetRenderNameMap) {
             if (value == name) {
                 return key;

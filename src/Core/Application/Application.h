@@ -1,12 +1,15 @@
 #pragma once
 
 #include "../Entity/EntityContext.h"
-#include "../Events/EventManager.h"
+// #include "../Events/EventManager.h"
+#include "../Events/EventManager_V2.h"
 #include "../Resources/ResourceManager.h"
 #include <string>
 
 class Application {
 public:
+    virtual ~Application() = default;
+
     Application();
 
     virtual void run();

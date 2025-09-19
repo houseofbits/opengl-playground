@@ -3,7 +3,7 @@
 #include "../../../Core/API.h"
 
 class EnvironmentProbeComponent : public Component {
-    TYPE_DEFINITION(EnvironmentProbeComponent);
+TYPE_DEFINITION(EnvironmentProbeComponent);
 
 public:
     inline static const std::string DEBUG_COLOR_KEY = "debugColor";
@@ -11,9 +11,10 @@ public:
     EnvironmentProbeComponent();
 
     void serialize(nlohmann::json &j) override;
+
     void deserialize(const nlohmann::json &j, ResourceManager &resourceManager) override;
-    void registerWithSystems(EntityContext &ctx) override;
-    std::string getListName(Entity* e) {
+
+    std::string getListName(Entity *e) {
         return e->m_Name + " " + " PROBE";
     }
 

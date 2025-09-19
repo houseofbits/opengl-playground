@@ -3,6 +3,8 @@
 #include "../../../Core/API.h"
 #include "../../Editor/Events/EditorUIEvent.h"
 #include "../Resources/LightsBufferResource.h"
+#include "../Components/StaticMeshComponent.h"
+#include "../Components/MeshComponent.h"
 
 class ShadowMapRenderSystem : public EntitySystem {
 public:
@@ -10,18 +12,21 @@ public:
 
     void process(EventManager &) override;
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void registerEventHandlers(EventManager &) override;
 
-    void handleEditorUIEvent(const EditorUIEvent *);
+    void handleEditorUIEvent(const EditorUIEvent &);
 
 private:
     void renderGeometry(int lightIndex);
 
-    void prepareShadowMapResources();
+    void prepareShadowMapResources() const;
 
     ResourceManager *m_ResourceManager;
     ResourceHandle<ShaderProgramResource> m_ShaderProgram;
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
+    EntityRelatedComponentRegistry<TransformComponent, StaticMeshComponent>* m_meshComponentRegistry;
+    EntityRelatedComponentRegistry<TransformComponent, LightComponent>* m_lightComponentRegistry;
+    EntityRelatedComponentRegistry<TransformComponent, MeshComponent> *m_compositeMeshComponentRegistry;
 };

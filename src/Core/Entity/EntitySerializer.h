@@ -3,6 +3,7 @@
 #include "../../../libs/tinygltf/json.hpp"
 #include "Component.h"
 #include "Entity.h"
+#include "../Helper/StringUtils.h"
 
 class EntitySerializer {
 public:
@@ -11,16 +12,7 @@ public:
         for (auto const &comp: e.m_Components) {
             nlohmann::json compJson;
             comp->serialize(compJson);
-            json[comp->m_Name] = compJson;
-        }
-        if (!e.m_Behaviours.empty()) {
-            nlohmann::json behavioursJson = nlohmann::json::object();
-            for (auto const &behaviour: e.m_Behaviours) {
-                nlohmann::json behaviourJson;
-                behaviour->serialize(behaviourJson);
-                behavioursJson[behaviour->getTypeName()] = behaviourJson;
-            }
-            json["behaviours"] = behavioursJson;
+            json[comp->getNameKey()] = compJson;
         }
     }
 
@@ -31,23 +23,39 @@ public:
         auto emptyJson = nlohmann::json({});
         for (auto const &comp: e.m_Components) {
             try {
-                if (json.contains(comp->m_Name)) {
-                    comp->deserialize(json[comp->m_Name], resourceManager);
+                if (json.contains(comp->getNameKey())) {
+                    comp->deserialize(json[comp->getNameKey()], resourceManager);
                 } else {
                     comp->deserialize(emptyJson, resourceManager);
                 }
+
+                comp->m_Status = Component::STATUS_DESERIALIZED;
             } catch (nlohmann::detail::type_error &exception) {
-                std::cout << "JSON deserialization error " << e.m_Name << ": " << exception.what() << std::endl;
+                std::cout << "JSON deserialization error " << e.m_Name <<" "<<comp->m_Name<<"("<<comp->getTypeName()<< "): " << exception.what() << std::endl;
             }
         }
-        for (auto const &behaviour: e.m_Behaviours) {
-            if (json.contains("behaviours") && json["behaviours"].is_object()) {
-                if (json["behaviours"].contains(behaviour->getTypeName())) {
-                    behaviour->deserialize(json["behaviours"][behaviour->getTypeName()], resourceManager);
-                } else {
-                    behaviour->deserialize(emptyJson, resourceManager);
-                }
-            }
+    }
+
+    static std::string getComponentNameFromNameKey(const std::string &nameKey) {
+        auto tokens = StringUtils::splitString(nameKey, '#');
+
+        if (tokens.size() > 1) {
+            return tokens[1];
         }
+
+        return "";
+    }
+
+    static std::string getComponentTypeFromNameKey(const std::string &nameKey) {
+        auto tokens = StringUtils::splitString(nameKey, '#');
+
+        return tokens[0];
+    }
+
+    static std::pair<std::string, std::string> getComponentTypeAndNameFromNameKey(const std::string &nameKey) {
+        return {
+            getComponentTypeFromNameKey(nameKey),
+            getComponentNameFromNameKey(nameKey),
+        };
     }
 };

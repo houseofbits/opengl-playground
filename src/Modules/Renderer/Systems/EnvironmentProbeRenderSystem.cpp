@@ -28,24 +28,28 @@ EnvironmentProbeRenderSystem::EnvironmentProbeRenderSystem() : EntitySystem(),
                                                                m_cubeMapArray(),
                                                                m_Camera(),
                                                                m_isRenderEnabled(true) {
-    usesComponent<StaticMeshComponent>();
-    usesComponent<TransformComponent>();
-    usesComponent<EnvironmentProbeComponent>();
+    m_probeComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, EnvironmentProbeComponent>();
+    m_compositeMeshComponentRegistry = useEntityRelatedComponentsRegistry<TransformComponent, MeshComponent>();
 }
 
 void EnvironmentProbeRenderSystem::registerEventHandlers(EventManager &eventManager) {
     eventManager.registerEventReceiver(this, &EnvironmentProbeRenderSystem::handleEditorUIEvent);
 }
 
-void EnvironmentProbeRenderSystem::initialize(ResourceManager &resourceManager) {
+void EnvironmentProbeRenderSystem::initialize(ResourceManager &resourceManager, EventManager&) {
     resourceManager.request(m_LightsBuffer, "SpotLightStorageBuffer");
     resourceManager.request(m_cubeMapArray, "EnvironmentProbesCubeMapArray");
 
     resourceManager.request(m_ShaderProgram,
-                            "data/shaders/|lighting.vert|lighting.geom|lightingEnvProbe.frag",
+                            "data/shaders/|lighting.vert|lightingEnvProbe.frag",
                             {"SpotLightStorageBuffer", "EnvironmentProbeStorageBuffer"});
 
     m_Camera.setFieldOfView(90.0);
+
+    resourceManager.requestWith(m_defaultMaterial, "defaultMaterial",
+                                [&](MaterialResource &resource) {
+                                    resource.fetchDefault(resourceManager);
+                                });
 }
 
 void EnvironmentProbeRenderSystem::process(EventManager &eventManager) {
@@ -55,22 +59,25 @@ void EnvironmentProbeRenderSystem::process(EventManager &eventManager) {
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    glViewport(0, 0, m_cubeMapArray().TEXTURE_SIZE, m_cubeMapArray().TEXTURE_SIZE);
+    glViewport(0, 0, EnvironmentProbesCubeMapArrayResource::TEXTURE_SIZE,
+               EnvironmentProbesCubeMapArrayResource::TEXTURE_SIZE);
 
     bindGeometry();
     m_cubeMapArray().bindRenderTarget();
     int layer = 0;
-    for (const auto &probe: getComponentContainer<EnvironmentProbeComponent>()) {
-        auto *probeTransform = getComponent<TransformComponent>(probe.first);
-        m_Camera.setPosition(probeTransform->getTranslation());
-        probe.second->m_cubeMapLayerIndex = layer;
+
+    for (const auto &[id, components]: m_probeComponentRegistry->container()) {
+        const auto &[transform, probe] = components.get();
+
+        m_Camera.setPosition(transform->getWorldPosition());
+        probe->m_cubeMapLayerIndex = layer;
         //
         //        std::cout << layer << " " << probeTransform->getTranslation().x
         //                  << ", " << probeTransform->getTranslation().y
         //                  << ", " << probeTransform->getTranslation().z
         //                  << std::endl;
 
-        glm::vec3 size = probeTransform->getScale();
+        glm::vec3 size = transform->getScale();
 
         for (int i = 0; i < 6; ++i) {
             int axis = std::floor(i / 2);
@@ -98,21 +105,15 @@ void EnvironmentProbeRenderSystem::bindGeometry() {
 
 void EnvironmentProbeRenderSystem::renderGeometry() {
     m_Camera.bind(m_ShaderProgram());
-
-    for (const auto &mesh: getComponentContainer<StaticMeshComponent>()) {
-        auto *transform = getComponent<TransformComponent>(mesh.first);
-        if (transform == nullptr) {
-            continue;
+    for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
+        if (const auto &[transform, mesh] = components.get(); mesh->m_Mesh().isReady()) {
+            mesh->m_Mesh().render(transform->getWorldTransform(), m_ShaderProgram(), m_defaultMaterial.get());
         }
-
-        m_ShaderProgram().setUniform("modelMatrix", transform->getModelMatrix());
-        mesh.second->m_Material().bind(m_ShaderProgram());
-        mesh.second->m_Mesh().render();
     }
 }
 
-void EnvironmentProbeRenderSystem::handleEditorUIEvent(const EditorUIEvent *const event) {
-    if (event->m_Type == EditorUIEvent::TRIGGER_PROBE_RENDER) {
+void EnvironmentProbeRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {
+    if (event.m_Type == EditorUIEvent::TRIGGER_PROBE_RENDER) {
         m_isRenderEnabled = true;
     }
 }

@@ -1,45 +1,49 @@
 #include "JointsProcessingSystem.h"
-#include "../Components/PhysicsJointComponent.h"
+#include "../../Common/Events/EntityLinkingEvent.h"
 
-JointsProcessingSystem::JointsProcessingSystem() : EntitySystem() {
-    usesComponent<PhysicsJointComponent>();
+JointsProcessingSystem::JointsProcessingSystem() : EntitySystem(), m_isSimulationDisabled(true) {
+    m_physicsJoints = useSameComponentRegistry<BasePhysicsJoint>();
 }
 
-void JointsProcessingSystem::initialize(ResourceManager &resourceManager) {
+void JointsProcessingSystem::initialize(ResourceManager &resourceManager, EventManager &) {
     resourceManager.request(m_PhysicsResource, "physics");
 }
 
 void JointsProcessingSystem::registerEventHandlers(EventManager &eventManager) {
-    eventManager.registerEventReceiver(this, &JointsProcessingSystem::handleCharacterPickingEvent);
+    eventManager.registerEventReceiver(this, &JointsProcessingSystem::handleSystemEvent);
 }
 
 void JointsProcessingSystem::process(EventManager &eventManager) {
-    if (!m_PhysicsResource.isReady()) {
+    if (m_isSimulationDisabled) {
         return;
     }
-
-    for (const auto &body: getComponentContainer<PhysicsJointComponent>()) {
-        if (!body.second->isCreated()) {
-            auto *bodyA = m_EntityContext->getEntityComponent<PhysicsBodyComponent>(body.first);
-            if (bodyA == nullptr) {
-                continue;
-            }
-
-            auto *bodyB = m_EntityContext->findEntityComponent<PhysicsBodyComponent>(body.second->m_targetEntityName);
-            if (bodyB == nullptr) {
-                continue;
-            }
-
-            body.second->create(*bodyA, *bodyB);
-        } else {
-            body.second->update();
+    for (const auto &[id, component]: m_physicsJoints->container()) {
+        if (component->isStateConnected()) {
+            component->update();
+        } else if (component->getState() == BasePhysicsJoint::STATE_AWAITING_CONNECTION) {
+            component->createPhysics(*m_EntityContext);
+        } else if (component->getState() == BasePhysicsJoint::STATE_AWAITING_DISCONNECTION) {
+            component->release();
         }
     }
 }
 
-void JointsProcessingSystem::handleCharacterPickingEvent(const PhysicsPickingEvent *const event) {
-    auto *hinge = getComponent<PhysicsJointComponent>(event->m_entityId);
-    if (hinge != nullptr && event->m_doActivate) {
-        hinge->activate();
+void JointsProcessingSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
+        for (const auto &[id, component]: m_physicsJoints->container()) {
+            if (component->m_isInitiallyConnected) {
+                component->requestConnectState();
+            }
+        }
+        m_isSimulationDisabled = false;
+    } else if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
+        m_isSimulationDisabled = true;
+        releaseAll();
+    }
+}
+
+void JointsProcessingSystem::releaseAll() const {
+    for (const auto &[id, component]: m_physicsJoints->container()) {
+        component->release();
     }
 }

@@ -23,11 +23,15 @@ public:
         int isPointSource{1};
 
         std::uint64_t projectorSamplerHandle{0};
-        glm::uvec2 _PLACEHOLDER1{0};
+        float _PLACEHOLDER1{0};
+        int isAtmosphericEffectsEnabled{0};
 
         std::uint64_t shadowSamplerHandle{0};
         float bias{0.0001};
-        float _PLACEHOLDER2{0};
+        float blurRadius{1.0};
+
+        glm::vec3 mieColor{1.0};
+        float rayleightFactor{1.0};
     };
 
     LightsBufferResource();

@@ -8,6 +8,8 @@
 #include "../Resources/EnvironmentProbesCubeMapArrayResource.h"
 #include "../Resources/LightsBufferResource.h"
 #include "../Resources/ShaderProgramResource.h"
+#include "../Components/StaticMeshComponent.h"
+#include "../Components/MeshComponent.h"
 
 class EnvironmentProbeRenderSystem : public EntitySystem {
 public:
@@ -18,11 +20,11 @@ public:
 
     void process(EventManager &) override;
 
-    void initialize(ResourceManager &) override;
+    void initialize(ResourceManager &, EventManager&) override;
 
     void registerEventHandlers(EventManager &) override;
 
-    void handleEditorUIEvent(const EditorUIEvent *);
+    void handleEditorUIEvent(const EditorUIEvent &);
 
 private:
     void bindGeometry();
@@ -31,9 +33,12 @@ private:
 
     static float calculateZFar(glm::vec3 position, glm::vec3 direction, glm::vec3 min, glm::vec3 max);
 
+    ResourceHandle<MaterialResource> m_defaultMaterial;
     ResourceHandle<ShaderProgramResource> m_ShaderProgram;
     ResourceHandle<LightsBufferResource> m_LightsBuffer;
     ResourceHandle<EnvironmentProbesCubeMapArrayResource> m_cubeMapArray;
     Camera m_Camera;
     bool m_isRenderEnabled;
+    EntityRelatedComponentRegistry<TransformComponent, EnvironmentProbeComponent>* m_probeComponentRegistry;
+    EntityRelatedComponentRegistry<TransformComponent, MeshComponent> *m_compositeMeshComponentRegistry;
 };

@@ -7,7 +7,7 @@ class BaseEvent : public BaseClass
 {
 public:
     EventManager* m_EventManager{nullptr};
-
-    void queue();
-    void trigger();
+//
+//    void queue();
+//    void trigger();
 };

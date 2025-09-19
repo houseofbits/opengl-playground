@@ -2,16 +2,24 @@
 
 #include "../Entity/Component.h"
 #include "../Reflection/Type.h"
-#include "../Events/EventManager.h"
+// #include "../Events/EventManager.h"
+#include "../Events/EventManager_V2.h"
+#include "AbstractComponentRegistry.h"
+#include "EntityRelatedComponentRegistry.h"
+#include "EntityUniqueComponentRegistry.h"
+#include "SameComponentRegistry.h"
 #include <memory>
+#include "../Entity/EntityContext.h"
 
 class EventManager;
 class EntityContext;
 class ResourceManager;
+class Entity;
 
-class EntitySystem : public EventHandler {
+class EntitySystem : public EventListener {
 public:
-    EntitySystem() : EventHandler() {}
+    EntitySystem() : EventListener() {
+    }
 
     typedef std::shared_ptr<EntitySystem> TEntitySystemPtr;
 
@@ -19,101 +27,15 @@ public:
      * Initialize is run for all systems once on startup. After the render context
      * is created and before entities are deserialized
      */
-    virtual void initialize(ResourceManager &) {};
+    virtual void initialize(ResourceManager &, EventManager&) {
+    };
     /**
      * Process runs each frame for each system
      */
-    virtual void process(EventManager &) {};
-    virtual void registerEventHandlers(EventManager &) {}
-
-    class VComponentContainer {
-    public:
-        virtual void registerComponent(Component *) {};
-        virtual void unregisterComponent(Component *) {};
+    virtual void process(EventManager &) {
     };
 
-    template<class T>
-    class RComponentContainer : public VComponentContainer {
-    public:
-        typedef std::unordered_map<Identity::Type, T *> ContainerType;
-
-        void registerComponent(Component *comp) override {
-            if (isOfType<T>(comp)) {
-                m_components[comp->m_EntityId()] = dynamic_cast<T *>(comp);
-            }
-        }
-
-        void unregisterComponent(Component *comp) override {
-            m_components.erase(comp->m_EntityId.id());
-        }
-
-        T *get(Identity::Type entityId) {
-            if (m_components.find(entityId) == m_components.end()) {
-                return nullptr;
-            }
-
-            return m_components[entityId];
-        }
-
-        T *find(std::function<bool(T *)> functor) {
-            auto it = std::find_if(
-                    m_components.begin(),
-                    m_components.end(),
-                    [&functor](const auto &v) {
-                        return functor(v.second);
-                    });
-
-            if (it == m_components.end()) {
-                return nullptr;
-            }
-
-            return it->second;
-        }
-
-        bool isEmpty() {
-            return m_components.empty();
-        }
-
-        ContainerType m_components{};
-    };
-
-    template<class T>
-    void usesComponent() {
-        m_components[T::TypeId()] = new RComponentContainer<T>();
-    }
-
-    virtual void registerComponent(Component *comp) {
-        if (m_components.find(comp->getTypeId()) == m_components.end()) {
-            return;
-        }
-
-        m_components[comp->getTypeId()]->registerComponent(comp);
-    }
-
-    virtual void unregisterComponent(Component *comp) {
-        for (auto m: m_components) {
-            m.second->unregisterComponent(comp);
-        }
-    }
-
-    template<class T>
-    T *getComponent(Identity::Type entityId) {
-        return getContainer<T>()->get(entityId);
-    }
-
-    template<class T>
-    T *findComponent(std::function<bool(T *)> functor) {
-        return getContainer<T>()->find(functor);
-    }
-
-    template<class T>
-    typename RComponentContainer<T>::ContainerType &getComponentContainer() {
-        return getContainer<T>()->m_components;
-    }
-
-    template<class T>
-    bool doesComponentsExist() {
-        return !getContainer<T>()->isEmpty();
+    virtual void registerEventHandlers(EventManager &) {
     }
 
     //Used for event manager to identify target handlers
@@ -123,15 +45,52 @@ public:
 
     EntityContext *m_EntityContext{nullptr};
     EventManager *m_EventManager{nullptr};
-    std::unordered_map<unsigned int, VComponentContainer *> m_components{};
     unsigned int m_processPriority{};
 
-protected:
-    template<class T>
-    RComponentContainer<T> *getContainer() {
-        assert(m_components.find(T::TypeId()) != m_components.end());
-        assert(isOfType<RComponentContainer<T>>(m_components[T::TypeId()]));
+    /**
+     * @details Handles multiple and unique entity components indexed by entity id
+     */
+    template<class... Ts>
+    EntityRelatedComponentRegistry<Ts...> *useEntityRelatedComponentsRegistry() {
+        auto reg = new EntityRelatedComponentRegistry<Ts...>();
+        m_registries.push_back(reg);
 
-        return ((RComponentContainer<T> *) m_components[T::TypeId()]);
+        return reg;
     }
+
+    /**
+     * @details Handles single unique entity component indexed by entity id
+     */
+    template<class T>
+    EntityUniqueComponentRegistry<T> *useEntityUniqueComponentRegistry() {
+        auto reg = new EntityUniqueComponentRegistry<T>();
+        m_registries.push_back(reg);
+
+        return reg;
+    }
+
+    /**
+     * @details Contains non unique entity components indexed by component id
+     */
+    template<class T>
+    SameComponentRegistry<T> *useSameComponentRegistry() {
+        auto reg = new SameComponentRegistry<T>();
+        m_registries.push_back(reg);
+
+        return reg;
+    }
+
+    virtual void registerEntityComponents(Entity &entity) {
+        for (const auto &reg: m_registries) {
+            reg->registerComponents(entity);
+        }
+    }
+
+    virtual void unregisterEntityComponents(Entity &entity) {
+        for (const auto &reg: m_registries) {
+            reg->unregisterComponents(entity);
+        }
+    }
+
+    std::list<AbstractComponentRegistry *> m_registries;
 };

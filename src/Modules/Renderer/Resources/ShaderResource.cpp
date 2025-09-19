@@ -32,6 +32,13 @@ Resource::Status ShaderResource::fetchData(ResourceManager&) {
 
 Resource::Status ShaderResource::build() {
     unsigned int type = getShaderType(m_Path);
+
+    if (type == GL_COMPUTE_SHADER && !areComputeShadersSupported()) {
+        Log::error("ShaderResource: Compute shaders are not supported");
+
+        return STATUS_BUILD_ERROR;
+    }
+
     m_Handle = glCreateShader(type);
     const char *c_code = m_SourceCode.c_str();
     glShaderSource(m_Handle, 1, &c_code, nullptr);
@@ -65,13 +72,13 @@ unsigned int ShaderResource::getShaderType(const std::string &filename) {
     return GL_VERTEX_SHADER;
 }
 
-bool ShaderResource::checkCompileError()
-{
+bool ShaderResource::checkCompileError() const {
     GLint success;
-    GLchar infoLog[1024];
     glGetShaderiv(m_Handle, GL_COMPILE_STATUS, &success);
     if (!success)
     {
+        GLchar infoLog[1024];
+
         glGetShaderInfoLog(m_Handle, 1024, nullptr, infoLog);
         std::cout << m_Path << std::endl;
         std::cout << "COMPILATION FAILED " << infoLog << std::endl;
@@ -91,4 +98,8 @@ bool ShaderResource::checkCompileError()
     }
 
     return true;
+}
+
+bool ShaderResource::areComputeShadersSupported() {
+    return GLEW_ARB_compute_shader;
 }

@@ -1,0 +1,175 @@
+#include "MainCharacterBehaviourSystem.h"
+#include "../../../Core/Helper/Time.h"
+#include "../../Physics/Events/PhysicsPickingEvent.h"
+#include "../../Application/Events/InputEvent.h"
+#include "../../../Modules/Application/Events/SystemEvent.h"
+#include "../../Physics/Components/PhysicsBodyComponent.h"
+
+MainCharacterBehaviourSystem::MainCharacterBehaviourSystem() : EntitySystem(), m_isEditorModeEnabled(false) {
+    m_registry = useEntityRelatedComponentsRegistry<TransformComponent, PhysicsCharacterComponent,
+        MainCharacterBehaviourComponent>();
+}
+
+void MainCharacterBehaviourSystem::initialize(ResourceManager &, EventManager &) {
+}
+
+void MainCharacterBehaviourSystem::process(EventManager &) {
+    for (const auto &[id, components]: m_registry->container()) {
+        const auto &[transform, character, behaviour] = components.get();
+
+        if (behaviour->m_isActive && !m_isEditorModeEnabled) {
+            const glm::vec3 worldPosition = transform->getWorldTransform() * glm::vec4(
+                                                behaviour->m_cameraAttachmentPosition, 1.0);
+
+            updateCamera(transform, behaviour, worldPosition);
+        }
+    }
+}
+
+void MainCharacterBehaviourSystem::registerEventHandlers(EventManager &eventManager) {
+    eventManager.registerEventReceiver(this, &MainCharacterBehaviourSystem::handleInputEvent);
+    eventManager.registerEventReceiver(this, &MainCharacterBehaviourSystem::handleSystemEvent);
+}
+
+void MainCharacterBehaviourSystem::handleSystemEvent(const SystemEvent &event) {
+    if (event.eventType == SystemEvent::REQUEST_EDITOR_MODE) {
+        m_isEditorModeEnabled = true;
+    } else if (event.eventType == SystemEvent::REQUEST_GAME_MODE) {
+        m_isEditorModeEnabled = false;
+    }
+}
+
+void MainCharacterBehaviourSystem::handleInputEvent(const InputEvent &event) {
+    if (m_isEditorModeEnabled) {
+        return;
+    }
+
+    for (const auto &[id, components]: m_registry->container()) {
+        const auto &[transform, character, behaviour] = components.get();
+
+        if (behaviour->m_isActive) {
+            handleMouseLook(event, behaviour, character);
+            handleMovement(event, transform, character);
+
+            const glm::vec3 worldPosition = transform->getWorldTransform() * glm::vec4(
+                                                behaviour->m_cameraAttachmentPosition, 1.0);
+
+            handleAction(event, character, worldPosition, behaviour->m_lookingDirection);
+
+            // updateCamera(transform, behaviour, worldPosition);
+        }
+    }
+}
+
+void MainCharacterBehaviourSystem::handleMouseLook(const InputEvent &event,
+                                                   MainCharacterBehaviourComponent *behaviour,
+                                                   PhysicsCharacterComponent *physics) {
+    if (event.type == InputEvent::MOUSEMOVE) {
+        behaviour->m_lookUpRadians += event.mouseMotion.y * behaviour->m_mouseLookSpeed;
+        physics->m_rotationDirection = -event.mouseMotion.x;
+    }
+}
+
+void MainCharacterBehaviourSystem::handleMovement(const InputEvent &event,
+                                                  TransformComponent *transform,
+                                                  PhysicsCharacterComponent *characterComponent) {
+    if (event.type == InputEvent::KEYPRESS) {
+        glm::vec3 forwardDirection = transform->getDirection(); //behaviour->m_lookingDirection;
+        forwardDirection.y = 0;
+        forwardDirection = glm::normalize(forwardDirection);
+        glm::vec3 rightDirection = glm::normalize(glm::cross(forwardDirection, glm::vec3(0, 1, 0)));
+        bool doMove = false;
+        glm::vec3 movementDirection(0);
+
+        //W
+        if (event.keyCode == 26) {
+            doMove = true;
+            movementDirection = movementDirection + forwardDirection;
+        }
+        //S
+        if (event.keyCode == 22) {
+            doMove = true;
+            movementDirection = movementDirection - forwardDirection;
+        }
+        //A
+        if (event.keyCode == 4) {
+            doMove = true;
+            movementDirection = movementDirection - rightDirection;
+        }
+        //D
+        if (event.keyCode == 7) {
+            doMove = true;
+            movementDirection = movementDirection + rightDirection;
+        }
+        //Space-bar
+        //    if (event->type == InputEvent::KEYPRESS && event->keyCode == 44) {
+        //        doMove = true;
+        //    }
+
+        if (doMove) {
+            characterComponent->move(glm::normalize(movementDirection));
+        }
+    }
+}
+
+void MainCharacterBehaviourSystem::handleAction(const InputEvent &event,
+                                                PhysicsCharacterComponent *characterComponent,
+                                                const glm::vec3 viewPosition,
+                                                const glm::vec3 viewDirection) const {
+    //(event.type == InputEvent::MOUSEMOVE && event.mouseButtonLeft) ||
+
+    if (event.type == InputEvent::MOUSEUP && event.mouseButtonRight) {
+        PhysicsRayCastResult hit;
+        if (characterComponent->rayCast(viewPosition,
+                                        viewDirection * 10.f, hit, false)) {
+            if (const auto entity = m_EntityContext->getEntity(hit.m_entityId)) {
+                event.m_EventManager->queueEvent<PhysicsPickingEvent>(
+                    hit.m_entityId,
+                    entity->m_Name,
+                    hit.m_distance,
+                    hit.m_touchPoint,
+                    event.mouseButtonRight,
+                    hit.m_shapeComponentId,
+                    hit.m_shapeComponentName
+                );
+
+                auto c = entity->getComponent<PhysicsBodyComponent>();
+                if (c && c->m_BodyType == PhysicsBodyComponent::BODY_TYPE_DYNAMIC) {
+                    // Log::write(entity->m_Name, " dynamic ", hit.m_distance);
+
+                    /*
+                     * 1. transformComponent = entity->getComp<TransformComponent>();
+                     * 2. localPoint = transformComponent->toLocal(touchPoint);
+                     * 3. physicsBodyComponent = entity->getComp<PhysicsBody>()
+                     * 4. cct->attachBody(physicsBody, localPoint);
+                     **/
+                }
+            }
+        }
+    }
+}
+
+void MainCharacterBehaviourSystem::updateCamera(TransformComponent *transform,
+                                                MainCharacterBehaviourComponent *behaviour,
+                                                const glm::vec3 viewPosition) const {
+    CameraComponent *camera = nullptr;
+    if (behaviour->m_cameraEntityId == 0) {
+        //Try to get camera component from Self
+        camera = m_EntityContext->getEntityComponent<CameraComponent>(behaviour->m_EntityId.id());
+    } else {
+        //Detached camera component
+        camera = m_EntityContext->getEntityComponent<CameraComponent>(behaviour->m_cameraEntityId);
+    }
+
+    if (camera && camera->m_isActive) {
+        glm::quat localRotation = glm::rotate(glm::quat(1, 0, 0, 0), behaviour->m_lookUpRadians,
+                                              glm::vec3(1.0f, 0.0f, 0.0f));
+        localRotation = transform->getRotation() * localRotation;
+        glm::vec3 direction = localRotation * glm::vec3(0.0f, 0.0f, 1.0f);
+
+        camera->setPositionAndDirection(viewPosition, direction, glm::vec3(0, 1, 0));
+
+        behaviour->m_lookingDirection = direction;
+        behaviour->m_viewPoint = viewPosition;
+    }
+}

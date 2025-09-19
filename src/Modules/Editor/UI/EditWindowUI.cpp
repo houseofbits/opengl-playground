@@ -2,114 +2,36 @@
 #include "../../../Core/Events/EntityCreationEvent.h"
 #include "../../../SourceLibs/imgui/imgui_impl_sdl2.h"
 #include "../../../SourceLibs/imgui/imgui_stdlib.h"
-#include "../../Physics/Components/CharacterControllerComponent.h"
+#include "../../Physics/Components/PhysicsCharacterComponent.h"
 #include "../../Physics/Components/PhysicsBodyComponent.h"
-#include "../../Physics/Components/PhysicsJointComponent.h"
+#include "../../Physics/Components/PhysicsHingeJointComponent.h"
 #include "../Systems/EditorUISystem.h"
-#include "ComponentEdit/CameraComponentEdit.h"
-#include "ComponentEdit/CharacterControllerComponentEdit.h"
-#include "ComponentEdit/EnvironmentProbeComponentEdit.h"
-#include "ComponentEdit/LightComponentEdit.h"
-#include "ComponentEdit/PhysicsBodyComponentEdit.h"
-#include "ComponentEdit/PhysicsJointComponentEdit.h"
-#include "ComponentEdit/StaticMeshComponentEdit.h"
-#include "ComponentEdit/TransformComponentEdit.h"
-#include "FileDialogHelper.h"
 #include "../../../Core/Helper/StringUtils.h"
+#include "../../Physics/Components/PhysicsFixedJointComponent.h"
+#include "../../Physics/Components/PhysicsSliderJointComponent.h"
 #include <utility>
+#include <algorithm>
 
-std::vector<std::string> ENTITY_CREATION_OPTIONS = {
-        "SpotLight",
-        "OmniLight",
-        "DirectLight",
-        "StaticMesh",
-        "EnvironmentProbe",
-        "RigidBody",
-        "CharacterController",
-        "Door"
-};
-
-std::vector<std::pair<std::string, std::string>> COMPONENT_NAMES = {
-        {"light",        "Light"},
-        {"camera",       "Camera"},
-        {"mesh",         "Render mesh"},
-        {"probe",        "Environment probe"},
-        {"sky",          "Skybox"},
-        {"cct",          "Character"},
-        {"physicsBody",  "Physics body"},
-        {"physicsJoint", "Physics joint"},
-        {"behaviour",    "Behaviour"},
-};
-
-EditWindowUI::EditWindowUI(EditorUISystem *editor) : m_selectedEntityId(0),
-                                                     m_EditorUISystem(editor),
-                                                     m_lightProjectorPath(),
-                                                     m_isBoundsTransformAllowed(false),
-                                                     m_meshModelPath(),
-                                                     m_meshMaterialPath(),
-                                                     m_selectedEntityCreationType(0),
-                                                     m_selectedComponentCreationType(0),
-                                                     m_selectedBehaviour(0),
-                                                     m_componentEditors(),
-                                                     m_entityListFilter() {
-
-    m_componentEditors[TransformComponent::TypeName()] = new TransformComponentEdit(editor);
-    m_componentEditors[StaticMeshComponent::TypeName()] = new StaticMeshComponentEdit(editor);
-    m_componentEditors[LightComponent::TypeName()] = new LightComponentEdit(editor);
-    m_componentEditors[CameraComponent::TypeName()] = new CameraComponentEdit(editor);
-    m_componentEditors[EnvironmentProbeComponent::TypeName()] = new EnvironmentProbeComponentEdit(editor);
-    m_componentEditors[PhysicsBodyComponent::TypeName()] = new PhysicsBodyComponentEdit(editor);
-    m_componentEditors[CharacterControllerComponent::TypeName()] = new CharacterControllerComponentEdit(editor);
-    m_componentEditors[PhysicsJointComponent::TypeName()] = new PhysicsJointComponentEdit(editor);
-
-    for (const auto &edit: m_componentEditors) {
-        m_entityListFilter[edit.first] = true;
-    }
+EditWindowUI::EditWindowUI(EditorUISystem *editor) : //m_selectedEntityId(0),
+    m_EditorUISystem(editor),
+    m_lightProjectorPath(),
+    m_isBoundsTransformAllowed(false),
+    m_meshModelPath(),
+    m_meshMaterialPath(),
+    m_selectedEntityCreationType(),
+    m_selectedComponentCreationType(),
+    m_isComponentCreationOpen(false),
+    m_selectedComponents{},
+    m_isEntityCreationWindowOpen(false) {
 }
 
 void EditWindowUI::process() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
     if (ImGui::Begin("Entities")) {
-        ImGui::PushItemWidth(100);
-        if (ImGui::BeginCombo("##ENTITY_TYPE", ENTITY_CREATION_OPTIONS[m_selectedEntityCreationType].c_str())) {
-            for (int i = 0; i < ENTITY_CREATION_OPTIONS.size(); i++) {
-                if (ImGui::Selectable(ENTITY_CREATION_OPTIONS[i].c_str(), m_selectedEntityCreationType == i)) {
-                    m_selectedEntityCreationType = i;
-                }
-            }
-            ImGui::EndCombo();
-        }
-        ImGui::PopItemWidth();
-
-        ImGui::SameLine();
-        if (ImGui::Button("Create")) {
-            sendEntityCreationEvent(ENTITY_CREATION_OPTIONS[m_selectedEntityCreationType],
-                                    "NEW " + ENTITY_CREATION_OPTIONS[m_selectedEntityCreationType]);
-        }
-
-        if (m_selectedEntityId >= 0) {
-            ImGui::SameLine();
-            if (ImGui::Button("Clone")) {
-                sendEntityCloneEvent(m_selectedEntityId);
-            }
-
-            ImGui::SameLine();
-            if (ImGui::Button("Delete")) {
-                sendEntityRemovalEvent();
-                m_selectedEntityId = -1;
-            }
-        }
+        processEntityCreation();
 
         ImGui::PushItemWidth(-FLT_MIN);
-        if (ImGui::InputText("##FILTER_STRING", &m_filterString)) {
-        }
-
-        if (ImGui::BeginCombo("##ENTITY_FILTER", "Filter")) {
-            for (const auto &edit: m_componentEditors) {
-                ImGui::Checkbox(edit.second->getName().c_str(), &m_entityListFilter[edit.first]);
-            }
-            m_selectedEntityId = -1;
-            ImGui::EndCombo();
+        if (ImGui::InputText("##FILTER_STRING", &m_entitiesFilterString)) {
         }
         ImGui::PopItemWidth();
 
@@ -119,44 +41,36 @@ void EditWindowUI::process() {
     }
     ImGui::PopStyleVar();
 
-    Entity *e = m_EditorUISystem->m_EntityContext->getEntity(m_selectedEntityId);
+    Entity *e = m_EditorUISystem->getSelectedEntity();
     if (e != nullptr && ImGui::Begin("Edit entity")) {
-        ImGui::InputText("Name", &e->m_Name);
+        if (ImGui::InputText("Name", &e->m_Name)) {
+            updateEntityNameReferences(e->m_Id.id(), e->m_Name);
+        }
 
-        for (const auto &edit: m_componentEditors) {
-            if (edit.second->isEntityEditable(m_selectedEntityId) &&
-                ImGui::CollapsingHeader(edit.second->getName().c_str())) {
-                edit.second->process(m_selectedEntityId);
+        if (m_isComponentCreationOpen) {
+            processComponentCreation(e);
+
+            ImGui::Dummy(ImVec2(0.0f, 5.0f));
+            ImGui::Separator();
+            if (ImGui::Button("Back to Edit entity")) {
+                m_isComponentCreationOpen = false;
+            }
+        } else {
+            processComponentEditors(e);
+
+            ImGui::Dummy(ImVec2(0.0f, 15.0f));
+            ImGui::Separator();
+            if (ImGui::Button("Add/remove components")) {
+                clearComponentSelection();
+                m_isComponentCreationOpen = true;
             }
         }
 
-        if (ImGui::CollapsingHeader("Behaviours")) {
-            processBehavioursEdit(e);
-        }
+        ImGui::End();
+    }
 
-        ImGui::SeparatorText("Add component");
-
-        ImGui::PushItemWidth(150);
-        if (ImGui::BeginCombo("##COMPONENT_TYPE",
-                              COMPONENT_NAMES[m_selectedComponentCreationType].second.c_str())) {
-            for (int i = 0; i < COMPONENT_NAMES.size(); i++) {
-                if (ImGui::Selectable(COMPONENT_NAMES[i].second.c_str(), m_selectedComponentCreationType == i)) {
-                    m_selectedComponentCreationType = i;
-                }
-            }
-            ImGui::EndCombo();
-        }
-        ImGui::PopItemWidth();
-
-        ImGui::SameLine();
-        if (ImGui::Button("Add")) {
-            sendComponentCreationEvent(COMPONENT_NAMES[m_selectedComponentCreationType].first);
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("Delete")) {
-            sendComponentRemovalEvent(COMPONENT_NAMES[m_selectedComponentCreationType].first);
-        }
+    if (m_isEntityCreationWindowOpen && ImGui::Begin("Create entity", &m_isEntityCreationWindowOpen)) {
+        processEntityCreationWindow();
 
         ImGui::End();
     }
@@ -166,26 +80,13 @@ void EditWindowUI::processEntitiesList() {
     if (ImGui::BeginListBox("##ENTITY_LIST", ImVec2(-1, -1))) {
         for (const auto &entity: m_EditorUISystem->m_EntityContext->getAllEntities()) {
             std::string name = entity->m_Name;
+            bool isEditable =
+                    m_entitiesFilterString.empty() || StringUtils::contains(entity->m_Name, m_entitiesFilterString);
 
-            bool isEditable = false;
-            for (const auto &edit: m_componentEditors) {
-                if (edit.second->isEntityEditable(entity->m_Id.id()) && m_entityListFilter[edit.first]) {
-                    isEditable = true;
-                    break;
-                }
-            }
-
-            if (!m_filterString.empty()) {
-                if (StringUtils::toLowerCase(entity->m_Name).find(StringUtils::toLowerCase(m_filterString)) !=
-                    std::string::npos) {
-                    isEditable = true;
-                } else {
-                    isEditable = false;
-                }
-            }
-
-            if (isEditable && ImGui::Selectable(name.c_str(), m_selectedEntityId == entity->m_Id.id())) {
-                m_selectedEntityId = (int) entity->m_Id.id();
+            if (isEditable && ImGui::Selectable(name.c_str(),
+                                                m_EditorUISystem->getSelectedEntity() == entity.get())) {
+                m_EditorUISystem->selectEntity(*entity); //m_selectedEntityId = (int) entity->m_Id.id();
+                m_isEntityCreationWindowOpen = false;
             }
         }
 
@@ -193,105 +94,195 @@ void EditWindowUI::processEntitiesList() {
     }
 }
 
-bool EditWindowUI::isTransformComponentSelected() {
-    if (m_selectedEntityId < 0 || m_EditorUISystem->getComponent<TransformComponent>(m_selectedEntityId) == nullptr) {
+void EditWindowUI::processComponentEditors(Entity *e) const {
+    int headerId = 1;
+    for (const auto &component: e->m_Components) {
+        std::string headerIdStr = "COMPONENT_HEADER_" + std::to_string(headerId);
+        std::string headerText = component->getHumanReadableTypeName() + "###" + headerIdStr;
+
+        if (ImGui::CollapsingHeader(headerText.c_str())) {
+            std::string internalId = "COMPONENT_SECTION_" + std::to_string(headerId);
+            ImGui::PushID(internalId.c_str());
+
+            ImGui::InputText("Editor component name", &component->m_Name);
+
+            m_EditorUISystem->runProcessComponentEditor(e, component.get());
+
+            ImGui::PopID();
+        }
+
+        headerId++;
+    }
+}
+
+bool EditWindowUI::isTransformComponentSelected() const {
+    if (m_EditorUISystem->getSelectedEntity() == nullptr) {
+        return false;
+    }
+
+    if (!m_EditorUISystem->getSelectedEntity()->getComponent<TransformComponent>()) {
         return false;
     }
 
     return true;
 }
 
-void EditWindowUI::sendEntityCreationEvent(std::string name, std::string entityName) {
-    auto evt = new EntityCreationEvent();
-    evt->m_Type = EntityCreationEvent::CREATE;
-    evt->m_ConfigurationName = std::move(name);
-    evt->m_name = std::move(entityName);
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+void EditWindowUI::sendEntityCreationEvent(std::string configName, std::string entityName) {
+    m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::CREATE,
+                                                                      std::move(entityName), std::move(configName));
 }
 
 void EditWindowUI::sendEntityRemovalEvent() {
-    auto evt = new EntityCreationEvent();
-    evt->m_Type = EntityCreationEvent::REMOVE;
-    evt->m_entityId = (int) m_selectedEntityId;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+    m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE,
+                                                                      m_EditorUISystem->getSelectedEntity()->m_Id.id()
+    );
 }
 
 void EditWindowUI::sendEntityCloneEvent(Identity::Type entityId) {
-    auto evt = new EntityCreationEvent();
-    evt->m_Type = EntityCreationEvent::CLONE;
-    evt->m_entityId = (int) entityId;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+    m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::CLONE, entityId);
 }
 
 void EditWindowUI::sendComponentCreationEvent(std::string name) {
-    auto evt = new EntityCreationEvent();
-    evt->m_Type = EntityCreationEvent::CREATE_COMPONENT;
-    evt->m_name = std::move(name);
-    evt->m_entityId = (int) m_selectedEntityId;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+    m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::CREATE_COMPONENT,
+                                                                      m_EditorUISystem->getSelectedEntity()->m_Id.id(),
+                                                                      std::move(name));
 }
 
-void EditWindowUI::sendComponentRemovalEvent(std::string name) {
-    auto evt = new EntityCreationEvent();
-    evt->m_Type = EntityCreationEvent::REMOVE_COMPONENT;
-    evt->m_name = std::move(name);
-    evt->m_entityId = (int) m_selectedEntityId;
-    m_EditorUISystem->m_EventManager->queueEvent(evt);
+void EditWindowUI::sendComponentRemovalEvent(const int componentId) const {
+    m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE_COMPONENT,
+                                                                      m_EditorUISystem->getSelectedEntity()->m_Id.id(),
+                                                                      componentId);
 }
 
-void EditWindowUI::processBehavioursEdit(Entity *e) {
-    if (ImGui::BeginCombo("##BEHAVIOUR", "Add")) {
-        for (const auto &behaviourType: m_EditorUISystem->m_EntityContext->getBehaviourTypes()) {
-            if (ImGui::Selectable(behaviourType.c_str(), false)) {
-//                Log::write("Add ", behaviourType);
+void EditWindowUI::updateEntityNameReferences(Identity::Type entityId, const std::string &newName) {
+    //TODO: Add event type for name changes
+    //    for (const auto &transformComponent: m_EditorUISystem->getComponentContainer<TransformComponent>()) {
+    //        if (transformComponent.second->m_parentEntityId == entityId) {
+    //            transformComponent.second->m_parentEntityName = newName;
+    //        }
+    //    }
+    //
+    //    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsHingeJointComponent>()) {
+    //        if (jointComponent.second->m_targetEntityId == entityId) {
+    //            jointComponent.second->m_targetEntityName = newName;
+    //        }
+    //    }
+    //
+    //    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsFixedJointComponent>()) {
+    //        if (jointComponent.second->m_targetEntityId == entityId) {
+    //            jointComponent.second->m_targetEntityName = newName;
+    //        }
+    //    }
+    //
+    //    for (const auto &jointComponent: m_EditorUISystem->getComponentContainer<PhysicsSliderJointComponent>()) {
+    //        if (jointComponent.second->m_targetEntityId == entityId) {
+    //            jointComponent.second->m_targetEntityName = newName;
+    //        }
+    //    }
+}
 
-                auto evt = new EntityCreationEvent();
-                evt->m_Type = EntityCreationEvent::ADD_BEHAVIOUR;
-                evt->m_name = behaviourType;
-                evt->m_entityId = (int) m_selectedEntityId;
-                m_EditorUISystem->m_EventManager->queueEvent(evt);
-            }
+void EditWindowUI::processComponentCreation(Entity *entity) {
+    ImGui::SeparatorText("Delete components");
+    ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+    bool hasSelectedComponents = false;
+    int index = 0;
+    for (const auto comp: entity->m_Components) {
+        ImGui::Selectable(comp->getHumanReadableTypeName().c_str(), &m_selectedComponents[index]);
+
+        if (m_selectedComponents[index]) {
+            hasSelectedComponents = true;
         }
-        ImGui::EndCombo();
+        index++;
     }
-    if (ImGui::BeginListBox("##BEHAVIOUR_LIST", ImVec2(-1, 100))) {
-        for (const auto &behaviour: e->m_Behaviours) {
-            std::string name = behaviour->getDisplayName();
 
-            if (ImGui::Selectable(name.c_str(), m_selectedBehaviour == behaviour->getTypeId())) {
-                m_selectedBehaviour = (int) behaviour->getTypeId();
+    if (hasSelectedComponents) {
+        ImGui::Dummy(ImVec2(0.0f, 5.0f));
+    }
+
+    if (hasSelectedComponents && ImGui::Button("Delete")) {
+        index = 0;
+        for (const auto comp: entity->m_Components) {
+            if (m_selectedComponents[index]) {
+                sendComponentRemovalEvent(comp->m_Id.id());
             }
+            index++;
         }
 
+        clearComponentSelection();
+    }
+
+    ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+    ImGui::SeparatorText("Add component");
+
+    if (ImGui::BeginListBox("##COMPONENT_CREATION_LIST", ImVec2(-1, 350))) {
+        for (const auto componentTypeName: m_EditorUISystem->m_EntityContext->getAllComponentTypeNames()) {
+            if (ImGui::Selectable(componentTypeName.c_str(), m_selectedComponentCreationType == componentTypeName)) {
+                m_selectedComponentCreationType = componentTypeName;
+            }
+        }
         ImGui::EndListBox();
     }
-    if (m_selectedBehaviour > 0 && ImGui::Button("Remove##REMOVE_BEHAVIOUR")) {
-        auto it = std::find_if(
-                e->m_Behaviours.begin(),
-                e->m_Behaviours.end(),
-                [&](EntityBehaviour *p) {
-                    return p->getTypeId() == m_selectedBehaviour;
-                });
 
-        if (it != e->m_Behaviours.end()) {
-            auto evt = new EntityCreationEvent();
-            evt->m_Type = EntityCreationEvent::REMOVE_BEHAVIOUR;
-            evt->m_name = (*it)->getTypeName();
-            evt->m_entityId = (int) m_selectedEntityId;
-            m_EditorUISystem->m_EventManager->queueEvent(evt);
-        }
+    if (!m_selectedComponentCreationType.empty()) {
+        ImGui::Dummy(ImVec2(0.0f, 5.0f));
     }
 
-    if (m_selectedBehaviour > 0) {
-        auto it = std::find_if(
-                e->m_Behaviours.begin(),
-                e->m_Behaviours.end(),
-                [&](EntityBehaviour *p) {
-                    return p->getTypeId() == m_selectedBehaviour;
-                });
-        if (it != e->m_Behaviours.end()) {
-            ImGui::Text("Type: %s", (*it)->getTypeName().c_str());
-            ImGui::TextWrapped("Description: %s", (*it)->getDescription().c_str());
-        }
+    if (!m_selectedComponentCreationType.empty() && ImGui::Button("Add")) {
+        sendComponentCreationEvent(m_selectedComponentCreationType);
     }
+}
+
+void EditWindowUI::processEntityCreationWindow() {
+    if (ImGui::Button("Create")) {
+        sendEntityCreationEvent(m_selectedEntityCreationType,
+                                "NEW " + m_selectedEntityCreationType);
+    }
+
+    ImGui::PushItemWidth(-FLT_MIN);
+    if (ImGui::InputText("##TEMPLATE_FILTER_STRING", &m_templatesFilterString)) {
+    }
+    ImGui::PopItemWidth();
+
+    auto names = m_EditorUISystem->m_EntityContext->getAllConfigurationNames();
+    if (ImGui::BeginListBox("##ENTITY_CREATION_LIST", ImVec2(-1, -1))) {
+        for (const auto &name: names) {
+            bool isEditable =
+                    m_templatesFilterString.empty() || StringUtils::contains(name, m_templatesFilterString);
+
+            if (isEditable && ImGui::Selectable(name.c_str(), m_selectedEntityCreationType == name)) {
+                m_selectedEntityCreationType = name;
+            }
+        }
+        ImGui::EndListBox();
+    }
+}
+
+void EditWindowUI::processEntityCreation() {
+    auto e = m_EditorUISystem->getSelectedEntity();
+    if (e) {
+        if (ImGui::Button("Clone")) {
+            sendEntityCloneEvent(e->m_Id.id());
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Delete")) {
+            const auto entityId = m_EditorUISystem->getSelectedEntity()->m_Id.id();
+            m_EditorUISystem->clearEntitySelection();
+            m_EditorUISystem->m_EventManager->queueEvent<EntityCreationEvent>(EntityCreationEvent::REMOVE, entityId);
+        }
+
+        ImGui::SameLine();
+    }
+
+    if (ImGui::Button("Create")) {
+        m_EditorUISystem->clearEntitySelection();
+        m_isEntityCreationWindowOpen = true;
+    }
+}
+
+void EditWindowUI::clearComponentSelection() {
+    std::fill_n(m_selectedComponents, 30, false);
+    m_selectedComponentCreationType = "";
 }

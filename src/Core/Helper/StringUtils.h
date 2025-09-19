@@ -8,7 +8,9 @@
 
 namespace StringUtils {
     std::string replaceAll(std::string str, const std::string &from, const std::string &to);
+
     std::vector<std::string> getAlternatePaths(const std::string &input);
+
     template<typename T>
     void removeSubstring(std::basic_string<T> &s,
                          const std::basic_string<T> &p) {
@@ -23,6 +25,7 @@ namespace StringUtils {
     inline std::string toString(glm::vec3 v) {
         return std::to_string(v.x) + "," + std::to_string(v.y) + "," + std::to_string(v.z);
     }
+
     inline std::string toLowerCase(const std::string &s) {
         std::string str(s);
         std::transform(str.begin(), str.end(), str.begin(),
@@ -30,4 +33,57 @@ namespace StringUtils {
 
         return s;
     }
-}// namespace StringUtils
+
+    inline bool contains(const std::string &source, const std::string &needle) {
+        return StringUtils::toLowerCase(source).find(StringUtils::toLowerCase(needle)) !=
+               std::string::npos;
+    }
+
+    inline std::string capitalizeFirstLetter(const std::string& input) {
+        if (input.empty()) return input;
+
+        std::string result = input;
+        result[0] = std::toupper(static_cast<unsigned char>(result[0]));
+        return result;
+    }
+
+    inline std::string pascalCaseToHumanReadable(const std::string text) {
+        std::string result;
+        for (size_t i = 0; i < text.size(); i++) {
+            if (i > 0 && std::isupper(text[i]) && (std::islower(text[i - 1]) || std::isdigit(text[i - 1]))) {
+                result += ' ';
+            }
+            result += text[i];
+        }
+
+        return result;
+    }
+
+    inline std::vector<std::string> splitString(const std::string& input, char delimiter) {
+        std::vector<std::string> tokens;
+        std::stringstream ss(input);
+        std::string token;
+
+        while (std::getline(ss, token, delimiter)) {
+            tokens.push_back(token);
+        }
+        return tokens;
+    }
+
+    inline std::string trimSlashes(const std::string& path) {
+        size_t start = 0;
+        size_t end = path.length();
+
+        // Trim leading slashes
+        while (start < end && (path[start] == '/' || path[start] == '\\')) {
+            ++start;
+        }
+
+        while (end > start && (path[end - 1] == '/' || path[end - 1] == '\\')) {
+            --end;
+        }
+
+        return path.substr(start, end - start);
+    }
+
+} // namespace StringUtils

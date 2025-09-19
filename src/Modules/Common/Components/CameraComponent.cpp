@@ -1,65 +1,41 @@
 #include "CameraComponent.h"
 #include "../../Editor/Systems/EditorUISystem.h"
-#include "../../Physics/Systems/CharacterControllerSystem.h"
-#include "../../Physics/Systems/PhysicsSystem.h"
-#include "../../Renderer/Systems/MainRenderSystem.h"
-#include "../Systems/TransformHierarchyProcessingSystem.h"
 
 CameraComponent::CameraComponent() : Component(),
-                                     ComponentTransformEdit(),
-                                     m_Camera(),
-                                     m_isActive(true),
-                                     m_type(TYPE_FREE),
+                                     BaseCameraComponent(),
                                      m_initialTransformLocal(1.0),
                                      m_currentTransformWorld(1.0),
-                                     m_shouldSyncWorldTransformToLocal(false) {
-}
-
-void CameraComponent::registerWithSystems(EntityContext &ctx) {
-    ctx.registerComponentWithEntitySystem<TransformHierarchyProcessingSystem>(this);
-    ctx.registerComponentWithEntitySystem<MainRenderSystem>(this);
-    ctx.registerComponentWithEntitySystem<EditorUISystem>(this);
-    ctx.registerComponentWithEntitySystem<PhysicsSystem>(this);
-    ctx.registerComponentWithEntitySystem<CharacterControllerSystem>(this);
+                                     m_shouldSyncWorldTransformToLocal(false),
+                                     m_isRelativeRotationDisabled(true) {
 }
 
 void CameraComponent::serialize(nlohmann::json &j) {
-    j["position"] = glm::vec3(m_initialTransformLocal[3]);
-    j["viewDirection"] = glm::vec3(m_initialTransformLocal[2]);
-    j["upDirection"] = glm::vec3(m_initialTransformLocal[1]);
+    j[POSITION_KEY] = glm::vec3(m_initialTransformLocal[3]);
+    j[VIEW_KEY] = glm::vec3(m_initialTransformLocal[2]);
+    j[UP_KEY] = glm::vec3(m_initialTransformLocal[1]);
 
-    j["isActive"] = m_isActive;
-    j["type"] = m_TypeNameMap[m_type];
+    j[REL_ROTATION_KEY] = m_isRelativeRotationDisabled;
+    j[ACTIVE_KEY] = m_isActive;
 }
 
 void CameraComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
-    glm::vec3 position = j.value("position", glm::vec3(0, 0, 0));
-    glm::vec3 view = j.value("viewDirection", glm::vec3(0, 0, 1));
-    glm::vec3 up = j.value("upDirection", glm::vec3(0, 1, 0));
+    glm::vec3 position = j.value(POSITION_KEY, glm::vec3(0, 0, 0));
+    glm::vec3 view = j.value(VIEW_KEY, glm::vec3(0, 0, 1));
+    glm::vec3 up = j.value(UP_KEY, glm::vec3(0, 1, 0));
 
     m_Camera.setPosition(position)
             .setView(view, up)
             .setViewportSize(1920, 1080)
             .setFieldOfView(90);
 
-    m_isActive = j.value("isActive", false);
-    m_type = getTypeFromName(j.value("type", m_TypeNameMap.begin()->second));
+    m_isRelativeRotationDisabled = j.value(REL_ROTATION_KEY, m_isRelativeRotationDisabled);
+    m_isActive = j.value(ACTIVE_KEY, false);
 
     m_initialTransformLocal = glm::mat4(1.0f);
     m_initialTransformLocal[0] = glm::vec4(glm::normalize(glm::cross(view, up)), 0.0f);
     m_initialTransformLocal[1] = glm::vec4(glm::normalize(up), 0.0f);
     m_initialTransformLocal[2] = glm::vec4(glm::normalize(view), 0.0f);
     m_initialTransformLocal[3] = glm::vec4(position, 1.0);
-}
-
-CameraComponent::Type CameraComponent::getTypeFromName(const std::string &name) {
-    for (const auto &[key, value]: m_TypeNameMap) {
-        if (value == name) {
-            return key;
-        }
-    }
-
-    return TYPE_FREE;
 }
 
 void CameraComponent::rotateView(glm::vec2 viewChangeAlongScreenAxis) {
@@ -77,27 +53,43 @@ void CameraComponent::rotateView(glm::vec2 viewChangeAlongScreenAxis) {
     m_initialTransformLocal[2] = glm::vec4(view, 0.0f);
 }
 
-glm::mat4 CameraComponent::getEditorTransform() {
+glm::mat4 CameraComponent::getWorldTransform() {
     return m_currentTransformWorld;
 }
 
-void CameraComponent::setFromEditorTransform(const glm::mat4 &m) {
+void CameraComponent::setWorldTransform(const glm::mat4 &m) {
     m_currentTransformWorld = m;
     m_shouldSyncWorldTransformToLocal = true;
 }
 
 void CameraComponent::updateTransformFromParent(const glm::mat4 &parent) {
-    if (m_shouldSyncWorldTransformToLocal) {
-        m_initialTransformLocal = glm::inverse(parent) * m_currentTransformWorld;
-        m_shouldSyncWorldTransformToLocal = false;
+    if (!m_isActive) {
+        return;
+    }
+
+    if (m_isRelativeRotationDisabled) {
+        if (m_shouldSyncWorldTransformToLocal) {
+        } else {
+            m_currentTransformWorld = m_initialTransformLocal;
+            m_currentTransformWorld[3] = parent[3] + m_initialTransformLocal[3];
+        }
     } else {
-        m_currentTransformWorld = parent * m_initialTransformLocal;
+        if (m_shouldSyncWorldTransformToLocal) {
+            m_initialTransformLocal = glm::inverse(parent) * m_currentTransformWorld;
+            m_shouldSyncWorldTransformToLocal = false;
+        } else {
+            m_currentTransformWorld = parent * m_initialTransformLocal;
+        }
     }
 
     m_Camera.setFromTransformMatrix(m_currentTransformWorld);
 }
 
 void CameraComponent::updateTransformWorld() {
+    if (!m_isActive) {
+        return;
+    }
+
     if (m_shouldSyncWorldTransformToLocal) {
         m_initialTransformLocal = m_currentTransformWorld;
         m_shouldSyncWorldTransformToLocal = false;
@@ -117,4 +109,9 @@ void CameraComponent::moveView(glm::vec3 direction) {
                + glm::vec3(m_initialTransformLocal[0]) * direction.x;
 
     m_initialTransformLocal[3] = glm::vec4(position, 1.0);
+}
+
+void CameraComponent::setPositionAndDirection(glm::vec3 position, glm::vec3 direction, glm::vec3 up) {
+    m_Camera.setPosition(position);
+    m_Camera.setView(direction, up);
 }

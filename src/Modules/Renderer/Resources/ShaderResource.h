@@ -7,12 +7,15 @@ public:
     ShaderResource();
 
     Status fetchData(ResourceManager&) override;
-    Resource::Status build() override;
+    Status build() override;
     void destroy() override;
 
     static unsigned int getShaderType(const std::string &filename);
-    bool checkCompileError();
+    [[nodiscard]] bool checkCompileError() const;
 
     std::string m_SourceCode;
     unsigned int m_Handle;
+
+private:
+    static bool areComputeShadersSupported();
 };

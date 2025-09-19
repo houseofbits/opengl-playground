@@ -1,0 +1,21 @@
+{
+    "diffuseColor": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "diffuseTexture": "data/materials/yellow-painted/diffuse.png",
+    "doesCastShadows": true,
+    "doesReceiveShadows": true,
+    "emiSsiveColor": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "emissiveTexture": null,
+    "metallicFactor": 0.1720000058412552,
+    "normalTexture": "data/materials/yellow-painted/normal.png",
+    "roughnessFactor": 0.9940000176429749,
+    "roughnessMetallicTexture": null,
+    "selfIlluminationFactor": 0.0
+}
