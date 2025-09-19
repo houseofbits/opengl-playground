@@ -4,7 +4,7 @@
         1.0,
         1.0
     ],
-    "diffuseTexture": "data\\materials\\dirt\\color.png",
+    "diffuseTexture": "data/materials/dirt/color.png",
     "diffuseTextureWrapping": 0,
     "doesCastShadows": true,
     "doesReceiveShadows": true,
@@ -15,8 +15,8 @@
     ],
     "emissiveTexture": null,
     "metallicFactor": 0.0,
-    "normalTexture": "data\\materials\\dirt\\normal.png",
+    "normalTexture": "data/materials/dirt/normal.png",
     "roughnessFactor": 1.0,
-    "roughnessMetallicTexture": "data\\materials\\dirt\\mro.png",
+    "roughnessMetallicTexture": "data/materials/dirt/mro.png",
     "selfIlluminationFactor": 0.0
 }
