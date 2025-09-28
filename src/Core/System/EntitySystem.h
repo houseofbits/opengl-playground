@@ -10,13 +10,14 @@
 #include "SameComponentRegistry.h"
 #include <memory>
 #include "../Entity/EntityContext.h"
+#include "../Helper/Profilable.h"
 
 class EventManager;
 class EntityContext;
 class ResourceManager;
 class Entity;
 
-class EntitySystem : public EventListener {
+class EntitySystem : public EventListener, public Profilable {
 public:
     EntitySystem() : EventListener() {
     }
@@ -93,4 +94,5 @@ public:
     }
 
     std::list<AbstractComponentRegistry *> m_registries;
+    std::string m_name;
 };

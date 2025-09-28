@@ -14,3 +14,4 @@
 #include "Resources/ResourceManager.h"
 #include "Json/JsonTypes.h"
 #include "Json/Json.h"
+#include "Helper/Profiling.h"

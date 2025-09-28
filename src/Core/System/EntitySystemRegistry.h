@@ -3,6 +3,8 @@
 #include <cassert>
 #include "BaseSystemProcess.h"
 #include <map>
+#include <string>
+#include <vector>
 
 class EntitySystem;
 class BaseSystemProcess;
@@ -13,6 +15,28 @@ public:
     typedef unsigned int ProcessType;
 
     static constexpr ProcessType MAIN_PROCESS = 0;
+
+    class ProcessProfilingInfo {
+    public:
+        ProcessProfilingInfo(ProcessType processId, double time, float perSecond): id(processId), timeMs(time),
+            perSecond(perSecond) {
+        }
+
+        ProcessType id;
+        double timeMs;
+        float perSecond;
+    };
+
+    class EntitySystemProfilingInfo {
+    public:
+        EntitySystemProfilingInfo(std::string name, double time, float percentage): systemName(name), timeMs(time),
+            percent(percentage) {
+        }
+
+        std::string systemName;
+        double timeMs;
+        float percent;
+    };
 
     EntitySystemRegistry() : m_eventManager(nullptr), m_systemProcesses() {
     }
@@ -55,6 +79,12 @@ public:
 
         return nullptr;
     }
+
+    void printProfilingData();
+
+    ProcessProfilingInfo getProcessProfilingInfo(ProcessType processId);
+
+    std::vector<EntitySystemProfilingInfo> getProcessSystemsProfilingInfo(const ProcessProfilingInfo &systemInfo);
 
 private:
     EventManager *m_eventManager;

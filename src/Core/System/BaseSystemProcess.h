@@ -32,10 +32,10 @@ public:
 
         return nullptr;
     }
+    std::list<EntitySystem *> m_Systems;
 
 protected:
     void processAllSystems() const;
 
     EventManager *m_eventManager;
-    std::list<EntitySystem *> m_Systems;
 };

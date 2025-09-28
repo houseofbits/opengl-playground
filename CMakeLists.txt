@@ -208,6 +208,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Modules/Renderer/Resources/MaterialsBufferResource.cpp
         src/Modules/Renderer/Resources/MaterialsBufferResource.h
         src/Modules/Physics/PhysicsModule.cpp
+        src/Core/Helper/Profiling.cpp
+        src/Core/Helper/Profiling.h
+        src/Core/Helper/Profilable.cpp
+        src/Core/Helper/Profilable.h
 )
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -gdwarf-4")

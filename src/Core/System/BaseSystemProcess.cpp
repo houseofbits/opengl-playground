@@ -28,7 +28,9 @@ void BaseSystemProcess::process() {
 
 void BaseSystemProcess::processAllSystems() const {
     for (const auto &system: m_Systems) {
+        system->beginProfiling();
         system->processEvents();
         system->process(*m_eventManager);
+        system->endProfiling();
     }
 }

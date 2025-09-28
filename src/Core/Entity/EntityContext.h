@@ -9,6 +9,7 @@
 #include "../System/EntitySystemRegistry.h"
 #include <memory>
 #include "../Scripting/ScriptingManager.h"
+#include "../Helper/Types.h"
 
 //0. add empty entity
 //1. buildEntity - populate with components
@@ -45,6 +46,7 @@ public:
         auto *p = new T();
         p->m_EntityContext = this;
         p->m_processPriority = processPriority;
+        p->m_name = type_name<T>();
 
         m_systemInitializers[p] = processType;
     }

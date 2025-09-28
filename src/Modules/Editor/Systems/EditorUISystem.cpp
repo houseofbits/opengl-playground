@@ -55,71 +55,8 @@ void EditorUISystem::process(EventManager &eventManager) {
             // m_wireframeRenderer.renderSphere(transform, {0, 1, 0, 1});
         }
     } else {
-        const auto motorJointRight = m_EntityContext->findEntityComponent<PhysicsHingeJointComponent>(
-            "walker-joint2-right");
-        const auto motorJointLeft = m_EntityContext->findEntityComponent<PhysicsHingeJointComponent>(
-            "walker-joint2-left");
-
-        if (motorJointRight && motorJointLeft) {
-            const auto bodyTransform = m_EntityContext->findEntityComponent<TransformComponent>("walker-body");
-
-            auto posLeft = motorJointLeft->getJointAngle();
-            auto posRight = motorJointRight->getJointAngle();
-
-            ImGui::SetNextWindowPos(ImVec2(20, 40), ImGuiCond_Always);
-            ImGui::SetNextWindowBgAlpha(0.0f);
-
-            ImGuiWindowFlags flags =
-                    ImGuiWindowFlags_NoDecoration |
-                    ImGuiWindowFlags_AlwaysAutoResize |
-                    ImGuiWindowFlags_NoSavedSettings |
-                    ImGuiWindowFlags_NoFocusOnAppearing |
-                    ImGuiWindowFlags_NoNav |
-                    ImGuiWindowFlags_NoBackground;
-
-            ImGui::Begin("TransparentOverlay", nullptr, flags);
-
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
-            ImGui::TextUnformatted("Walker properties");
-            ImGui::PopStyleColor();
-
-            ImGui::Text("Joint position: %.0f %.0f degrees", posLeft, posRight);
-
-            if (bodyTransform) {
-                glm::vec3 euler = glm::eulerAngles(bodyTransform->getRotation());
-                const float pitch = glm::degrees(euler.x);
-                const float yaw = glm::degrees(euler.y);
-                const float roll = glm::degrees(euler.z);
-
-                ImGui::Text("Heading: %.0f degrees", yaw);
-                ImGui::Text("Pitch: %.0f degrees", pitch);
-                ImGui::Text("Roll: %.0f degrees", roll);
-
-                const auto pos = bodyTransform->getWorldPosition();
-                const auto t = Time::timestamp;
-                float dt = t - prevTime;
-                prevTime = t;
-                auto dst = glm::length(pos - walkerPrevPosition);
-                walkerPrevPosition = pos;
-                const float speed_kmh = (dst / dt) * 3.6f;
-                constexpr auto alpha = 0.1f;
-                walkerAverageSpeed = (1.0f - alpha) * walkerAverageSpeed + alpha * speed_kmh;
-
-                ImGui::Text("Avg speed: %.1f km/h", walkerAverageSpeed);
-            }
-
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
-            ImGui::TextUnformatted("Left leg ON/OFF: [Z]");
-            ImGui::TextUnformatted("Right leg ON/OFF: [X]");
-            ImGui::TextUnformatted("Rotation ON/OFF: [C]");
-            ImGui::TextUnformatted("Toggle motor direction: [V]");
-            ImGui::TextUnformatted("Speed 1,2,3: [Keypad-1,2.3]");
-            ImGui::TextUnformatted("Ramp up ON/OFF: [B]");
-            ImGui::TextUnformatted("Ramp down ON/OFF: [N]");
-            ImGui::PopStyleColor();
-
-            ImGui::End();
-        }
+        processWalkerInfo();
+        processProfilingInfo();
     }
 }
 
@@ -243,4 +180,101 @@ void EditorUISystem::updateEditorCameraTarget(Entity &selectedEntity) const {
             }
         }
     }
+}
+
+void EditorUISystem::processWalkerInfo() {
+    const auto motorJointRight = m_EntityContext->findEntityComponent<PhysicsHingeJointComponent>(
+        "walker-joint2-right");
+    const auto motorJointLeft = m_EntityContext->findEntityComponent<PhysicsHingeJointComponent>(
+        "walker-joint2-left");
+
+    if (motorJointRight && motorJointLeft) {
+        const auto bodyTransform = m_EntityContext->findEntityComponent<TransformComponent>("walker-body");
+
+        auto posLeft = motorJointLeft->getJointAngle();
+        auto posRight = motorJointRight->getJointAngle();
+
+        ImGui::SetNextWindowPos(ImVec2(20, 40), ImGuiCond_Always);
+        ImGui::SetNextWindowBgAlpha(0.0f);
+
+        ImGuiWindowFlags flags =
+                ImGuiWindowFlags_NoDecoration |
+                ImGuiWindowFlags_AlwaysAutoResize |
+                ImGuiWindowFlags_NoSavedSettings |
+                ImGuiWindowFlags_NoFocusOnAppearing |
+                ImGuiWindowFlags_NoNav |
+                ImGuiWindowFlags_NoBackground;
+
+        ImGui::Begin("TransparentOverlay", nullptr, flags);
+
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
+        ImGui::TextUnformatted("Walker properties");
+        ImGui::PopStyleColor();
+
+        ImGui::Text("Joint position: %.0f %.0f degrees", posLeft, posRight);
+
+        if (bodyTransform) {
+            glm::vec3 euler = glm::eulerAngles(bodyTransform->getRotation());
+            const float pitch = glm::degrees(euler.x);
+            const float yaw = glm::degrees(euler.y);
+            const float roll = glm::degrees(euler.z);
+
+            ImGui::Text("Heading: %.0f degrees", yaw);
+            ImGui::Text("Pitch: %.0f degrees", pitch);
+            ImGui::Text("Roll: %.0f degrees", roll);
+
+            const auto pos = bodyTransform->getWorldPosition();
+            const auto t = Time::timestamp;
+            float dt = t - prevTime;
+            prevTime = t;
+            auto dst = glm::length(pos - walkerPrevPosition);
+            walkerPrevPosition = pos;
+            const float speed_kmh = (dst / dt) * 3.6f;
+            constexpr auto alpha = 0.1f;
+            walkerAverageSpeed = (1.0f - alpha) * walkerAverageSpeed + alpha * speed_kmh;
+
+            ImGui::Text("Avg speed: %.1f km/h", walkerAverageSpeed);
+        }
+
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
+        ImGui::TextUnformatted("Left leg ON/OFF: [Z]");
+        ImGui::TextUnformatted("Right leg ON/OFF: [X]");
+        ImGui::TextUnformatted("Rotation ON/OFF: [C]");
+        ImGui::TextUnformatted("Toggle motor direction: [V]");
+        ImGui::TextUnformatted("Speed 1,2,3: [Keypad-1,2.3]");
+        ImGui::TextUnformatted("Ramp up ON/OFF: [B]");
+        ImGui::TextUnformatted("Ramp down ON/OFF: [N]");
+        ImGui::PopStyleColor();
+
+        ImGui::End();
+    }
+}
+
+void EditorUISystem::processProfilingInfo() {
+    const auto processInfo = m_EntityContext->entitySystemRegistry.getProcessProfilingInfo(0);
+    auto systemsInfo = m_EntityContext->entitySystemRegistry.getProcessSystemsProfilingInfo(processInfo);
+
+
+    ImGui::SetNextWindowPos(ImVec2(20, 400), ImGuiCond_Always);
+    ImGui::SetNextWindowBgAlpha(0.0f);
+
+    ImGuiWindowFlags flags =
+            ImGuiWindowFlags_NoDecoration |
+            ImGuiWindowFlags_AlwaysAutoResize |
+            ImGuiWindowFlags_NoSavedSettings |
+            ImGuiWindowFlags_NoFocusOnAppearing |
+            ImGuiWindowFlags_NoNav |
+            ImGuiWindowFlags_NoBackground;
+
+    ImGui::Begin("TransparentOverlay2", nullptr, flags);
+
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
+    ImGui::Text("Process: %u %.5f ms %.2f fps", processInfo.id, processInfo.timeMs, processInfo.perSecond);
+    ImGui::PopStyleColor();
+
+    for (const auto &system: systemsInfo) {
+        ImGui::Text("%.5f ms %.2f %% - %s", system.timeMs, system.percent, system.systemName.c_str());
+    }
+
+    ImGui::End();
 }

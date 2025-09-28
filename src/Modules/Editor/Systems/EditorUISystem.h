@@ -79,6 +79,10 @@ private:
 
     void updateEditorCameraTarget(Entity &) const;
 
+    void processWalkerInfo();
+
+    void processProfilingInfo();
+
     Identity::Type m_selectedEntityId;
 
     WireframeRenderer m_wireframeRenderer;

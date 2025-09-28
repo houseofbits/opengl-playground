@@ -58,3 +58,4 @@ DartConfiguration.tcl
 build.ninja
 cmake-build-default-coverage
 cmake-build-debug
+err.txt

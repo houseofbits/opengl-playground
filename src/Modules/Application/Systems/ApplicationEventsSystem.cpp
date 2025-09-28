@@ -1,5 +1,6 @@
 #include "ApplicationEventsSystem.h"
 #include "../Events/RawSDLEvent.h"
+#include "../../../Core/Helper/Profiling.h"
 
 ApplicationEventsSystem::ApplicationEventsSystem() : EntitySystem(), isRunning(true),
                                                      m_WindowResource() {
@@ -48,6 +49,9 @@ void ApplicationEventsSystem::processSDLEvent(EventManager &eventManager, SDL_Ev
                     isRunning = false;
 
                     return;
+                case SDLK_F12:
+                    m_EntityContext->entitySystemRegistry.printProfilingData();
+                    break;
                 // case SDLK_F11:
                 //     isFullScreen = !isFullScreen;
                 //
