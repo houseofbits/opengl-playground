@@ -14,6 +14,7 @@
 #include "../Components/StaticMeshComponent.h"
 #include "../Components/MeshComponent.h"
 #include "../Components/SkyComponent.h"
+#include "../Resources/ShaderResource.h"
 
 class DeferredRenderTargetResource;
 
@@ -60,4 +61,6 @@ private:
     ResourceHandle<MaterialResource> m_defaultMaterial;
     ResourceHandle<DeferredRenderTargetResource> m_deferredRenderTarget;
     ResourceHandle<TextureResource> m_brdfLUTTexture;
+
+    ResourceHandle<ShaderResource> m_lightingShader;
 };

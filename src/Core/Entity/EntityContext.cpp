@@ -120,7 +120,7 @@ void EntityContext::initializeSystems(ResourceManager &resourceManager, EventMan
         system->initialize(resourceManager, eventManager);
     }
 
-    postRegisterModules();
+    //postRegisterModules();
 
     m_systemInitializers.clear();
 }

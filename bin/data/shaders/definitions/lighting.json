@@ -1,0 +1,20 @@
+{
+  "shader": "data/shaders/lighting|.vert|.frag",
+  "uniforms": [
+    {
+      "resourceType": "LightsBufferResource",
+      "resourceName": "SpotLightStorageBuffer"
+    },
+    {
+      "resourceType": "EnvironmentProbesBufferResource",
+      "resourceName": "EnvironmentProbeStorageBuffer"
+    },
+    {
+      "resourceType": "EnvironmentProbesCubeMapArrayResource",
+      "resourceName": "EnvironmentProbesCubeMapArray"
+    }
+  ],
+  "attributes": {
+    "depthTest": true
+  }
+}

@@ -23,13 +23,14 @@ void EditorApplication::initialize(const std::string &fileName, const std::strin
 
     m_EntityContext.scriptingManager.init();
 
-    m_EntityContext.registerModule<ApplicationModule>();
-    m_EntityContext.registerModule<CommonModule>();
-    m_EntityContext.registerModule<RendererModule>();
-    m_EntityContext.registerModule<EditorUIModule>();
-    m_EntityContext.registerModule<PhysicsModule>();
-    m_EntityContext.registerModule<BehavioursModule>();
+    registerModule<ApplicationModule>();
+    registerModule<CommonModule>();
+    registerModule<RendererModule>();
+    registerModule<EditorUIModule>();
+    registerModule<PhysicsModule>();
+    registerModule<BehavioursModule>();
     m_EntityContext.initializeSystems(m_ResourceManager, m_EventManager);
+    postRegisterModules();
     m_EventManager.queueEvent<SystemEvent>(SystemEvent::ENTITY_SYSTEMS_READY);
     m_EventManager.queueEvent<EntityPersistenceEvent>(EntityPersistenceEvent::TYPE_LOAD, fileName);
     m_EventManager.queueEvent<SystemEvent>(SystemEvent::REQUEST_EDITOR_MODE);
@@ -37,7 +38,7 @@ void EditorApplication::initialize(const std::string &fileName, const std::strin
 
 void EditorApplication::run() {
     while (m_EntityContext.getSystem<ApplicationEventsSystem>()->isRunning) {
-        m_ResourceManager.buildFetchedResources();
+        m_resourceProcess.buildFetchedResources();
         m_EntityContext.processSystems(m_EventManager);
     }
 }

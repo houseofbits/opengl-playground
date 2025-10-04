@@ -7,21 +7,19 @@
 #include <functional>
 #include <atomic>
 #include <cstdio>
-#include <ctime>
 #include <list>
 #include <thread>
 #include <utility>
 #include <vector>
+#include "ResourceFactory.h"
 
 class ResourceManager {
 public:
-    ResourceManager() : m_Resources(), m_FetchThread(&ResourceManager::fetchProcess, this),
-                        m_FetchProcessRunning(true) {
+    ResourceManager() : m_Resources()
+    {
     }
 
     ~ResourceManager() {
-        m_FetchProcessRunning = false;
-        m_FetchThread.join();
         for (const auto &resource: m_Resources) {
             resource->destroy();
             delete resource;
@@ -30,7 +28,7 @@ public:
     }
 
     bool doesResourceExist(const std::string &path) {
-        return std::any_of(m_Resources.begin(), m_Resources.end(), [&path](Resource *resource) {
+        return std::any_of(m_Resources.begin(), m_Resources.end(), [&path](const Resource *resource) {
             return resource->m_Path == path;
         });
     }
@@ -96,6 +94,38 @@ public:
         });
     }
 
+    /**
+    * @desciption Request resource of some abstract type T, by providing concrete resource typeName
+    */
+    template<class T>
+    void requestAbstract(T &handle, const std::string &typeName, const std::string &resourceName,
+                         const std::vector<std::string> &dependencies = {}) {
+        if (resourceName.empty() || typeName.empty()) {
+            return;
+        }
+
+        Resource *resource = findResourceOfType<typename T::TYPE>(resourceName);
+        if (resource == nullptr) {
+            resource = resourceFactory.createInstance(typeName);
+            if (!resource) {
+                Log::warn("Type not found in resource factory: ", typeName, ",  while requesting resource: ",
+                          resourceName);
+
+                return;
+            }
+            if (!dependencies.empty()) {
+                resource->m_Dependencies.insert(resource->m_Dependencies.end(), dependencies.begin(),
+                                                dependencies.end());
+            }
+            resource->m_Path = resourceName;
+            resource->m_Status = Resource::STATUS_DATA_FETCHING;
+
+            m_Resources.push_back(resource);
+        }
+
+        handle.makeValid(this, reinterpret_cast<typename T::TYPE *>(resource));
+    }
+
     template<class T>
     void requestWith(T &hand, std::string resourceName, std::function<void(typename T::TYPE &)> fetchFunctor) {
         if (resourceName.empty()) {
@@ -125,89 +155,6 @@ public:
         delete resource;
     }
 
-    void buildFetchedResources() const {
-        for (const auto &resource: m_Resources) {
-            if (resource->m_Status == Resource::STATUS_DATA_READY) {
-                if (areDependenciesReady(resource)) {
-                    resource->m_Status = resource->build();
-                    if (resource->m_Status == Resource::STATUS_BUILD_ERROR) {
-                        Log::warn("Failed to build resource: " + resource->m_Path);
-                    }
-                } else if (doesDependencyHaveError(resource)) {
-                    resource->m_Status = Resource::STATUS_BUILD_ERROR;
-                    Log::warn("Failed to build resource: " + resource->m_Path + " dependency failed");
-                }
-            }
-        }
-    }
-
-    void fetchProcess() {
-        //        const auto timestep = std::chrono::milliseconds(100);
-        while (true) {
-            if (!m_FetchProcessRunning) {
-                return;
-            }
-            auto start = std::chrono::steady_clock::now();
-            for (const auto &resource: m_Resources) {
-                if (resource->m_Status == Resource::STATUS_DATA_FETCHING) {
-                    if (areDependenciesReady(resource)) {
-                        resource->m_Status = resource->fetchData(*this);
-                        if (resource->m_Status != Resource::STATUS_DATA_READY) {
-                            Log::warn("Failed to fetch resource: " + resource->m_Path);
-                        }
-                    } else if (doesDependencyHaveError(resource)) {
-                        resource->m_Status = Resource::STATUS_FETCH_ERROR;
-                        Log::warn("Failed to fetch resource: " + resource->m_Path + " dependency failed");
-                    }
-                }
-            }
-
-            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::steady_clock::now() - start).count();
-
-            if (elapsed < 100) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(100 - elapsed));
-            }
-            //            std::this_thread::sleep_for(timestep);
-        }
-    }
-
-    bool areDependenciesReady(Resource *resource) const {
-        // Log::write("Check resource ", resource->m_Path);
-        if (!resource->m_Dependencies.empty()) {
-            for (const auto &dependencyPath: resource->m_Dependencies) {
-                const Resource *r = findResource(dependencyPath);
-                if (r == nullptr) {
-                    return false;
-                }
-
-                if (!r->isReady()) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    bool doesDependencyHaveError(Resource *resource) const {
-        if (!resource->m_Dependencies.empty()) {
-            for (const auto &dependencyPath: resource->m_Dependencies) {
-                Resource *r = findResource(dependencyPath);
-                if (r == nullptr) {
-                    return false;
-                }
-                if (r->m_Status == Resource::STATUS_FETCH_ERROR ||
-                    r->m_Status == Resource::STATUS_BUILD_ERROR) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     std::list<Resource *> m_Resources;
-    std::thread m_FetchThread;
-    std::atomic<bool> m_FetchProcessRunning;
+    ResourceFactory resourceFactory;
 };

@@ -85,6 +85,9 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
 
     resourceManager.request(m_deferredRenderTarget, "deferredRenderTarget");
     resourceManager.request(m_brdfLUTTexture, "data/textures/ibl_brdf_lut.png");
+
+
+    resourceManager.request(m_lightingShader, "data/shaders/definitions/lighting.json");
 }
 
 void MainRenderSystem::process(EventManager &eventManager) {
@@ -110,7 +113,7 @@ void MainRenderSystem::process(EventManager &eventManager) {
     }
 
     const auto &sky = m_skyComponentRegistry->container().begin();
-    bool doesSkyComponentExist = sky != m_skyComponentRegistry->container().end();
+    const bool doesSkyComponentExist = sky != m_skyComponentRegistry->container().end();
     if (doesSkyComponentExist && sky->second->m_cubeMap().isReady()) {
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);

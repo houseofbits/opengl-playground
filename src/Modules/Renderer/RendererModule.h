@@ -38,6 +38,20 @@ public:
         ctx.registerEntitySystem<OverlayRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 7);
     }
 
+    void registerResources(ResourceFactory &factory) override {
+        factory.registerResourceType<CubeTextureResource>("CubeTexture");
+        factory.registerResourceType<EnvironmentProbesBufferResource>("EnvironmentProbesBuffer");
+        factory.registerResourceType<EnvironmentProbesCubeMapArrayResource>("EnvironmentProbesCubeMapArray");
+        factory.registerResourceType<LightsBufferResource>("LightsBuffer");
+        factory.registerResourceType<MaterialResource>("Material");
+        factory.registerResourceType<MaterialsBufferResource>("MaterialsBuffer");
+        factory.registerResourceType<MeshResource>("Mesh");
+        factory.registerResourceType<ShaderProgramResource>("ShaderProgram");
+        factory.registerResourceType<ShaderResource>("Shader");
+        factory.registerResourceType<ShadowMapResource>("ShadowMap");
+        factory.registerResourceType<TextureResource>("Texture");
+    }
+
     void registerScriptableTypes(ScriptingManager &scriptingManager) override {
         scriptingManager.registerComponentType<LightComponent>("isEnabled", &LightComponent::m_isEnabled,
                                                                "intensity", &LightComponent::m_Intensity

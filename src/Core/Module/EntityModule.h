@@ -1,7 +1,8 @@
 #pragma once
-#include "../Scripting/ScriptingManager.h"
 
 class EntityContext;
+class ScriptingManager;
+class ResourceFactory;
 
 class EntityModule {
 public:
@@ -9,11 +10,18 @@ public:
 
     EntityModule();
 
-    virtual void registerComponents(EntityContext &) {};
+    virtual void registerComponents(EntityContext &) {
+    };
 
-    virtual void registerSystems(EntityContext &) {};
+    virtual void registerSystems(EntityContext &) {
+    };
 
-    virtual void registerScriptableTypes(ScriptingManager &) {};
+    virtual void registerResources(ResourceFactory &) {
+    };
 
-    virtual void postRegister(EntityContext &) {};
+    virtual void registerScriptableTypes(ScriptingManager &) {
+    };
+
+    virtual void postRegister(EntityContext &) {
+    };
 };

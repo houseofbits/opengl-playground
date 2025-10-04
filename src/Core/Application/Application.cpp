@@ -1,7 +1,8 @@
 #include "Application.h"
 #include <fstream>
 
-Application::Application() : m_EventManager(), m_ResourceManager(), m_EntityContext(), m_EntitySourceFileName() {
+Application::Application() : m_EventManager(), m_ResourceManager(), m_EntityContext(), m_EntitySourceFileName(),
+                             m_resourceProcess(&m_ResourceManager) {
     m_EntityContext.entitySystemRegistry.setEventManager(m_EventManager);
     m_EntityContext.entitySystemRegistry.createMainProcess();
 }
@@ -20,7 +21,7 @@ void Application::loadEntitiesFromFile(const std::string &fileName) {
     m_EntityContext.deserializeEntities(json, m_ResourceManager);
 }
 
-void Application::saveEntitiesToFile() {
+void Application::saveEntitiesToFile() const {
     nlohmann::json j;
     m_EntityContext.serializeEntities(j);
 
@@ -29,4 +30,10 @@ void Application::saveEntitiesToFile() {
 
     std::string data(j.dump(4));
     file << data;
+}
+
+void Application::postRegisterModules() {
+    for (const auto module: m_Modules) {
+        module->postRegister(m_EntityContext);
+    }
 }

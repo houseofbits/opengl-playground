@@ -23,7 +23,6 @@ private:
     EntityConfiguration m_EntityConfiguration;
 
     std::list<std::shared_ptr<Entity> > m_Entities;
-    std::list<EntityModule *> m_Modules;
 
     std::shared_ptr<Entity> addEntity();
 
@@ -51,30 +50,13 @@ public:
         m_systemInitializers[p] = processType;
     }
 
-    template<class T, typename = std::enable_if_t<std::is_base_of_v<EntityModule, T> > >
-    T *registerModule() {
-        auto *p = new T();
-        m_Modules.push_back(p);
-        m_Modules.back()->registerComponents(*this);
-        m_Modules.back()->registerSystems(*this);
-        m_Modules.back()->registerScriptableTypes(scriptingManager);
-
-        return p;
-    }
-
-    void postRegisterModules() {
-        for (const auto module: m_Modules) {
-            module->postRegister(*this);
-        }
-    }
-
     template<class T, typename = std::enable_if_t<std::is_base_of_v<EntitySystem, T> > >
     T *getSystem() {
         return entitySystemRegistry.getSystem<T>();
     }
 
     template<class T>
-    bool doesEntityHaveComponent(const Identity::Type entityId) {
+    [[nodiscard]] bool doesEntityHaveComponent(const Identity::Type entityId) const {
         auto *e = getEntity(entityId);
         if (e != nullptr) {
             auto *c = e->getComponent<T>();
