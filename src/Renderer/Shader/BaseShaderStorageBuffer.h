@@ -3,9 +3,9 @@
 class BaseShaderStorageBuffer 
 {
 public:
-    BaseShaderStorageBuffer();
+    BaseShaderStorageBuffer() = default;
 
-    virtual ~BaseShaderStorageBuffer();
+    virtual ~BaseShaderStorageBuffer() = default;
 
     virtual void bind() = 0;
 };

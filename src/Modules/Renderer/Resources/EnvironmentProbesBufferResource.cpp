@@ -1,7 +1,7 @@
 #include "EnvironmentProbesBufferResource.h"
 #include "../../../Core/Helper/ShaderSourceLoader.h"
 
-EnvironmentProbesBufferResource::EnvironmentProbesBufferResource() : ShaderUniformResource(), m_StorageBuffer() {
+EnvironmentProbesBufferResource::EnvironmentProbesBufferResource() : RenderShaderResource(), m_StorageBuffer() {
 }
 
 Resource::Status EnvironmentProbesBufferResource::build() {
@@ -19,8 +19,10 @@ Resource::Status EnvironmentProbesBufferResource::build() {
 void EnvironmentProbesBufferResource::destroy() {
 }
 
+//@deprecated
 void EnvironmentProbesBufferResource::bind(ShaderProgramResource &shader) {
-    use(shader);
+    m_StorageBuffer.bind();
+    shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
 }
 
 void EnvironmentProbesBufferResource::appendProbe(TransformComponent &transform, EnvironmentProbeComponent &probe) {
@@ -35,7 +37,7 @@ void EnvironmentProbesBufferResource::appendProbe(TransformComponent &transform,
     m_StorageBuffer.append(structure);
 }
 
-void EnvironmentProbesBufferResource::use(Shader &shader) {
-    m_StorageBuffer.bind();
+void EnvironmentProbesBufferResource::applyToShader(RenderShader &shader) {
+    shader.addStorageBuffer(&m_StorageBuffer);
     shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
 }

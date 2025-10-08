@@ -10,7 +10,7 @@ const glm::vec3 CUBE_DIRECTIONS[] = {
     glm::vec3(0, 0, -1),
 };
 
-LightsBufferResource::LightsBufferResource() : ShaderUniformResource(), m_StorageBuffer() {
+LightsBufferResource::LightsBufferResource() : RenderShaderResource(), m_StorageBuffer() {
 }
 
 Resource::Status LightsBufferResource::build() {
@@ -77,7 +77,8 @@ void LightsBufferResource::appendLight(TransformComponent &transform, LightCompo
 }
 
 void LightsBufferResource::bind(ShaderProgramResource &shader) {
-    use(shader);
+    m_StorageBuffer.bind();
+    shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
 }
 
 glm::mat4 LightsBufferResource::createPerspectiveProjectionViewMatrix(TransformComponent &transform,
@@ -111,7 +112,7 @@ glm::mat4 LightsBufferResource::createPerspectiveProjectionViewMatrix(glm::vec3 
     return projectionMatrix * viewMatrix;
 }
 
-void LightsBufferResource::use(Shader &shader) {
-    m_StorageBuffer.bind();
+void LightsBufferResource::applyToShader(RenderShader &shader) {
+    shader.addStorageBuffer(&m_StorageBuffer);
     shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
 }

@@ -7,7 +7,7 @@
 #include "../../../Core/Helper/StringUtils.h"
 #include "../../../Renderer/Shader/Shader.h"
 
-CubeTextureResource::CubeTextureResource() : ShaderUniformResource(), m_textureId(), m_handleId(), m_width(0), m_height(0), m_data() {
+CubeTextureResource::CubeTextureResource() : RenderShaderResource(), m_textureId(), m_handleId(), m_width(0), m_height(0), m_data() {
 }
 
 Resource::Status CubeTextureResource::fetchData(ResourceManager &) {
@@ -89,6 +89,6 @@ void CubeTextureResource::destroy() {
     }
 }
 
-void CubeTextureResource::use(Shader &shader, const std::string &uniformName) {
+void CubeTextureResource::applyToShader(RenderShader &shader, const std::string &uniformName) {
     shader.setUniform(uniformName.c_str(), m_handleId);
 }

@@ -21,11 +21,11 @@ RenderShader::~RenderShader() {
 
     m_uniforms.clear();
 
-    glDeleteShader(programId);
+    glDeleteShader(m_programId);
 }
 
 void RenderShader::use() const {
-    glUseProgram(programId);
+    glUseProgram(m_programId);
 
     for (const auto &buffer: m_buffers) {
         buffer->bind();
@@ -88,12 +88,12 @@ void RenderShader::setUniform(const std::string &name, const bool val) {
 }
 
 int RenderShader::getUniformLocation(std::string name) {
-    if (programId == 0) {
+    if (m_programId == 0) {
         return 0;
     }
 
     if (const auto pos = uniformLocations.find(name); pos == uniformLocations.end()) {
-        uniformLocations[name] = glGetUniformLocation(programId, name.c_str());
+        uniformLocations[name] = glGetUniformLocation(m_programId, name.c_str());
     }
 
     return uniformLocations[name];

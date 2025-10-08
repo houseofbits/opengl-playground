@@ -16,7 +16,10 @@ class Camera;
 
 class RenderShader final {
 public:
-    RenderShader(unsigned int programId) : programId(programId) {
+    RenderShader() {
+    }
+
+    RenderShader(const unsigned int programId) : m_programId(programId) {
     }
 
     ~RenderShader();
@@ -51,12 +54,16 @@ public:
         m_buffers.push_back(buffer);
     }
 
+    void setProgramId(const unsigned int programId) {
+        m_programId = programId;
+    }
+
 private:
     int getUniformLocation(std::string name);
 
     void setUniformValue(const std::string &, UniformValue *);
 
-    unsigned int programId = 0;
+    unsigned int m_programId = 0;
     std::map<std::string, int> uniformLocations;
     std::unordered_map<int, UniformValue *> m_uniforms;
     std::vector<BaseShaderStorageBuffer *> m_buffers;

@@ -5,9 +5,9 @@
 #include "../../Common/Components/TransformComponent.h"
 #include "../Components/EnvironmentProbeComponent.h"
 #include "ShaderProgramResource.h"
-#include "ShaderUniformResource.h"
+#include "RenderShaderResource.h"
 
-class EnvironmentProbesBufferResource : public ShaderUniformResource {
+class EnvironmentProbesBufferResource : public RenderShaderResource {
 public:
     inline static const int MAX_PROBES = 100;
 
@@ -30,7 +30,7 @@ public:
 
     void appendProbe(TransformComponent &transform, EnvironmentProbeComponent &probe);
 
-    void use(Shader &shader) override;
+    void applyToShader(RenderShader &shader) override;
 
     ShaderStorageBuffer<EnvironmentProbeStructure> m_StorageBuffer;
 

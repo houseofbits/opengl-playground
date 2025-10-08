@@ -5,9 +5,9 @@
 #include "../../Common/Components/TransformComponent.h"
 #include "../Components/LightComponent.h"
 #include "ShaderProgramResource.h"
-#include "ShaderUniformResource.h"
+#include "RenderShaderResource.h"
 
-class LightsBufferResource : public ShaderUniformResource {
+class LightsBufferResource : public RenderShaderResource {
 public:
     inline static const int MAX_SPOT_LIGHTS = 100;
 
@@ -45,7 +45,7 @@ public:
 
     void appendLight(TransformComponent &, LightComponent &);
 
-    void use(Shader &shader) override;
+    void applyToShader(RenderShader &shader) override;
 
     ShaderStorageBuffer<LightStructure> m_StorageBuffer;
 

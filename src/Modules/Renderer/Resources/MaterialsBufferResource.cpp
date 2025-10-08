@@ -1,7 +1,7 @@
 #include "MaterialsBufferResource.h"
 #include "../../../Core/Helper/ShaderSourceLoader.h"
 
-MaterialsBufferResource::MaterialsBufferResource() : ShaderUniformResource(), m_StorageBuffer() {
+MaterialsBufferResource::MaterialsBufferResource() : RenderShaderResource(), m_StorageBuffer() {
 }
 
 Resource::Status MaterialsBufferResource::build() {
@@ -52,10 +52,11 @@ void MaterialsBufferResource::destroy() {
 }
 
 void MaterialsBufferResource::bind(ShaderProgramResource &shader) {
-    use(shader);
+    m_StorageBuffer.bind();
+    shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
 }
 
-void MaterialsBufferResource::use(Shader &shader) {
-    m_StorageBuffer.bind();
+void MaterialsBufferResource::applyToShader(RenderShader &shader) {
+    shader.addStorageBuffer(&m_StorageBuffer);
     shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
 }

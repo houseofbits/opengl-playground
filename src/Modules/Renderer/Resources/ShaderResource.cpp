@@ -1,11 +1,12 @@
 #include "ShaderResource.h"
 #include "../../../Core/Helper/ShaderSourceLoader.h"
-#include "ShaderUniformResource.h"
+#include "RenderShaderResource.h"
 #include <vector>
 #include "../../../Renderer/Camera/Camera.h"
+#include "../../../Renderer/Shader/ShaderBuilder.h"
 
-ShaderResource::ShaderResource() : Resource(), m_uniformResources(), m_namedUniformResources(),
-                                   m_isDepthTestEnabled(true) {
+ShaderResource::ShaderResource() : Resource(), m_shader(), m_uniformResources(), m_namedUniformResources(),
+                                   m_isDepthTestEnabled(true), m_shaderBuilder(nullptr) {
 }
 
 Resource::Status ShaderResource::fetchData(ResourceManager &manager) {
@@ -37,7 +38,12 @@ Resource::Status ShaderResource::fetchData(ResourceManager &manager) {
 }
 
 Resource::Status ShaderResource::build() {
-    m_shader.compileAndLink();
+    const auto programId = m_shaderBuilder->compile();
+    if (!programId) {
+        return STATUS_BUILD_ERROR;
+    }
+
+    m_shader.setProgramId(programId.value());
 
     return STATUS_READY;
 }
@@ -61,9 +67,9 @@ void ShaderResource::fetchDependencies(nlohmann::json &json, ResourceManager &ma
             auto resourceName = uniformDef.at("resourceName");
             auto resourceType = uniformDef.at("resourceType");
 
-            auto resource = new ShaderUniformResourceHandle();
+            auto resource = new RenderShaderResourceHandle();
 
-            manager.requestAbstract<ShaderUniformResourceHandle>(*resource, resourceType, resourceName);
+            manager.requestAbstract<RenderShaderResourceHandle>(*resource, resourceType, resourceName);
 
             if (uniformDef.contains("name")) {
                 auto name = uniformDef.at("name");
@@ -83,8 +89,10 @@ void ShaderResource::loadShader() {
         return;
     }
 
+    m_shaderBuilder = new ShaderBuilder();
+
     for (const auto &path: paths) {
-        m_shader.loadFromFile(path);
+        m_shaderBuilder->loadFromFile(path);
     }
 }
 
@@ -93,10 +101,10 @@ void ShaderResource::use(Camera &camera) {
     m_shader.setUniform("viewPosition", camera.getPosition());
 
     for (const auto &uniform: m_uniformResources) {
-        uniform->get().use(m_shader);
+        uniform->get().applyToShader(m_shader);
     }
 
     for (const auto &[name, uniform]: m_namedUniformResources) {
-        uniform->get().use(m_shader, name);
+        uniform->get().applyToShader(m_shader, name);
     }
 }

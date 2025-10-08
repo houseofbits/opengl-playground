@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ShaderUniformResource.h"
+#include "RenderShaderResource.h"
 #include "../../../Core/API.h"
 #include "../../../Core/Helper/Log.h"
 #include <cstdint>
 
-class CubeTextureResource : public ShaderUniformResource {
+class CubeTextureResource : public RenderShaderResource {
 public:
     inline static const std::string CUBE_FACE_FILENAME_PLACEHOLDER = "*";
     inline static const std::string CUBE_FACE_FILENAME_SUFFIXES[6] = {
@@ -23,7 +23,7 @@ public:
     Resource::Status build() override;
     void destroy() override;
 
-    void use(Shader &shader, const std::string &uniformName) override;
+    void applyToShader(RenderShader &shader, const std::string &uniformName) override;
 
     int m_width;
     int m_height;

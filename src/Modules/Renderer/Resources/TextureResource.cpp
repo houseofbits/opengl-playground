@@ -5,7 +5,7 @@
 #define STB_IMAGE_STATIC
 #include "../../../../libs/tinygltf/stb_image.h"
 
-TextureResource::TextureResource() : ShaderUniformResource(), m_textureId(), m_handleId(), m_width(0), m_height(0),
+TextureResource::TextureResource() : RenderShaderResource(), m_textureId(), m_handleId(), m_width(0), m_height(0),
                                      m_data(nullptr) {
 }
 
@@ -92,6 +92,6 @@ void TextureResource::bindImageTexture(const unsigned int unit) const {
     glBindImageTexture(unit, m_textureId, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
 }
 
-void TextureResource::use(Shader &shader, const std::string &uniformName) {
-    shader.setUniform(uniformName.c_str(), m_handleId);
+void TextureResource::applyToShader(RenderShader &shader, const std::string &uniformName) {
+    shader.setUniform(uniformName, m_handleId);
 }

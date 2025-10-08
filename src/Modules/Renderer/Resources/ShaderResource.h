@@ -1,16 +1,17 @@
 #pragma once
 
 #include "../../../Core/API.h"
-#include "../../../Renderer/Shader/Shader.h"
+#include "../../../Renderer/Shader/RenderShader.h"
 
-class ShaderUniformResource;
+class RenderShaderResource;
 class Camera;
+class ShaderBuilder;
 
 class ShaderResource : public Resource {
 public:
     ShaderResource();
 
-    typedef ResourceHandle<ShaderUniformResource> ShaderUniformResourceHandle;
+    typedef ResourceHandle<RenderShaderResource> RenderShaderResourceHandle;
 
     Status fetchData(ResourceManager &) override;
 
@@ -20,7 +21,7 @@ public:
 
     void use(Camera &camera);
 
-    Shader& getShader() {
+    RenderShader& getShader() {
         return m_shader;
     }
 
@@ -33,8 +34,9 @@ private:
 
     bool m_fetchMetadata = true;
     std::string m_shaderPath;
-    Shader m_shader;
-    std::vector<ShaderUniformResourceHandle *> m_uniformResources;
-    std::vector<std::pair<std::string, ShaderUniformResourceHandle *> > m_namedUniformResources;
+    RenderShader m_shader;
+    std::vector<RenderShaderResourceHandle *> m_uniformResources;
+    std::vector<std::pair<std::string, RenderShaderResourceHandle *> > m_namedUniformResources;
     bool m_isDepthTestEnabled;
+    ShaderBuilder* m_shaderBuilder;
 };

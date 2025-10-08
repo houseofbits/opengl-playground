@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 #include "../../../Renderer/Shader/Shader.h"
 
-EnvironmentProbesCubeMapArrayResource::EnvironmentProbesCubeMapArrayResource() : ShaderUniformResource(),
+EnvironmentProbesCubeMapArrayResource::EnvironmentProbesCubeMapArrayResource() : RenderShaderResource(),
                                                                                  m_TextureCube(),
                                                                                  m_framebufferId(),
                                                                                  m_renderbufferId(),
@@ -73,6 +73,6 @@ void EnvironmentProbesCubeMapArrayResource::selectCubeFace(int face) {
     glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_TextureCube.textureId, 0, face);
 }
 
-void EnvironmentProbesCubeMapArrayResource::use(Shader &shader) {
+void EnvironmentProbesCubeMapArrayResource::applyToShader(RenderShader &shader) {
     shader.setUniform("probesCubeArraySampler", m_handleId);
 }

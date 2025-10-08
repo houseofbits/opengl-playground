@@ -1,11 +1,11 @@
 #pragma once
 
 #include "MaterialResource.h"
-#include "ShaderUniformResource.h"
+#include "RenderShaderResource.h"
 #include "../../../Core/API.h"
 #include "../../../Renderer/Shader/ShaderStorageBuffer.h"
 
-class MaterialsBufferResource : public ShaderUniformResource {
+class MaterialsBufferResource : public RenderShaderResource {
 public:
     inline static const int MAX_MATERIALS = 100;
 
@@ -41,7 +41,7 @@ public:
 
     void bind(ShaderProgramResource &shader);
 
-    void use(Shader &shader) override;
+    void applyToShader(RenderShader &shader) override;
 
     std::string getSizeAttributeName() {
         return m_Path + "_size";

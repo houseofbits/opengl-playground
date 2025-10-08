@@ -2,9 +2,9 @@
 
 #include "../../../Core/API.h"
 #include "../../../Renderer/Texture/TextureCube.h"
-#include "ShaderUniformResource.h"
+#include "RenderShaderResource.h"
 
-class EnvironmentProbesCubeMapArrayResource : public ShaderUniformResource {
+class EnvironmentProbesCubeMapArrayResource : public RenderShaderResource {
 public:
     inline static const int TEXTURE_SIZE = 256;
     inline static const int TEXTURE_DEPTH = 256;
@@ -23,7 +23,7 @@ public:
 
     void selectCubeFace(int layer);
 
-    void use(Shader &shader) override;
+    void applyToShader(RenderShader &shader) override;
 
     TextureCube m_TextureCube;
     std::uint64_t m_handleId;
