@@ -11,7 +11,22 @@
     },
     {
       "resourceType": "EnvironmentProbesCubeMapArrayResource",
-      "resourceName": "EnvironmentProbesCubeMapArray"
+      "resourceName": "EnvironmentProbesCubeMapArray",
+      "name": "probesCubeArraySampler"
+    },
+    {
+      "resourceType": "MaterialsBufferResource",
+      "resourceName": "MaterialsStorageBuffer"
+    },
+    {
+      "resourceType": "CubeTextureResource",
+      "resourceName": "resources/textures/sky2/*.png",
+      "name": "environmentSampler"
+    },
+    {
+      "resourceType": "TextureResource",
+      "resourceName": "data/textures/ibl_brdf_lut.png",
+      "name": "brdfLUT"
     }
   ],
   "attributes": {

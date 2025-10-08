@@ -149,15 +149,11 @@ void MainRenderSystem::process(EventManager &eventManager) {
 
     currentProgram.setUniform("brdfLUT", m_brdfLUTTexture().getHandle());
 
-    //
-    // for (const auto &[id, components]: m_meshComponentRegistry->container()) {
-    //     const auto &[transform, mesh] = components.get();
-    //     m_ShaderPrograms[m_shaderType]().setUniform("modelMatrix", transform->getWorldTransform());
-    //     if (mesh->m_Mesh().isReady()) {
-    //         mesh->m_Material().bind(m_ShaderPrograms[m_shaderType]());
-    //         mesh->m_Mesh().render();
-    //     }
+    // if (!m_isEnabled || !m_lightingShader.isReady()) {
+    //     return;
     // }
+    //
+    // m_lightingShader.get().use(*camera);
 
     for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
         if (const auto &[transform, mesh] = components.get(); mesh->m_Mesh().isReady()) {

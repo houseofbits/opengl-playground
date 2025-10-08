@@ -1,13 +1,14 @@
 #include "ShaderResource.h"
-#include "../../../Core/Helper/Console.h"
 #include "../../../Core/Helper/ShaderSourceLoader.h"
-#include <GL/glew.h>
+#include "ShaderUniformResource.h"
 #include <vector>
+#include "../../../Renderer/Camera/Camera.h"
 
-ShaderResource::ShaderResource() : Resource(), m_isDepthTestEnabled(true) {
+ShaderResource::ShaderResource() : Resource(), m_uniformResources(), m_namedUniformResources(),
+                                   m_isDepthTestEnabled(true) {
 }
 
-Resource::Status ShaderResource::fetchData(ResourceManager &) {
+Resource::Status ShaderResource::fetchData(ResourceManager &manager) {
     auto json = Json::readFile(m_Path);
     if (!json) {
         return STATUS_FETCH_ERROR;
@@ -17,30 +18,19 @@ Resource::Status ShaderResource::fetchData(ResourceManager &) {
         return STATUS_FETCH_ERROR;
     }
 
-    auto paths = StringUtils::getAlternatePaths(json->at("shader"));
-    if (paths.empty()) {
-        Log::error("Resource path " + m_Path + " not valid for ShaderProgramResource");
-        return STATUS_FETCH_ERROR;
-    }
+    m_shaderPath = json->at("shader");
 
-    for (const auto &path: paths) {
-        m_shader.loadFromFile(path);
-    }
+    fetchAttributes(*json);
+    fetchDependencies(*json, manager);
 
-    if (json->contains("attributes")) {
-        m_isDepthTestEnabled = Json::getValue(json->at("attributes"), "depthTest", true);
-    }
+    if (m_fetchMetadata) {
+        m_fetchMetadata = false;
 
-    if (json->contains("uniforms") && json->at("uniforms").is_array()) {
-        for (const auto uniformDef: json->at("uniforms")) {
-            if (!uniformDef.contains("resourceName")) {
-                continue;
-            }
+        return STATUS_DATA_FETCHING;
+    } else {
+        loadShader();
 
-            auto resourceName = uniformDef.at("resourceName");
-
-            addDependency(resourceName);
-        }
+        m_fetchMetadata = true;
     }
 
     return STATUS_DATA_READY;
@@ -52,5 +42,61 @@ Resource::Status ShaderResource::build() {
     return STATUS_READY;
 }
 
-void ShaderResource::destroy() {
+void ShaderResource::ShaderResource::destroy() {
+}
+
+void ShaderResource::fetchAttributes(nlohmann::json &json) {
+    if (json.contains("attributes")) {
+        m_isDepthTestEnabled = Json::getValue(json.at("attributes"), "depthTest", true);
+    }
+}
+
+void ShaderResource::fetchDependencies(nlohmann::json &json, ResourceManager &manager) {
+    if (json.contains("uniforms") && json.at("uniforms").is_array()) {
+        for (const auto &uniformDef: json.at("uniforms")) {
+            if (!uniformDef.contains("resourceName")) {
+                continue;
+            }
+
+            auto resourceName = uniformDef.at("resourceName");
+            auto resourceType = uniformDef.at("resourceType");
+
+            auto resource = new ShaderUniformResourceHandle();
+
+            manager.requestAbstract<ShaderUniformResourceHandle>(*resource, resourceType, resourceName);
+
+            if (uniformDef.contains("name")) {
+                auto name = uniformDef.at("name");
+                m_namedUniformResources.push_back({name, resource});
+            } else {
+                m_uniformResources.push_back(resource);
+            }
+            addDependency(resourceName);
+        }
+    }
+}
+
+void ShaderResource::loadShader() {
+    auto paths = StringUtils::getAlternatePaths(m_shaderPath);
+    if (paths.empty()) {
+        Log::error("Resource path " + m_Path + " not valid for ShaderProgramResource");
+        return;
+    }
+
+    for (const auto &path: paths) {
+        m_shader.loadFromFile(path);
+    }
+}
+
+void ShaderResource::use(Camera &camera) {
+    m_shader.setUniform("viewProjectionMatrix", camera.getProjectionViewMatrix());
+    m_shader.setUniform("viewPosition", camera.getPosition());
+
+    for (const auto &uniform: m_uniformResources) {
+        uniform->get().use(m_shader);
+    }
+
+    for (const auto &[name, uniform]: m_namedUniformResources) {
+        uniform->get().use(m_shader, name);
+    }
 }

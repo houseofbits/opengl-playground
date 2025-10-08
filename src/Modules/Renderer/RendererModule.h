@@ -39,17 +39,17 @@ public:
     }
 
     void registerResources(ResourceFactory &factory) override {
-        factory.registerResourceType<CubeTextureResource>("CubeTexture");
-        factory.registerResourceType<EnvironmentProbesBufferResource>("EnvironmentProbesBuffer");
-        factory.registerResourceType<EnvironmentProbesCubeMapArrayResource>("EnvironmentProbesCubeMapArray");
-        factory.registerResourceType<LightsBufferResource>("LightsBuffer");
-        factory.registerResourceType<MaterialResource>("Material");
-        factory.registerResourceType<MaterialsBufferResource>("MaterialsBuffer");
-        factory.registerResourceType<MeshResource>("Mesh");
-        factory.registerResourceType<ShaderProgramResource>("ShaderProgram");
-        factory.registerResourceType<ShaderResource>("Shader");
-        factory.registerResourceType<ShadowMapResource>("ShadowMap");
-        factory.registerResourceType<TextureResource>("Texture");
+        factory.registerResourceType<CubeTextureResource>("CubeTextureResource");
+        factory.registerResourceType<EnvironmentProbesBufferResource>("EnvironmentProbesBufferResource");
+        factory.registerResourceType<EnvironmentProbesCubeMapArrayResource>("EnvironmentProbesCubeMapArrayResource");
+        factory.registerResourceType<LightsBufferResource>("LightsBufferResource");
+        factory.registerResourceType<MaterialResource>("MaterialResource");
+        factory.registerResourceType<MaterialsBufferResource>("MaterialsBufferResource");
+        factory.registerResourceType<MeshResource>("MeshResource");
+        factory.registerResourceType<ShaderProgramResource>("ShaderProgramResource");
+        factory.registerResourceType<ShaderResource>("ShaderResource");
+        factory.registerResourceType<ShadowMapResource>("ShadowMapResource");
+        factory.registerResourceType<TextureResource>("TextureResource");
     }
 
     void registerScriptableTypes(ScriptingManager &scriptingManager) override {

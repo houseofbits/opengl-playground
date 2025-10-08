@@ -6,5 +6,13 @@ class Shader;
 
 class ShaderUniformResource : public Resource {
 public:
-    virtual void use(Shader* shader) { }
+    ShaderUniformResource() = default;
+
+    ~ShaderUniformResource() override = default;
+
+    virtual void use(Shader &shader) {
+    }
+
+    virtual void use(Shader &shader, const std::string &uniformName) {
+    }
 };

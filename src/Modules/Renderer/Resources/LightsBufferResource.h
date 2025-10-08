@@ -5,8 +5,9 @@
 #include "../../Common/Components/TransformComponent.h"
 #include "../Components/LightComponent.h"
 #include "ShaderProgramResource.h"
+#include "ShaderUniformResource.h"
 
-class LightsBufferResource : public Resource {
+class LightsBufferResource : public ShaderUniformResource {
 public:
     inline static const int MAX_SPOT_LIGHTS = 100;
 
@@ -37,9 +38,14 @@ public:
     LightsBufferResource();
 
     Resource::Status build() override;
+
     void destroy() override;
+
     void bind(ShaderProgramResource &shader);
+
     void appendLight(TransformComponent &, LightComponent &);
+
+    void use(Shader &shader) override;
 
     ShaderStorageBuffer<LightStructure> m_StorageBuffer;
 
@@ -47,7 +53,10 @@ private:
     std::string getSizeAttributeName() {
         return m_Path + "_size";
     }
+
     static glm::mat4 createPerspectiveProjectionViewMatrix(TransformComponent &transform, LightComponent &light);
+
     static glm::mat4 createPerspectiveProjectionViewMatrix(glm::vec3 direction, glm::vec3 position, float far);
+
     static glm::mat4 createOrthoProjectionViewMatrix(TransformComponent &transform, LightComponent &light);
 };

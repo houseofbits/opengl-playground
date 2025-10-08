@@ -1,7 +1,7 @@
 #include "EnvironmentProbesBufferResource.h"
 #include "../../../Core/Helper/ShaderSourceLoader.h"
 
-EnvironmentProbesBufferResource::EnvironmentProbesBufferResource() : Resource(), m_StorageBuffer() {
+EnvironmentProbesBufferResource::EnvironmentProbesBufferResource() : ShaderUniformResource(), m_StorageBuffer() {
 }
 
 Resource::Status EnvironmentProbesBufferResource::build() {
@@ -10,8 +10,8 @@ Resource::Status EnvironmentProbesBufferResource::build() {
     }
 
     m_StorageBuffer.create(
-            MAX_PROBES,
-            ShaderSourceLoader::registerBindingIndex(m_Path));
+        MAX_PROBES,
+        ShaderSourceLoader::registerBindingIndex(m_Path));
 
     return STATUS_READY;
 }
@@ -20,8 +20,7 @@ void EnvironmentProbesBufferResource::destroy() {
 }
 
 void EnvironmentProbesBufferResource::bind(ShaderProgramResource &shader) {
-    m_StorageBuffer.bind();
-    shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
+    use(shader);
 }
 
 void EnvironmentProbesBufferResource::appendProbe(TransformComponent &transform, EnvironmentProbeComponent &probe) {
@@ -34,4 +33,9 @@ void EnvironmentProbesBufferResource::appendProbe(TransformComponent &transform,
     structure.cubeMapTextureLayer = probe.m_cubeMapLayerIndex;
 
     m_StorageBuffer.append(structure);
+}
+
+void EnvironmentProbesBufferResource::use(Shader &shader) {
+    m_StorageBuffer.bind();
+    shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
 }

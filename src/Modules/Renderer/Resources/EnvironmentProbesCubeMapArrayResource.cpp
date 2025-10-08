@@ -1,7 +1,8 @@
 #include "EnvironmentProbesCubeMapArrayResource.h"
 #include <GL/glew.h>
+#include "../../../Renderer/Shader/Shader.h"
 
-EnvironmentProbesCubeMapArrayResource::EnvironmentProbesCubeMapArrayResource() : Resource(),
+EnvironmentProbesCubeMapArrayResource::EnvironmentProbesCubeMapArrayResource() : ShaderUniformResource(),
                                                                                  m_TextureCube(),
                                                                                  m_framebufferId(),
                                                                                  m_renderbufferId(),
@@ -70,4 +71,8 @@ void EnvironmentProbesCubeMapArrayResource::generateMipMaps() {
 
 void EnvironmentProbesCubeMapArrayResource::selectCubeFace(int face) {
     glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_TextureCube.textureId, 0, face);
+}
+
+void EnvironmentProbesCubeMapArrayResource::use(Shader &shader) {
+    shader.setUniform("probesCubeArraySampler", m_handleId);
 }

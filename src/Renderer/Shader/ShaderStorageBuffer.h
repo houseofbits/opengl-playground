@@ -1,9 +1,10 @@
 #pragma once
 #include <GL/glew.h>
 #include <cstring>
+#include "BaseShaderStorageBuffer.h"
 
 template<typename T>
-class ShaderStorageBuffer {
+class ShaderStorageBuffer : public BaseShaderStorageBuffer {
 public:
     unsigned int maxSize;
     unsigned int currentSize;
@@ -15,7 +16,11 @@ public:
     ShaderStorageBuffer() : maxSize(0), currentSize(0), bufferId(0), data(nullptr), uniformBindingIndex() {
     }
 
-    explicit ShaderStorageBuffer(unsigned int i) : maxSize(0), currentSize(0), bufferId(0), data(nullptr), uniformBindingIndex() {
+    explicit ShaderStorageBuffer(unsigned int i) : maxSize(0), currentSize(0), bufferId(0), data(nullptr),
+                                                   uniformBindingIndex() {
+    }
+
+    ~ShaderStorageBuffer() override {
     }
 
     static bool isSupported() {
@@ -81,7 +86,7 @@ public:
         }
     }
 
-    void bind() {
+    void bind() override {
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, uniformBindingIndex, bufferId);
     }
 

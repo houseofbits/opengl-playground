@@ -216,6 +216,14 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/Resources/ResourceFactory.h
         src/Core/Resources/ResourceProcess.h
         src/Core/Resources/ResourceProcess.cpp
+        src/Renderer/Queue/RenderQueueItem.cpp
+        src/Renderer/Queue/RenderQueueItem.h
+        src/Renderer/Shader/Uniform/UniformValue3f.h
+        src/Renderer/Shader/RenderShader.cpp
+        src/Renderer/Shader/RenderShader.h
+        src/Renderer/Shader/ShaderBuilder.cpp
+        src/Renderer/Shader/ShaderBuilder.h
+        src/Renderer/Shader/BaseShaderStorageBuffer.h
 )
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -gdwarf-4")

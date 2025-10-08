@@ -5,8 +5,9 @@
 #define STB_IMAGE_STATIC
 #include "../../../../libs/tinygltf/stb_image.h"
 #include "../../../Core/Helper/StringUtils.h"
+#include "../../../Renderer/Shader/Shader.h"
 
-CubeTextureResource::CubeTextureResource() : Resource(), m_textureId(), m_handleId(), m_width(0), m_height(0), m_data() {
+CubeTextureResource::CubeTextureResource() : ShaderUniformResource(), m_textureId(), m_handleId(), m_width(0), m_height(0), m_data() {
 }
 
 Resource::Status CubeTextureResource::fetchData(ResourceManager &) {
@@ -86,4 +87,8 @@ void CubeTextureResource::destroy() {
     if (glIsTexture(m_textureId)) {
         glDeleteTextures(1, &m_textureId);
     }
+}
+
+void CubeTextureResource::use(Shader &shader, const std::string &uniformName) {
+    shader.setUniform(uniformName.c_str(), m_handleId);
 }

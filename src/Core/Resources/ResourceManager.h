@@ -108,7 +108,7 @@ public:
         if (resource == nullptr) {
             resource = resourceFactory.createInstance(typeName);
             if (!resource) {
-                Log::warn("Type not found in resource factory: ", typeName, ",  while requesting resource: ",
+                Log::warn("Type not found in resource factory: ", typeName, ", while requesting resource: ",
                           resourceName);
 
                 return;

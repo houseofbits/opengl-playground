@@ -4,8 +4,9 @@
 #include "../../../Core/Helper/Log.h"
 #include <cstdint>
 #include "ShaderProgramResource.h"
+#include "ShaderUniformResource.h"
 
-class TextureResource final : public Resource {
+class TextureResource final : public ShaderUniformResource {
 public:
     explicit TextureResource();
 
@@ -22,6 +23,8 @@ public:
     }
 
     void bindImageTexture(unsigned int unit) const;
+
+    void use(Shader &shader, const std::string &uniformName) override;
 
     int m_width;
     int m_height;

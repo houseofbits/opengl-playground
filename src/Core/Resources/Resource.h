@@ -8,6 +8,7 @@ class ResourceManager;
 class Resource {
 public:
     explicit Resource();
+
     virtual ~Resource() = default;
 
     inline static Resource *m_DefaultInstance = nullptr;
@@ -30,12 +31,15 @@ public:
     virtual Status fetchData(ResourceManager &) {
         return STATUS_DATA_READY;
     }
+
     virtual Status build() {
         return STATUS_READY;
     }
-    virtual void destroy() = 0;
-    virtual void write() {
 
+    virtual void destroy() {
+    }
+
+    virtual void write() {
     }
 
     void setDataReady() {
@@ -45,9 +49,12 @@ public:
     [[nodiscard]] bool isReady() const {
         return m_Status == STATUS_READY;
     }
+
     [[nodiscard]] bool isFinished() const {
-        return m_Status == STATUS_UNDEFINED || m_Status == STATUS_READY || m_Status == STATUS_FETCH_ERROR || m_Status == STATUS_BUILD_ERROR;
+        return m_Status == STATUS_UNDEFINED || m_Status == STATUS_READY || m_Status == STATUS_FETCH_ERROR || m_Status ==
+               STATUS_BUILD_ERROR;
     }
+
     void addDependency(const std::string &path) {
         m_Dependencies.push_back(path);
     }

@@ -2,9 +2,9 @@
 
 #include "../../../Core/API.h"
 #include "../../../Renderer/Texture/TextureCube.h"
-#include "ShaderProgramResource.h"
+#include "ShaderUniformResource.h"
 
-class EnvironmentProbesCubeMapArrayResource : public Resource {
+class EnvironmentProbesCubeMapArrayResource : public ShaderUniformResource {
 public:
     inline static const int TEXTURE_SIZE = 256;
     inline static const int TEXTURE_DEPTH = 256;
@@ -12,11 +12,18 @@ public:
     EnvironmentProbesCubeMapArrayResource();
 
     Resource::Status build() override;
+
     void destroy() override;
+
     void bindRenderTarget();
+
     void unbindRenderTarget();
+
     void generateMipMaps();
+
     void selectCubeFace(int layer);
+
+    void use(Shader &shader) override;
 
     TextureCube m_TextureCube;
     std::uint64_t m_handleId;
