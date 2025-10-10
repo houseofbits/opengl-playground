@@ -13,7 +13,7 @@ public:
     GLuint vertexArray;
     unsigned int offset{0};
     unsigned int size{0};
-    unsigned int materialIndex;
+    int materialIndex;
     glm::mat4 modelMatrix{1.0};
 
     void draw() const {
