@@ -37,54 +37,106 @@ void RenderShader::use() const {
 }
 
 void RenderShader::use(Camera &camera) {
-    use();
+    glUseProgram(m_programId);
 
-    setUniform("viewProjectionMatrix", camera.getProjectionViewMatrix());
-    setUniform("viewPosition", camera.getPosition());
+    addUniform("viewProjectionMatrix", camera.getProjectionViewMatrix());
+    addUniform("viewPosition", camera.getPosition());
+
+    for (const auto &buffer: m_buffers) {
+        buffer->bind();
+    }
+
+    for (const auto &[location, value]: m_uniforms) {
+        value->bind(location);
+    }
 }
 
-void RenderShader::setUniform(const std::string &name, const float x, const float y, const float z) {
+void RenderShader::addUniform(const std::string &name, const float x, const float y, const float z) {
     setUniformValue(name, new UniformValue3f(x, y, z));
 }
 
-void RenderShader::setUniform(const std::string &name, const glm::vec3 &v) {
+void RenderShader::addUniform(const std::string &name, const glm::vec3 &v) {
     setUniformValue(name, new UniformValue3f(v));
 }
 
-void RenderShader::setUniform(const std::string &name, const glm::vec4 &v) {
+void RenderShader::addUniform(const std::string &name, const glm::vec4 &v) {
     setUniformValue(name, new UniformValue4f(v));
 }
 
-void RenderShader::setUniform(const std::string &name, const glm::vec2 &v) {
+void RenderShader::addUniform(const std::string &name, const glm::vec2 &v) {
     setUniformValue(name, new UniformValue2f(v));
 }
 
-void RenderShader::setUniform(const std::string &name, const glm::mat4 &m) {
+void RenderShader::addUniform(const std::string &name, const glm::mat4 &m) {
     setUniformValue(name, new UniformValueMat4(m));
 }
 
-void RenderShader::setUniform(const std::string &name, const glm::mat3 &m) {
+void RenderShader::addUniform(const std::string &name, const glm::mat3 &m) {
     setUniformValue(name, new UniformValueMat3(m));
 }
 
-void RenderShader::setUniform(const std::string &name, const float val) {
+void RenderShader::addUniform(const std::string &name, const float val) {
     setUniformValue(name, new UniformValue1f(val));
 }
 
-void RenderShader::setUniform(const std::string &name, const int val) {
+void RenderShader::addUniform(const std::string &name, const int val) {
     setUniformValue(name, new UniformValue1i(val));
 }
 
-void RenderShader::setUniform(const std::string &name, const uint64_t &val) {
+void RenderShader::addUniform(const std::string &name, const uint64_t &val) {
     setUniformValue(name, new UniformValue64i(val));
 }
 
-void RenderShader::setUniform(const std::string &name, const unsigned int val) {
+void RenderShader::addUniform(const std::string &name, const unsigned int val) {
     setUniformValue(name, new UniformValue1ui(val));
 }
 
-void RenderShader::setUniform(const std::string &name, const bool val) {
+void RenderShader::addUniform(const std::string &name, const bool val) {
     setUniformValue(name, new UniformValue1i(val));
+}
+
+void RenderShader::setUniform(const std::string &name, const float x, const float y, const float z) {
+    glUniform3f(getUniformLocation(name), x, y, z);
+}
+
+void RenderShader::setUniform(const std::string &name, const glm::vec3 &v) {
+    setUniform(name, v.x, v.y, v.z);
+}
+
+void RenderShader::setUniform(const std::string &name, const glm::vec4 &v) {
+    glUniform4f(getUniformLocation(name), v.x, v.y, v.z, v.w);
+}
+
+void RenderShader::setUniform(const std::string &name, const glm::vec2 &v) {
+    glUniform2f(getUniformLocation(name), v.x, v.y);
+}
+
+void RenderShader::setUniform(const std::string &name, const glm::mat4 &m) {
+    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &m[0][0]);
+}
+
+void RenderShader::setUniform(const std::string &name, const glm::mat3 &m) {
+    glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, &m[0][0]);
+}
+
+void RenderShader::setUniform(const std::string &name, float val) {
+    glUniform1f(getUniformLocation(name), val);
+}
+
+void RenderShader::setUniform(const std::string &name, int val) {
+    glUniform1i(getUniformLocation(name), val);
+}
+
+void RenderShader::setUniform(const std::string &name, const uint64_t &val) {
+    glUniformHandleui64ARB(getUniformLocation(name), val);
+}
+
+void RenderShader::setUniform(const std::string &name, const unsigned int val) {
+    glUniform1ui(getUniformLocation(name), val);
+}
+
+void RenderShader::setUniform(const std::string &name, bool val) {
+    glUniform1i(getUniformLocation(name), val);
 }
 
 int RenderShader::getUniformLocation(std::string name) {

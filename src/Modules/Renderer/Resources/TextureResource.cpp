@@ -93,5 +93,5 @@ void TextureResource::bindImageTexture(const unsigned int unit) const {
 }
 
 void TextureResource::applyToShader(RenderShader &shader, const std::string &uniformName) {
-    shader.setUniform(uniformName, m_handleId);
+    shader.addUniform(uniformName, m_handleId);
 }

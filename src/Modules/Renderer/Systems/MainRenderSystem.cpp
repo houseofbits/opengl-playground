@@ -4,6 +4,8 @@
 #include <GL/glew.h>
 #include "../../Application/Events/SystemEvent.h"
 #include "../Resources/DeferredRenderTargetResource.h"
+#include "../../../Renderer/Queue/RenderQueueBuilder.h"
+#include "../Resources/RenderQueueResource.h"
 
 MainRenderSystem::MainRenderSystem() : EntitySystem(),
                                        m_isEnabled(true),
@@ -86,8 +88,8 @@ void MainRenderSystem::initialize(ResourceManager &resourceManager, EventManager
     resourceManager.request(m_deferredRenderTarget, "deferredRenderTarget");
     resourceManager.request(m_brdfLUTTexture, "data/textures/ibl_brdf_lut.png");
 
-
     resourceManager.request(m_lightingShader, "data/shaders/definitions/lighting.json");
+    resourceManager.request(m_mainRenderQueue, "mainRenderQueue");
 }
 
 void MainRenderSystem::process(EventManager &eventManager) {
@@ -129,41 +131,20 @@ void MainRenderSystem::process(EventManager &eventManager) {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    auto &currentProgram = m_ShaderPrograms[m_shaderType]();
-
-    if (!m_isEnabled || !currentProgram.isReady()) {
+    if (!m_isEnabled || !m_lightingShader.isReady()) {
         return;
     }
 
-    currentProgram.use();
-    camera->bind(currentProgram);
-    m_LightsBuffer().bind(currentProgram);
-    m_MaterialsBuffer().bind(currentProgram);
-    m_ProbesBuffer().bind(currentProgram);
-    if (m_ProbesCubeMapArray().isReady()) {
-        currentProgram.setUniform("probesCubeArraySampler", m_ProbesCubeMapArray().m_handleId);
-    }
-    if (doesSkyComponentExist && sky->second->m_cubeMap().isReady()) {
-        currentProgram.setUniform("environmentSampler", sky->second->m_cubeMap().m_handleId);
-    }
-
-    currentProgram.setUniform("brdfLUT", m_brdfLUTTexture().getHandle());
-
-    // if (!m_isEnabled || !m_lightingShader.isReady()) {
-    //     return;
-    // }
-    //
-    // m_lightingShader.get().use(*camera);
+    m_mainRenderQueue().clear();
 
     for (const auto &[id, components]: m_compositeMeshComponentRegistry->container()) {
         if (const auto &[transform, mesh] = components.get(); mesh->m_Mesh().isReady()) {
-            mesh->render(transform->getWorldTransform(), currentProgram, m_defaultMaterial());
+            mesh->addToRenderQueue(m_mainRenderQueue.get(), m_lightingShader().getShader(),
+                                   transform->getWorldTransform(), m_defaultMaterial.get());
         }
     }
 
-    // m_deferredRenderTarget().unbindRenderTarget();
-
-    // glViewport(0, 0, m_viewportWidth, m_viewportHeight);
+    m_mainRenderQueue().render(*camera);
 }
 
 void MainRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {

@@ -6,7 +6,7 @@
 
 class UniformValueMat3 final : public UniformValue {
 public:
-    UniformValueMat3(const glm::mat3& v) : val(v) {
+    explicit UniformValueMat3(const glm::mat3& v) : val(v) {
     }
 
     void bind(int location) override {

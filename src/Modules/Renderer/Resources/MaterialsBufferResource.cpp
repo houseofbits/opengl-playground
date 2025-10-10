@@ -58,5 +58,5 @@ void MaterialsBufferResource::bind(ShaderProgramResource &shader) {
 
 void MaterialsBufferResource::applyToShader(RenderShader &shader) {
     shader.addStorageBuffer(&m_StorageBuffer);
-    shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
+    shader.addUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
 }

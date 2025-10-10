@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../Core/API.h"
+#include "../../../Renderer/Queue/RenderQueue.h"
 #include "../Resources/MeshResource.h"
 #include "../Resources/MaterialResource.h"
 
@@ -23,6 +24,8 @@ public:
     std::string getNodeMaterial(const std::string& nodeName);
 
     void render(const glm::mat4 &worldTransform, ShaderProgramResource &shader, MaterialResource &);
+
+    void addToRenderQueue(RenderQueue& queue, RenderShader& shader,  const glm::mat4 &worldTransform, const MaterialResource& defaultMaterial);
 
     ResourceHandle<MeshResource> m_Mesh;
     ResourceHandle<MaterialResource> m_Material;

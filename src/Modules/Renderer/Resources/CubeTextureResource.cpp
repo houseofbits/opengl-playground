@@ -90,5 +90,5 @@ void CubeTextureResource::destroy() {
 }
 
 void CubeTextureResource::applyToShader(RenderShader &shader, const std::string &uniformName) {
-    shader.setUniform(uniformName.c_str(), m_handleId);
+    shader.addUniform(uniformName.c_str(), m_handleId);
 }

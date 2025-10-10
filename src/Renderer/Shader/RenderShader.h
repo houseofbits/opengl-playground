@@ -16,10 +16,9 @@ class Camera;
 
 class RenderShader final {
 public:
-    RenderShader() {
-    }
+    RenderShader() = default;
 
-    RenderShader(const unsigned int programId) : m_programId(programId) {
+    explicit RenderShader(const unsigned int programId) : m_programId(programId) {
     }
 
     ~RenderShader();
@@ -27,6 +26,28 @@ public:
     void use() const;
 
     void use(Camera &camera);
+
+    void addUniform(const std::string &, float x, float y, float z);
+
+    void addUniform(const std::string &, const glm::vec2 &v);
+
+    void addUniform(const std::string &, const glm::vec3 &v);
+
+    void addUniform(const std::string &, const glm::vec4 &v);
+
+    void addUniform(const std::string &, const glm::mat4 &m);
+
+    void addUniform(const std::string &, const glm::mat3 &m);
+
+    void addUniform(const std::string &, const std::uint64_t &v);
+
+    void addUniform(const std::string &, float val);
+
+    void addUniform(const std::string &, int val);
+
+    void addUniform(const std::string &, bool val);
+
+    void addUniform(const std::string &, unsigned int val);
 
     void setUniform(const std::string &, float x, float y, float z);
 

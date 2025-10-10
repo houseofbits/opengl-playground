@@ -114,5 +114,5 @@ glm::mat4 LightsBufferResource::createPerspectiveProjectionViewMatrix(glm::vec3 
 
 void LightsBufferResource::applyToShader(RenderShader &shader) {
     shader.addStorageBuffer(&m_StorageBuffer);
-    shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
+    shader.addUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
 }

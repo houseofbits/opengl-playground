@@ -212,7 +212,6 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Core/Helper/Profiling.h
         src/Core/Helper/Profilable.cpp
         src/Core/Helper/Profilable.h
-        src/Modules/Renderer/Resources/ShaderUniformResource.h
         src/Core/Resources/ResourceFactory.h
         src/Core/Resources/ResourceProcess.h
         src/Core/Resources/ResourceProcess.cpp
@@ -224,6 +223,10 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Shader/ShaderBuilder.cpp
         src/Renderer/Shader/ShaderBuilder.h
         src/Renderer/Shader/BaseShaderStorageBuffer.h
+        src/Renderer/Queue/RenderQueue.cpp
+        src/Renderer/Queue/RenderQueue.h
+        src/Modules/Renderer/Resources/RenderQueueResource.cpp
+        src/Modules/Renderer/Resources/RenderQueueResource.h
 )
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -gdwarf-4")

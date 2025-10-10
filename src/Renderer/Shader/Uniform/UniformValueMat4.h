@@ -6,7 +6,7 @@
 
 class UniformValueMat4 final : public UniformValue {
 public:
-    UniformValueMat4(const glm::mat4& v) : val(v) {
+    explicit UniformValueMat4(const glm::mat4& v) : val(v) {
     }
 
     void bind(int location) override {

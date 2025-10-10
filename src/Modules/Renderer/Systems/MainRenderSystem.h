@@ -16,6 +16,7 @@
 #include "../Components/SkyComponent.h"
 #include "../Resources/ShaderResource.h"
 
+class RenderQueueResource;
 class DeferredRenderTargetResource;
 
 class MainRenderSystem : public EntitySystem {
@@ -63,4 +64,5 @@ private:
     ResourceHandle<TextureResource> m_brdfLUTTexture;
 
     ResourceHandle<ShaderResource> m_lightingShader;
+    ResourceHandle<RenderQueueResource> m_mainRenderQueue;
 };

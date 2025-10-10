@@ -5,7 +5,7 @@
 
 class UniformValue1ui final : public UniformValue {
 public:
-    UniformValue1ui(unsigned int v) : val(v) {
+    explicit UniformValue1ui(unsigned int v) : val(v) {
     }
 
     void bind(int location) override {

@@ -39,5 +39,5 @@ void EnvironmentProbesBufferResource::appendProbe(TransformComponent &transform,
 
 void EnvironmentProbesBufferResource::applyToShader(RenderShader &shader) {
     shader.addStorageBuffer(&m_StorageBuffer);
-    shader.setUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
+    shader.addUniform(getSizeAttributeName().c_str(), m_StorageBuffer.currentSize);
 }

@@ -31,8 +31,10 @@ public:
     std::vector<ResourceHandle<MaterialResource> > m_materials;
     ModelConfigurationLoader::ModelConfiguration m_modelConfig;
 
+    Model m_model;
+
 private:
     void preloadMaterials(tinygltf::Model &model, ResourceManager &resourceManager);
 
-    Model m_model;
+
 };

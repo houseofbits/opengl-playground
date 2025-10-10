@@ -5,7 +5,7 @@
 
 class UniformValue64i final : public UniformValue {
 public:
-    UniformValue64i(const uint64_t v) : val(v) {
+    explicit UniformValue64i(const uint64_t v) : val(v) {
     }
 
     void bind(int location) override {

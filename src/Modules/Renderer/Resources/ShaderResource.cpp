@@ -45,6 +45,14 @@ Resource::Status ShaderResource::build() {
 
     m_shader.setProgramId(programId.value());
 
+    for (const auto &uniform: m_uniformResources) {
+        uniform->get().applyToShader(m_shader);
+    }
+
+    for (const auto &[name, uniform]: m_namedUniformResources) {
+        uniform->get().applyToShader(m_shader, name);
+    }
+
     return STATUS_READY;
 }
 
@@ -73,7 +81,7 @@ void ShaderResource::fetchDependencies(nlohmann::json &json, ResourceManager &ma
 
             if (uniformDef.contains("name")) {
                 auto name = uniformDef.at("name");
-                m_namedUniformResources.push_back({name, resource});
+                m_namedUniformResources.emplace_back(name, resource);
             } else {
                 m_uniformResources.push_back(resource);
             }
@@ -97,8 +105,8 @@ void ShaderResource::loadShader() {
 }
 
 void ShaderResource::use(Camera &camera) {
-    m_shader.setUniform("viewProjectionMatrix", camera.getProjectionViewMatrix());
-    m_shader.setUniform("viewPosition", camera.getPosition());
+    m_shader.addUniform("viewProjectionMatrix", camera.getProjectionViewMatrix());
+    m_shader.addUniform("viewPosition", camera.getPosition());
 
     for (const auto &uniform: m_uniformResources) {
         uniform->get().applyToShader(m_shader);

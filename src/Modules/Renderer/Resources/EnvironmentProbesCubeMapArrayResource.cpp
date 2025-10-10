@@ -74,5 +74,5 @@ void EnvironmentProbesCubeMapArrayResource::selectCubeFace(int face) {
 }
 
 void EnvironmentProbesCubeMapArrayResource::applyToShader(RenderShader &shader) {
-    shader.setUniform("probesCubeArraySampler", m_handleId);
+    shader.addUniform("probesCubeArraySampler", m_handleId);
 }

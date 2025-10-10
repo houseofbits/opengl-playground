@@ -15,4 +15,9 @@ public:
     unsigned int size{0};
     unsigned int materialIndex;
     glm::mat4 modelMatrix{1.0};
+
+    void draw() const {
+        glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT,
+                       reinterpret_cast<void *>(offset * sizeof(GLuint)));
+    }
 };

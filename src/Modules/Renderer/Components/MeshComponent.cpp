@@ -1,6 +1,7 @@
 #include "MeshComponent.h"
 
-MeshComponent::MeshComponent() : Component(), m_Mesh(), m_Material(), m_shouldOverrideMaterial(false), m_isVisible(true) {
+MeshComponent::MeshComponent() : Component(), m_Mesh(), m_Material(), m_shouldOverrideMaterial(false),
+                                 m_isVisible(true) {
 }
 
 void MeshComponent::serialize(nlohmann::json &j) {
@@ -45,5 +46,28 @@ void MeshComponent::render(const glm::mat4 &worldTransform, ShaderProgramResourc
         m_Mesh().render(worldTransform, shader, true, defaultMaterial);
     } else {
         m_Mesh().render(worldTransform, shader, false, defaultMaterial);
+    }
+}
+
+void MeshComponent::addToRenderQueue(RenderQueue &queue, RenderShader &shader, const glm::mat4 &worldTransform,
+                                     const MaterialResource &defaultMaterial) {
+    for (const auto &mesh: m_Mesh().m_model.m_meshNodes) {
+        RenderQueueItem item;
+        item.shader = &shader;
+        item.vertexArray = m_Mesh().m_model.m_vertexArrayObject;
+        item.offset = mesh.offset;
+        item.size = mesh.size;
+        item.modelMatrix = mesh.modelMatrix * worldTransform;
+        item.materialIndex = 1;
+
+        if (m_shouldOverrideMaterial && m_Material().isReady()) {
+            item.materialIndex = m_Material().m_materialBufferIndex;
+        } else  if (mesh.materialIndex >= 0 && m_Mesh().m_materials[mesh.materialIndex].isReady()) {
+            item.materialIndex = m_Mesh().m_materials[mesh.materialIndex]().m_materialBufferIndex;
+        } else {
+            item.materialIndex = defaultMaterial.m_materialBufferIndex;
+        }
+
+        queue.add(item);
     }
 }
