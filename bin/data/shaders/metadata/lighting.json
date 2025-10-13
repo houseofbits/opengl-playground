@@ -20,7 +20,7 @@
     },
     {
       "resourceType": "CubeTextureResource",
-      "resourceName": "resources/textures/sky2/*.png",
+      "resourceName": "resources/textures/sky-dark/*.png",
       "name": "environmentSampler"
     },
     {

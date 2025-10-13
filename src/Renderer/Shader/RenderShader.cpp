@@ -25,6 +25,8 @@ RenderShader::~RenderShader() {
 }
 
 void RenderShader::use() const {
+    bindAttribs();
+
     glUseProgram(m_programId);
 
     for (const auto &buffer: m_buffers) {
@@ -37,6 +39,8 @@ void RenderShader::use() const {
 }
 
 void RenderShader::use(Camera &camera) {
+    bindAttribs();
+
     glUseProgram(m_programId);
 
     addUniform("viewProjectionMatrix", camera.getProjectionViewMatrix());
@@ -160,4 +164,18 @@ void RenderShader::setUniformValue(const std::string &name, UniformValue *value)
     }
 
     m_uniforms[location] = value;
+}
+
+void RenderShader::bindAttribs() const {
+    if (attribs.depthTest) {
+        glEnable(GL_DEPTH_TEST);
+    } else {
+        glDisable(GL_DEPTH_TEST);
+    }
+
+    if (attribs.cullFace) {
+        glEnable(GL_CULL_FACE);
+    } else {
+        glDisable(GL_CULL_FACE);
+    }
 }

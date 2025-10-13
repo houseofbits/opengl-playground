@@ -1,0 +1,18 @@
+{
+  "shader": "data/shaders/skybox.|vert|frag",
+  "uniforms": [
+    {
+      "resourceType": "LightsBufferResource",
+      "resourceName": "SpotLightStorageBuffer"
+    },
+    {
+      "resourceType": "CubeTextureResource",
+      "resourceName": "resources/textures/sky-dark/*.png",
+      "name": "environmentSampler"
+    }
+  ],
+  "attributes": {
+    "depthTest": false,
+    "cullFace": false
+  }
+}

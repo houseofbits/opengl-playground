@@ -227,6 +227,8 @@ add_executable(${PROJECT_NAME} ${sources}
         src/Renderer/Queue/RenderQueue.h
         src/Modules/Renderer/Resources/RenderQueueResource.cpp
         src/Modules/Renderer/Resources/RenderQueueResource.h
+        src/Modules/Renderer/Resources/RenderTargetResource.cpp
+        src/Modules/Renderer/Resources/RenderTargetResource.h
 )
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -gdwarf-4")

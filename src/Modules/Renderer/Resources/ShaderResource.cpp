@@ -6,7 +6,7 @@
 #include "../../../Renderer/Shader/ShaderBuilder.h"
 
 ShaderResource::ShaderResource() : Resource(), m_shader(), m_uniformResources(), m_namedUniformResources(),
-                                   m_isDepthTestEnabled(true), m_shaderBuilder(nullptr) {
+                                   m_shaderBuilder(nullptr) {
 }
 
 Resource::Status ShaderResource::fetchData(ResourceManager &manager) {
@@ -61,7 +61,8 @@ void ShaderResource::ShaderResource::destroy() {
 
 void ShaderResource::fetchAttributes(nlohmann::json &json) {
     if (json.contains("attributes")) {
-        m_isDepthTestEnabled = Json::getValue(json.at("attributes"), "depthTest", true);
+        m_shader.attribs.depthTest = Json::getValue(json.at("attributes"), "depthTest", true);
+        m_shader.attribs.cullFace = Json::getValue(json.at("attributes"), "cullFace", true);
     }
 }
 

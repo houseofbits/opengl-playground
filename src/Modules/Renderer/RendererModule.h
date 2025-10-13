@@ -16,6 +16,9 @@
 #include "Editors/StaticMeshComponentEdit.h"
 #include "Editors/MeshComponentEdit.h"
 #include "Editors/EnvironmentProbeComponentEdit.h"
+#include "Systems/CameraRenderTargetSystem.h"
+#include "Systems/RenderQueueBuilderSystem.h"
+#include "Resources/ShaderResource.h"
 
 class RendererModule : public EntityModule {
 public:
@@ -29,9 +32,13 @@ public:
 
     void registerSystems(EntityContext &ctx) override {
         ctx.registerEntitySystem<StorageBufferUpdateSystem>(EntitySystemRegistry::MAIN_PROCESS, 1);
+        ctx.registerEntitySystem<RenderQueueBuilderSystem>(EntitySystemRegistry::MAIN_PROCESS, 2);
+
         ctx.registerEntitySystem<ShadowMapRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 2);
 
         ctx.registerEntitySystem<EnvironmentProbeRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 3);
+        ctx.registerEntitySystem<CameraRenderTargetSystem>(EntitySystemRegistry::MAIN_PROCESS, 4);
+
         ctx.registerEntitySystem<MainRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 5);
         ctx.registerEntitySystem<PhysicsDebugRenderSystem>(EntitySystemRegistry::MAIN_PROCESS, 6);
 

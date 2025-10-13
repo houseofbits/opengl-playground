@@ -37,6 +37,5 @@ private:
     RenderShader m_shader;
     std::vector<RenderShaderResourceHandle *> m_uniformResources;
     std::vector<std::pair<std::string, RenderShaderResourceHandle *> > m_namedUniformResources;
-    bool m_isDepthTestEnabled;
     ShaderBuilder* m_shaderBuilder;
 };

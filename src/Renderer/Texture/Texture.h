@@ -44,5 +44,5 @@ public:
 
     virtual void destroy();
 
-    bool isLoaded();
+    bool isLoaded() const;
 };

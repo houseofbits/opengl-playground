@@ -16,6 +16,12 @@ void CameraComponent::serialize(nlohmann::json &j) {
 
     j[REL_ROTATION_KEY] = m_isRelativeRotationDisabled;
     j[ACTIVE_KEY] = m_isActive;
+
+    if (m_renderTarget.isReady() && m_isRenderTargetEnabled) {
+        j[IS_RENDER_TARGET_KEY] = true;
+        j[RENDER_TARGET_WIDTH_KEY] = m_renderTarget().m_width;
+        j[RENDER_TARGET_HEIGHT_KEY] = m_renderTarget().m_height;
+    }
 }
 
 void CameraComponent::deserialize(const nlohmann::json &j, ResourceManager &resourceManager) {
@@ -36,6 +42,15 @@ void CameraComponent::deserialize(const nlohmann::json &j, ResourceManager &reso
     m_initialTransformLocal[1] = glm::vec4(glm::normalize(up), 0.0f);
     m_initialTransformLocal[2] = glm::vec4(glm::normalize(view), 0.0f);
     m_initialTransformLocal[3] = glm::vec4(position, 1.0);
+
+    if (j.value(IS_RENDER_TARGET_KEY, false)) {
+        m_isRenderTargetEnabled = true;
+        resourceManager.request(m_renderTarget, "renderTarget-" + m_Name);
+        unsigned int width = Json::getValue(j, RENDER_TARGET_WIDTH_KEY, 256);
+        unsigned int height = Json::getValue(j, RENDER_TARGET_HEIGHT_KEY, 256);
+
+        m_renderTarget().resize(width, height, Texture::Type::TYPE_RGBA);
+    }
 }
 
 void CameraComponent::rotateView(glm::vec2 viewChangeAlongScreenAxis) {

@@ -4,7 +4,8 @@
 #include <cmath>
 #include <iostream>
 
-Texture::Texture() : textureId(0), isMipmapsEnabled(false), width(0), height(0), type(TYPE_RGBA), arrayDepth(0) {
+Texture::Texture() : textureId(0), isMipmapsEnabled(false), handleId(0), width(0), height(0), type(TYPE_RGBA),
+                     arrayDepth(0) {
 }
 
 Texture::~Texture() = default;
@@ -91,6 +92,9 @@ void Texture::enableMipMaps() {
 }
 
 void Texture::destroy() {
+    if (handleId > 0) {
+        glMakeTextureHandleNonResidentARB(handleId);
+    }
     if (glIsTexture(textureId)) {
         glDeleteTextures(1, &textureId);
     }
@@ -104,7 +108,7 @@ void Texture::unbind() {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-bool Texture::isLoaded() {
+bool Texture::isLoaded() const {
     return glIsTexture(textureId);
 }
 void Texture::createArray(unsigned int textureWidth, unsigned int textureHeight, Type textureType, int depth) {

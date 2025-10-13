@@ -79,10 +79,17 @@ public:
         m_programId = programId;
     }
 
+    struct {
+        bool cullFace{true};
+        bool depthTest{true};
+    } attribs;
+
 private:
     int getUniformLocation(std::string name);
 
     void setUniformValue(const std::string &, UniformValue *);
+
+    void bindAttribs() const;
 
     unsigned int m_programId = 0;
     std::map<std::string, int> uniformLocations;
