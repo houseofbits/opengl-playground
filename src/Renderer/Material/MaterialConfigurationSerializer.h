@@ -18,6 +18,8 @@ private:
     inline static const std::string KEY_DOES_CAST_SHADOWS = "doesCastShadows";
     inline static const std::string KEY_DOES_RECEIVE_SHADOWS = "doesReceiveShadows";
     inline static const std::string KEY_DIFFUSE_WRAPPING_TYPE = "diffuseTextureWrapping";
+    inline static const std::string KEY_USE_DIFFUSE_RENDER_TARGET = "useDiffuseRenderTarget";
+    inline static const std::string KEY_DIFFUSE_RENDER_TARGET = "diffuseRenderTarget";
 
 public:
     MaterialConfigurationSerializer();

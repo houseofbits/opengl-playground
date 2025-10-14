@@ -27,7 +27,9 @@ void MaterialsBufferResource::appendMaterial(MaterialResource &material) {
     structure.doesCastShadows = material.m_materialConfiguration.doesCastShadows;
     structure.doesReceiveShadows = material.m_materialConfiguration.doesReceiveShadows;
 
-    if (material.m_Diffuse().isReady()) {
+    if (material.m_materialConfiguration.useDiffuseRenderTarget && material.m_DiffuseRenderTarget.isReady()) {
+        structure.diffuseTextureHandle = material.m_DiffuseRenderTarget().getHandle();
+    } else if (material.m_Diffuse().isReady()) {
         structure.diffuseTextureHandle = material.m_Diffuse().m_handleId;
     }
     if (material.m_Normal().isReady()) {

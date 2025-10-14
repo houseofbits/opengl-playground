@@ -26,4 +26,6 @@ public:
     // TextureWrappingType roughnessMetallicTextureWrappingType{WRAPPING_UV0};
     bool doesCastShadows{true};
     bool doesReceiveShadows{true};
+    bool useDiffuseRenderTarget{false};
+    std::string diffuseRenderTargetUri;
 };

@@ -24,6 +24,9 @@ MaterialConfiguration MaterialConfigurationSerializer::deserialize(const nlohman
     config.diffuseTextureWrappingType = Json::getValue(json, KEY_DIFFUSE_WRAPPING_TYPE,
                                                        config.diffuseTextureWrappingType);
 
+    config.useDiffuseRenderTarget = Json::getValue(json, KEY_USE_DIFFUSE_RENDER_TARGET, config.useDiffuseRenderTarget);
+    config.diffuseRenderTargetUri = Json::getValue(json, KEY_DIFFUSE_RENDER_TARGET, config.diffuseRenderTargetUri);
+
     return config;
 }
 
@@ -35,6 +38,11 @@ void MaterialConfigurationSerializer::serialize(MaterialConfiguration &config, n
     json[KEY_SELF_ILLUMINATION_FACTOR] = config.selfIllumination;
     json[KEY_DOES_CAST_SHADOWS] = config.doesCastShadows;
     json[KEY_DOES_RECEIVE_SHADOWS] = config.doesReceiveShadows;
+    json[KEY_USE_DIFFUSE_RENDER_TARGET] = config.useDiffuseRenderTarget;
+
+    if (config.useDiffuseRenderTarget) {
+        json[KEY_DIFFUSE_RENDER_TARGET] = config.diffuseRenderTargetUri;
+    }
 
     if (!config.diffuseTextureUri.empty()) {
         json[KEY_DIFFUSE_TEXTURE] = config.diffuseTextureUri;

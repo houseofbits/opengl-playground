@@ -17,12 +17,15 @@ void CameraRenderTargetSystem::process(EventManager &) {
         }
 
         component->m_renderTarget().bindRenderTarget();
+
         glViewport(0,
                    0,
-                   component->m_renderTarget().m_width,
-                   component->m_renderTarget().m_height);
+                   static_cast<int>(component->m_renderTarget().m_width),
+                   static_cast<int>(component->m_renderTarget().m_height));
 
-//        Log::write("Render target camera ", component->getRenderTargetResourceName());
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+
         m_mainRenderQueue().render(component->m_Camera);
 
         RenderTargetResource::unbindRenderTarget();

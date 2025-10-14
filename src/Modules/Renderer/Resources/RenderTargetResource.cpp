@@ -35,7 +35,7 @@ void RenderTargetResource::unbindRenderTarget() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void RenderTargetResource::resize(unsigned int width, unsigned int height, Texture::Type type) {
+void RenderTargetResource::resize(unsigned int width, unsigned int height, const Texture::Type type) {
     destroy();
 
     m_width = width;

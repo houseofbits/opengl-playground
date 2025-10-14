@@ -129,6 +129,32 @@ void MaterialEditWindowUI::processMaterial() {
     processTexture("DiffuseTexturePicker", m_selectedMaterial->m_Diffuse);
     ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
+    ImGui::Text("Diffuse render target");
+    if (ImGui::Checkbox("Use", &m_selectedMaterial->m_materialConfiguration.useDiffuseRenderTarget)) {
+        if (m_selectedMaterial->m_materialConfiguration.useDiffuseRenderTarget) {
+            m_selectedMaterial->m_Diffuse.invalidate();
+            m_selectedMaterial->m_materialConfiguration.diffuseTextureUri = "";
+        } else {
+            m_selectedMaterial->m_DiffuseRenderTarget.invalidate();
+            m_selectedMaterial->m_materialConfiguration.diffuseRenderTargetUri = "";
+        }
+    }
+
+    if (m_selectedMaterial->m_materialConfiguration.useDiffuseRenderTarget) {
+        const auto renderTargets = m_EditorUISystem->m_ResourceManager->getAllOfType<RenderTargetResource>();
+        if (ImGui::BeginCombo("##combo", m_selectedMaterial->m_materialConfiguration.diffuseRenderTargetUri.c_str())) {
+            for (const auto target: renderTargets) {
+                bool isSelected = target->m_Path == m_selectedMaterial->m_materialConfiguration.diffuseRenderTargetUri;
+                if (ImGui::Selectable(target->m_Path.c_str(), isSelected)) {
+                    m_selectedMaterial->m_materialConfiguration.diffuseRenderTargetUri = target->m_Path;
+                    m_EditorUISystem->m_ResourceManager->request(m_selectedMaterial->m_DiffuseRenderTarget,
+                                                                 target->m_Path);
+                }
+            }
+            ImGui::EndCombo();
+        }
+    }
+
     ImGui::Text("Normals texture");
     processTexture("NormalsTexturePicker", m_selectedMaterial->m_Normal);
     ImGui::Dummy(ImVec2(0.0f, 10.0f));

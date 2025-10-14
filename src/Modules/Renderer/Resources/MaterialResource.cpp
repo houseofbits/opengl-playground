@@ -9,6 +9,7 @@ MaterialResource::MaterialResource() : Resource(),
                                        m_Normal(),
                                        m_Roughness(),
                                        m_Emissive(),
+                                       m_DiffuseRenderTarget(),
                                        m_materialBufferIndex(0) {
 }
 

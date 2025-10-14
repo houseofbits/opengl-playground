@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RenderTargetResource.h"
 #include "../../../Core/API.h"
 #include "ShaderProgramResource.h"
 #include "TextureResource.h"
@@ -37,6 +38,7 @@ public:
     ResourceHandle<TextureResource> m_Normal;
     ResourceHandle<TextureResource> m_Roughness;
     ResourceHandle<TextureResource> m_Emissive;
+    ResourceHandle<RenderTargetResource> m_DiffuseRenderTarget;
 
     int m_materialBufferIndex;
 private:
