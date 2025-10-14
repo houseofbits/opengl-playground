@@ -28,6 +28,8 @@ inline void processCameraComponentEditor(Component *c, Entity *e, EditorUISystem
     ImGui::Checkbox("Render target##CAMERA_RENDER_TARGET", &component->m_isRenderTargetEnabled);
     if (component->m_isRenderTargetEnabled) {
         if (ImGui::InputInt2("Size", &v[0])) {
+            component->m_renderTarget().m_width = v[0];
+            component->m_renderTarget().m_height = v[1];
         } else {
             if (component->m_renderTarget.isReady()) {
                 v[0] = static_cast<int>(component->m_renderTarget().m_width);
@@ -41,5 +43,7 @@ inline void processCameraComponentEditor(Component *c, Entity *e, EditorUISystem
             system.m_ResourceManager->request(component->m_renderTarget, component->getRenderTargetResourceName());
             component->m_renderTarget().resize(v[0], v[1], Texture::Type::TYPE_RGBA);
         }
+
+        ImGui::Text("Name: %s", component->getRenderTargetResourceName().c_str());
     }
 }

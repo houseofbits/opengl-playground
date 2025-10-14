@@ -21,6 +21,7 @@ void OverlayRenderSystem::initialize(ResourceManager &resourceManager, EventMana
     resourceManager.request(m_deferredRenderTarget, "deferredRenderTarget");
 
     resourceManager.request(m_texturedQuadShaderProgram, "data/shaders/ui/texturedQuad.|vert|frag");
+    resourceManager.request(m_renderTarget, "camera-render-target");
 }
 
 void OverlayRenderSystem::process(EventManager &eventManager) {
@@ -88,6 +89,8 @@ void OverlayRenderSystem::process(EventManager &eventManager) {
     // glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     //
     // glEnable(GL_DEPTH_TEST);
+
+    // renderTexturedQuad(m_renderTarget().getHandle(), glm::vec2(0, 0), glm::vec2(1, 1));
 }
 
 void OverlayRenderSystem::registerEventHandlers(EventManager &eventManager) {
@@ -101,19 +104,13 @@ void OverlayRenderSystem::handleSystemEvent(const SystemEvent &event) {
 void OverlayRenderSystem::handleEditorUIEvent(const EditorUIEvent &event) {
 }
 
-void OverlayRenderSystem::renderTexturedQuad(const TextureResource &texture) {
-    auto vw = m_WindowResource().getViewportSize();
-    glm::vec2 size = glm::vec2(static_cast<float>(texture.m_width) / static_cast<float>(vw.x),
-                               static_cast<float>(texture.m_height) / static_cast<float>(vw.y));
-
-    glm::vec2 position = glm::vec2(0.5) - size * 0.5f;
-
+void OverlayRenderSystem::renderTexturedQuad(std::uint64_t textureHandleId, glm::vec2 position, glm::vec2 size) {
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
 
     m_texturedQuadShaderProgram().use();
 
-    m_texturedQuadShaderProgram().setUniform("inputTexture", texture.getHandle());
+    m_texturedQuadShaderProgram().setUniform("inputTexture", textureHandleId);
     m_texturedQuadShaderProgram().setUniform("position", position);
     m_texturedQuadShaderProgram().setUniform("size", size);
 
@@ -122,4 +119,14 @@ void OverlayRenderSystem::renderTexturedQuad(const TextureResource &texture) {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     glEnable(GL_DEPTH_TEST);
+}
+
+void OverlayRenderSystem::renderTexturedQuad(const TextureResource &texture) {
+    const auto vw = m_WindowResource().getViewportSize();
+    const auto size = glm::vec2(static_cast<float>(texture.m_width) / static_cast<float>(vw.x),
+                                static_cast<float>(texture.m_height) / static_cast<float>(vw.y));
+
+    const glm::vec2 position = glm::vec2(0.5) - size * 0.5f;
+
+    renderTexturedQuad(texture.m_handleId, position, size);
 }

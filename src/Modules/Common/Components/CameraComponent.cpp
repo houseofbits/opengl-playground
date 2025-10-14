@@ -6,6 +6,7 @@ CameraComponent::CameraComponent() : Component(),
                                      m_initialTransformLocal(1.0),
                                      m_currentTransformWorld(1.0),
                                      m_shouldSyncWorldTransformToLocal(false),
+                                     m_isRenderTargetEnabled(false),
                                      m_isRelativeRotationDisabled(true) {
 }
 
@@ -45,7 +46,7 @@ void CameraComponent::deserialize(const nlohmann::json &j, ResourceManager &reso
 
     if (j.value(IS_RENDER_TARGET_KEY, false)) {
         m_isRenderTargetEnabled = true;
-        resourceManager.request(m_renderTarget, "renderTarget-" + m_Name);
+        resourceManager.request(m_renderTarget, getRenderTargetResourceName());
         unsigned int width = Json::getValue(j, RENDER_TARGET_WIDTH_KEY, 256);
         unsigned int height = Json::getValue(j, RENDER_TARGET_HEIGHT_KEY, 256);
 

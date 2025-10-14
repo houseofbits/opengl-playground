@@ -6,7 +6,7 @@
 #include "../Resources/ShaderProgramResource.h"
 #include <GL/glew.h>
 #include "../Resources/TextureResource.h"
-#include "../Components/LightComponent.h"
+#include "../Resources/RenderTargetResource.h"
 #include "../../Application/Resources/WindowResource.h"
 
 class DeferredRenderTargetResource;
@@ -28,6 +28,8 @@ public:
 private:
     void renderTexturedQuad(const TextureResource& texture);
 
+    void renderTexturedQuad(std::uint64_t textureHandleId, glm::vec2 pos, glm::vec2 size);
+
     ResourceHandle<ShaderProgramResource> m_ShaderProgram;
     GLuint VAO{0};
     ResourceHandle<TextureResource> m_textureResource;
@@ -36,4 +38,6 @@ private:
     ResourceHandle<ShaderProgramResource> m_texturedQuadShaderProgram;
 
     ResourceHandle<WindowResource> m_WindowResource;
+
+    ResourceHandle<RenderTargetResource> m_renderTarget;
 };
